@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Ingredient Search Demo - Iterum R&D</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .demo-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2e7d32;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2e7d32;
+        }
+        
+        .demo-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .example-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .search-demo {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .selected-ingredients {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .ingredient-chip {
+            display: inline-block;
+            background: #2e7d32;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 3px;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-examples {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>🍅 Enhanced Ingredient Database</h1>
+        <p>Professional ingredient search with 291 preloaded ingredients across 11 categories</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">291</div>
+                <div class="stat-label">Total Ingredients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">11</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">84</div>
+                <div class="stat-label">Produce Items</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">68</div>
+                <div class="stat-label">Pantry Items</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🔍 Try the Enhanced Search</h2>
+        <p>Search from our comprehensive database with smart filtering, dietary tags, and nutritional information.</p>
+        
+        <div class="search-demo">
+            <div id="ingredient-search-demo"></div>
+            
+            <div class="selected-ingredients" id="selected-ingredients" style="display: none;">
+                <h4>Selected Ingredients:</h4>
+                <div id="ingredient-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>✨ Enhanced Features</h2>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-title">🏷️ Smart Dietary Tags</div>
+                <div>Automatic detection of Vegan, Gluten-Free, Organic, and Superfood ingredients</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">💪 Nutritional Highlights</div>
+                <div>Key nutritional benefits displayed for health-conscious cooking</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">🌍 International Ingredients</div>
+                <div>20 specialty ingredients from global cuisines including Asian, Mediterranean, and more</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">🌱 Plant-Based Options</div>
+                <div>Complete alternative protein section with tofu, tempeh, seitan, and more</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">🧪 Fermented Foods</div>
+                <div>Probiotic-rich ingredients like kimchi, kefir, kombucha, and various misos</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-title">⚡ Superfoods</div>
+                <div>Nutrient-dense ingredients like spirulina, chia seeds, and matcha powder</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>📊 Category Breakdown</h2>
+        
+        <div class="demo-examples">
+            <div class="example-section">
+                <div class="example-title">Top Categories</div>
+                <ul>
+                    <li><strong>Produce (84 items)</strong> - Fresh vegetables, herbs, and fruits</li>
+                    <li><strong>Pantry (68 items)</strong> - Grains, beans, oils, condiments, baking</li>
+                    <li><strong>Spices (28 items)</strong> - Essential seasonings and aromatics</li>
+                    <li><strong>Protein (21 items)</strong> - Meat, poultry, and traditional proteins</li>
+                    <li><strong>International (20 items)</strong> - Global specialty ingredients</li>
+                </ul>
+            </div>
+            
+            <div class="example-section">
+                <div class="example-title">Specialty Categories</div>
+                <ul>
+                    <li><strong>Nuts & Seeds (18 items)</strong> - Including hemp hearts and specialty nuts</li>
+                    <li><strong>Dairy (16 items)</strong> - Traditional and artisanal dairy products</li>
+                    <li><strong>Alternative (12 items)</strong> - Plant-based alternatives and substitutes</li>
+                    <li><strong>Seafood (10 items)</strong> - Fresh and premium seafood options</li>
+                    <li><strong>Superfood (8 items)</strong> - Nutrient-dense health foods</li>
+                    <li><strong>Fermented (6 items)</strong> - Probiotic and cultured foods</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🎯 Usage Examples</h2>
+        <p>Try searching for these terms to see the enhanced features in action:</p>
+        
+        <div class="demo-examples">
+            <div class="example-section">
+                <div class="example-title">Search Suggestions</div>
+                <ul>
+                    <li><code>chia</code> - See superfood tags and omega-3 info</li>
+                    <li><code>miso</code> - Explore fermented options</li>
+                    <li><code>almond</code> - Multiple almond products with nutritional data</li>
+                    <li><code>quinoa</code> - Complete protein superfood</li>
+                    <li><code>turmeric</code> - Fresh vs. ground with health benefits</li>
+                </ul>
+            </div>
+            
+            <div class="example-section">
+                <div class="example-title">Filter by Category</div>
+                <ul>
+                    <li>Click category chips to filter results</li>
+                    <li>Use keyboard navigation (↑↓ arrows, Enter)</li>
+                    <li>See dietary restrictions and allergen warnings</li>
+                    <li>View storage recommendations</li>
+                    <li>Check seasonal availability</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the search widget -->
+    <script src="ingredient_search_widget.js"></script>
+    
+    <script>
+        let selectedIngredients = [];
+        
+        // Initialize the search widget
+        const ingredientWidget = new IngredientSearchWidget({
+            containerId: 'ingredient-search-demo',
+            placeholder: 'Search from 291 ingredients...',
+            maxResults: 12,
+            showCategories: true,
+            showDetails: true,
+            onSelect: (ingredient) => {
+                addSelectedIngredient(ingredient);
+            }
+        });
+        
+        function addSelectedIngredient(ingredient) {
+            // Avoid duplicates
+            if (!selectedIngredients.find(item => item.name === ingredient.name)) {
+                selectedIngredients.push(ingredient);
+                updateSelectedDisplay();
+            }
+            
+            // Clear search
+            ingredientWidget.clearSearch();
+        }
+        
+        function updateSelectedDisplay() {
+            const container = document.getElementById('selected-ingredients');
+            const list = document.getElementById('ingredient-list');
+            
+            if (selectedIngredients.length > 0) {
+                container.style.display = 'block';
+                list.innerHTML = selectedIngredients.map(ingredient => 
+                    `<span class="ingredient-chip">${ingredient.name}</span>`
+                ).join('');
+            } else {
+                container.style.display = 'none';
+            }
+        }
+        
+        // Add some demo styling
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🍅 Ingredient Demo Loaded');
+            console.log('📊 Enhanced database includes:');
+            console.log('   • 291 total ingredients');
+            console.log('   • 11 categories');
+            console.log('   • Nutritional information');
+            console.log('   • Dietary tags');
+            console.log('   • International specialties');
+            console.log('   • Plant-based alternatives');
+            console.log('   • Fermented foods');
+            console.log('   • Superfoods');
+        });
+    </script>
+</body>
+</html>

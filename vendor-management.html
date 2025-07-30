@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor & Equipment Management - Iterum R&D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: repeating-linear-gradient(
+                to bottom,
+                #f6fbe7 0px,
+                #f6fbe7 38px,
+                #eafcd7 39px,
+                #f6fbe7 40px
+            );
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 56px;
+            width: 2px;
+            height: 100vh;
+            background: repeating-linear-gradient(
+                to bottom,
+                #e57373 0px,
+                #e57373 16px,
+                transparent 16px,
+                transparent 32px
+            );
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fffbe7;
+            border: 1.5px solid #e2d8b8;
+            border-radius: 22px 22px 18px 18px;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.09), 0 1.5px 0 #e2d8b8;
+            position: relative;
+            padding-top: 2.5rem;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 18px;
+            width: 12px;
+            height: 80%;
+            background: repeating-linear-gradient(
+                to bottom,
+                #e57373 0px,
+                #e57373 8px,
+                transparent 8px,
+                transparent 24px
+            );
+            border-radius: 8px;
+            opacity: 0.18;
+            z-index: 1;
+        }
+
+        .header {
+            background: #fffbe7;
+            color: #795548;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #e2d8b8;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 2.5rem;
+            color: #b8860b;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 8px #fffbe7, 0 1px 0 #e2d8b8;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #795548;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f6fbe7;
+            border-bottom: 2px solid #e2d8b8;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #795548;
+            border-radius: 0;
+        }
+
+        .nav-tab.active {
+            background: #fffbe7;
+            color: #b8860b;
+            border-bottom: 3px solid #b8860b;
+            box-shadow: 0 2px 8px 0 rgba(184, 134, 11, 0.15);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #eafcd7;
+            color: #8d6e63;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            background: #fffbe7;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #b8860b;
+            font-weight: 600;
+            font-family: 'Shadows Into Light', cursive;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
+            color: #795548;
+            border: 1.5px solid #ffe082;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
+            font-weight: 600;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 1em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) scale(1.04) rotate(-2deg);
+            box-shadow: 0 6px 18px 0 rgba(255, 235, 59, 0.25);
+            background: linear-gradient(135deg, #ffe082 80%, #fff176 100%);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
+            color: #795548;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #e2d8b8 80%, #d4c4a8 100%);
+            color: #795548;
+            border-color: #d4c4a8;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #a5d6a7 80%, #81c784 100%);
+            color: #2e7d32;
+            border-color: #81c784;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef9a9a 80%, #e57373 100%);
+            color: #c62828;
+            border-color: #e57373;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            margin-right: 8px;
+        }
+        
+        .btn-sm:last-child {
+            margin-right: 0;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1.5px solid #e2d8b8;
+            border-radius: 10px;
+            background: #fffbe7;
+            font-size: 1em;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #b8860b;
+            box-shadow: 0 0 0 2px #ffe082;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fffbe7;
+            border: 1.5px solid #e2d8b8;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2d8b8;
+        }
+
+        .data-table th {
+            background: #f6fbe7;
+            font-weight: 600;
+            color: #b8860b;
+        }
+
+        .data-table tr:hover {
+            background: #eafcd7;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #a5d6a7;
+            color: #2e7d32;
+        }
+
+        .status-inactive {
+            background: #ef9a9a;
+            color: #c62828;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: #fffbe7;
+            border: 1.5px solid #e2d8b8;
+            border-radius: 22px 22px 18px 18px;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.09), 0 1.5px 0 #e2d8b8;
+            margin: 5% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2d8b8;
+        }
+
+        .modal-title {
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 1.8em;
+            color: #b8860b;
+            margin: 0;
+        }
+
+        .close {
+            color: #795548;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close:hover {
+            color: #b8860b;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #795548;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e2d8b8;
+            border-radius: 10px;
+            background: #fffbe7;
+            font-size: 1em;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #b8860b;
+            box-shadow: 0 0 0 2px #ffe082;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #b8860b;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e2d8b8;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .alert-success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #795548;
+            font-style: italic;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #795548;
+        }
+
+        .empty-state h3 {
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 1.5em;
+            color: #b8860b;
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+            border: 2px solid #7bb661;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(123, 182, 97, 0.15);
+        }
+
+        .info-box h3 {
+            color: #4a7c2c;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .info-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .info-box li {
+            margin: 5px 0;
+            color: #4a7c2c;
+        }
+
+        .section-description {
+            color: #795548;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+
+        /* Modern scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #fdf6e3;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #e2d8b8;
+            border-radius: 8px;
+        }
+
+        /* Plant Sketches */
+        .plant-sketch {
+            position: fixed;
+            z-index: 0;
+            opacity: 0.08;
+            pointer-events: none;
+            width: 120px;
+            height: 180px;
+        }
+
+        .plant-sketch.top-right {
+            top: 20px;
+            right: 20px;
+            transform: rotate(15deg);
+        }
+
+        .plant-sketch.top-left {
+            top: 20px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .plant-sketch.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            transform: rotate(-10deg);
+        }
+
+        .plant-sketch.center-right {
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%) rotate(5deg);
+        }
+
+        .plant-sketch.center-left {
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%) rotate(-5deg);
+        }
+
+        .plant-sketch.small {
+            width: 80px;
+            height: 120px;
+            opacity: 0.06;
+        }
+
+        .plant-sketch.tiny {
+            width: 60px;
+            height: 90px;
+            opacity: 0.05;
+        }
+
+        /* Different plant variations */
+        .plant-herb {
+            opacity: 0.07;
+        }
+
+        .plant-vegetable {
+            opacity: 0.06;
+        }
+
+        .plant-flower {
+            opacity: 0.08;
+        }
+
+        /* Floating animation for some plants */
+        .plant-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* Responsive plant positioning */
+        @media (max-width: 768px) {
+            .plant-sketch {
+                width: 60px;
+                height: 90px;
+                opacity: 0.05;
+            }
+            
+            .plant-sketch.top-right,
+            .plant-sketch.top-left,
+            .plant-sketch.bottom-left {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+    <div class="flex items-center gap-2">
+      <img src="iterum.ico" alt="Iterum Logo" class="h-8 w-8">
+      <span class="font-bold text-xl tracking-tight">Iterum R&D Chef Notebook</span>
+    </div>
+    <nav class="hidden md:flex gap-6 text-gray-700 font-medium">
+      <a href="index.html" class="hover:text-green-600">Dashboard</a>
+      <a href="recipe-library.html" class="hover:text-green-600">Recipe Library</a>
+      <a href="recipe-upload.html" class="hover:text-green-600">Recipe Uploader</a>
+      <a href="menu-builder.html" class="hover:text-green-600">Menu Builder</a>
+      <a href="ingredients.html" class="hover:text-green-600">Ingredients</a>
+      <a href="equipment-management.html" class="hover:text-green-600">Equipment</a>
+      <a href="vendor-management.html" class="hover:text-green-600">Vendors</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <span id="current-user" class="text-gray-600 text-sm"></span>
+      <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded hidden">Login</button>
+      <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded hidden">Logout</button>
+      <button id="nav-toggle" class="md:hidden text-2xl text-gray-700 focus:outline-none">&#9776;</button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="md:hidden bg-white border-t border-gray-200 hidden flex-col gap-2 px-4 pb-4">
+    <a href="index.html" class="block py-2 hover:text-green-600">Dashboard</a>
+    <a href="recipe-library.html" class="block py-2 hover:text-green-600">Recipe Library</a>
+    <a href="recipe-upload.html" class="block py-2 hover:text-green-600">Recipe Uploader</a>
+    <a href="menu-builder.html" class="block py-2 hover:text-green-600">Menu Builder</a>
+    <a href="ingredients.html" class="block py-2 hover:text-green-600">Ingredients</a>
+    <a href="equipment-management.html" class="block py-2 hover:text-green-600">Equipment</a>
+    <a href="vendor-management.html" class="block py-2 hover:text-green-600">Vendors</a>
+  </nav>
+</header>
+
+    <div class="container">
+        <div class="header">
+            <h1>Vendor & Equipment Management</h1>
+            <p>Manage your suppliers, equipment, and vendor relationships</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('vendors')">Vendors</button>
+            <button class="nav-tab" onclick="showTab('equipment')">Equipment</button>
+            <button class="nav-tab" onclick="showTab('relationships')">Relationships</button>
+        </div>
+
+        <!-- Vendors Tab -->
+        <div id="vendors" class="tab-content active">
+            <div class="section-header">
+                <h2 class="section-title">Vendor Management</h2>
+                <button class="btn btn-primary" onclick="openVendorModal()">Add Vendor</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="vendorSearch" class="search-input" placeholder="Search vendors...">
+                <button class="btn btn-secondary" onclick="searchVendors()">Search</button>
+            </div>
+
+            <div id="vendorsTable">
+                <div class="loading">Loading vendors...</div>
+            </div>
+        </div>
+
+        <!-- Equipment Tab -->
+        <div id="equipment" class="tab-content">
+            <div class="section-header">
+                <h2 class="section-title">Equipment Management</h2>
+                <p class="section-description">Equipment management has been moved to the dedicated Equipment Management page for better organization.</p>
+                <a href="equipment-management.html" class="btn btn-primary">Go to Equipment Management</a>
+            </div>
+
+            <div class="info-box">
+                <h3>Equipment Management Features:</h3>
+                <ul>
+                    <li>✅ Add and manage your own equipment</li>
+                    <li>✅ Browse equipment database</li>
+                    <li>✅ Manage vendor equipment relationships</li>
+                    <li>✅ Track maintenance and repairs</li>
+                    <li>✅ Export and import equipment data</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Relationships Tab -->
+        <div id="relationships" class="tab-content">
+            <div class="section-header">
+                <h2 class="section-title">Vendor Relationships</h2>
+                <div>
+                    <button class="btn btn-primary" onclick="openVendorIngredientModal()">Add Ingredient to Vendor</button>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>Equipment Relationships:</h3>
+                <p>Equipment relationships are now managed in the Equipment Management page for better organization.</p>
+                <a href="equipment-management.html" class="btn btn-secondary">Manage Equipment Relationships</a>
+            </div>
+
+            <div id="relationshipsTable">
+                <div class="loading">Loading relationships...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Modal -->
+    <div id="vendorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="vendorModalTitle">Add Vendor</h3>
+                <span class="close" onclick="closeVendorModal()">&times;</span>
+            </div>
+            <form id="vendorForm">
+                <div class="form-group">
+                    <label class="form-label" for="vendorName">Name *</label>
+                    <input type="text" id="vendorName" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="vendorCompany">Company</label>
+                    <input type="text" id="vendorCompany" class="form-input">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="vendorEmail">Email</label>
+                        <input type="email" id="vendorEmail" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="vendorPhone">Phone</label>
+                        <input type="tel" id="vendorPhone" class="form-input">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="vendorMobile">Mobile</label>
+                        <input type="tel" id="vendorMobile" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="vendorFax">Fax</label>
+                        <input type="tel" id="vendorFax" class="form-input">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="vendorWebsite">Website</label>
+                    <input type="url" id="vendorWebsite" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="vendorStreet">Street Address</label>
+                    <input type="text" id="vendorStreet" class="form-input">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="vendorCity">City</label>
+                        <input type="text" id="vendorCity" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="vendorState">State</label>
+                        <input type="text" id="vendorState" class="form-input">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="vendorZip">ZIP Code</label>
+                    <input type="text" id="vendorZip" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="vendorSpecialties">Specialties</label>
+                    <input type="text" id="vendorSpecialties" class="form-input" placeholder="Comma-separated specialties">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="vendorNotes">Notes</label>
+                    <textarea id="vendorNotes" class="form-textarea"></textarea>
+                </div>
+                
+                <div class="form-checkbox">
+                    <input type="checkbox" id="vendorActive" checked>
+                    <label for="vendorActive">Active</label>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeVendorModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Vendor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Shared Auth/Loading UI -->
+    <!--#include file="shared-auth.html" -->
+    <script src="unified_auth_system.js"></script>
+<script src="debug_auth_buttons.js"></script>
+    <script src="standardize-login-modals.js"></script>
+
+    <script>
+        // Global variables
+        let currentVendorId = null;
+        let currentEquipmentId = null;
+        const API_BASE = 'http://localhost:8000/api';
+
+        // Utility to get current user ID
+        function getCurrentUserId() {
+            if (window.userDataManager && window.userDataManager.getCurrentUserId) {
+                return window.userDataManager.getCurrentUserId();
+            }
+            const user = localStorage.getItem('current_user');
+            if (user) return JSON.parse(user).id;
+            return null;
+        }
+
+        // Tab management
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load data for the tab
+            if (tabName === 'vendors') {
+                loadVendors();
+            } else if (tabName === 'equipment') {
+                loadEquipment();
+            } else if (tabName === 'relationships') {
+                loadRelationships();
+            }
+        }
+
+        // Vendor management
+        async function loadVendors() {
+            try {
+                const userId = getCurrentUserId();
+                const url = `${API_BASE}/vendors/?user_id=${encodeURIComponent(userId)}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.vendors && data.vendors.length > 0) {
+                    displayVendors(data.vendors);
+                } else {
+                    document.getElementById('vendorsTable').innerHTML = `
+                        <div class="empty-state">
+                            <h3>No vendors found</h3>
+                            <p>Add your first vendor to get started</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading vendors:', error);
+                document.getElementById('vendorsTable').innerHTML = `
+                    <div class="alert alert-error">Error loading vendors: ${error.message}</div>
+                `;
+            }
+        }
+
+        function displayVendors(vendors) {
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${vendors.map(vendor => `
+                            <tr>
+                                <td>${vendor.name || '-'}</td>
+                                <td>${vendor.company || '-'}</td>
+                                <td>${vendor.email || '-'}</td>
+                                <td>${vendor.phone || '-'}</td>
+                                <td>${vendor.city ? `${vendor.city}, ${vendor.state}` : '-'}</td>
+                                <td>
+                                    <span class="status-badge ${vendor.is_active ? 'status-active' : 'status-inactive'}">
+                                        ${vendor.is_active ? 'Active' : 'Inactive'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="editVendor(${vendor.id})">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteVendor(${vendor.id})">Delete</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('vendorsTable').innerHTML = table;
+        }
+
+        function openVendorModal(vendorId = null) {
+            currentVendorId = vendorId;
+            const modal = document.getElementById('vendorModal');
+            const title = document.getElementById('vendorModalTitle');
+            
+            if (vendorId) {
+                title.textContent = 'Edit Vendor';
+                loadVendorData(vendorId);
+            } else {
+                title.textContent = 'Add Vendor';
+                document.getElementById('vendorForm').reset();
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeVendorModal() {
+            document.getElementById('vendorModal').style.display = 'none';
+            currentVendorId = null;
+        }
+
+        async function loadVendorData(vendorId) {
+            try {
+                const userId = getCurrentUserId();
+                const url = `${API_BASE}/vendors/${vendorId}/?user_id=${encodeURIComponent(userId)}`;
+                const response = await fetch(url);
+                const vendor = await response.json();
+                
+                document.getElementById('vendorName').value = vendor.name || '';
+                document.getElementById('vendorCompany').value = vendor.company || '';
+                document.getElementById('vendorEmail').value = vendor.email || '';
+                document.getElementById('vendorPhone').value = vendor.phone || '';
+                document.getElementById('vendorMobile').value = vendor.mobile || '';
+                document.getElementById('vendorFax').value = vendor.fax || '';
+                document.getElementById('vendorWebsite').value = vendor.website || '';
+                document.getElementById('vendorStreet').value = vendor.street || '';
+                document.getElementById('vendorCity').value = vendor.city || '';
+                document.getElementById('vendorState').value = vendor.state || '';
+                document.getElementById('vendorZip').value = vendor.zip_code || '';
+                document.getElementById('vendorSpecialties').value = vendor.specialties ? vendor.specialties.join(', ') : '';
+                document.getElementById('vendorNotes').value = vendor.notes || '';
+                document.getElementById('vendorActive').checked = vendor.is_active;
+            } catch (error) {
+                console.error('Error loading vendor data:', error);
+                alert('Error loading vendor data');
+            }
+        }
+
+        // Equipment management
+        async function loadEquipment() {
+            try {
+                const response = await fetch(`${API_BASE}/vendors/equipment`);
+                const data = await response.json();
+                
+                if (data.equipment && data.equipment.length > 0) {
+                    displayEquipment(data.equipment);
+                } else {
+                    document.getElementById('equipmentTable').innerHTML = `
+                        <div class="empty-state">
+                            <h3>No equipment found</h3>
+                            <p>Add your first piece of equipment to get started</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading equipment:', error);
+                document.getElementById('equipmentTable').innerHTML = `
+                    <div class="alert alert-error">Error loading equipment: ${error.message}</div>
+                `;
+            }
+        }
+
+        function displayEquipment(equipment) {
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${equipment.map(eq => `
+                            <tr>
+                                <td>${eq.name}</td>
+                                <td>${eq.category || '-'}</td>
+                                <td>${eq.location || '-'}</td>
+                                <td>
+                                    <span class="status-badge status-${eq.status}">
+                                        ${eq.status.charAt(0).toUpperCase() + eq.status.slice(1)}
+                                    </span>
+                                </td>
+                                <td>${eq.description ? eq.description.substring(0, 50) + '...' : '-'}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="editEquipment(${eq.id})">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteEquipment(${eq.id})">Delete</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('equipmentTable').innerHTML = table;
+        }
+
+        function openEquipmentModal(equipmentId = null) {
+            currentEquipmentId = equipmentId;
+            const modal = document.getElementById('equipmentModal');
+            const title = document.getElementById('equipmentModalTitle');
+            
+            if (equipmentId) {
+                title.textContent = 'Edit Equipment';
+                loadEquipmentData(equipmentId);
+            } else {
+                title.textContent = 'Add Equipment';
+                document.getElementById('equipmentForm').reset();
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeEquipmentModal() {
+            document.getElementById('equipmentModal').style.display = 'none';
+            currentEquipmentId = null;
+        }
+
+        async function loadEquipmentData(equipmentId) {
+            try {
+                const response = await fetch(`${API_BASE}/vendors/equipment/${equipmentId}`);
+                const equipment = await response.json();
+                
+                document.getElementById('equipmentName').value = equipment.name || '';
+                document.getElementById('equipmentCategory').value = equipment.category || '';
+                document.getElementById('equipmentDescription').value = equipment.description || '';
+                document.getElementById('equipmentLocation').value = equipment.location || '';
+                document.getElementById('equipmentStatus').value = equipment.status || 'active';
+                document.getElementById('equipmentMaintenance').value = equipment.maintenance_notes || '';
+                document.getElementById('equipmentWarranty').value = equipment.warranty_info || '';
+            } catch (error) {
+                console.error('Error loading equipment data:', error);
+                alert('Error loading equipment data');
+            }
+        }
+
+        // Form submissions
+        document.getElementById('vendorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('vendorName').value,
+                company: document.getElementById('vendorCompany').value,
+                email: document.getElementById('vendorEmail').value,
+                phone: document.getElementById('vendorPhone').value,
+                mobile: document.getElementById('vendorMobile').value,
+                fax: document.getElementById('vendorFax').value,
+                website: document.getElementById('vendorWebsite').value,
+                street: document.getElementById('vendorStreet').value,
+                city: document.getElementById('vendorCity').value,
+                state: document.getElementById('vendorState').value,
+                zip_code: document.getElementById('vendorZip').value,
+                specialties: document.getElementById('vendorSpecialties').value.split(',').map(s => s.trim()).filter(s => s),
+                notes: document.getElementById('vendorNotes').value,
+                is_active: document.getElementById('vendorActive').checked
+            };
+
+            try {
+                const userId = getCurrentUserId();
+                const url = currentVendorId 
+                    ? `${API_BASE}/vendors/${currentVendorId}/?user_id=${encodeURIComponent(userId)}`
+                    : `${API_BASE}/vendors/?user_id=${encodeURIComponent(userId)}`;
+                
+                const method = currentVendorId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ...formData, user_id: userId })
+                });
+
+                if (response.ok) {
+                    closeVendorModal();
+                    loadVendors();
+                    showAlert('Vendor saved successfully!', 'success');
+                } else {
+                    const error = await response.json();
+                    showAlert(`Error saving vendor: ${error.detail}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error saving vendor:', error);
+                showAlert('Error saving vendor', 'error');
+            }
+        });
+
+        document.getElementById('equipmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('equipmentName').value,
+                category: document.getElementById('equipmentCategory').value,
+                description: document.getElementById('equipmentDescription').value,
+                location: document.getElementById('equipmentLocation').value,
+                status: document.getElementById('equipmentStatus').value,
+                maintenance_notes: document.getElementById('equipmentMaintenance').value,
+                warranty_info: document.getElementById('equipmentWarranty').value
+            };
+
+            try {
+                const url = currentEquipmentId 
+                    ? `${API_BASE}/vendors/equipment/${currentEquipmentId}`
+                    : `${API_BASE}/vendors/equipment`;
+                
+                const method = currentEquipmentId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    closeEquipmentModal();
+                    loadEquipment();
+                    showAlert('Equipment saved successfully!', 'success');
+                } else {
+                    const error = await response.json();
+                    showAlert(`Error saving equipment: ${error.detail}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error saving equipment:', error);
+                showAlert('Error saving equipment', 'error');
+            }
+        });
+
+        // Utility functions
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.nav-tabs'));
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        async function deleteVendor(vendorId) {
+            if (!confirm('Are you sure you want to delete this vendor?')) {
+                return;
+            }
+
+            try {
+                const userId = getCurrentUserId();
+                const response = await fetch(`${API_BASE}/vendors/${vendorId}/?user_id=${encodeURIComponent(userId)}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadVendors();
+                    showAlert('Vendor deleted successfully!', 'success');
+                } else {
+                    showAlert('Error deleting vendor', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting vendor:', error);
+                showAlert('Error deleting vendor', 'error');
+            }
+        }
+
+        async function deleteEquipment(equipmentId) {
+            if (!confirm('Are you sure you want to delete this equipment?')) {
+                return;
+            }
+
+            try {
+                const equipmentResponse = await fetch(`${API_BASE}/vendors/equipment/${equipmentId}`);
+                const equipment = await equipmentResponse.json();
+                const userId = getCurrentUserId();
+                const url = `${API_BASE}/vendors/equipment/${equipmentId}/?user_id=${encodeURIComponent(userId)}`;
+                const method = 'DELETE';
+                const deleteResponse = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (deleteResponse.ok) {
+                    loadEquipment();
+                    showAlert('Equipment deleted successfully!', 'success');
+                } else {
+                    showAlert('Error deleting equipment', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting equipment:', error);
+                showAlert('Error deleting equipment', 'error');
+            }
+        }
+
+        function editVendor(vendorId) {
+            openVendorModal(vendorId);
+        }
+
+        function editEquipment(equipmentId) {
+            openEquipmentModal(equipmentId);
+        }
+
+        function searchVendors() {
+            const searchTerm = document.getElementById('vendorSearch').value;
+            // Implement search functionality
+            console.log('Searching vendors for:', searchTerm);
+        }
+
+        function searchEquipment() {
+            const searchTerm = document.getElementById('equipmentSearch').value;
+            // Implement search functionality
+            console.log('Searching equipment for:', searchTerm);
+        }
+
+        function loadRelationships() {
+            document.getElementById('relationshipsTable').innerHTML = `
+                <div class="empty-state">
+                    <h3>Vendor Relationships</h3>
+                    <p>Connect vendors with ingredients and equipment to track sourcing and availability.</p>
+                    <p>This feature is coming soon!</p>
+                </div>
+            `;
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const vendorModal = document.getElementById('vendorModal');
+            const equipmentModal = document.getElementById('equipmentModal');
+            
+            if (event.target === vendorModal) {
+                closeVendorModal();
+            }
+            if (event.target === equipmentModal) {
+                closeEquipmentModal();
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadVendors();
+        });
+    </script>
+
+    <!-- Plant Sketches -->
+    <!-- Pea Plant (Original) -->
+    <svg class="plant-sketch top-right plant-float" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
+        <ellipse cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+        <ellipse cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+        <ellipse cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+        <path d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+        <path d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+    </svg>
+
+    <!-- Herb Plant (Basil/Rosemary) -->
+    <svg class="plant-sketch top-left plant-herb" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 140 60 100" stroke="#8bc34a" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q40 90 35 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q80 90 85 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q50 80 45 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q70 80 75 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="35" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+        <ellipse cx="85" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+        <ellipse cx="45" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+        <ellipse cx="75" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+    </svg>
+
+    <!-- Vegetable Plant (Carrot/Tomato) -->
+    <svg class="plant-sketch bottom-left plant-vegetable" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 140 60 120" stroke="#ff9800" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 Q40 110 30 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 Q80 110 90 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 Q50 100 45 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 Q70 100 75 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="30" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+        <ellipse cx="90" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+        <ellipse cx="45" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+        <ellipse cx="75" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+        <circle cx="60" cy="120" r="8" fill="#ff5722" stroke="#e64a19" stroke-width="1"/>
+    </svg>
+
+    <!-- Flower Plant (Edible Flowers) -->
+    <svg class="plant-sketch center-right plant-flower" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 140 60 100" stroke="#9c27b0" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q40 90 35 70" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q80 90 85 70" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q50 80 45 60" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q70 80 75 60" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <circle cx="35" cy="70" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
+        <circle cx="85" cy="70" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
+        <circle cx="45" cy="60" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
+        <circle cx="75" cy="60" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
+        <circle cx="60" cy="100" r="6" fill="#f3e5f5" stroke="#9c27b0" stroke-width="1"/>
+    </svg>
+
+    <!-- Small Herb Sprig -->
+    <svg class="plant-sketch center-left small plant-herb" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 140 60 100" stroke="#689f38" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q45 90 40 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q75 90 80 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="40" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
+        <ellipse cx="80" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
+    </svg>
+
+    <!-- Tiny Microgreens -->
+    <svg class="plant-sketch tiny plant-vegetable" viewBox="0 0 120 180" fill="none" style="top: 80%; left: 10%;">
+        <path d="M60 160 Q60 150 60 140" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 140 Q55 135 50 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <path d="M60 140 Q65 135 70 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <ellipse cx="50" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
+        <ellipse cx="70" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
+    </svg>
+
+</body>
+</html> 

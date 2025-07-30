@@ -1,0 +1,13 @@
+{
+  "id": "local-1752001501157",
+  "name": "Test",
+  "email": "matt@iterumfoods.com",
+  "role": "chef",
+  "restaurant": "home",
+  "avatar": null,
+  "isGoogleUser": false,
+  "recipes": [],
+  "ingredients": [],
+  "equipment": [],
+  "lastUpdated": null
+}

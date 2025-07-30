@@ -1,0 +1,2390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterum R&D Chef Notebook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="iterum.ico">
+    <style>
+        body {
+            background: repeating-linear-gradient(
+                to bottom,
+                #f6fbe7 0px,
+                #f6fbe7 38px,
+                #eafcd7 39px,
+                #f6fbe7 40px
+            );
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            padding-left: 0;
+            position: relative;
+        }
+        .pea-bg-sketch {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            z-index: 0;
+            opacity: 0.11;
+            pointer-events: none;
+            width: 480px;
+            max-width: 90vw;
+            height: auto;
+        }
+
+        /* Additional Plant Sketches */
+        .plant-sketch {
+            position: fixed;
+            z-index: 0;
+            opacity: 0.08;
+            pointer-events: none;
+            width: 120px;
+            height: 180px;
+        }
+
+        .plant-sketch.top-right {
+            top: 20px;
+            right: 20px;
+            transform: rotate(15deg);
+        }
+
+        .plant-sketch.top-left {
+            top: 20px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .plant-sketch.middle-right {
+            top: 40%;
+            right: 20px;
+            transform: translateY(-50%) rotate(5deg);
+        }
+
+        .plant-sketch.middle-left {
+            top: 40%;
+            left: 20px;
+            transform: translateY(-50%) rotate(-5deg);
+        }
+
+        .plant-sketch.small {
+            width: 80px;
+            height: 120px;
+            opacity: 0.06;
+        }
+
+        .plant-sketch.tiny {
+            width: 60px;
+            height: 90px;
+            opacity: 0.05;
+        }
+
+        /* Different plant variations */
+        .plant-herb {
+            opacity: 0.07;
+        }
+
+        .plant-vegetable {
+            opacity: 0.06;
+        }
+
+        .plant-flower {
+            opacity: 0.08;
+        }
+
+        .plant-spice {
+            opacity: 0.07;
+        }
+
+        /* Floating animation for some plants */
+        .plant-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* Responsive plant positioning */
+        @media (max-width: 768px) {
+            .plant-sketch {
+                width: 60px;
+                height: 90px;
+                opacity: 0.05;
+            }
+            
+            .plant-sketch.top-right,
+            .plant-sketch.top-left,
+            .plant-sketch.middle-right,
+            .plant-sketch.middle-left {
+                display: none;
+            }
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 56px;
+            width: 2px;
+            height: 100vh;
+            background: repeating-linear-gradient(
+                to bottom,
+                #e57373 0px,
+                #e57373 16px,
+                transparent 16px,
+                transparent 32px
+            );
+            z-index: 0;
+            pointer-events: none;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: #fffbe7;
+            border-bottom: 3px solid #e2d8b8;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+            border-radius: 0 0 18px 18px;
+        }
+        .notebook-heading {
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 2.5rem;
+            color: #b8860b;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 8px #fffbe7, 0 1px 0 #e2d8b8;
+        }
+        .notebook-card {
+            background: #fffbe7;
+            border: 1.5px solid #e2d8b8;
+            border-radius: 22px 22px 18px 18px;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.09), 0 1.5px 0 #e2d8b8;
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding-top: 2.5rem;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .notebook-card::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 18px;
+            width: 12px;
+            height: 80%;
+            background: repeating-linear-gradient(
+                to bottom,
+                #e57373 0px,
+                #e57373 8px,
+                transparent 8px,
+                transparent 24px
+            );
+            border-radius: 8px;
+            opacity: 0.18;
+            z-index: 1;
+        }
+        .sticky-btn {
+            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
+            color: #795548;
+            border: 1.5px solid #ffe082;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
+            font-weight: 600;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+            padding: 0.5rem 1.5rem;
+        }
+        .sticky-btn:hover {
+            transform: translateY(-2px) scale(1.04) rotate(-2deg);
+            box-shadow: 0 6px 18px 0 rgba(255, 235, 59, 0.25);
+            background: linear-gradient(135deg, #ffe082 80%, #fff176 100%);
+        }
+        .notebook-textarea, .notebook-input {
+            border-radius: 10px;
+            border: 1.5px solid #e2d8b8;
+            background: #fffbe7;
+            padding: 0.5rem;
+            width: 100%;
+            font-size: 1rem;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .notebook-textarea:focus, .notebook-input:focus {
+            border-color: #b8860b;
+            box-shadow: 0 0 0 2px #ffe082;
+            outline: none;
+        }
+        button, .notebook-input, .notebook-textarea {
+            transition: box-shadow 0.2s, border 0.2s, background 0.2s, color 0.2s;
+        }
+        button {
+            border-radius: 999px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+        .notebook-card:hover {
+            box-shadow: 0 12px 36px 0 rgba(0,0,0,0.13), 0 2px 0 #e2d8b8;
+            transform: translateY(-2px) scale(1.01);
+        }
+        /* Tape/Sticky Note effect for highlights */
+        .tape {
+            position: absolute;
+            top: -18px;
+            left: 32px;
+            width: 60px;
+            height: 24px;
+            background: repeating-linear-gradient(135deg, #ffe082 0px, #fffde7 8px, #ffe082 16px);
+            border-radius: 8px 8px 4px 4px;
+            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
+            z-index: 2;
+            opacity: 0.85;
+        }
+        /* Modern scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #fdf6e3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e2d8b8;
+            border-radius: 8px;
+        }
+        /* Responsive tweaks */
+        @media (max-width: 768px) {
+            .notebook-card {
+                padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+            }
+            .notebook-heading {
+                font-size: 1.5rem;
+            }
+        }
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 50; display: flex; align-items: center; justify-content: center; }
+        .modal { background: #fffbe9; border-radius: 1rem; box-shadow: 0 4px 32px #0002; padding: 2rem; min-width: 320px; }
+        .modal input { font-size: 1.1rem; padding: 0.5rem 1rem; border-radius: 0.5rem; border: 1px solid #ccc; margin-bottom: 1rem; width: 100%; }
+        .modal button { background: #2a365d; color: #fff; border: none; border-radius: 0.5rem; padding: 0.5rem 1.5rem; font-weight: bold; cursor: pointer; }
+        #loading-overlay {
+          position: fixed;
+          z-index: 9999;
+          top: 0; left: 0; width: 100vw; height: 100vh;
+          background: linear-gradient(120deg, #eafcd7 0%, #b6e388 100%);
+          display: flex; align-items: center; justify-content: center;
+          transition: opacity 0.7s;
+        }
+        #loading-overlay.fade-out {
+          opacity: 0;
+          pointer-events: none;
+        }
+        .pea-plant-anim {
+          width: 120px; height: 180px;
+          display: block;
+        }
+        .loading-text {
+          font-family: 'Shadows Into Light', cursive;
+          color: #3a5a40;
+          font-size: 1.3rem;
+          margin-top: 1.2rem;
+          text-align: center;
+          letter-spacing: 0.03em;
+        }
+
+        /* Header Navigation Hover Effects */
+        header nav a:hover {
+          background-color: rgba(182, 227, 136, 0.3);
+          transform: translateY(-1px);
+        }
+
+        /* Responsive Header */
+        @media (max-width: 1024px) {
+          header nav {
+            gap: 0.8rem;
+          }
+          header nav a {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.9rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          header > div {
+            flex-direction: column;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+          }
+          header nav {
+            order: 2;
+            justify-content: center;
+            gap: 0.5rem;
+          }
+          header nav a {
+            padding: 0.3rem 0.5rem;
+            font-size: 0.8rem;
+          }
+          #user-info {
+            order: 3;
+            margin-left: 0;
+          }
+        }
+
+        @media (max-width: 480px) {
+          header nav {
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+          header nav a {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+          }
+        }
+    </style>
+    <!-- Load unified auth system first before main.js -->
+<script src="unified_auth_system.js"></script>
+<script type="module" src="main.js"></script>
+<script src="userDataManager.js"></script>
+<script src="profileManager.js"></script>
+<script src="equipmentManager.js"></script>
+<script src="recipeScaling.js"></script>
+<script src="recipeLibrary.js"></script>
+<script src="recipeImportExport.js"></script>
+<script src="recipeReview.js"></script>
+<script src="ingredientLibrary.js"></script>
+<script src="haccpManager.js"></script>
+    
+    <!-- Include standardized login modal template -->
+    <script>
+    // Load standardized login modal to replace existing one
+    document.addEventListener('DOMContentLoaded', function() {
+        // Remove existing login modal if it exists
+        const existingModal = document.getElementById('login-modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        // Load standardized modal
+        fetch('shared-login-modal.html')
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('Standardized login modal not found, using existing modal');
+                    return null;
+                }
+                return response.text();
+            })
+            .then(html => {
+                if (html) {
+                    // Create a temporary div to parse the HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    
+                    // Extract and append modal elements
+                    const loginModal = tempDiv.querySelector('#login-modal');
+                    
+                    if (loginModal) {
+                        document.body.appendChild(loginModal);
+                        console.log('✅ Standardized login modal loaded successfully');
+                        
+                        // Execute any scripts from the template
+                        const scripts = tempDiv.querySelectorAll('script');
+                        scripts.forEach(script => {
+                            const newScript = document.createElement('script');
+                            newScript.textContent = script.textContent;
+                            document.head.appendChild(newScript);
+                        });
+                        
+                        // Execute any styles from the template
+                        const styles = tempDiv.querySelectorAll('style');
+                        styles.forEach(style => {
+                            document.head.appendChild(style.cloneNode(true));
+                        });
+                    }
+                }
+            })
+            .catch(error => {
+                console.warn('Could not load standardized login modal:', error);
+            });
+    });
+    </script>
+</head>
+<body>
+
+
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <!-- Logo and Brand -->
+        <div class="flex items-center gap-3">
+          <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10">
+          <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
+            Iterum R&D Chef Notebook
+          </span>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="hidden lg:flex gap-6 text-gray-700 font-medium">
+          <a href="index.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Dashboard</a>
+          <a href="recipe-library.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Recipe Library</a>
+          <a href="recipe-developer.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">🧪 Recipe Developer</a>
+          <a href="recipe-upload.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Quick Recipe Upload</a>
+          <a href="automated-workflow.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">🤖 Batch Processor</a>
+          <a href="menu-builder.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Menu Builder</a>
+          <a href="ingredients.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Ingredients</a>
+          <a href="equipment-management.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Equipment</a>
+          <a href="vendor-management.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Vendors</a>
+        </nav>
+        
+        <!-- User Info and Actions -->
+        <div class="flex items-center gap-4">
+          <span id="current-user" class="text-gray-600 text-sm font-medium"></span>
+          <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors hidden">
+            Login
+          </button>
+          <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
+            Logout
+          </button>
+          <button onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors">
+            Switch User
+          </button>
+          <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 transition-colors">
+            &#9776;
+          </button>
+        </div>
+      </div>
+      
+      <!-- Mobile Navigation -->
+      <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-2 px-4 pb-4">
+        <a href="index.html" class="block py-2 hover:text-green-600 transition-colors">Dashboard</a>
+        <a href="recipe-library.html" class="block py-2 hover:text-green-600 transition-colors">Recipe Library</a>
+        <a href="recipe-developer.html" class="block py-2 hover:text-green-600 transition-colors">🧪 Recipe Developer</a>
+        <a href="recipe-upload.html" class="block py-2 hover:text-green-600 transition-colors">Quick Recipe Upload</a>
+        <a href="automated-workflow.html" class="block py-2 hover:text-green-600 transition-colors">🤖 Batch Processor</a>
+        <a href="menu-builder.html" class="block py-2 hover:text-green-600 transition-colors">Menu Builder</a>
+        <a href="ingredients.html" class="block py-2 hover:text-green-600 transition-colors">Ingredients</a>
+        <a href="equipment-management.html" class="block py-2 hover:text-green-600 transition-colors">Equipment</a>
+        <a href="vendor-management.html" class="block py-2 hover:text-green-600 transition-colors">Vendors</a>
+      </nav>
+    </header>
+    
+    <!-- Mobile Navigation Toggle Script -->
+    <script>
+      document.getElementById('nav-toggle').addEventListener('click', function() {
+        const mobileNav = document.getElementById('mobile-nav');
+        mobileNav.classList.toggle('hidden');
+      });
+    </script>
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div class="flex justify-between items-center p-6 border-b">
+          <h3 class="text-xl font-bold text-gray-800">Edit Profile</h3>
+          <button id="close-edit-profile-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        </div>
+        <form id="edit-profile-form" class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+            <input type="text" id="edit-profile-name" class="notebook-input w-full" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <input type="email" id="edit-profile-email" class="notebook-input w-full">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Role/Position</label>
+            <input type="text" id="edit-profile-role" class="notebook-input w-full">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Restaurant/Kitchen</label>
+            <input type="text" id="edit-profile-restaurant" class="notebook-input w-full">
+          </div>
+          <div class="flex gap-3 pt-4">
+            <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">
+              Save Changes
+            </button>
+            <button type="button" id="cancel-edit-profile-2" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <main class="w-full px-4 py-8 max-w-5xl mx-auto">
+        <!-- Daily Notes Section -->
+        <section class="notebook-card p-8 mb-10 w-full">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                <h1 class="notebook-heading mb-2 md:mb-0">Daily Notes</h1>
+                <input type="date" id="notes-date" class="notebook-input border px-2 py-1 w-48" />
+            </div>
+            <form id="daily-notes-form" class="space-y-4">
+                <div>
+                    <label class="block font-semibold mb-1" for="general-notes">General Notes</label>
+                    <textarea id="general-notes" rows="3" class="notebook-textarea w-full" placeholder="Shift summary, special events, issues, etc."></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1" for="haccp-notes">HACCP (Refrigerator Temps)</label>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-2">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Refrigerator</label>
+                                <select id="daily-fridge-select" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                    <option value="">Select Refrigerator</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Temperature (°F)</label>
+                                <input type="number" id="daily-temp" step="0.1" placeholder="35.0" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                            <div class="flex items-end">
+                                <button type="button" id="add-daily-temp" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm">
+                                    📝 Add to HACCP
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-xs text-blue-600">
+                            💡 Tip: Enter temperatures here and they'll be automatically logged to the HACCP system
+                        </div>
+                    </div>
+                    <textarea id="haccp-notes" rows="2" class="notebook-textarea w-full" placeholder="e.g. Walk-in: 38°F, Prep Fridge: 40°F, etc. (Additional notes)"></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1" for="maintenance-notes">Maintenance Needs</label>
+                    <textarea id="maintenance-notes" rows="2" class="notebook-textarea w-full" placeholder="Equipment issues, cleaning, repairs needed..."></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1" for="recipe-changes-notes">Recipes Changed or Created</label>
+                    <textarea id="recipe-changes-notes" rows="2" class="notebook-textarea w-full" placeholder="List any new or modified recipes..."></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Save Notes</button>
+                </div>
+            </form>
+        </section>
+        
+        <!-- Calendar Section -->
+        <section id="calendar" class="notebook-card p-8 mb-10 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="notebook-heading">📅 Calendar</h1>
+                <div class="flex items-center gap-2">
+                    <button id="prev-month" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">
+                        ◀️ Previous
+                    </button>
+                    <span id="current-month" class="text-lg font-semibold text-gray-800">December 2024</span>
+                    <button id="next-month" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">
+                        Next ▶️
+                    </button>
+                    <button id="today-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                        Today
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Calendar Grid -->
+            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <!-- Calendar Header -->
+                <div class="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
+                    <div class="p-3 text-center text-sm font-medium text-gray-700">Sun</div>
+                    <div class="p-3 text-center text-sm font-medium text-gray-700">Mon</div>
+                    <div class="p-3 text-center text-sm font-medium text-gray-700">Tue</div>
+                    <div class="p-3 text-center text-sm font-medium text-gray-700">Wed</div>
+                    <div class="p-3 text-center text-sm font-medium text-gray-700">Thu</div>
+                    <div class="p-3 text-center text-sm font-medium text-gray-700">Fri</div>
+                    <div class="p-3 text-center text-sm font-medium text-gray-700">Sat</div>
+                </div>
+                
+                <!-- Calendar Days -->
+                <div id="calendar-grid" class="grid grid-cols-7">
+                    <!-- Calendar days will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Day Details Modal -->
+            <div id="day-details-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                    <div class="flex justify-between items-center p-6 border-b">
+                        <h2 id="modal-date-title" class="text-xl font-bold text-gray-800">December 15, 2024</h2>
+                        <button id="close-day-modal" class="text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+                    </div>
+                    <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                        <!-- Journal Entries -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">📝 Journal Entries</h3>
+                            <div id="day-journal-entries" class="space-y-4">
+                                <!-- Journal entries will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- HACCP Data -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">🧪 HACCP Data</h3>
+                            <div id="day-haccp-data" class="space-y-4">
+                                <!-- HACCP data will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Recipe Changes -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">📚 Recipe Changes</h3>
+                            <div id="day-recipe-changes" class="space-y-4">
+                                <!-- Recipe changes will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Recipe Development -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">🧪 Recipe Development</h3>
+                            <div id="day-recipe-development" class="space-y-4">
+                                <!-- Recipe development activities will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Equipment Maintenance -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">🔧 Equipment Maintenance</h3>
+                            <div id="day-maintenance" class="space-y-4">
+                                <!-- Maintenance data will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="notebook-card p-8 mb-10 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="notebook-heading">📚 Recipe Library</h1>
+                <div class="flex items-center gap-2">
+                    <span id="recipe-count" class="text-sm text-gray-600">0 recipes</span>
+                    <button id="bulk-upload-recipes" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                        📁 Bulk Upload
+                    </button>
+                    <button id="review-recipes-btn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg">
+                        🔍 Review Recipes
+                    </button>
+                    <button id="view-mode-toggle" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">
+                        📋 List View
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Enhanced Search and Filter Controls -->
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                    <div class="relative">
+                        <input type="text" id="recipe-search" placeholder="🔍 Search recipes..." 
+                               class="notebook-input w-full pl-10">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+                    </div>
+                    <select id="category-filter" class="notebook-input w-full">
+                        <option value="">📂 All Categories</option>
+                        <option value="Breakfast">🌅 Breakfast</option>
+                        <option value="Lunch">🍽️ Lunch</option>
+                        <option value="Dinner">🌙 Dinner</option>
+                        <option value="Dessert">🍰 Dessert</option>
+                        <option value="Appetizer">🥗 Appetizer</option>
+                        <option value="Soup">🍲 Soup</option>
+                        <option value="Salad">🥬 Salad</option>
+                        <option value="Bread">🍞 Bread</option>
+                        <option value="Beverage">🥤 Beverage</option>
+                        <option value="Snack">🍿 Snack</option>
+                    </select>
+                    <select id="difficulty-filter" class="notebook-input w-full">
+                        <option value="">⭐ All Difficulties</option>
+                        <option value="Easy">🟢 Easy</option>
+                        <option value="Medium">🟡 Medium</option>
+                        <option value="Hard">🔴 Hard</option>
+                    </select>
+                    <select id="rating-filter" class="notebook-input w-full">
+                        <option value="">⭐ All Ratings</option>
+                        <option value="5">⭐⭐⭐⭐⭐ 5 Stars</option>
+                        <option value="4">⭐⭐⭐⭐ 4+ Stars</option>
+                        <option value="3">⭐⭐⭐ 3+ Stars</option>
+                        <option value="2">⭐⭐ 2+ Stars</option>
+                        <option value="1">⭐ 1+ Stars</option>
+                    </select>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                    <button id="show-all-recipes" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        📖 Show All
+                    </button>
+                    <button id="show-favorites" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        ❤️ Favorites
+                    </button>
+                    <button id="show-recent" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🕒 Recent
+                    </button>
+                    <button id="show-quick-recipes" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        ⚡ Quick (< 30 min)
+                    </button>
+                    <button id="show-needs-review" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        ⚠️ Needs Review
+                    </button>
+                    <button id="show-pending-reviews" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🔍 Pending Review
+                    </button>
+                    <button id="export-recipe-library" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        📤 Export Library
+                    </button>
+                    <button id="import-recipe-library" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        📥 Import Library
+                    </button>
+                    <button id="clear-filters" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🗑️ Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recipe Library Display -->
+            <div id="recipe-library-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
+                <!-- Recipe cards will be displayed here -->
+            </div>
+
+            <!-- Recipe Form -->
+            <form id="recipe-form" class="mb-6 p-4 border rounded-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <input id="recipe-name" type="text" placeholder="Recipe Name" class="notebook-input w-full mb-2" required>
+                        <select id="recipe-category" class="notebook-input w-full mb-2">
+                            <option value="">Select Category</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                            <option value="Dessert">Dessert</option>
+                            <option value="Appetizer">Appetizer</option>
+                            <option value="Soup">Soup</option>
+                            <option value="Salad">Salad</option>
+                            <option value="Bread">Bread</option>
+                            <option value="Beverage">Beverage</option>
+                            <option value="Snack">Snack</option>
+                        </select>
+                        <input id="recipe-restaurant" type="text" placeholder="Restaurant/Chef (optional)" class="notebook-input w-full mb-2">
+                    </div>
+                    <div>
+                        <select id="recipe-difficulty" class="notebook-input w-full mb-2">
+                            <option value="">Select Difficulty</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                        <div class="flex gap-2">
+                            <input id="recipe-servings" type="number" placeholder="Servings" min="1" class="notebook-input w-24">
+                            <input id="recipe-cook-time" type="number" placeholder="Cook Time (min)" min="1" class="notebook-input w-32">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <input id="recipe-influenced" type="text" placeholder="Influenced from (e.g., 'Chef John's YouTube', 'Mom's recipe', 'French bistro')" class="notebook-input w-full">
+                </div>
+                
+                <!-- Recipe Scaling Controls -->
+                <div class="mb-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border-l-4 border-green-400">
+                    <h4 class="font-semibold text-gray-800 mb-3">📏 Recipe Scaling</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Original Servings</label>
+                            <input type="number" id="original-servings" class="notebook-input w-full" placeholder="4" min="1" readonly>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Target Servings</label>
+                            <input type="number" id="target-servings" class="notebook-input w-full" placeholder="8" min="1">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" id="scale-recipe-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                                🔄 Scale Recipe
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Scaling Results -->
+                    <div id="scaling-results" class="hidden">
+                        <div class="bg-white rounded-lg p-4 border">
+                            <h5 class="font-semibold text-gray-800 mb-3">Scaled Ingredients</h5>
+                            <div id="scaled-ingredients-list" class="space-y-2">
+                                <!-- Scaled ingredients will be displayed here -->
+                            </div>
+                            <div class="mt-4 flex gap-2">
+                                <button type="button" id="apply-scaling-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+                                    ✅ Apply Scaling
+                                </button>
+                                <button type="button" id="reset-scaling-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm">
+                                    🔄 Reset to Original
+                                </button>
+                                <button type="button" id="print-scaled-recipe-btn" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm">
+                                    🖨️ Print Scaled Recipe
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <textarea id="recipe-description" placeholder="Recipe description, notes, cooking tips, serving suggestions..." rows="4" class="notebook-textarea w-full mb-4"></textarea>
+                
+                <div id="ingredients-container" class="mb-4"></div>
+                <button type="button" id="add-ingredient-btn" class="sticky-btn mb-4">+ Add Ingredient</button>
+                
+                <!-- Equipment Selection -->
+                <div class="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-l-4 border-blue-400">
+                    <h4 class="font-semibold text-gray-800 mb-3">🔧 Required Equipment</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Equipment</label>
+                            <select id="recipe-equipment-select" class="notebook-input w-full">
+                                <option value="">Choose equipment...</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" id="add-equipment-to-recipe" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                ➕ Add Equipment
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Selected Equipment List -->
+                    <div id="recipe-equipment-list" class="space-y-2">
+                        <!-- Equipment items will be added here -->
+                    </div>
+                </div>
+                
+                <div id="instructions-container" class="mb-4"></div>
+                <button type="button" id="add-instruction-btn" class="sticky-btn mb-4">+ Add Instruction</button>
+                
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Save Recipe</button>
+                    <button type="button" id="clear-recipe-form" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Clear Form</button>
+                </div>
+            </form>
+
+            <!-- View Mode and Sorting Controls -->
+            <div class="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border-l-4 border-orange-400">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex gap-2">
+                        <button id="grid-view" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium border-2 border-blue-200">
+                            📱 Grid View
+                        </button>
+                        <button id="list-view" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
+                            📋 List View
+                        </button>
+                        <button id="compact-view" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
+                            📄 Compact
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm text-gray-600 font-medium">Sort by:</label>
+                        <select id="sort-recipes" class="notebook-input text-sm">
+                            <option value="name">Name A-Z</option>
+                            <option value="name-desc">Name Z-A</option>
+                            <option value="date">Date Created</option>
+                            <option value="rating">Rating</option>
+                            <option value="cookTime">Cook Time</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipe Scaling -->
+            <div class="mb-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border-l-4 border-green-400">
+                <h3 class="font-bold mb-3 text-green-800">⚖️ Recipe Scaling</h3>
+                <div class="flex items-center gap-4">
+                    <label class="font-medium text-green-700">Scale to:</label>
+                    <input id="scale-servings" type="number" placeholder="Servings" min="1" class="notebook-input w-24">
+                    <button id="scale-recipe" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">Scale Recipe</button>
+                    <button id="reset-scale" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">Reset</button>
+                </div>
+            </div>
+
+            <!-- Saved Recipes Display -->
+            <div id="saved-recipes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            
+            <!-- No Results Message -->
+            <div id="no-results" class="hidden text-center py-12">
+                <div class="text-6xl mb-4">🔍</div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">No recipes found</h3>
+                <p class="text-gray-500 mb-4">Try adjusting your search or filters</p>
+                <button id="reset-all-filters" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+                    Reset All Filters
+                </button>
+            </div>
+        </section>
+        
+        <!-- HACCP Temperature Tracking Section -->
+        <section id="haccp" class="notebook-card p-8 mb-10 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="notebook-heading">🌡️ HACCP Temperature Tracking</h1>
+                <div class="flex items-center gap-2">
+                    <span id="haccp-status" class="text-sm text-gray-600">All temperatures within range</span>
+                    <button id="add-haccp-reading" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                        ➕ Add Reading
+                    </button>
+                    <button id="haccp-report" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        📊 Generate Report
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Quick Temperature Entry -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <h3 class="text-lg font-semibold text-blue-800 mb-3">Quick Temperature Entry</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Refrigerator</label>
+                        <select id="quick-fridge-select" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="">Select Refrigerator</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Temperature (°F)</label>
+                        <input type="number" id="quick-temp" step="0.1" placeholder="35.0" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                        <select id="quick-time-slot" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="morning">🌅 Morning (6-10 AM)</option>
+                            <option value="afternoon">🌞 Afternoon (2-6 PM)</option>
+                            <option value="evening">🌆 Evening (6-10 PM)</option>
+                            <option value="night">🌙 Night (10 PM-6 AM)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button id="quick-add-temp" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            📝 Log Temperature
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sanitizer Testing Section -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <h3 class="text-lg font-semibold text-green-800 mb-3">🧪 Sanitizer Testing</h3>
+                
+                <!-- Sanitizer Bucket Tests -->
+                <div class="mb-4">
+                    <h4 class="font-semibold text-green-700 mb-2">Sanitizer Bucket Tests</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <select id="sanitizer-location" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <option value="">Select Location</option>
+                                <option value="Prep Station">Prep Station</option>
+                                <option value="Dish Station">Dish Station</option>
+                                <option value="Service Station">Service Station</option>
+                                <option value="Bar Station">Bar Station</option>
+                                <option value="Back Kitchen">Back Kitchen</option>
+                                <option value="Front Kitchen">Front Kitchen</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Sanitizer Type</label>
+                            <select id="sanitizer-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <option value="">Select Type</option>
+                                <option value="Chlorine">Chlorine (50-200 ppm)</option>
+                                <option value="Quaternary">Quaternary (200-400 ppm)</option>
+                                <option value="Iodine">Iodine (12.5-25 ppm)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Concentration (ppm)</label>
+                            <input type="number" id="sanitizer-concentration" step="0.1" placeholder="100" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Test Time</label>
+                            <select id="sanitizer-time-slot" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <option value="morning">🌅 Morning</option>
+                                <option value="afternoon">🌞 Afternoon</option>
+                                <option value="evening">🌆 Evening</option>
+                                <option value="night">🌙 Night</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button id="add-sanitizer-test" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                                🧪 Log Test
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dishwasher Sanitizer Check -->
+                <div>
+                    <h4 class="font-semibold text-green-700 mb-2">Dishwasher Sanitizer Check</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Dishwasher</label>
+                            <select id="dishwasher-select" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <option value="">Select Dishwasher</option>
+                                <option value="Main Dishwasher">Main Dishwasher</option>
+                                <option value="Bar Dishwasher">Bar Dishwasher</option>
+                                <option value="Prep Dishwasher">Prep Dishwasher</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Final Rinse Temp (°F)</label>
+                            <input type="number" id="dishwasher-temp" step="0.1" placeholder="180" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Sanitizer (ppm)</label>
+                            <input type="number" id="dishwasher-sanitizer" step="0.1" placeholder="50" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cycle Time (min)</label>
+                            <input type="number" id="dishwasher-cycle-time" step="0.5" placeholder="2.5" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Test Time</label>
+                            <select id="dishwasher-time-slot" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <option value="morning">🌅 Morning</option>
+                                <option value="afternoon">🌞 Afternoon</option>
+                                <option value="evening">🌆 Evening</option>
+                                <option value="night">🌙 Night</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button id="add-dishwasher-test" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                                🧽 Log Check
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Temperature Alerts -->
+            <div id="haccp-alerts" class="mb-6 hidden">
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h3 class="text-lg font-semibold text-red-800 mb-2">⚠️ Temperature Alerts</h3>
+                    <div id="alert-list" class="space-y-2">
+                        <!-- Alerts will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Today's Readings -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Today's Temperature Readings</h3>
+                <div id="today-readings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Today's readings will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Historical Data -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Historical HACCP Data</h3>
+                <div class="flex gap-2 mb-4">
+                    <select id="haccp-filter-fridge" class="px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="">All Equipment</option>
+                    </select>
+                    <select id="haccp-filter-date" class="px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="90">Last 90 Days</option>
+                        <option value="all">All Time</option>
+                    </select>
+                    <button id="haccp-export" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+                        📤 Export Data
+                    </button>
+                </div>
+                
+                <!-- Data Type Tabs -->
+                <div class="flex border-b border-gray-200 mb-4">
+                    <button id="temp-tab" class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600" 
+                            onclick="haccpManager.showHistoricalTab('temperature')">
+                        🌡️ Temperature
+                    </button>
+                    <button id="sanitizer-tab" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" 
+                            onclick="haccpManager.showHistoricalTab('sanitizer')">
+                        🧪 Sanitizer
+                    </button>
+                    <button id="dishwasher-tab" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" 
+                            onclick="haccpManager.showHistoricalTab('dishwasher')">
+                        🧽 Dishwasher
+                    </button>
+                </div>
+                
+                <div id="historical-readings" class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+                        <thead class="bg-gray-50">
+                            <tr id="haccp-table-headers">
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Date</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Time</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Equipment</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Value</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Notes</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="haccp-table-body">
+                            <!-- Historical data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Ingredient Library Section -->
+        <section id="ingredient-library" class="notebook-card p-8 mb-10 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="notebook-heading">🥕 Ingredient Library</h1>
+                <div class="flex items-center gap-2">
+                    <span id="ingredient-count" class="text-sm text-gray-600">0 ingredients</span>
+                    <button id="add-ingredient-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                        ➕ Add Ingredient
+                    </button>
+                    <button id="add-ingredient-via-link" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        🔗 Add via Link
+                    </button>
+                    <button id="edit-all-ingredients" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg">
+                        ✏️ Edit All
+                    </button>
+                    <button id="import-ingredients-csv" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        📥 Import CSV
+                    </button>
+                    <button id="export-ingredients" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+                        📤 Export
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Enhanced Search and Filter Controls -->
+            <div class="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                    <div class="relative">
+                        <input type="text" id="ingredient-search" placeholder="🔍 Search ingredients..." 
+                               class="notebook-input w-full pl-10">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+                    </div>
+                    <select id="ingredient-category-filter" class="notebook-input w-full">
+                        <option value="">📂 All Categories</option>
+                        <option value="Produce">🥬 Produce</option>
+                        <option value="Dairy">🥛 Dairy</option>
+                        <option value="Meat">🥩 Meat</option>
+                        <option value="Seafood">🐟 Seafood</option>
+                        <option value="Pantry">🥫 Pantry</option>
+                        <option value="Spices">🌶️ Spices</option>
+                        <option value="Bakery">🍞 Bakery</option>
+                        <option value="Beverages">🥤 Beverages</option>
+                        <option value="Frozen">🧊 Frozen</option>
+                        <option value="Canned">🥫 Canned</option>
+                        <option value="Dried">🍂 Dried</option>
+                    </select>
+                    <select id="ingredient-unit-filter" class="notebook-input w-full">
+                        <option value="">📏 All Units</option>
+                        <option value="g">⚖️ Grams (g)</option>
+                        <option value="kg">⚖️ Kilograms (kg)</option>
+                        <option value="ml">🥤 Milliliters (ml)</option>
+                        <option value="L">🥤 Liters (L)</option>
+                        <option value="cup">🥤 Cups</option>
+                        <option value="tbsp">🥄 Tablespoons (tbsp)</option>
+                        <option value="tsp">🥄 Teaspoons (tsp)</option>
+                        <option value="each">📦 Each</option>
+                        <option value="oz">⚖️ Ounces (oz)</option>
+                        <option value="lb">⚖️ Pounds (lb)</option>
+                    </select>
+                    <select id="ingredient-sort" class="notebook-input w-full">
+                        <option value="name">📝 Name A-Z</option>
+                        <option value="name-desc">📝 Name Z-A</option>
+                        <option value="category">📂 Category</option>
+                        <option value="unit">📏 Unit</option>
+                        <option value="date">📅 Date Added</option>
+                    </select>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                    <button id="show-all-ingredients" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        📖 Show All
+                    </button>
+                    <button id="show-produce" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🥬 Produce
+                    </button>
+                    <button id="show-dairy" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🥛 Dairy
+                    </button>
+                    <button id="show-meat" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🥩 Meat
+                    </button>
+                    <button id="show-seafood" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🐟 Seafood
+                    </button>
+                    <button id="show-pantry" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🥫 Pantry
+                    </button>
+                    <button id="show-spices" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🌶️ Spices
+                    </button>
+                    <button id="clear-ingredient-filters" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🗑️ Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- View Mode Controls -->
+            <div class="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border-l-4 border-orange-400">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex gap-2">
+                        <button id="ingredient-grid-view" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium border-2 border-blue-200">
+                            📱 Grid View
+                        </button>
+                        <button id="ingredient-list-view" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
+                            📋 List View
+                        </button>
+                        <button id="ingredient-table-view" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
+                            📊 Table View
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm text-gray-600 font-medium">Display:</label>
+                        <select id="ingredient-display-options" class="notebook-input text-sm">
+                            <option value="all">All Details</option>
+                            <option value="basic">Basic Info</option>
+                            <option value="nutritional">Nutritional Info</option>
+                            <option value="allergens">Allergen Info</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredient Library Display -->
+            <div id="ingredient-library-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
+                <!-- Ingredient cards will be displayed here -->
+            </div>
+
+            <!-- Ingredient Form -->
+            <form id="ingredient-form" class="mb-6 p-4 border rounded-lg hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Ingredient Name *</label>
+                        <input id="ingredient-name" type="text" placeholder="e.g., Fresh Basil" class="notebook-input w-full mb-2" required>
+                        
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                        <select id="ingredient-category" class="notebook-input w-full mb-2">
+                            <option value="">Select Category</option>
+                            <option value="Produce">🥬 Produce</option>
+                            <option value="Dairy">🥛 Dairy</option>
+                            <option value="Meat">🥩 Meat</option>
+                            <option value="Seafood">🐟 Seafood</option>
+                            <option value="Pantry">🥫 Pantry</option>
+                            <option value="Spices">🌶️ Spices</option>
+                            <option value="Bakery">🍞 Bakery</option>
+                            <option value="Beverages">🥤 Beverages</option>
+                            <option value="Frozen">🧊 Frozen</option>
+                            <option value="Canned">🥫 Canned</option>
+                            <option value="Dried">🍂 Dried</option>
+                        </select>
+                        
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Default Unit</label>
+                        <select id="ingredient-unit" class="notebook-input w-full mb-2">
+                            <option value="">Select Unit</option>
+                            <option value="g">⚖️ Grams (g)</option>
+                            <option value="kg">⚖️ Kilograms (kg)</option>
+                            <option value="ml">🥤 Milliliters (ml)</option>
+                            <option value="L">🥤 Liters (L)</option>
+                            <option value="cup">🥤 Cups</option>
+                            <option value="tbsp">🥄 Tablespoons (tbsp)</option>
+                            <option value="tsp">🥄 Teaspoons (tsp)</option>
+                            <option value="each">📦 Each</option>
+                            <option value="oz">⚖️ Ounces (oz)</option>
+                            <option value="lb">⚖️ Pounds (lb)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea id="ingredient-description" placeholder="Brief description of the ingredient..." rows="3" class="notebook-textarea w-full mb-2"></textarea>
+                        
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Allergens</label>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" value="gluten" class="mr-2"> Gluten
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="dairy" class="mr-2"> Dairy
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="nuts" class="mr-2"> Nuts
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="eggs" class="mr-2"> Eggs
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="soy" class="mr-2"> Soy
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="shellfish" class="mr-2"> Shellfish
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="fish" class="mr-2"> Fish
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="sulfites" class="mr-2"> Sulfites
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Nutritional Information -->
+                <div class="mb-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border-l-4 border-green-400">
+                    <h4 class="font-semibold text-gray-800 mb-3">📊 Nutritional Information (per 100g)</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Calories</label>
+                            <input type="number" id="nutrition-calories" class="notebook-input w-full" placeholder="0" min="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Protein (g)</label>
+                            <input type="number" id="nutrition-protein" class="notebook-input w-full" placeholder="0" min="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Carbs (g)</label>
+                            <input type="number" id="nutrition-carbs" class="notebook-input w-full" placeholder="0" min="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fat (g)</label>
+                            <input type="number" id="nutrition-fat" class="notebook-input w-full" placeholder="0" min="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fiber (g)</label>
+                            <input type="number" id="nutrition-fiber" class="notebook-input w-full" placeholder="0" min="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Sugar (g)</label>
+                            <input type="number" id="nutrition-sugar" class="notebook-input w-full" placeholder="0" min="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Sodium (mg)</label>
+                            <input type="number" id="nutrition-sodium" class="notebook-input w-full" placeholder="0" min="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Iron (mg)</label>
+                            <input type="number" id="nutrition-iron" class="notebook-input w-full" placeholder="0" min="0" step="0.1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Save Ingredient</button>
+                    <button type="button" id="cancel-ingredient-form" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                </div>
+            </form>
+            
+            <!-- No Results Message -->
+            <div id="no-ingredients" class="hidden text-center py-12">
+                <div class="text-6xl mb-4">🥕</div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">No ingredients found</h3>
+                <p class="text-gray-500 mb-4">Add your first ingredient to get started</p>
+                <button id="add-first-ingredient" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg">
+                    Add Ingredient
+                </button>
+            </div>
+        </section>
+        
+        <section class="notebook-card p-8 mb-10 w-full">
+            <h2 class="text-xl font-bold mb-4">🥫 Pantry</h2>
+            <div id="pantry-list" class="mb-2"></div>
+            <button type="button" id="add-pantry-item-btn" class="sticky-btn">+ Add Pantry Item</button>
+        </section>
+
+        <!-- Recipe Developer Section -->
+        <section class="notebook-card p-8 mb-10 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">🧪 Recipe Developer</h2>
+                <div class="flex items-center gap-2">
+                    <span id="recipe-drafts-count" class="text-sm text-gray-600">0 drafts</span>
+                    <a href="recipe-developer.html" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium">
+                        🧪 Open Developer
+                    </a>
+                    <button onclick="window.location.href='recipe-developer.html'" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                        ➕ New Recipe
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-orange-50 to-yellow-50 p-6 rounded-lg">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl mb-2">📝</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Recipe Planning</h3>
+                        <p class="text-sm text-gray-600">Research, concept, and vision development</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl mb-2">🧪</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Testing & Refinement</h3>
+                        <p class="text-sm text-gray-600">Test, iterate, and perfect your recipes</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl mb-2">📊</div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Quality Assessment</h3>
+                        <p class="text-sm text-gray-600">Rate taste, texture, and presentation</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Equipment Management Section -->
+        <section class="notebook-card p-8 mb-10 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">🔧 Equipment Management</h2>
+                <div class="flex items-center gap-2">
+                    <span id="equipment-count" class="text-sm text-gray-600">0 items</span>
+                    <a href="equipment-management.html" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-medium">
+                        🔧 Full Management
+                    </a>
+                    <button id="browse-equipment-db-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                        📚 Browse Database
+                    </button>
+                    <button id="add-equipment-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        ➕ Add Equipment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Equipment Filter Controls -->
+            <div class="bg-gradient-to-r from-orange-50 to-red-50 p-4 rounded-lg mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="relative">
+                        <input type="text" id="equipment-search" placeholder="🔍 Search equipment..." 
+                               class="notebook-input w-full pl-10">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+                    </div>
+                    <select id="equipment-category-filter" class="notebook-input w-full">
+                        <option value="">🏷️ All Categories</option>
+                        <option value="Front of House">🍽️ Front of House</option>
+                        <option value="Small Kitchenware">🥄 Small Kitchenware</option>
+                        <option value="Large Equipment">🏭 Large Equipment</option>
+                        <option value="Beverage Equipment">🥤 Beverage Equipment</option>
+                        <option value="Storage">📦 Storage</option>
+                        <option value="Safety">🛡️ Safety Equipment</option>
+                    </select>
+                    <select id="equipment-status-filter" class="notebook-input w-full">
+                        <option value="">📊 All Status</option>
+                        <option value="Active">🟢 Active</option>
+                        <option value="Maintenance">🟡 Maintenance Due</option>
+                        <option value="Repair">🔴 Needs Repair</option>
+                        <option value="Retired">⚫ Retired</option>
+                    </select>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                    <button id="show-all-equipment" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        📋 Show All
+                    </button>
+                    <button id="show-maintenance-due" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        ⚠️ Maintenance Due
+                    </button>
+                    <button id="show-needs-repair" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🔧 Needs Repair
+                    </button>
+                    <button id="show-front-of-house" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🍽️ Front of House
+                    </button>
+                    <button id="show-large-equipment" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        🏭 Large Equipment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Equipment Display -->
+            <div id="equipment-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            
+            <!-- No Equipment Message -->
+            <div id="no-equipment" class="hidden text-center py-12">
+                <div class="text-6xl mb-4">🔧</div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">No equipment found</h3>
+                <p class="text-gray-500 mb-4">Add your first piece of equipment to get started</p>
+                <button id="add-first-equipment" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+                    Add Equipment
+                </button>
+            </div>
+        </section>
+        <section class="notebook-card p-8 mb-10 w-full">
+            <h2 class="text-xl font-bold mb-4">Import Recipes</h2>
+            
+            <!-- Import Options -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- File Upload -->
+                <div class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors">
+                    <h3 class="font-semibold mb-3">📁 Upload Recipe Files</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">PDF Recipes</label>
+                            <input type="file" accept="application/pdf" id="pdf-upload" class="notebook-input w-full" multiple>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Excel/CSV Files</label>
+                            <input type="file" accept=".xlsx,.xls,.csv" id="excel-upload" class="notebook-input w-full" multiple>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Word Documents</label>
+                            <input type="file" accept=".doc,.docx" id="word-upload" class="notebook-input w-full" multiple>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Text Files</label>
+                            <input type="file" accept=".txt" id="text-upload" class="notebook-input w-full" multiple>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Entry -->
+                <div class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-400 transition-colors">
+                    <h3 class="font-semibold mb-3">✏️ Manual Recipe Entry</h3>
+                    <div class="space-y-3">
+                        <button id="quick-add-recipe" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">
+                            Quick Add Recipe
+                        </button>
+                        <button id="import-from-url" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+                            Import from URL
+                        </button>
+                        <button id="import-from-clipboard" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded">
+                            Import from Clipboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import Progress -->
+            <div id="import-progress" class="hidden mb-4">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-medium">Processing files...</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import Preview -->
+            <div id="import-preview" class="hidden mb-4">
+                <h3 class="font-semibold mb-3">📋 Import Preview</h3>
+                <div id="preview-container" class="max-h-96 overflow-y-auto border rounded-lg p-4 bg-gray-50"></div>
+                <div class="flex gap-2 mt-3">
+                    <button id="confirm-import" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                        Import Selected Recipes
+                    </button>
+                    <button id="cancel-import" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Import History -->
+            <div class="mt-6">
+                <h3 class="font-semibold mb-3">📊 Import History</h3>
+                <div id="import-history" class="space-y-2 max-h-40 overflow-y-auto">
+                    <!-- Import history items will be populated here -->
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Notes Directory Modal -->
+    <div id="notes-directory-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl flex overflow-hidden">
+        <!-- Sidebar with date tabs -->
+        <div class="bg-gray-100 w-56 p-4 flex flex-col border-r">
+          <input type="date" id="notes-search-date" class="notebook-input mb-4" />
+          <div id="notes-date-tabs" class="flex flex-col gap-1 overflow-y-auto h-96"></div>
+        </div>
+        <!-- Notes list -->
+        <div class="flex-1 p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Notes Directory</h2>
+            <button id="close-notes-directory" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+          </div>
+          <div id="notes-list" class="flex flex-col gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Management Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+        <div class="flex justify-between items-center p-6 border-b">
+          <h2 class="text-2xl font-bold text-gray-800">👤 Profile Management</h2>
+          <button id="close-profile-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        </div>
+        
+        <div class="flex h-[calc(90vh-120px)]">
+          <!-- Profile List Sidebar -->
+          <div class="w-1/3 bg-gray-50 p-6 border-r overflow-y-auto">
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold mb-3">Your Profiles</h3>
+              <button id="add-new-profile" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg mb-4">
+                ➕ Add New Profile
+              </button>
+            </div>
+            <div id="profile-list" class="space-y-3">
+              <!-- Profile items will be populated here -->
+            </div>
+          </div>
+          
+          <!-- Profile Details -->
+          <div class="flex-1 p-6 overflow-y-auto">
+            <div id="profile-details" class="space-y-6">
+              <!-- Profile details will be populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Profile Modal -->
+    <div id="edit-profile-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div class="flex justify-between items-center p-6 border-b">
+          <h3 class="text-xl font-bold text-gray-800" id="edit-profile-title">Add New Profile</h3>
+          <button id="close-edit-profile-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        </div>
+        
+        <form id="profile-form" class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Profile Name</label>
+            <input type="text" id="profile-name" class="notebook-input w-full" placeholder="Enter profile name" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email (optional)</label>
+            <input type="email" id="profile-email" class="notebook-input w-full" placeholder="Enter email address">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Role/Position</label>
+            <input type="text" id="profile-role" class="notebook-input w-full" placeholder="e.g., Head Chef, Sous Chef, Pastry Chef">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Restaurant/Kitchen</label>
+            <input type="text" id="profile-restaurant" class="notebook-input w-full" placeholder="Restaurant or kitchen name">
+          </div>
+          <div class="flex gap-3 pt-4">
+            <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">
+              Save Profile
+            </button>
+            <button type="button" id="cancel-edit-profile-2" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add/Edit Equipment Modal -->
+    <div id="equipment-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+        <div class="flex justify-between items-center p-6 border-b">
+          <h3 class="text-xl font-bold text-gray-800" id="equipment-modal-title">Add New Equipment</h3>
+          <button id="close-equipment-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        </div>
+        
+        <form id="equipment-form" class="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+          <!-- Basic Information -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Equipment Name *</label>
+              <input type="text" id="equipment-name" class="notebook-input w-full" placeholder="e.g., Commercial Blender, Wine Glasses" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+              <select id="equipment-category" class="notebook-input w-full" required>
+                <option value="">Select Category</option>
+                <option value="Front of House">🍽️ Front of House</option>
+                <option value="Small Kitchenware">🥄 Small Kitchenware</option>
+                <option value="Large Equipment">🏭 Large Equipment</option>
+                <option value="Beverage Equipment">🥤 Beverage Equipment</option>
+                <option value="Storage">📦 Storage</option>
+                <option value="Safety">🛡️ Safety Equipment</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Inventory Count</label>
+              <input type="number" id="equipment-inventory-count" class="notebook-input w-full" placeholder="1" min="1" value="1">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Brand/Manufacturer</label>
+              <input type="text" id="equipment-brand" class="notebook-input w-full" placeholder="e.g., KitchenAid, Cambro">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Model Number</label>
+              <input type="text" id="equipment-model" class="notebook-input w-full" placeholder="e.g., KSM150PS, 4CWR">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Serial Number</label>
+              <input type="text" id="equipment-serial" class="notebook-input w-full" placeholder="Serial number if applicable">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Purchase Date</label>
+              <input type="date" id="equipment-purchase-date" class="notebook-input w-full">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Purchase Price</label>
+              <input type="number" id="equipment-price" class="notebook-input w-full" placeholder="0.00" step="0.01" min="0">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Current Status</label>
+              <select id="equipment-status" class="notebook-input w-full">
+                <option value="Active">🟢 Active</option>
+                <option value="Maintenance">🟡 Maintenance Due</option>
+                <option value="Repair">🔴 Needs Repair</option>
+                <option value="Retired">⚫ Retired</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+              <input type="text" id="equipment-location" class="notebook-input w-full" placeholder="e.g., Kitchen, Bar, Storage Room">
+            </div>
+          </div>
+
+          <!-- Description and Buy Link -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <textarea id="equipment-description" class="notebook-textarea w-full" rows="4" placeholder="Detailed description of the equipment, its features, and usage notes..."></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Buy/Info URL</label>
+              <input type="url" id="equipment-buy-url" class="notebook-input w-full" placeholder="https://example.com/buy-equipment or https://example.com/product-info">
+              <p class="text-xs text-gray-500 mt-1">Link to purchase or get more information about this equipment</p>
+            </div>
+          </div>
+
+          <!-- Specifications and Links -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Specifications</label>
+              <textarea id="equipment-specs" class="notebook-textarea w-full" rows="4" placeholder="Power rating, dimensions, capacity, etc."></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+              <textarea id="equipment-notes" class="notebook-textarea w-full" rows="4" placeholder="Additional notes, special instructions, etc."></textarea>
+            </div>
+          </div>
+
+          <!-- Links Section -->
+          <div class="space-y-4">
+            <h4 class="font-semibold text-gray-800">🔗 Links & Documentation</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Spec Sheet URL</label>
+                <input type="url" id="equipment-spec-url" class="notebook-input w-full" placeholder="https://manufacturer.com/specs/...">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Manual URL</label>
+                <input type="url" id="equipment-manual-url" class="notebook-input w-full" placeholder="https://manufacturer.com/manual/...">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Warranty URL</label>
+                <input type="url" id="equipment-warranty-url" class="notebook-input w-full" placeholder="https://manufacturer.com/warranty/...">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Parts/Service URL</label>
+                <input type="url" id="equipment-parts-url" class="notebook-input w-full" placeholder="https://manufacturer.com/parts/...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Maintenance Schedule -->
+          <div class="space-y-4">
+            <h4 class="font-semibold text-gray-800">⚙️ Maintenance Schedule</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Maintenance Frequency</label>
+                <select id="equipment-maintenance-frequency" class="notebook-input w-full">
+                  <option value="">No Maintenance</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="semi-annually">Semi-Annually</option>
+                  <option value="annually">Annually</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Last Maintenance</label>
+                <input type="date" id="equipment-last-maintenance" class="notebook-input w-full">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Next Maintenance Due</label>
+                <input type="date" id="equipment-next-maintenance" class="notebook-input w-full">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Maintenance Notes</label>
+              <textarea id="equipment-maintenance-notes" class="notebook-textarea w-full" rows="3" placeholder="Maintenance procedures, special requirements, etc."></textarea>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="space-y-4">
+            <h4 class="font-semibold text-gray-800">📞 Service Contacts</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Service Provider</label>
+                <input type="text" id="equipment-service-provider" class="notebook-input w-full" placeholder="Company name">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Service Phone</label>
+                <input type="tel" id="equipment-service-phone" class="notebook-input w-full" placeholder="Phone number">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Service Email</label>
+                <input type="email" id="equipment-service-email" class="notebook-input w-full" placeholder="Email address">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Service Website</label>
+                <input type="url" id="equipment-service-website" class="notebook-input w-full" placeholder="https://service-provider.com">
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-3 pt-6 border-t">
+            <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-lg font-medium">
+              Save Equipment
+            </button>
+            <button type="button" id="cancel-equipment" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-medium">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Equipment Database Browser Modal -->
+    <div id="equipment-db-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
+        <div class="flex justify-between items-center p-6 border-b">
+          <h3 class="text-xl font-bold text-gray-800">📚 Equipment Database Browser</h3>
+          <button id="close-equipment-db-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        </div>
+        
+        <div class="p-6">
+          <!-- Search and Filter Controls -->
+          <div class="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div class="relative">
+                <input type="text" id="equipment-db-search" placeholder="🔍 Search equipment database..." 
+                       class="notebook-input w-full pl-10">
+                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+              </div>
+              <select id="equipment-db-category-filter" class="notebook-input w-full">
+                <option value="">🏷️ All Categories</option>
+                <option value="Front of House">🍽️ Front of House</option>
+                <option value="Small Kitchenware">🥄 Small Kitchenware</option>
+                <option value="Large Equipment">🏭 Large Equipment</option>
+                <option value="Beverage Equipment">🥤 Beverage Equipment</option>
+                <option value="Storage">📦 Storage</option>
+                <option value="Safety">🛡️ Safety Equipment</option>
+              </select>
+              <button id="load-equipment-db" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                🔄 Load Database
+              </button>
+            </div>
+          </div>
+
+          <!-- Equipment Database Display -->
+          <div id="equipment-db-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
+            <!-- Equipment items will be loaded here -->
+          </div>
+
+          <!-- Loading and No Results Messages -->
+          <div id="equipment-db-loading" class="hidden text-center py-8">
+            <div class="text-2xl mb-2">⏳</div>
+            <p class="text-gray-600">Loading equipment database...</p>
+          </div>
+          
+          <div id="equipment-db-no-results" class="hidden text-center py-8">
+            <div class="text-2xl mb-2">🔍</div>
+            <p class="text-gray-600">No equipment found matching your search criteria.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Unified Review Modal (hidden by default) -->
+    <div id="review-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 relative">
+        <button id="close-review-modal" class="absolute top-3 right-4 text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        <h2 class="text-2xl font-bold mb-4 text-center">Review & Approve Uploaded Recipes</h2>
+        <div id="pending-reviews-container"></div>
+        <div class="mt-6 flex justify-between items-center">
+          <span id="selection-text" class="text-sm text-gray-600"></span>
+          <div class="flex gap-2">
+            <button id="select-all-recipes" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">Select All</button>
+            <button id="clear-selection" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">Clear</button>
+            <button id="approve-selected-recipes" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">Approve Selected</button>
+            <button id="reject-selected-recipes" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Reject Selected</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module">
+// ...existing code from your previous script block (restored logic)...
+// Language selector logic
+const languageSelector = document.getElementById('language-selector');
+if (languageSelector) {
+  languageSelector.value = localStorage.getItem('selectedLanguage') || 'en';
+  languageSelector.addEventListener('change', async function() {
+    const lang = languageSelector.value;
+    localStorage.setItem('selectedLanguage', lang);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = `[${lang}] ` + (el.getAttribute('data-i18n-key') || el.textContent);
+    });
+  });
+}
+function saveToLocalStorage(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+function loadFromLocalStorage(key, defaultValue = []) {
+  const stored = localStorage.getItem(key);
+  return stored ? JSON.parse(stored) : defaultValue;
+}
+// Profile Management System
+// (moved to profileManager.js)
+// let currentUser = null;
+// let userProfiles = [];
+// let currentProfile = null;
+// ... (rest of profile management logic commented out) ...
+
+    </script>
+    <script>
+// --- Tab Switching Logic ---
+// List of main section IDs and their corresponding nav hashes
+const tabSections = [
+  { id: 'daily-notes', hash: '#daily-notes' },
+  { id: 'recipe-management', hash: '#recipe-management' },
+  { id: 'ingredient-library', hash: '#ingredient-library' },
+  { id: 'haccp', hash: '#haccp' },
+  { id: 'pantry', hash: '#pantry' },
+  { id: 'import', hash: '#import' }
+];
+
+function showTabFromHash() {
+  const hash = window.location.hash || tabSections[0].hash;
+  tabSections.forEach(({ id, hash: tabHash }) => {
+    const section = document.getElementById(id) || document.querySelector(`section[id^='${id}']`);
+    if (section) {
+      section.style.display = (hash === tabHash) ? '' : 'none';
+    }
+    // Highlight active tab in header
+    const navLink = document.querySelector(`header a[href='${tabHash}']`);
+    if (navLink) {
+      if (hash === tabHash) {
+        navLink.classList.add('text-blue-700', 'font-bold', 'underline');
+      } else {
+        navLink.classList.remove('text-blue-700', 'font-bold', 'underline');
+      }
+    }
+  });
+}
+
+window.addEventListener('hashchange', showTabFromHash);
+document.addEventListener('DOMContentLoaded', showTabFromHash);
+</script>
+<script>
+// --- Profile Display, Dropdown, and Edit Logic ---
+const userInfo = document.getElementById('user-info');
+const loginBtn = document.getElementById('login-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const editProfileModal = document.getElementById('edit-profile-modal');
+const editProfileForm = document.getElementById('edit-profile-form');
+const closeEditProfileModal = document.getElementById('close-edit-profile-modal');
+const cancelEditProfile = document.getElementById('cancel-edit-profile-2');
+
+// Helper: Get current profile (from Firebase or local)
+function getCurrentProfile() {
+  // Prefer Firebase user if available
+  if (window.firebaseAuth && window.firebaseAuth.currentUser) {
+    const user = window.firebaseAuth.currentUser;
+    // Try to get extra info from local storage if present
+    const extra = JSON.parse(localStorage.getItem('profile_extra_' + user.uid) || '{}');
+    return {
+      id: user.uid,
+      name: user.displayName || '',
+      email: user.email || '',
+      avatar: user.photoURL || '',
+      role: extra.role || '',
+      restaurant: extra.restaurant || ''
+    };
+  }
+  // Otherwise, check for local profile
+  const local = JSON.parse(localStorage.getItem('currentLocalProfile') || 'null');
+  if (local) {
+    return {
+      id: local.id,
+      name: local.name || '',
+      email: local.email || '',
+      avatar: '',
+      role: local.role || '',
+      restaurant: local.restaurant || ''
+    };
+  }
+  return null;
+}
+
+function updateProfileUI() {
+  const profile = getCurrentProfile();
+  if (!profile) {
+    // No profile - show guest state
+    if (userInfo) userInfo.textContent = 'Guest';
+    if (loginBtn) loginBtn.style.display = 'inline-block';
+    if (logoutBtn) logoutBtn.style.display = 'none';
+    return;
+  }
+  
+  // Profile exists - show user info
+  if (userInfo) userInfo.textContent = profile.name || profile.email || 'User';
+  if (loginBtn) loginBtn.style.display = 'none';
+  if (logoutBtn) logoutBtn.style.display = 'inline-block';
+}
+
+// Login/Logout button handlers - Setup after unified auth loads
+function setupAuthButtons() {
+  loginBtn && loginBtn.addEventListener('click', () => {
+    console.log('Login button clicked');
+    if (window.unifiedAuth && typeof window.unifiedAuth.showAuthFlow === 'function') {
+      window.unifiedAuth.showAuthFlow();
+    } else {
+      const loginModal = document.getElementById('login-modal');
+      if (loginModal) loginModal.classList.remove('hidden');
+    }
+  });
+
+  logoutBtn && logoutBtn.addEventListener('click', () => {
+    console.log('Logout button clicked');
+    console.log('window.unifiedAuth available:', !!window.unifiedAuth);
+    
+    // Use unified auth system for consistent logout
+    if (window.unifiedAuth && typeof window.unifiedAuth.handleLogout === 'function') {
+      console.log('Using unified auth logout');
+      window.unifiedAuth.handleLogout();
+    } else {
+      console.log('Using fallback logout');
+      // Fallback: clear all auth data and reload
+      localStorage.removeItem('current_user');
+      localStorage.removeItem('currentLocalProfile');
+      localStorage.removeItem('iterum_auth_token');
+      localStorage.removeItem('access_token');
+      
+      // Clear any profile data
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('equipment_') || key.startsWith('profile_') || key.includes('user')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
+      // Update UI to show logged out state
+      updateProfileUI();
+      
+      // Show a success message
+      alert('Logged out successfully');
+      
+      // Reload page to reset state
+      setTimeout(() => window.location.reload(), 500);
+    }
+  });
+}
+
+// Wait for unified auth to be ready before setting up buttons
+function waitForUnifiedAuth() {
+  if (window.unifiedAuth) {
+    setupAuthButtons();
+    console.log('✅ Auth buttons setup complete with unified auth system');
+  } else {
+    setTimeout(waitForUnifiedAuth, 100);
+  }
+}
+
+// Start waiting for unified auth
+waitForUnifiedAuth();
+closeEditProfileModal && closeEditProfileModal.addEventListener('click', () => {
+  editProfileModal.classList.add('hidden');
+});
+cancelEditProfile && cancelEditProfile.addEventListener('click', () => {
+  editProfileModal.classList.add('hidden');
+});
+
+// Save profile edits
+editProfileForm && editProfileForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = document.getElementById('edit-profile-name').value.trim();
+  const email = document.getElementById('edit-profile-email').value.trim();
+  const role = document.getElementById('edit-profile-role').value.trim();
+  const restaurant = document.getElementById('edit-profile-restaurant').value.trim();
+  
+  // Save as local profile
+  const local = {
+    id: Date.now().toString(),
+    name: name,
+    email: email,
+    role: role,
+    restaurant: restaurant
+  };
+  localStorage.setItem('currentLocalProfile', JSON.stringify(local));
+  updateProfileUI();
+  editProfileModal.classList.add('hidden');
+});
+
+// Update UI on auth state change
+if (window.firebaseAuth) {
+  window.firebaseAuth.onAuthStateChanged(updateProfileUI);
+}
+// Also update on page load
+window.addEventListener('DOMContentLoaded', updateProfileUI);
+</script>
+
+<!-- Plant Sketches and UI Elements -->
+<svg class="pea-bg-sketch" viewBox="0 0 120 180" fill="none" style="">
+  <path d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
+  <ellipse cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+  <ellipse cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+  <ellipse cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+  <path d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+  <path d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+</svg>
+
+<!-- Additional Plant Sketches -->
+<!-- Herb Plant (Basil/Rosemary) -->
+<svg class="plant-sketch top-right plant-herb" viewBox="0 0 120 180" fill="none">
+    <path d="M60 160 Q60 140 60 100" stroke="#8bc34a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q40 90 35 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q80 90 85 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q50 80 45 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q70 80 75 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="35" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+    <ellipse cx="85" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+    <ellipse cx="45" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+    <ellipse cx="75" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+</svg>
+
+<!-- Spice Plant (Cinnamon/Cloves) -->
+<svg class="plant-sketch top-left plant-spice" viewBox="0 0 120 180" fill="none">
+    <path d="M60 160 Q60 140 60 100" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q40 90 35 70" stroke="#8d6e63" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q80 90 85 70" stroke="#8d6e63" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="35" cy="70" rx="2" ry="6" fill="#a1887f" stroke="#8d6e63" stroke-width="1"/>
+    <ellipse cx="85" cy="70" rx="2" ry="6" fill="#a1887f" stroke="#8d6e63" stroke-width="1"/>
+    <circle cx="60" cy="100" r="4" fill="#d7ccc8" stroke="#8d6e63" stroke-width="1"/>
+</svg>
+
+<!-- Vegetable Plant (Carrot/Tomato) -->
+<svg class="plant-sketch middle-right plant-vegetable plant-float" viewBox="0 0 120 180" fill="none">
+    <path d="M60 160 Q60 140 60 120" stroke="#ff9800" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M60 120 Q40 110 30 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M60 120 Q80 110 90 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M60 120 Q50 100 45 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M60 120 Q70 100 75 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="30" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+    <ellipse cx="90" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+    <ellipse cx="45" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+    <ellipse cx="75" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+    <circle cx="60" cy="120" r="8" fill="#ff5722" stroke="#e64a19" stroke-width="1"/>
+</svg>
+
+<!-- Flower Plant (Edible Flowers) -->
+<svg class="plant-sketch middle-left plant-flower" viewBox="0 0 120 180" fill="none">
+    <path d="M60 160 Q60 140 60 100" stroke="#9c27b0" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q40 90 35 70" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q80 90 85 70" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q50 80 45 60" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q70 80 75 60" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <circle cx="35" cy="70" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
+    <circle cx="85" cy="70" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
+    <circle cx="45" cy="60" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
+    <circle cx="75" cy="60" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
+    <circle cx="60" cy="100" r="6" fill="#f3e5f5" stroke="#9c27b0" stroke-width="1"/>
+</svg>
+
+<!-- Small Herb Sprig -->
+<svg class="plant-sketch small plant-herb" viewBox="0 0 120 180" fill="none" style="top: 70%; left: 10%;">
+    <path d="M60 160 Q60 140 60 100" stroke="#689f38" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q45 90 40 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 100 Q75 90 80 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="40" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
+    <ellipse cx="80" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
+</svg>
+
+<!-- Tiny Microgreens -->
+<svg class="plant-sketch tiny plant-vegetable" viewBox="0 0 120 180" fill="none" style="top: 85%; right: 15%;">
+    <path d="M60 160 Q60 150 60 140" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M60 140 Q55 135 50 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <path d="M60 140 Q65 135 70 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <ellipse cx="50" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
+    <ellipse cx="70" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
+</svg>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(120deg,#eafcd7 0%,#b6e388 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;">
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <svg class="pea-plant-anim" viewBox="0 0 120 180" fill="none">
+      <path id="stem" d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse id="pod" cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2" opacity="0"/>
+      <ellipse id="pea1" cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
+      <ellipse id="pea2" cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
+      <ellipse id="pea3" cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
+      <path id="leafL" d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>
+      <ellipse id="leafL2" cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1" opacity="0"/>
+      <path id="leafR" d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>
+      <ellipse id="leafR2" cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1" opacity="0"/>
+    </svg>
+    <div class="loading-text" style="font-family:'Shadows Into Light',cursive;color:#3a5a40;font-size:1.3rem;margin-top:1.2rem;text-align:center;letter-spacing:0.03em;">Loading Iterum R&D Chef Notebook…</div>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white text-center">
+      <div class="text-3xl mb-2">👨‍🍳</div>
+      <h2 class="text-2xl font-bold">Welcome to Iterum</h2>
+      <p class="text-blue-100">Your Culinary Research & Development Notebook</p>
+    </div>
+    <!-- Login Form -->
+    <div id="login-form-container" class="p-6">
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+          <input type="email" id="login-email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Enter your email">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <div class="relative">
+            <input type="password" id="login-password" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12" placeholder="Enter your password">
+            <button type="button" id="toggle-password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">👁️</button>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label class="flex items-center">
+            <input type="checkbox" id="remember-me" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+            <span class="ml-2 text-sm text-gray-600">Remember me</span>
+          </label>
+          <button type="button" id="forgot-password-btn" class="text-sm text-blue-600 hover:text-blue-800">Forgot password?</button>
+        </div>
+        <div id="login-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+        <button type="submit" id="login-submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all">
+          <span id="login-btn-text">Sign In</span>
+          <div id="login-spinner" class="hidden inline-block ml-2">
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+          </div>
+        </button>
+      </form>
+                <div class="mt-6 text-center">
+            <p class="text-gray-600">Don't have an account?</p>
+            <button type="button" id="show-signup-btn" class="text-blue-600 hover:text-blue-800 font-semibold">Create Account</button>
+          </div>
+          <div class="mt-6 pt-6 border-t border-gray-200">
+            <button type="button" id="continue-offline-btn" class="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-all">🚀 Continue Offline (Local Profile)</button>
+          </div>
+        </div>
+        
+        <!-- Signup Form -->
+        <div id="signup-form-container" class="p-6 hidden">
+          <form id="signup-form" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+              <input type="text" id="signup-name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Enter your full name">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+              <input type="email" id="signup-email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Enter your email">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <div class="relative">
+                <input type="password" id="signup-password" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12" placeholder="Create a password">
+                <button type="button" id="toggle-signup-password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">👁️</button>
+              </div>
+            </div>
+            <div id="signup-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+            <button type="submit" id="signup-submit-btn" class="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-green-700 hover:to-blue-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all">
+              <span id="signup-btn-text">Create Account</span>
+              <div id="signup-spinner" class="hidden inline-block ml-2">
+                <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              </div>
+            </button>
+          </form>
+          <div class="mt-6 text-center">
+            <p class="text-gray-600">Already have an account?</p>
+            <button type="button" id="show-login-btn" class="text-blue-600 hover:text-blue-800 font-semibold">Sign In</button>
+          </div>
+    </div>
+  </div>
+</div>
+
+<!-- API Configuration -->
+<script src="api_config.js"></script>
+
+<!-- Error Handler -->
+<script src="error_handler.js"></script>
+
+<!-- Enhanced Core App Systems -->
+<script src="enhanced_loading_system.js"></script>
+<script src="enhanced_search_system.js"></script>
+<script src="modern_dashboard.js"></script>
+<script src="data_export_import.js"></script>
+<!-- unified_auth_system.js moved earlier to load before main.js -->
+<script src="standardize-login-modals.js"></script>
+<script src="debug_auth_buttons.js"></script>
+    <script>
+        // Debug: Check if unified auth system loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                console.log('Checking unified auth system after DOM load...');
+                console.log('window.unifiedAuth available:', !!window.unifiedAuth);
+                if (window.unifiedAuth) {
+                    console.log('Unified auth methods:', Object.keys(window.unifiedAuth));
+                    console.log('Current user:', window.unifiedAuth.getCurrentUser());
+                } else {
+                    console.warn('Unified auth system not available - buttons will use fallback');
+                }
+                
+                // Test button availability
+                const logoutBtn = document.getElementById('logout-btn');
+                const loginBtn = document.getElementById('login-btn');
+                console.log('Logout button found:', !!logoutBtn);
+                console.log('Login button found:', !!loginBtn);
+                
+                // Add a debug function to the window for testing
+                window.debugAuth = function() {
+                    console.log('=== AUTH DEBUG INFO ===');
+                    console.log('Unified auth available:', !!window.unifiedAuth);
+                    console.log('Current user:', window.unifiedAuth ? window.unifiedAuth.getCurrentUser() : 'No unified auth');
+                    console.log('Local storage current_user:', localStorage.getItem('current_user'));
+                    console.log('Logout button display:', logoutBtn ? logoutBtn.style.display : 'Button not found');
+                    console.log('Login button display:', loginBtn ? loginBtn.style.display : 'Button not found');
+                    console.log('=== END DEBUG INFO ===');
+                };
+                
+                console.log('✅ Auth debug functions loaded. Call window.debugAuth() to see current state.');
+            }, 1000);
+        });
+    </script>
+
+<!-- Initialize Enhanced Systems -->
+<script>
+// Initialize all enhanced systems when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Initializing Enhanced Core App Systems...');
+    
+    // Initialize loading system
+    if (window.loadingSystem) {
+        console.log('✅ Loading system initialized');
+    }
+    
+    // Initialize search system
+    if (window.enhancedSearch) {
+        console.log('✅ Enhanced search system initialized');
+    }
+    
+    // Initialize dashboard
+    if (window.modernDashboard) {
+        console.log('✅ Modern dashboard initialized');
+    }
+    
+    // Initialize data export/import
+    if (window.dataExportImport) {
+        console.log('✅ Data export/import system initialized');
+    }
+    
+    console.log('🎉 All enhanced systems loaded successfully!');
+});
+</script>
+</body>
+</html> 

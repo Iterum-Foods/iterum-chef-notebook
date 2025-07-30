@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - Iterum R&D Chef Notebook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
+    <style>
+        body {
+            background: repeating-linear-gradient(
+                to bottom,
+                #f6fbe7 0px,
+                #f6fbe7 38px,
+                #eafcd7 39px,
+                #f6fbe7 40px
+            ), url('data:image/svg+xml;utf8,<svg width="180" height="180" xmlns="http://www.w3.org/2000/svg"><g opacity="0.13"><path d="M60 140 Q90 80 120 140" stroke="%237bb661" stroke-width="2.5" fill="none"/><ellipse cx="90" cy="140" rx="22" ry="9" fill="%23b6e388" stroke="%237bb661" stroke-width="1.5"/><ellipse cx="80" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><ellipse cx="90" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><ellipse cx="100" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><path d="M90 140 Q95 120 110 110 Q125 100 140 120" stroke="%237bb661" stroke-width="1.2" fill="none"/><ellipse cx="140" cy="120" rx="4" ry="2.5" fill="%23b6e388" stroke="%237bb661" stroke-width="1"/></g></svg>');
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            padding-left: 0;
+            position: relative;
+        }
+        .pea-bg-sketch {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            z-index: 0;
+            opacity: 0.11;
+            pointer-events: none;
+            width: 480px;
+            max-width: 90vw;
+            height: auto;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 56px;
+            width: 2px;
+            height: 100vh;
+            background: repeating-linear-gradient(
+                to bottom,
+                #e57373 0px,
+                #e57373 16px,
+                transparent 16px,
+                transparent 32px
+            );
+            z-index: 0;
+            pointer-events: none;
+        }
+        .notebook-heading {
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 2.5rem;
+            color: #b8860b;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 8px #fffbe7, 0 1px 0 #e2d8b8;
+        }
+        .notebook-card {
+            background: #fffbe7;
+            border: 1.5px solid #e2d8b8;
+            border-radius: 22px 22px 18px 18px;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.09), 0 1.5px 0 #e2d8b8;
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding-top: 2.5rem;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .notebook-card::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 18px;
+            width: 12px;
+            height: 80%;
+            background: repeating-linear-gradient(
+                to bottom,
+                #e57373 0px,
+                #e57373 8px,
+                transparent 8px,
+                transparent 24px
+            );
+            border-radius: 8px;
+            opacity: 0.18;
+            z-index: 1;
+        }
+        .sticky-btn {
+            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
+            color: #795548;
+            border: 1.5px solid #ffe082;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
+            font-weight: 600;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+            padding: 0.5rem 1.5rem;
+        }
+        .sticky-btn:hover {
+            transform: translateY(-2px) scale(1.04) rotate(-2deg);
+            box-shadow: 0 6px 18px 0 rgba(255, 235, 59, 0.25);
+            background: linear-gradient(135deg, #ffe082 80%, #fff176 100%);
+        }
+        .notebook-textarea, .notebook-input {
+            border-radius: 10px;
+            border: 1.5px solid #e2d8b8;
+            background: #fffbe7;
+            padding: 0.5rem;
+            width: 100%;
+            font-size: 1rem;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .notebook-textarea:focus, .notebook-input:focus {
+            border-color: #b8860b;
+            box-shadow: 0 0 0 2px #ffe082;
+            outline: none;
+        }
+        button, .notebook-input, .notebook-textarea {
+            transition: box-shadow 0.2s, border 0.2s, background 0.2s, color 0.2s;
+        }
+        button {
+            border-radius: 999px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+        .notebook-card:hover {
+            box-shadow: 0 12px 36px 0 rgba(0,0,0,0.13), 0 2px 0 #e2d8b8;
+            transform: translateY(-2px) scale(1.01);
+        }
+        /* Tape/Sticky Note effect for highlights */
+        .tape {
+            position: absolute;
+            top: -18px;
+            left: 32px;
+            width: 60px;
+            height: 24px;
+            background: repeating-linear-gradient(135deg, #ffe082 0px, #fffde7 8px, #ffe082 16px);
+            border-radius: 8px 8px 4px 4px;
+            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
+            z-index: 2;
+            opacity: 0.85;
+        }
+        /* Modern scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #fdf6e3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e2d8b8;
+            border-radius: 8px;
+        }
+        /* Responsive tweaks */
+        @media (max-width: 768px) {
+            .notebook-card {
+                padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+            }
+            .notebook-heading {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header style="background: linear-gradient(90deg, #eafcd7 0%, #b6e388 100%); border-bottom: 2px solid #7bb661; min-height: 48px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0.3rem 1.5rem;">
+        <div style="display: flex; align-items: center;">
+          <svg width="48" height="48" viewBox="0 0 64 64" fill="none" style="vertical-align: middle;">
+            <ellipse cx="32" cy="44" rx="18" ry="8" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
+            <ellipse cx="24" cy="44" rx="2.5" ry="2.5" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+            <ellipse cx="32" cy="44" rx="2.5" ry="2.5" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+            <ellipse cx="40" cy="44" rx="2.5" ry="2.5" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+            <path d="M18 44 Q32 20 46 44" stroke="#7bb661" stroke-width="2.5" fill="none"/>
+            <path d="M32 20 Q36 10 50 18" stroke="#7bb661" stroke-width="1.2" fill="none"/>
+            <path d="M32 20 Q28 10 14 18" stroke="#7bb661" stroke-width="1.2" fill="none"/>
+            <ellipse cx="50" cy="18" rx="4" ry="2" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+            <ellipse cx="14" cy="18" rx="4" ry="2" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+          </svg>
+          <span style="font-family: 'Shadows Into Light', cursive; font-size: 2rem; color: #4a7c2c; margin-left: 0.5rem;">Iterum R&D Chef Notebook</span>
+        </div>
+        <nav style="display: flex; gap: 1.2rem; font-weight: 600; flex-wrap: wrap;">
+          <a href="index.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Home</a>
+          <a href="menu-builder.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Menu Builder</a>
+          <a href="recipe-developer.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Recipe Developer</a>
+          <a href="recipe-upload.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Recipe Upload</a>
+          <a href="recipe-review.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Recipe Review</a>
+          <a href="ingredients.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Ingredients</a>
+          <a href="inventory.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Inventory</a>
+          <a href="equipment-management.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Equipment</a>
+          <a href="vendor-management.html" style="color: #4a7c2c; text-decoration: none; padding: 0.5rem 0.8rem; border-radius: 8px; transition: background-color 0.2s;">Vendors</a>
+        </nav>
+        <span id="user-info" style="margin-left: 1rem; padding: 0.2rem 0.8rem; border-radius: 999px; background: #eafcd7; color: #4a7c2c; font-weight: bold;">Guest</span>
+      </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-800">Inventory Dashboard</h2>
+            <div class="flex gap-2">
+                <button id="bulk-import-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">📥 Bulk Import</button>
+                <button id="add-inventory-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">+ Add Inventory</button>
+            </div>
+        </div>
+        <!-- Search, Filter, Sort Controls -->
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg mb-6 flex flex-wrap gap-4 items-center">
+            <input type="text" id="inventory-search" placeholder="🔍 Search inventory..." class="notebook-input w-64 px-3 py-2 border rounded">
+            <select id="location-filter" class="notebook-input w-48 px-3 py-2 border rounded">
+                <option value="">All Locations</option>
+                <option value="Walk-in">Walk-in</option>
+                <option value="Dry Storage">Dry Storage</option>
+                <option value="Freezer">Freezer</option>
+                <option value="Line">Line</option>
+                <option value="Other">Other</option>
+            </select>
+            <select id="sort-by" class="notebook-input w-48 px-3 py-2 border rounded">
+                <option value="name">Sort by Name</option>
+                <option value="quantity">Sort by Quantity</option>
+                <option value="expiry">Sort by Expiry</option>
+                <option value="location">Sort by Location</option>
+            </select>
+            <button id="show-low-stock" class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-medium">Low Stock</button>
+            <button id="show-expiring" class="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium">Expiring Soon</button>
+        </div>
+        <!-- Inventory Table -->
+        <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+            <table class="min-w-full divide-y divide-gray-200" id="inventory-table">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ingredient</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Received</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry Date</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Inventory rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <!-- Add/Edit Inventory Modal -->
+    <div id="inventory-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 inventory-modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 id="inventory-modal-title" class="text-xl font-bold text-gray-800">Add Inventory</h3>
+                <button id="close-inventory-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+            </div>
+            <form id="inventory-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ingredient</label>
+                    <select id="inventory-ingredient" class="notebook-input w-full" required>
+                        <option value="">Select ingredient...</option>
+                        <!-- Ingredient options will be populated here -->
+                    </select>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                        <input type="number" id="inventory-quantity" class="notebook-input w-full" min="0" step="0.01" required>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
+                        <input type="text" id="inventory-unit" class="notebook-input w-full" readonly>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <select id="inventory-location" class="notebook-input w-full" required>
+                        <option value="Walk-in">Walk-in</option>
+                        <option value="Dry Storage">Dry Storage</option>
+                        <option value="Freezer">Freezer</option>
+                        <option value="Line">Line</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date Received</label>
+                        <input type="date" id="inventory-date-received" class="notebook-input w-full" required>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                        <input type="date" id="inventory-expiry-date" class="notebook-input w-full">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                    <textarea id="inventory-notes" rows="2" class="notebook-textarea w-full" placeholder="Optional notes..."></textarea>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">
+                        Save
+                    </button>
+                    <button type="button" id="cancel-inventory" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Bulk Import Modal -->
+    <div id="bulk-import-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 inventory-modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 class="text-xl font-bold text-gray-800">Bulk Import Inventory</h3>
+                <button id="close-bulk-import-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+            </div>
+            <form id="bulk-import-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Paste CSV Data</label>
+                    <textarea id="bulk-import-csv" rows="6" class="notebook-textarea w-full" placeholder="Ingredient,Quantity,Unit,Location,Date Received,Expiry Date,Notes"></textarea>
+                </div>
+                <div class="flex flex-col gap-2 mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Or Upload Inventory PDF</label>
+                    <input type="file" id="bulk-import-inventory-pdf" accept=".pdf" class="notebook-input w-full mb-2" />
+                    <div id="inventory-pdf-preview" class="hidden mt-2">
+                        <div class="text-xs text-gray-500 mb-1">Preview detected table. Map columns before importing.</div>
+                        <div id="inventory-pdf-mapping" class="mb-2"></div>
+                        <table class="min-w-full text-xs border rounded bg-white shadow">
+                            <thead id="inventory-pdf-preview-head"></thead>
+                            <tbody id="inventory-pdf-preview-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="text-xs text-yellow-700 mt-1">Works best with digital PDFs containing tables. For scans/photos, use Excel/CSV import.</div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg">
+                        Import
+                    </button>
+                    <button type="button" id="cancel-bulk-import" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Shared Auth/Loading UI -->
+    <!--#include file="shared-auth.html" -->
+    <script src="unified_auth_system.js"></script>
+    <script src="userDataManager.js"></script>
+    <script src="inventoryManager.js"></script>
+</body>
+</html> 

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe PDF Upload | Iterum R&D Chef Notebook</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <header class="bg-white shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <!-- Logo and Brand -->
+      <div class="flex items-center gap-3">
+        <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10">
+        <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
+          Iterum R&D Chef Notebook
+        </span>
+      </div>
+      
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex gap-6 text-gray-700 font-medium">
+        <a href="index.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Dashboard</a>
+        <a href="recipe-library.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Recipe Library</a>
+        <a href="recipe-developer.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">🧪 Recipe Developer</a>
+        <a href="recipe-upload.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Quick Recipe Upload</a>
+        <a href="automated-workflow.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">🤖 Batch Processor</a>
+        <a href="menu-builder.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Menu Builder</a>
+        <a href="ingredients.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Ingredients</a>
+        <a href="equipment-management.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Equipment</a>
+        <a href="vendor-management.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Vendors</a>
+      </nav>
+      
+      <!-- User Info and Actions -->
+      <div class="flex items-center gap-4">
+        <span id="current-user" class="text-gray-600 text-sm font-medium"></span>
+        <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors hidden">
+          Login
+        </button>
+        <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
+          Logout
+        </button>
+        <button onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors">
+          Switch User
+        </button>
+        <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 transition-colors">
+          &#9776;
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-2 px-4 pb-4">
+      <a href="index.html" class="block py-2 hover:text-green-600 transition-colors">Dashboard</a>
+      <a href="recipe-library.html" class="block py-2 hover:text-green-600 transition-colors">Recipe Library</a>
+      <a href="recipe-developer.html" class="block py-2 hover:text-green-600 transition-colors">🧪 Recipe Developer</a>
+      <a href="recipe-upload.html" class="block py-2 hover:text-green-600 transition-colors">Quick Recipe Upload</a>
+      <a href="automated-workflow.html" class="block py-2 hover:text-green-600 transition-colors">🤖 Batch Processor</a>
+      <a href="menu-builder.html" class="block py-2 hover:text-green-600 transition-colors">Menu Builder</a>
+      <a href="ingredients.html" class="block py-2 hover:text-green-600 transition-colors">Ingredients</a>
+      <a href="equipment-management.html" class="block py-2 hover:text-green-600 transition-colors">Equipment</a>
+      <a href="vendor-management.html" class="block py-2 hover:text-green-600 transition-colors">Vendors</a>
+    </nav>
+  </header>
+  
+  <!-- Mobile Navigation Toggle Script -->
+  <script>
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      const mobileNav = document.getElementById('mobile-nav');
+      mobileNav.classList.toggle('hidden');
+    });
+  </script>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(120deg,#eafcd7 0%,#b6e388 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;">
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <svg class="pea-plant-anim" viewBox="0 0 120 180" fill="none">
+        <path id="stem" d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse id="pod" cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2" opacity="0"/>
+        <ellipse id="pea1" cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
+        <ellipse id="pea2" cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
+        <ellipse id="pea3" cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
+        <path id="leafL" d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>
+        <ellipse id="leafL2" cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1" opacity="0"/>
+        <path id="leafR" d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>
+        <ellipse id="leafR2" cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1" opacity="0"/>
+      </svg>
+      <div class="loading-text" style="font-family:'Shadows Into Light',cursive;color:#3a5a40;font-size:1.3rem;margin-top:1.2rem;text-align:center;letter-spacing:0.03em;">Loading Iterum R&D Chef Notebook…</div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white text-center">
+        <div class="text-3xl mb-2">👨‍🍳</div>
+        <h2 class="text-2xl font-bold">Welcome to Iterum</h2>
+        <p class="text-blue-100">Your Culinary Research & Development Notebook</p>
+      </div>
+      <!-- Login Form -->
+      <div id="login-form-container" class="p-6">
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+            <input type="email" id="login-email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Enter your email">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <div class="relative">
+              <input type="password" id="login-password" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12" placeholder="Enter your password">
+              <button type="button" id="toggle-password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">👁️</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <label class="flex items-center">
+              <input type="checkbox" id="remember-me" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              <span class="ml-2 text-sm text-gray-600">Remember me</span>
+            </label>
+            <button type="button" id="forgot-password-btn" class="text-sm text-blue-600 hover:text-blue-800">Forgot password?</button>
+          </div>
+          <div id="login-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+          <button type="submit" id="login-submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all">
+            <span id="login-btn-text">Sign In</span>
+            <div id="login-spinner" class="hidden inline-block ml-2">
+              <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+            </div>
+          </button>
+        </form>
+        <div class="mt-6 text-center">
+          <p class="text-gray-600">Don't have an account?</p>
+          <button type="button" id="show-signup-btn" class="text-blue-600 hover:text-blue-800 font-semibold">Create Account</button>
+        </div>
+        <div class="mt-6 pt-6 border-t border-gray-200">
+          <button type="button" id="continue-offline-btn" class="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-all">🚀 Continue Offline (Local Profile)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="unified_auth_system.js"></script>
+  <script src="standardize-login-modals.js"></script>
+  <script src="debug_auth_buttons.js"></script>
+  <main class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Upload Recipe Documents</h1>
+    <p class="mb-4">Select one or more files containing recipes. Supported formats: PDF, Excel (.xlsx, .xls), and Word (.docx). Extracted recipes will be queued for review and approval.</p>
+    <!-- Recipe Type Selector -->
+    <div class="mb-4">
+      <label for="recipe-type" class="block font-medium mb-1">Recipe Type</label>
+      <select id="recipe-type" name="type" class="border rounded px-3 py-2 w-full">
+        <option value="dish">Dish (Menu Item)</option>
+        <option value="prep">Prep Recipe (Component)</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <input id="document-upload" type="file" accept=".pdf,.xlsx,.xls,.docx" multiple class="mb-4" />
+    <button id="go-review" class="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Go to Review Page</button>
+    <div id="upload-status" class="mt-4 text-green-700"></div>
+
+        <!-- Test Recipe Parsing Section -->
+        <div class="notebook-card p-8 mb-8">
+            <h2 class="text-2xl font-bold text-[#4a7c2c] mb-4" style="font-family: 'Shadows Into Light', cursive;">
+                🧪 Test Recipe Parsing
+            </h2>
+            <p class="text-lg text-[#795548] mb-6">
+                Test the enhanced recipe parser with sample text to see how it extracts allergy notes, pricing, ingredients, and amounts
+            </p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Input Section -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Recipe Text to Parse</label>
+                    <textarea id="test-recipe-text" rows="15" class="notebook-input w-full" placeholder="Paste your recipe text here...">Chocolate Chip Cookies
+
+Allergen Warning: Contains wheat, eggs, dairy, and nuts. May contain traces of soy.
+
+Ingredients:
+2 cups all-purpose flour
+1 cup butter, softened
+1 cup brown sugar
+1/2 cup white sugar
+2 large eggs
+1 tsp vanilla extract
+1 tsp baking soda
+1/2 tsp salt
+2 cups chocolate chips
+
+Directions:
+1. Preheat oven to 375°F
+2. Cream butter and sugars together
+3. Beat in eggs and vanilla
+4. Mix in dry ingredients
+5. Stir in chocolate chips
+6. Drop by rounded tablespoons onto baking sheet
+7. Bake for 9-11 minutes
+
+Prep Time: 15 minutes
+Cook Time: 10 minutes
+Yield: 24 cookies
+Difficulty: Easy
+Cuisine: American
+
+Cost Information:
+Total ingredient cost: $8.50
+Cost per serving: $0.35
+Estimated total cost: $10.00</textarea>
+                    
+                    <button id="test-parse-btn" class="mt-4 sticky-btn px-6 py-3">
+                        🔍 Parse Recipe
+                    </button>
+                </div>
+                
+                <!-- Results Section -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Parsed Results</label>
+                    <div id="parse-results" class="bg-gray-50 p-4 rounded-lg min-h-[400px] overflow-y-auto">
+                        <p class="text-gray-500">Click "Parse Recipe" to see the extracted information...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Upload Section -->
+  </main>
+  <script>
+    // PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    function parseRecipeText(text) {
+      // Basic parsing: split by lines, look for title, ingredients, steps
+      // This can be improved for your format
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      let title = lines[0] || '';
+      let ingredients = [];
+      let steps = [];
+      let inIngredients = false, inSteps = false;
+      for (let line of lines.slice(1)) {
+        if (/ingredients?/i.test(line)) { inIngredients = true; inSteps = false; continue; }
+        if (/steps?|directions?/i.test(line)) { inSteps = true; inIngredients = false; continue; }
+        if (inIngredients) ingredients.push(line);
+        else if (inSteps) steps.push(line);
+      }
+      return { title, ingredients, steps };
+    }
+
+    async function extractTextFromPDF(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let text = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(item => item.str).join(' ') + '\n';
+      }
+      return text;
+    }
+
+    // Helper to get current user ID
+    function getCurrentUserId() {
+        const user = JSON.parse(localStorage.getItem('current_user') || '{}');
+        return user && user.id ? user.id : null;
+    }
+
+    document.getElementById('document-upload').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+      let pending = JSON.parse(localStorage.getItem('pendingRecipes') || '[]');
+      document.getElementById('upload-status').textContent = 'Processing...';
+      
+      for (const file of files) {
+        try {
+          let text = '';
+          let parsedData = {};
+          
+          // Handle different file types
+          if (file.type === 'application/pdf') {
+            // PDF files - use existing PDF extraction
+            text = await extractTextFromPDF(file);
+            // Send extracted text to backend parser
+            const response = await fetch('/api/uploads/parse-text', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ text, user_id: getCurrentUserId() })
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            parsedData = await response.json();
+          } else {
+            // Excel and Word files - use new backend endpoint
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const response = await fetch('/api/uploads/extract-text', {
+              method: 'POST',
+              body: formData
+            });
+            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const result = await response.json();
+            text = result.extracted_text;
+            parsedData = result.parsed_data;
+          }
+          
+          // Add source file and status to parsed recipe
+          parsedData.sourceFile = file.name;
+          parsedData.status = 'pending';
+          parsedData.recipeType = document.getElementById('recipe-type').value; // Get the selected recipe type
+          parsedData.user_id = getCurrentUserId(); // Add user_id
+          pending.push(parsedData);
+        } catch (err) {
+          console.error('Document parse error:', err);
+          document.getElementById('upload-status').textContent = `Error parsing ${file.name}: ${err.message}`;
+        }
+      }
+      localStorage.setItem('pendingRecipes', JSON.stringify(pending));
+      document.getElementById('upload-status').textContent = `Uploaded ${files.length} file(s). Go to review page to approve.`;
+    });
+    document.getElementById('go-review').onclick = () => {
+      window.location.href = 'recipe-review.html';
+    };
+
+    // Test Recipe Parsing Functionality
+    document.getElementById('test-parse-btn').addEventListener('click', async () => {
+      const recipeText = document.getElementById('test-recipe-text').value;
+      const resultsDiv = document.getElementById('parse-results');
+      
+      if (!recipeText.trim()) {
+        resultsDiv.innerHTML = '<p class="text-red-500">Please enter some recipe text to parse.</p>';
+        return;
+      }
+      
+      resultsDiv.innerHTML = '<p class="text-blue-500">Parsing recipe...</p>';
+      
+      try {
+        const response = await fetch('/api/uploads/parse-text', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text: recipeText, user_id: getCurrentUserId() })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        // Display the parsed results in a formatted way
+        let html = '<div class="space-y-4">';
+        
+        if (result.title) {
+          html += `<div><strong>Title:</strong> <span class="text-green-700">${result.title}</span></div>`;
+        }
+        
+        if (result.allergy_notes && result.allergy_notes.length > 0) {
+          html += `<div><strong>Allergy Notes:</strong> <span class="text-red-600">${result.allergy_notes.join(', ')}</span></div>`;
+        }
+        
+        if (result.pricing && Object.keys(result.pricing).length > 0) {
+          html += '<div><strong>Pricing:</strong><ul class="list-disc list-inside ml-4">';
+          for (const [key, value] of Object.entries(result.pricing)) {
+            html += `<li>${key}: <span class="text-blue-600">${value}</span></li>`;
+          }
+          html += '</ul></div>';
+        }
+        
+        if (result.ingredients && result.ingredients.length > 0) {
+          html += '<div><strong>Ingredients / Menu Items:</strong>';
+          html += '<table class="min-w-full text-sm border mt-2 mb-4"><thead><tr><th class="border px-2 py-1">Item</th><th class="border px-2 py-1">Quantity</th><th class="border px-2 py-1">Unit</th></tr></thead><tbody>';
+          result.ingredients.forEach(ingredient => {
+            html += `<tr><td class="border px-2 py-1">${ingredient.name || ''}</td><td class="border px-2 py-1">${ingredient.amount !== undefined && ingredient.amount !== null ? ingredient.amount : ''}</td><td class="border px-2 py-1">${ingredient.unit || ''}</td></tr>`;
+          });
+          html += '</tbody></table></div>';
+        }
+        
+        if (result.instructions && result.instructions.length > 0) {
+          html += '<div><strong>Instructions:</strong><ol class="list-decimal list-inside ml-4">';
+          result.instructions.forEach(instruction => {
+            html += `<li>${instruction}</li>`;
+          });
+          html += '</ol></div>';
+        }
+        
+        if (result.metadata && Object.keys(result.metadata).length > 0) {
+          html += '<div><strong>Metadata:</strong><ul class="list-disc list-inside ml-4">';
+          for (const [key, value] of Object.entries(result.metadata)) {
+            html += `<li>${key}: <span class="text-gray-600">${value}</span></li>`;
+          }
+          html += '</ul></div>';
+        }
+        
+        html += '</div>';
+        resultsDiv.innerHTML = html;
+        
+      } catch (error) {
+        console.error('Error parsing recipe:', error);
+        resultsDiv.innerHTML = `<p class="text-red-500">Error parsing recipe: ${error.message}</p>`;
+      }
+    });
+
+    (function updateUserInfo() {
+      const userInfo = document.getElementById('current-user');
+      if (userInfo) {
+        const username = localStorage.getItem('username') || 'Guest';
+        userInfo.textContent = username;
+      }
+    })();
+  </script>
+  <style>
+    body {
+      background: repeating-linear-gradient(
+        to bottom,
+        #f6fbe7 0px,
+        #f6fbe7 38px,
+        #eafcd7 39px,
+        #f6fbe7 40px
+      );
+      position: relative;
+    }
+    .pea-bg-sketch {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      z-index: 0;
+      opacity: 0.11;
+      pointer-events: none;
+      width: 480px;
+      max-width: 90vw;
+      height: auto;
+    }
+    
+    /* Notebook card styling */
+    .notebook-card {
+      background: #fff;
+      border: 2px solid #7bb661;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(123, 182, 97, 0.15);
+      position: relative;
+    }
+    
+    .notebook-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #b6e388, #7bb661, #b6e388);
+      border-radius: 10px 10px 0 0;
+    }
+    
+    .notebook-input {
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      transition: all 0.3s ease;
+    }
+    
+    .notebook-input:focus {
+      outline: none;
+      border-color: #7bb661;
+      box-shadow: 0 0 0 3px rgba(123, 182, 97, 0.1);
+    }
+    
+    .sticky-btn {
+      background: linear-gradient(135deg, #7bb661, #b6e388);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(123, 182, 97, 0.3);
+    }
+    
+    .sticky-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(123, 182, 97, 0.4);
+    }
+    
+    .sticky-btn:active {
+      transform: translateY(0);
+    }
+  </style>
+  <svg class="pea-bg-sketch" viewBox="0 0 120 180" fill="none" style="">
+    <path d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
+    <ellipse cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+    <ellipse cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+    <ellipse cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+    <path d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+    <path d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+  </svg>
+</body>
+</html> 

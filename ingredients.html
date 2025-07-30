@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Ingredient Database</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        body {
+            background: repeating-linear-gradient(
+                to bottom,
+                #f6fbe7 0px,
+                #f6fbe7 38px,
+                #eafcd7 39px,
+                #f6fbe7 40px
+            ), url('data:image/svg+xml;utf8,<svg width="180" height="180" xmlns="http://www.w3.org/2000/svg"><g opacity="0.13"><path d="M60 140 Q90 80 120 140" stroke="%237bb661" stroke-width="2.5" fill="none"/><ellipse cx="90" cy="140" rx="22" ry="9" fill="%23b6e388" stroke="%237bb661" stroke-width="1.5"/><ellipse cx="80" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><ellipse cx="90" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><ellipse cx="100" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><path d="M90 140 Q95 120 110 110 Q125 100 140 120" stroke="%237bb661" stroke-width="1.2" fill="none"/><ellipse cx="140" cy="120" rx="4" ry="2.5" fill="%23b6e388" stroke="%237bb661" stroke-width="1"/></g></svg>');
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 56px;
+            width: 2px;
+            height: 100vh;
+            background: #e57373;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .pea-bg-sketch {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            z-index: 0;
+            opacity: 0.11;
+            pointer-events: none;
+            width: 480px;
+            max-width: 90vw;
+            height: auto;
+        }
+
+        /* Additional Plant Sketches */
+        .plant-sketch {
+            position: fixed;
+            z-index: 0;
+            opacity: 0.08;
+            pointer-events: none;
+            width: 120px;
+            height: 180px;
+        }
+
+        .plant-sketch.top-right {
+            top: 20px;
+            right: 20px;
+            transform: rotate(15deg);
+        }
+
+        .plant-sketch.top-left {
+            top: 20px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .plant-sketch.middle-right {
+            top: 40%;
+            right: 20px;
+            transform: translateY(-50%) rotate(5deg);
+        }
+
+        .plant-sketch.middle-left {
+            top: 40%;
+            left: 20px;
+            transform: translateY(-50%) rotate(-5deg);
+        }
+
+        .plant-sketch.small {
+            width: 80px;
+            height: 120px;
+            opacity: 0.06;
+        }
+
+        .plant-sketch.tiny {
+            width: 60px;
+            height: 90px;
+            opacity: 0.05;
+        }
+
+        /* Different plant variations */
+        .plant-herb {
+            opacity: 0.07;
+        }
+
+        .plant-vegetable {
+            opacity: 0.06;
+        }
+
+        .plant-fruit {
+            opacity: 0.08;
+        }
+
+        .plant-grain {
+            opacity: 0.07;
+        }
+
+        /* Floating animation for some plants */
+        .plant-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* Responsive plant positioning */
+        @media (max-width: 768px) {
+            .plant-sketch {
+                width: 60px;
+                height: 90px;
+                opacity: 0.05;
+            }
+            
+            .plant-sketch.top-right,
+            .plant-sketch.top-left,
+            .plant-sketch.middle-right,
+            .plant-sketch.middle-left {
+                display: none;
+            }
+        }
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: #fffbe7;
+            border-bottom: 3px solid #e2d8b8;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+            border-radius: 0 0 18px 18px;
+        }
+        .notebook-heading {
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 2.2rem;
+            color: #b8860b;
+            letter-spacing: 1px;
+        }
+        .notebook-card {
+            background: #fffbe7;
+            border: 1.5px solid #e2d8b8;
+            border-radius: 18px;
+            box-shadow: 0 4px 16px 0 rgba(0,0,0,0.07);
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+        .sticky-btn {
+            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
+            color: #795548;
+            border: 1.5px solid #ffe082;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
+            font-weight: 600;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .sticky-btn:hover {
+            transform: translateY(-2px) scale(1.04) rotate(-2deg);
+            box-shadow: 0 6px 18px 0 rgba(255, 235, 59, 0.25);
+        }
+    </style>
+</head>
+<body>
+        <header class="bg-white shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+            <!-- Logo and Brand -->
+            <div class="flex items-center gap-3">
+                <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10">
+                <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
+                    Iterum R&D Chef Notebook
+                </span>
+            </div>
+    <nav class="hidden md:flex gap-6 text-gray-700 font-medium">
+      <a href="index.html" class="hover:text-green-600">Dashboard</a>
+      <a href="recipe-library.html" class="hover:text-green-600">Recipe Library</a>
+      <a href="recipe-upload.html" class="hover:text-green-600">Recipe Uploader</a>
+      <a href="menu-builder.html" class="hover:text-green-600">Menu Builder</a>
+      <a href="ingredients.html" class="hover:text-green-600">Ingredients</a>
+      <a href="equipment-management.html" class="hover:text-green-600">Equipment</a>
+      <a href="vendor-management.html" class="hover:text-green-600">Vendors</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <span id="current-user" class="text-gray-600 text-sm"></span>
+      <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded hidden">Login</button>
+      <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded hidden">Logout</button>
+      <button id="nav-toggle" class="md:hidden text-2xl text-gray-700 focus:outline-none">&#9776;</button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="md:hidden bg-white border-t border-gray-200 hidden flex-col gap-2 px-4 pb-4">
+    <a href="index.html" class="block py-2 hover:text-green-600">Dashboard</a>
+    <a href="recipe-library.html" class="block py-2 hover:text-green-600">Recipe Library</a>
+    <a href="recipe-upload.html" class="block py-2 hover:text-green-600">Recipe Uploader</a>
+    <a href="menu-builder.html" class="block py-2 hover:text-green-600">Menu Builder</a>
+    <a href="ingredients.html" class="block py-2 hover:text-green-600">Ingredients</a>
+    <a href="equipment-management.html" class="block py-2 hover:text-green-600">Equipment</a>
+    <a href="vendor-management.html" class="block py-2 hover:text-green-600">Vendors</a>
+  </nav>
+</header>
+    <main class="w-full px-4 py-8">
+        <section class="notebook-card">
+            <h1 class="notebook-heading mb-4">Master Ingredient Database</h1>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Ingredient Database</h3>
+                <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <h4 class="font-semibold text-yellow-800 mb-2">Debug Controls</h4>
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="clearIngredientsAndReload()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">Clear & Reload CSV</button>
+                        <button onclick="forceLoadCSV()" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">Force Load CSV</button>
+                        <button onclick="checkIngredients()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">Check Ingredients</button>
+                        <button onclick="enhanceAllIngredients()" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm">🔍 Enhance All with Specialty Produce</button>
+                    </div>
+                </div>
+                <div class="mb-2 flex flex-wrap items-center gap-2">
+                    <input id="ingredient-search" type="text" placeholder="Search ingredients..." class="border rounded px-3 py-1 w-64 focus:outline-none focus:ring-2 focus:ring-blue-300" oninput="renderIngredients()">
+                </div>
+                <div id="existing-ingredients-container" class="w-full">
+                    <!-- Ingredients will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Ingredient Detail Modal -->
+    <div id="ingredient-detail-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div id="ingredient-detail-content" class="notebook-modal w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+    </div>
+    <!-- Shared Auth/Loading UI -->
+    <!--#include file="shared-auth.html" -->
+    <script src="unified_auth_system.js"></script>
+<script src="debug_auth_buttons.js"></script>
+    <script src="standardize-login-modals.js"></script>
+    <script>
+    // --- Ingredient Database Logic (copied from index-local.html) ---
+    const STORAGE_KEYS = {
+        INGREDIENTS: 'iterum_ingredients',
+    };
+    let currentIngredients = [];
+    async function saveIngredientsToBackend(data) {
+        await fetch('/api/data/json/ingredients', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+    }
+    async function loadIngredientsFromBackend() {
+        const res = await fetch('/api/data/json/ingredients');
+        if (res.ok) {
+            return await res.json();
+        }
+        return [];
+    }
+    const searchBoxHTML = `
+        <div class="mb-2 flex flex-wrap items-center gap-2">
+            <input id="ingredient-search" type="text" placeholder="Search ingredients..." class="border rounded px-3 py-1 w-64 focus:outline-none focus:ring-2 focus:ring-blue-300" oninput="renderIngredients()">
+        </div>
+    `;
+    function renderIngredients() {
+        const container = document.getElementById('existing-ingredients-container');
+        if (!container) return;
+        const search = (document.getElementById('ingredient-search')?.value || '').toLowerCase();
+        let filtered = currentIngredients;
+        if (search) {
+            filtered = currentIngredients.filter(ing =>
+                (ing.name || '').toLowerCase().includes(search) ||
+                (ing.category || '').toLowerCase().includes(search)
+            );
+        }
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                ${searchBoxHTML}
+                <div class="col-span-full text-center py-8">
+                    <p class="text-gray-600 mb-4">No ingredients found.</p>
+                    <button onclick="clearIngredientsAndReload()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                        Load from CSV
+                    </button>
+                </div>
+            `;
+            return;
+        }
+        let table = `${searchBoxHTML}<div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-300 bg-white text-sm">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Name</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Unit</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Category</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Prev. Price</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Current Price</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Cost Level</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Notes</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Nutrition</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Allergens</th>
+                        <th class="px-3 py-2 border-b text-left font-semibold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+        table += filtered.map((ingredient, idx) => {
+            if (ingredient.previousPrice === undefined) ingredient.previousPrice = '';
+            if (ingredient.currentPrice === undefined) ingredient.currentPrice = '';
+            let priceClass = '';
+            if (ingredient.previousPrice && ingredient.currentPrice) {
+                const prev = parseFloat(ingredient.previousPrice);
+                const curr = parseFloat(ingredient.currentPrice);
+                if (!isNaN(prev) && !isNaN(curr)) {
+                    if (curr > prev) priceClass = 'bg-red-100 text-red-700 font-bold';
+                    else if (curr < prev) priceClass = 'bg-green-100 text-green-700 font-bold';
+                }
+            }
+            return `
+            <tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50 cursor-pointer" onclick="viewIngredientDetail(${ingredient.id})">
+                <td class="px-3 py-2 border-b font-medium">${ingredient.name}</td>
+                <td class="px-3 py-2 border-b">${ingredient.unit || ''}</td>
+                <td class="px-3 py-2 border-b">${ingredient.category || ''}</td>
+                <td class="px-3 py-2 border-b">${ingredient.previousPrice !== undefined ? ingredient.previousPrice : ''}</td>
+                <td class="px-3 py-2 border-b ${priceClass}" onclick="event.stopPropagation(); editPrice(${ingredient.id}, this)">${ingredient.currentPrice !== undefined ? ingredient.currentPrice : ''}</td>
+                <td class="px-3 py-2 border-b">${ingredient.costLevel || ''}</td>
+                <td class="px-3 py-2 border-b">${ingredient.specNotes || ''}</td>
+                <td class="px-3 py-2 border-b">${ingredient.nutritionalInfo ? ingredient.nutritionalInfo.split(',')[0] : ''}</td>
+                <td class="px-3 py-2 border-b">${ingredient.allergenInfo || ''}</td>
+                <td class="px-3 py-2 border-b text-blue-600 underline hover:text-blue-800" onclick="event.stopPropagation(); viewIngredientDetail(${ingredient.id})">View</td>
+            </tr>
+            `;
+        }).join('');
+        table += `</tbody></table></div>`;
+        container.innerHTML = table;
+    }
+    function editPrice(ingredientId, cell) {
+        const ingredient = currentIngredients.find(ing => ing.id === ingredientId);
+        if (!ingredient) return;
+        const oldValue = ingredient.currentPrice || '';
+        cell.innerHTML = `<input type='number' step='0.01' min='0' value='${oldValue}' class='border rounded px-2 py-1 w-24 focus:outline-none focus:ring-2 focus:ring-blue-300' onblur='savePrice(${ingredientId}, this)' onkeydown='if(event.key==="Enter"){this.blur();}' autofocus>`;
+        cell.querySelector('input').focus();
+    }
+    function savePrice(ingredientId, input) {
+        const ingredient = currentIngredients.find(ing => ing.id === ingredientId);
+        if (!ingredient) return;
+        const newValue = input.value;
+        if (newValue !== '' && newValue !== ingredient.currentPrice) {
+            ingredient.previousPrice = ingredient.currentPrice || '';
+            ingredient.currentPrice = newValue;
+            alert(`Price updated for ${ingredient.name}: ${ingredient.previousPrice} → ${ingredient.currentPrice}`);
+            saveIngredientsToBackend(currentIngredients);
+        }
+        renderIngredients();
+    }
+    function viewIngredientDetail(ingredientId) {
+        const ingredient = currentIngredients.find(ing => ing.id === ingredientId);
+        if (!ingredient) return;
+        const detailHTML = `
+            <div class="bg-white rounded-lg shadow-xl max-w-6xl mx-auto">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-t-lg">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-2">${ingredient.name}</h2>
+                            <div class="flex items-center gap-4 text-blue-100">
+                                <span class="bg-blue-700 px-3 py-1 rounded-full text-sm">${ingredient.category || 'N/A'}</span>
+                                <span class="text-sm">Unit: ${ingredient.unit || 'N/A'}</span>
+                                ${ingredient.costLevel ? `<span class="text-sm">Cost: ${ingredient.costLevel}</span>` : ''}
+                                ${ingredient.scientificName ? `<span class="text-sm italic">${ingredient.scientificName}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="enhanceIngredientWithSpecialtyProduce(${ingredient.id})" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300">
+                                🔍 Enhance with Specialty Produce
+                            </button>
+                            <button onclick="closeIngredientDetail()" class="text-white hover:text-blue-200 text-2xl font-bold">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <!-- Image Upload Section -->
+                    <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Ingredient Image</h3>
+                        <div id="ingredient-image-upload-${ingredient.id}"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Basic Information</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-1">Description</label>
+                                    <p class="text-gray-600">${ingredient.specNotes || 'No description available'}</p>
+                                </div>
+                                ${ingredient.family ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Family</label><p class="text-gray-600">${ingredient.family}</p></div>` : ''}
+                                ${ingredient.variety ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Variety</label><p class="text-gray-600">${ingredient.variety}</p></div>` : ''}
+                                ${ingredient.origin ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Origin</label><p class="text-gray-600">${ingredient.origin}</p></div>` : ''}
+                                <div><label class="block text-gray-700 text-sm font-bold mb-1">Seasonality</label><p class="text-gray-600">${ingredient.seasonality || 'Year-round'}</p></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Physical Characteristics</h3>
+                            <div class="space-y-3">
+                                ${ingredient.appearance ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Appearance</label><p class="text-gray-600">${ingredient.appearance}</p></div>` : ''}
+                                ${ingredient.color ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Color</label><p class="text-gray-600">${ingredient.color}</p></div>` : ''}
+                                ${ingredient.texture ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Texture</label><p class="text-gray-600">${ingredient.texture}</p></div>` : ''}
+                                ${ingredient.aroma ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Aroma</label><p class="text-gray-600">${ingredient.aroma}</p></div>` : ''}
+                                ${ingredient.flavor ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Flavor Profile</label><p class="text-gray-600">${ingredient.flavor}</p></div>` : ''}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Culinary & Storage</h3>
+                            <div class="space-y-3">
+                                <div><label class="block text-gray-700 text-sm font-bold mb-1">Storage</label><p class="text-gray-600">${ingredient.storageNotes || 'Store as appropriate'}</p></div>
+                                <div><label class="block text-gray-700 text-sm font-bold mb-1">Prep Notes</label><p class="text-gray-600">${ingredient.prepNotes || 'No prep notes'}</p></div>
+                                ${ingredient.cookingMethods ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Cooking Methods</label><p class="text-gray-600">${ingredient.cookingMethods}</p></div>` : ''}
+                                <div><label class="block text-gray-700 text-sm font-bold mb-1">Substitutions</label><p class="text-gray-600">${ingredient.substitutions || 'No substitutions listed'}</p></div>
+                                ${ingredient.pairings ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Flavor Pairings</label><p class="text-gray-600">${ingredient.pairings}</p></div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Nutritional & Health Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="block text-gray-700 text-sm font-bold mb-1">Nutritional Info</label><p class="text-gray-600">${ingredient.nutritionalInfo || 'Not specified'}</p></div>
+                            <div><label class="block text-gray-700 text-sm font-bold mb-1">Allergen Info</label><p class="text-gray-600">${ingredient.allergenInfo || 'None'}</p></div>
+                            ${ingredient.healthBenefits ? `<div class="md:col-span-2"><label class="block text-gray-700 text-sm font-bold mb-1">Health Benefits</label><p class="text-gray-600">${ingredient.healthBenefits}</p></div>` : ''}
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Commercial Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="block text-gray-700 text-sm font-bold mb-1">Supplier Notes</label><p class="text-gray-600">${ingredient.supplierNotes || 'Common grocery item'}</p></div>
+                            ${ingredient.availability ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Availability</label><p class="text-gray-600">${ingredient.availability}</p></div>` : ''}
+                            ${ingredient.certifications ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Certifications</label><p class="text-gray-600">${ingredient.certifications}</p></div>` : ''}
+                        </div>
+                    </div>
+                    ${ingredient.specialtyProduceUrl ? `<div class="mt-6 pt-4 border-t"><h3 class="text-lg font-semibold text-gray-700 mb-3">External Resources</h3><a href="${ingredient.specialtyProduceUrl}" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>View on Specialty Produce</a></div>` : ''}
+                    <div class="flex justify-end mt-6 pt-4 border-t"><button onclick="closeIngredientDetail()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-full transition duration-300">Close</button></div>
+                </div>
+            </div>
+        `;
+        const modal = document.getElementById('ingredient-detail-modal');
+        const content = document.getElementById('ingredient-detail-content');
+        if (modal && content) {
+            content.innerHTML = detailHTML;
+            modal.classList.remove('hidden');
+        }
+    }
+    function closeIngredientDetail() {
+        const modal = document.getElementById('ingredient-detail-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+    async function clearIngredientsAndReload() {
+        if (confirm('This will clear all ingredients and reload from CSV. Continue?')) {
+            // localStorage.removeItem(STORAGE_KEYS.INGREDIENTS);
+            await preloadIngredientsFromCSV();
+            currentIngredients = await loadIngredientsFromBackend();
+            renderIngredients();
+        }
+    }
+    async function forceLoadCSV() {
+        // localStorage.removeItem(STORAGE_KEYS.INGREDIENTS);
+        const csvIngredients = await preloadIngredientsFromCSV();
+        if (csvIngredients.length > 0) {
+            currentIngredients = csvIngredients;
+            renderIngredients();
+            alert(`Successfully loaded ${csvIngredients.length} ingredients from CSV!`);
+        } else {
+            alert('No ingredients were loaded from CSV. Check the console for errors.');
+        }
+    }
+    async function enhanceAllIngredients() {
+        if (confirm(`This will enhance all ${currentIngredients.length} ingredients with Specialty Produce data. This may take a while. Continue?`)) {
+            let enhanced = 0;
+            for (let i = 0; i < currentIngredients.length; i++) {
+                const ingredient = currentIngredients[i];
+                try {
+                    const specialtyData = await fetchSpecialtyProduceData(ingredient.name);
+                    const enhancedIngredient = {
+                        ...ingredient,
+                        ...specialtyData,
+                        enhanced_at: new Date().toISOString()
+                    };
+                    currentIngredients[i] = enhancedIngredient;
+                    enhanced++;
+                    if (enhanced % 10 === 0) {
+                        console.log(`Enhanced ${enhanced}/${currentIngredients.length} ingredients...`);
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                } catch (error) {
+                    console.error(`Error enhancing ${ingredient.name}:`, error);
+                }
+            }
+            await saveIngredientsToBackend(currentIngredients);
+            renderIngredients();
+            alert(`Successfully enhanced ${enhanced} ingredients with Specialty Produce data!`);
+        }
+    }
+    function checkIngredients() {
+        console.log('Current ingredients in memory:', currentIngredients.length);
+        console.log('Sample ingredients:', currentIngredients.slice(0, 3));
+        alert(`Found ${currentIngredients.length} ingredients in database.\nCheck console for details.`);
+    }
+    async function preloadIngredientsFromCSV() {
+        try {
+            const response = await fetch('Ingredient Database-Sheet1.csv.txt');
+            const text = await response.text();
+            const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+            const header = lines[0].split(',');
+            const ingredients = [];
+            for (let i = 1; i < lines.length && ingredients.length < 1000; i++) {
+                const line = lines[i];
+                const row = [];
+                let current = '';
+                let inQuotes = false;
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                row.push(current.trim());
+                if (row.length < 4) continue;
+                const [name, unit, category, specNotes, nutritionalInfo, storageNotes, substitutions, seasonality, costLevel, supplierNotes, allergenInfo, bestBefore, prepNotes] = row;
+                if (!name || name.trim() === '') continue;
+                ingredients.push({
+                    id: i,
+                    name: name.trim(),
+                    unit: unit ? unit.trim() : '',
+                    category: category ? category.trim() : '',
+                    specNotes: specNotes ? specNotes.trim() : '',
+                    nutritionalInfo: nutritionalInfo ? nutritionalInfo.trim() : '',
+                    storageNotes: storageNotes ? storageNotes.trim() : '',
+                    substitutions: substitutions ? substitutions.trim() : '',
+                    seasonality: seasonality ? seasonality.trim() : '',
+                    costLevel: costLevel ? costLevel.trim() : '',
+                    supplierNotes: supplierNotes ? supplierNotes.trim() : '',
+                    allergenInfo: allergenInfo ? allergenInfo.trim() : '',
+                    bestBefore: bestBefore ? bestBefore.trim() : '',
+                    prepNotes: prepNotes ? prepNotes.trim() : '',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                });
+            }
+            return ingredients;
+        } catch (e) {
+            console.error('Failed to preload ingredients:', e);
+            return [];
+        }
+    }
+    async function fetchSpecialtyProduceData(ingredientName) {
+        // Mock implementation for demo
+        return {
+            scientificName: '',
+            family: '',
+            variety: '',
+            origin: '',
+            appearance: '',
+            color: '',
+            size: '',
+            texture: '',
+            aroma: '',
+            flavor: '',
+            healthBenefits: '',
+            cookingMethods: '',
+            availability: '',
+            certifications: '',
+            pairings: '',
+            recipes: '',
+            imageUrl: '',
+            specialtyProduceUrl: `https://www.specialtyproduce.com/search?q=${encodeURIComponent(ingredientName)}`
+        };
+    }
+    document.addEventListener('DOMContentLoaded', async function() {
+        currentIngredients = await loadIngredientsFromBackend();
+        renderIngredients();
+    });
+    (function updateUserInfo() {
+      const userInfo = document.getElementById('current-user');
+      if (userInfo) {
+        const username = localStorage.getItem('username') || 'Guest';
+        userInfo.textContent = username;
+      }
+    })();
+    (function(){
+        const langSel = document.getElementById('language-selector');
+        if (!langSel) return;
+        const storedLang = localStorage.getItem('iterum_lang') || 'en';
+        langSel.value = storedLang;
+        langSel.addEventListener('change', function() {
+            localStorage.setItem('iterum_lang', langSel.value);
+            translatePage(langSel.value);
+        });
+        if (storedLang !== 'en') translatePage(storedLang);
+
+        function translatePage(targetLang) {
+            if (targetLang === 'en') return location.reload();
+            const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, label, button, a, p, span, th, td, li');
+            elements.forEach(el => {
+                if (!el.dataset.origText) el.dataset.origText = el.innerText;
+            });
+            const texts = Array.from(elements).map(el => el.dataset.origText);
+            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(texts.join('|||'))}&langpair=en|${targetLang}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.responseData) return;
+                    const translated = data.responseData.translatedText.split('|||');
+                    elements.forEach((el, i) => {
+                        if (translated[i]) el.innerText = translated[i];
+                    });
+                });
+        }
+    })();
+    </script>
+    <svg class="pea-bg-sketch" viewBox="0 0 120 180" fill="none" style="">
+      <path d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
+      <ellipse cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+      <ellipse cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+      <ellipse cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
+      <path d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+      <path d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
+    </svg>
+
+    <!-- Additional Plant Sketches for Ingredients -->
+    <!-- Fruit Tree (Apple/Orange) -->
+    <svg class="plant-sketch top-right plant-fruit" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 140 60 100" stroke="#8d6e63" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q40 90 30 70" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q80 90 90 70" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q50 80 45 60" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q70 80 75 60" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="30" cy="70" rx="5" ry="8" fill="#a5d6a7" stroke="#8d6e63" stroke-width="1"/>
+        <ellipse cx="90" cy="70" rx="5" ry="8" fill="#a5d6a7" stroke="#8d6e63" stroke-width="1"/>
+        <ellipse cx="45" cy="60" rx="5" ry="8" fill="#a5d6a7" stroke="#8d6e63" stroke-width="1"/>
+        <ellipse cx="75" cy="60" rx="5" ry="8" fill="#a5d6a7" stroke="#8d6e63" stroke-width="1"/>
+        <circle cx="60" cy="100" r="10" fill="#ff9800" stroke="#f57c00" stroke-width="1"/>
+    </svg>
+
+    <!-- Grain Plant (Wheat/Corn) -->
+    <svg class="plant-sketch top-left plant-grain" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 140 60 100" stroke="#d4a574" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q40 90 35 70" stroke="#d4a574" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q80 90 85 70" stroke="#d4a574" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q50 80 45 60" stroke="#d4a574" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q70 80 75 60" stroke="#d4a574" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="35" cy="70" rx="2" ry="8" fill="#f4e4c1" stroke="#d4a574" stroke-width="1"/>
+        <ellipse cx="85" cy="70" rx="2" ry="8" fill="#f4e4c1" stroke="#d4a574" stroke-width="1"/>
+        <ellipse cx="45" cy="60" rx="2" ry="8" fill="#f4e4c1" stroke="#d4a574" stroke-width="1"/>
+        <ellipse cx="75" cy="60" rx="2" ry="8" fill="#f4e4c1" stroke="#d4a574" stroke-width="1"/>
+        <ellipse cx="60" cy="100" rx="8" ry="4" fill="#ffeb3b" stroke="#fbc02d" stroke-width="1"/>
+    </svg>
+
+    <!-- Herb Plant (Basil/Rosemary) -->
+    <svg class="plant-sketch middle-right plant-herb plant-float" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 140 60 100" stroke="#8bc34a" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q40 90 35 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q80 90 85 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q50 80 45 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q70 80 75 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="35" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+        <ellipse cx="85" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+        <ellipse cx="45" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+        <ellipse cx="75" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
+    </svg>
+
+    <!-- Vegetable Plant (Carrot/Tomato) -->
+    <svg class="plant-sketch middle-left plant-vegetable" viewBox="0 0 120 180" fill="none">
+        <path d="M60 160 Q60 140 60 120" stroke="#ff9800" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 Q40 110 30 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 Q80 110 90 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 Q50 100 45 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 Q70 100 75 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="30" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+        <ellipse cx="90" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+        <ellipse cx="45" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+        <ellipse cx="75" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
+        <circle cx="60" cy="120" r="8" fill="#ff5722" stroke="#e64a19" stroke-width="1"/>
+    </svg>
+
+    <!-- Small Herb Sprig -->
+    <svg class="plant-sketch small plant-herb" viewBox="0 0 120 180" fill="none" style="top: 70%; left: 10%;">
+        <path d="M60 160 Q60 140 60 100" stroke="#689f38" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q45 90 40 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 100 Q75 90 80 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="40" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
+        <ellipse cx="80" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
+    </svg>
+
+    <!-- Tiny Microgreens -->
+    <svg class="plant-sketch tiny plant-vegetable" viewBox="0 0 120 180" fill="none" style="top: 85%; right: 15%;">
+        <path d="M60 160 Q60 150 60 140" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M60 140 Q55 135 50 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <path d="M60 140 Q65 135 70 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <ellipse cx="50" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
+        <ellipse cx="70" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
+    </svg>
+
+    <script src="imageUploadManager.js"></script>
+    <script>
+        // Initialize image upload functionality for ingredients
+        function initializeIngredientImageUpload(ingredientId) {
+            const uploadContainer = document.getElementById(`ingredient-image-upload-${ingredientId}`);
+            if (!uploadContainer) return;
+            
+            window.imageUploadManager.createUploadInterface(uploadContainer, {
+                multiple: false,
+                placeholder: 'Upload ingredient image here'
+            });
+            
+            // Add upload button
+            const uploadBtn = document.createElement('button');
+            uploadBtn.textContent = 'Upload Image';
+            uploadBtn.className = 'mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors';
+            uploadBtn.onclick = async () => {
+                const uploadContainerEl = uploadContainer.querySelector('.image-upload-container');
+                if (uploadContainerEl && uploadContainerEl.pendingFiles && uploadContainerEl.pendingFiles.length > 0) {
+                    const file = uploadContainerEl.pendingFiles[0];
+                    const ingredient = currentIngredients.find(ing => ing.id === ingredientId);
+                    
+                    if (!ingredient) {
+                        alert('Ingredient not found');
+                        return;
+                    }
+                    
+                    try {
+                        const progressCallback = (percent) => {
+                            window.imageUploadManager.showProgress(uploadContainerEl, percent);
+                        };
+                        
+                        // For development, simulate upload
+                        console.log('Would upload image for ingredient:', ingredient.name);
+                        const messagesContainer = uploadContainerEl.querySelector('.upload-messages');
+                        window.imageUploadManager.showMessage(messagesContainer, 'Image uploaded successfully!', 'success');
+                        
+                        // In production, would call:
+                        // await window.imageUploadManager.uploadIngredientImage(ingredientId, file, progressCallback);
+                        
+                    } catch (error) {
+                        const messagesContainer = uploadContainerEl.querySelector('.upload-messages');
+                        window.imageUploadManager.showMessage(messagesContainer, `Upload failed: ${error.message}`, 'error');
+                    }
+                } else {
+                    alert('Please select an image first');
+                }
+            };
+            uploadContainer.appendChild(uploadBtn);
+        }
+        
+        // Override the viewIngredientDetail function to initialize image upload
+        const originalViewIngredientDetail = viewIngredientDetail;
+        viewIngredientDetail = function(ingredientId) {
+            originalViewIngredientDetail(ingredientId);
+            // Initialize image upload after modal content is created
+            setTimeout(() => {
+                initializeIngredientImageUpload(ingredientId);
+            }, 100);
+        };
+    </script>
+
+</body>
+</html> 
