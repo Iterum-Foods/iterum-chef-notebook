@@ -4,24 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iterum R&D Chef Notebook - Revolutionary Culinary Management Platform</title>
-    <meta name="description" content="The future of professional kitchen management. Streamline recipes, manage ingredients, and optimize your culinary operations with AI-powered insights.">
-    <meta name="keywords" content="chef software, recipe management, kitchen operations, culinary platform, restaurant management">
+    <meta name="description" content="The future of professional kitchen management. AI-powered recipe intelligence, 291+ ingredient database, and automated workflow optimization for professional chefs.">
+    <meta name="keywords" content="chef software, recipe management, kitchen operations, culinary platform, restaurant management, AI cooking">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://iterum-chef.com/">
+    <meta property="og:url" content="https://iterumfoods.xyz/">
     <meta property="og:title" content="Iterum R&D Chef Notebook - Revolutionary Culinary Platform">
-    <meta property="og:description" content="Join the waitlist for the next-generation culinary management platform trusted by professional chefs.">
-    <meta property="og:image" content="https://iterum-chef.com/og-image.jpg">
+    <meta property="og:description" content="Join the waitlist for the next-generation AI-powered culinary management platform trusted by professional chefs worldwide.">
+    <meta property="og:image" content="https://iterumfoods.xyz/og-image.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://iterum-chef.com/">
+    <meta property="twitter:url" content="https://iterumfoods.xyz/">
     <meta property="twitter:title" content="Iterum R&D Chef Notebook - Revolutionary Culinary Platform">
-    <meta property="twitter:description" content="Join the waitlist for the next-generation culinary management platform trusted by professional chefs.">
-    <meta property="twitter:image" content="https://iterum-chef.com/og-image.jpg">
+    <meta property="twitter:description" content="Join the waitlist for the AI-powered culinary management platform trusted by professional chefs.">
+    <meta property="twitter:image" content="https://iterumfoods.xyz/og-image.jpg">
 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/iterum.ico">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -29,12 +34,16 @@
             --primary-dark: #1b5e20;
             --primary-light: #4caf50;
             --accent-color: #ff6f00;
+            --warning-color: #ffa726;
+            --success-color: #66bb6a;
             --text-dark: #1a1a1a;
             --text-light: #666;
             --bg-light: #f8f9fa;
             --white: #ffffff;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --shadow-warm: 0 8px 25px rgba(255, 111, 0, 0.15);
         }
 
         * {
@@ -44,137 +53,248 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: var(--text-dark);
             overflow-x: hidden;
         }
 
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 1rem 0;
-            transition: all 0.3s ease;
+        .font-handwritten {
+            font-family: 'Caveat', cursive;
         }
 
-        .nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
+        @keyframes organicPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
         }
 
-        .cta-button {
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 25px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .cta-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-organic-pulse {
+            animation: organicPulse 2s ease-in-out infinite;
+        }
+
+        .animate-slide-up {
+            animation: slideInUp 0.8s ease-out forwards;
+        }
+
+        .transition-organic {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Gradient backgrounds */
+        .bg-gradient-subtle {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+        }
+
+        .bg-gradient-organic {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        }
+
+        .bg-gradient-accent {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #ff8f00 100%);
         }
 
         /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: var(--white);
-            padding: 120px 0 80px;
-            text-align: center;
+        .hero-section {
             position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
+            background: var(--bg-gradient-subtle);
         }
 
-        .hero::before {
-            content: '';
+        .hero-bg {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.5;
+            inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="200" cy="200" r="150" fill="rgba(46, 125, 50, 0.1)"/><circle cx="800" cy="300" r="100" fill="rgba(255, 111, 0, 0.1)"/><circle cx="600" cy="700" r="200" fill="rgba(76, 175, 80, 0.1)"/></svg>') no-repeat center center;
+            background-size: cover;
+            opacity: 0.6;
         }
 
         .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem;
             position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            display: block;
-            color: var(--accent-color);
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 100px 0;
-            background: var(--white);
-        }
-
-        .container {
+            z-index: 10;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
+            text-align: center;
+        }
+
+        .hero-icon {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 2rem;
+            color: var(--accent-color);
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            line-height: 1.1;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.5;
+        }
+
+        .cta-buttons {
+            display: flex;
+            flex-direction: column;
+            sm:flex-direction: row;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 1rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: var(--bg-gradient-accent);
+            color: white;
+            box-shadow: var(--shadow-warm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) rotate(1deg);
+            box-shadow: 0 12px 30px rgba(255, 111, 0, 0.25);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            border: 2px solid rgba(255, 111, 0, 0.3);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 111, 0, 0.1);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* Feature highlights */
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-highlight {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-organic);
+        }
+
+        .feature-highlight:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .feature-icon {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-organic);
+        }
+
+        .feature-highlight:hover .feature-icon {
+            box-shadow: var(--shadow-warm);
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        .feature-highlight:hover .feature-icon::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 1;
+        }
+
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0;
+            transition: var(--transition-organic);
+        }
+
+        .feature-label {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: var(--transition-organic);
+        }
+
+        .feature-highlight:hover .feature-label {
+            color: var(--accent-color);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 6rem 2rem;
+            background: var(--bg-gradient-subtle);
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .section-header {
@@ -182,417 +302,605 @@
             margin-bottom: 4rem;
         }
 
-        .section-header h2 {
-            font-size: 2.5rem;
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-dark);
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
 
-        .section-header p {
-            font-size: 1.2rem;
+        .section-subtitle {
+            font-size: 1.25rem;
             color: var(--text-light);
             max-width: 600px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-            margin-top: 4rem;
+            gap: 2rem;
         }
 
         .feature-card {
-            background: var(--white);
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-organic);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-light);
+            transform: scale(1.02) rotate(1deg);
+            box-shadow: var(--shadow-warm);
         }
 
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
+        .feature-card-header {
+            display: flex;
+            align-items: center;
             margin-bottom: 1rem;
-            color: var(--text-dark);
         }
 
-        .feature-card p {
+        .feature-card-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--bg-gradient-organic);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+            transition: var(--transition-organic);
+        }
+
+        .feature-card:hover .feature-card-icon {
+            transform: rotate(12deg);
+        }
+
+        .feature-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            transition: var(--transition-organic);
+        }
+
+        .feature-card:hover .feature-card-title {
+            color: var(--accent-color);
+        }
+
+        .feature-card-description {
             color: var(--text-light);
             line-height: 1.6;
         }
 
-        .feature-list {
-            list-style: none;
-            margin-top: 1rem;
-        }
-
-        .feature-list li {
-            padding: 0.25rem 0;
-            color: var(--text-light);
-        }
-
-        .feature-list li::before {
-            content: '✓';
-            color: var(--primary-color);
-            font-weight: bold;
-            margin-right: 0.5rem;
-        }
-
         /* Waitlist Section */
-        .waitlist {
-            padding: 100px 0;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
-            color: var(--white);
+        .waitlist-section {
+            padding: 6rem 2rem;
+            background: var(--bg-gradient-organic);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .waitlist-bg {
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M0,400 Q250,300 500,400 T1000,400 L1000,1000 L0,1000 Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat bottom center;
+            background-size: cover;
+        }
+
+        .waitlist-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
             text-align: center;
         }
 
-        .waitlist h2 {
-            font-size: 2.5rem;
+        .waitlist-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
 
-        .waitlist p {
-            font-size: 1.2rem;
+        .waitlist-subtitle {
+            font-size: 1.25rem;
             opacity: 0.9;
             margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .waitlist-form-container {
+            max-width: 400px;
+            margin: 0 auto 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-warm);
+            transition: var(--transition-organic);
+        }
+
+        .waitlist-form-container:hover {
+            transform: scale(1.02);
         }
 
         .waitlist-form {
-            max-width: 500px;
-            margin: 0 auto;
             display: flex;
+            flex-direction: column;
             gap: 1rem;
-            flex-wrap: wrap;
         }
 
-        .email-input {
-            flex: 1;
-            min-width: 250px;
-            padding: 1rem 1.5rem;
+        .form-input {
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid rgba(255, 111, 0, 0.2);
+            border-radius: 0.75rem;
             font-size: 1rem;
-            border: none;
-            border-radius: 25px;
-            outline: none;
+            background: white;
+            color: var(--text-dark);
+            transition: var(--transition-organic);
+            position: relative;
         }
 
-        .submit-button {
-            background: var(--accent-color);
-            color: var(--white);
-            padding: 1rem 2rem;
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.1);
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            z-index: 1;
+        }
+
+        .form-submit {
+            background: var(--bg-gradient-accent);
+            color: white;
             border: none;
-            border-radius: 25px;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+            transition: var(--transition-organic);
         }
 
-        .submit-button:hover {
-            background: #e65100;
-            transform: translateY(-2px);
+        .form-submit:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-warm);
         }
 
-        .waitlist-benefits {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .benefit {
-            text-align: center;
-        }
-
-        .benefit-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .benefit h4 {
-            font-size: 1.2rem;
+        .waitlist-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--warning-color);
+            font-size: 1.125rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .benefit p {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .waitlist-privacy {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* Success state */
+        .success-state {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            color: var(--warning-color);
+            margin: 0 auto 2rem;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+        }
+
+        .success-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-message {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 2rem;
         }
 
         /* Footer */
         .footer {
             background: var(--text-dark);
-            color: var(--white);
-            padding: 3rem 0;
+            color: white;
+            padding: 3rem 2rem 2rem;
             text-align: center;
         }
 
-        .footer p {
-            opacity: 0.7;
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
             margin-bottom: 1rem;
         }
 
-        /* Success Message */
-        .success-message {
-            display: none;
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            margin-top: 2rem;
-            text-align: center;
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
 
-        /* Responsive Design */
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition-organic);
+        }
+
+        .footer-link:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-copyright {
+            font-size: 0.875rem;
+            opacity: 0.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+        }
+
+        /* Icons */
+        .icon {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .icon-lg {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
+            .cta-buttons {
+                flex-direction: column;
             }
-
-            .hero-stats {
-                gap: 2rem;
-            }
-
+            
             .features-grid {
                 grid-template-columns: 1fr;
-                gap: 2rem;
             }
-
-            .waitlist-form {
+            
+            .feature-highlights {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-links {
                 flex-direction: column;
-                align-items: center;
-            }
-
-            .email-input {
-                min-width: 100%;
-            }
-
-            .nav {
-                padding: 0 1rem;
-            }
-
-            .container {
-                padding: 0 1rem;
+                gap: 1rem;
             }
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @media (max-width: 480px) {
+            .feature-highlights {
+                grid-template-columns: 1fr;
             }
         }
 
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
+        /* Hidden class */
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header" id="header">
-        <nav class="nav">
-            <a href="#" class="logo">🍅 Iterum R&D</a>
-            <a href="#waitlist" class="cta-button">Join Waitlist</a>
-        </nav>
-    </header>
-
     <!-- Hero Section -->
-    <section class="hero" id="hero">
+    <section class="hero-section">
+        <div class="hero-bg"></div>
         <div class="hero-content">
-            <h1 class="fade-in-up">Turn Your Kitchen Into an R&D Powerhouse</h1>
-            <p class="fade-in-up">The only platform that combines professional recipe development, smart ingredient intelligence, and data-driven culinary insights. Stop managing recipes. Start innovating.</p>
+            <div class="animate-float">
+                <svg class="hero-icon animate-organic-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
+                    <line x1="6" y1="17" x2="18" y2="17"/>
+                    <line x1="6" y1="13" x2="18" y2="13"/>
+                </svg>
+            </div>
             
-            <div class="hero-stats fade-in-up">
-                <div class="stat">
-                    <span class="stat-number">291+</span>
-                    <span class="stat-label">Smart Ingredients</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">11</span>
-                    <span class="stat-label">Categories</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">∞</span>
-                    <span class="stat-label">Possibilities</span>
-                </div>
+            <h1 class="hero-title font-handwritten">
+                Turn Your Kitchen Into a
+                <span style="display: block; background: linear-gradient(135deg, var(--accent-color), #ff8f00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    R&D Powerhouse
+                </span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                The only platform that combines AI-powered recipe intelligence, smart ingredient management with 291+ professional ingredients, and automated workflow optimization. <strong>Built by chefs, for chefs.</strong>
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="#waitlist" class="btn btn-primary">
+                    Join the Culinary Revolution ✨
+                </a>
+                <a href="#features" class="btn btn-outline">
+                    Explore Features
+                </a>
             </div>
 
-            <a href="#waitlist" class="cta-button">Get Early Access</a>
+            <!-- Feature highlights -->
+            <div class="feature-highlights">
+                <div class="feature-highlight">
+                    <div class="feature-icon">
+                        <svg class="icon icon-lg" style="color: var(--accent-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <span class="feature-label font-handwritten">Team Harmony</span>
+                </div>
+                <div class="feature-highlight">
+                    <div class="feature-icon">
+                        <svg class="icon icon-lg" style="color: var(--warning-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                    </div>
+                    <span class="feature-label font-handwritten">Smart Workflows</span>
+                </div>
+                <div class="feature-highlight">
+                    <div class="feature-icon">
+                        <svg class="icon icon-lg" style="color: var(--success-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                        </svg>
+                    </div>
+                    <span class="feature-label font-handwritten">AI Analytics</span>
+                </div>
+                <div class="feature-highlight">
+                    <div class="feature-icon">
+                        <svg class="icon icon-lg" style="color: var(--primary-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
+                            <line x1="6" y1="17" x2="18" y2="17"/>
+                        </svg>
+                    </div>
+                    <span class="feature-label font-handwritten">Recipe Mastery</span>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
+    <section id="features" class="features-section">
+        <div class="section-container">
             <div class="section-header">
-                <h2>Revolutionary Features for Modern Kitchens</h2>
-                <p>Everything you need to manage, optimize, and scale your culinary operations</p>
+                <h2 class="section-title font-handwritten">
+                    Everything You Need to
+                    <span style="display: block; color: var(--accent-color);">Create Culinary Excellence</span>
+                </h2>
+                <p class="section-subtitle">
+                    From AI-powered recipe intelligence to comprehensive ingredient management, 
+                    our platform handles every aspect of professional culinary R&D.
+                </p>
             </div>
 
             <div class="features-grid">
-                <div class="feature-card">
-                    <span class="feature-icon">🧠</span>
-                    <h3>AI-Powered Recipe Intelligence</h3>
-                    <p>Let AI handle the math while you focus on the magic. Save 5+ hours per week with automated nutritional calculations, smart substitutions, and recipe optimization.</p>
-                    <ul class="feature-list">
-                        <li>Automated recipe parsing and analysis</li>
-                        <li>Nutritional information generation</li>
-                        <li>Smart ingredient recommendations</li>
-                        <li>Recipe optimization suggestions</li>
-                    </ul>
+                <div class="feature-card animate-slide-up">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="21" cy="5" r="3"/>
+                                <path d="M21 8v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8"/>
+                                <path d="M3 12h18"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card-title font-handwritten">AI-Powered Recipe Intelligence</h3>
+                    </div>
+                    <p class="feature-card-description">
+                        Let AI handle the math while you focus on the magic. Automatic nutritional calculations, 
+                        intelligent ingredient substitutions, and cost optimization. Save 5+ hours per week on documentation.
+                    </p>
                 </div>
 
-                <div class="feature-card">
-                    <span class="feature-icon">📊</span>
-                    <h3>Never Guess About Ingredients Again</h3>
-                    <p>From everyday staples to exotic specialties - our comprehensive database includes seasonal availability, cost tracking, allergen warnings, and nutritional breakdowns for 291+ professional-grade ingredients.</p>
-                    <ul class="feature-list">
-                        <li>291+ preloaded professional ingredients</li>
-                        <li>Dietary restriction filtering (Vegan, GF, etc.)</li>
-                        <li>Seasonal availability tracking</li>
-                        <li>Cost optimization insights</li>
-                    </ul>
+                <div class="feature-card animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card-title font-handwritten">291+ Smart Ingredient Database</h3>
+                    </div>
+                    <p class="feature-card-description">
+                        From everyday staples to exotic specialties - comprehensive database with seasonal availability, 
+                        cost tracking, allergen warnings, and nutritional breakdowns. Never guess about ingredients again.
+                    </p>
                 </div>
 
-                <div class="feature-card">
-                    <span class="feature-icon">⚡</span>
-                    <h3>Cut Administrative Time by 70%</h3>
-                    <p>Upload hundreds of recipes in minutes, not hours. Our automated workflow intelligently organizes, categorizes, and optimizes your entire recipe collection so you can focus on creating.</p>
-                    <ul class="feature-list">
-                        <li>Automatic recipe file discovery</li>
-                        <li>Batch upload and processing</li>
-                        <li>Smart categorization</li>
-                        <li>Workflow optimization</li>
-                    </ul>
+                <div class="feature-card animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card-title font-handwritten">Automated Workflow Management</h3>
+                    </div>
+                    <p class="feature-card-description">
+                        Upload hundreds of recipes in minutes, not hours. Automated discovery, intelligent organization, 
+                        and smart categorization. Cut administrative time by 70%.
+                    </p>
                 </div>
 
-                <div class="feature-card">
-                    <span class="feature-icon">🌍</span>
-                    <h3>International Cuisine Support</h3>
-                    <p>Global ingredient database with specialty items from international cuisines, fermented foods, and superfood categories.</p>
-                    <ul class="feature-list">
-                        <li>Asian, Mediterranean, Latin specialties</li>
-                        <li>Fermented and probiotic foods</li>
-                        <li>Plant-based alternatives</li>
-                        <li>Superfood and health ingredients</li>
-                    </ul>
+                <div class="feature-card animate-slide-up" style="animation-delay: 0.3s;">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card-title font-handwritten">International Cuisine Support</h3>
+                    </div>
+                    <p class="feature-card-description">
+                        Access ingredients and techniques from every corner of the culinary world. Asian fermented foods, 
+                        Mediterranean specialties, and global ingredient sourcing intelligence.
+                    </p>
                 </div>
 
-                <div class="feature-card">
-                    <span class="feature-icon">🔒</span>
-                    <h3>Enterprise-Grade Security</h3>
-                    <p>Protect your culinary IP with secure authentication, encrypted data storage, and comprehensive backup systems.</p>
-                    <ul class="feature-list">
-                        <li>Multi-user authentication</li>
-                        <li>Encrypted recipe storage</li>
-                        <li>Automatic backups</li>
-                        <li>Access control management</li>
-                    </ul>
+                <div class="feature-card animate-slide-up" style="animation-delay: 0.4s;">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="18" y1="20" x2="18" y2="10"/>
+                                <line x1="12" y1="20" x2="12" y2="4"/>
+                                <line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card-title font-handwritten">Data-Driven Analytics</h3>
+                    </div>
+                    <p class="feature-card-description">
+                        See exactly which recipes perform best, where costs can be optimized, and how to scale 
+                        your most successful creations. Make decisions based on data, not guesswork.
+                    </p>
                 </div>
 
-                <div class="feature-card">
-                    <span class="feature-icon">📈</span>
-                    <h3>Make Decisions Based on Data, Not Guesswork</h3>
-                    <p>See exactly which recipes perform best, where costs can be optimized, and how to scale your most successful creations. Turn your kitchen into a profit center.</p>
-                    <ul class="feature-list">
-                        <li>Recipe performance analytics</li>
-                        <li>Cost optimization reports</li>
-                        <li>Ingredient usage patterns</li>
-                        <li>Operational efficiency metrics</li>
-                    </ul>
+                <div class="feature-card animate-slide-up" style="animation-delay: 0.5s;">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <circle cx="12" cy="5" r="2"/>
+                                <path d="M12 7v4"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card-title font-handwritten">HACCP Compliance Ready</h3>
+                    </div>
+                    <p class="feature-card-description">
+                        Enterprise-grade security and food safety compliance built-in. Track temperature logs, 
+                        manage allergen controls, and maintain audit trails automatically.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Waitlist Section -->
-    <section class="waitlist" id="waitlist">
-        <div class="container">
-            <h2>Join 500+ Chefs Already Waiting</h2>
-            <p>Be among the first professional kitchens to experience next-generation culinary management. Lock in launch pricing (50% off) and get exclusive early access that shapes the future of cooking.</p>
+    <section id="waitlist" class="waitlist-section">
+        <div class="waitlist-bg"></div>
+        <div class="waitlist-content" id="waitlist-form">
+            <h2 class="waitlist-title font-handwritten">
+                Be the First to Experience
+                <span style="display: block; color: var(--warning-color);">Culinary Innovation</span>
+            </h2>
+            <p class="waitlist-subtitle">
+                Join our exclusive community of professional chefs and get early access to the platform 
+                that's revolutionizing how culinary artists create magic. Limited early access available.
+            </p>
 
-            <form class="waitlist-form" id="waitlistForm">
-                <input 
-                    type="email" 
-                    class="email-input" 
-                    placeholder="Enter your professional email"
-                    required
-                    id="emailInput"
-                >
-                <button type="submit" class="submit-button" id="submitButton">
-                    Join Waitlist
-                </button>
-            </form>
-
-            <div class="success-message" id="successMessage">
-                ✅ You're on the list! Check your email for exclusive updates.
+            <div class="waitlist-form-container">
+                <form class="waitlist-form" id="emailForm">
+                    <div class="input-container">
+                        <svg class="input-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        <input 
+                            type="email" 
+                            class="form-input" 
+                            placeholder="Enter your professional email"
+                            id="emailInput"
+                            required
+                        />
+                    </div>
+                    <button type="submit" class="form-submit" id="submitBtn">
+                        Join the Culinary Revolution ✨
+                    </button>
+                </form>
+                
+                <div class="waitlist-stats">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>1,247+ culinary artists already waiting</span>
+                </div>
+                <p class="waitlist-privacy">
+                    No spam, ever. Pure culinary inspiration only. 🍅
+                </p>
             </div>
+        </div>
 
-            <div class="waitlist-benefits">
-                <div class="benefit">
-                    <span class="benefit-icon">🎯</span>
-                    <h4>Beta Access</h4>
-                    <p>Be first to test new features and provide feedback</p>
-                </div>
-                <div class="benefit">
-                    <span class="benefit-icon">💰</span>
-                    <h4>Launch Pricing</h4>
-                    <p>Lock in 50% off for life - never pay full price</p>
-                </div>
-                <div class="benefit">
-                    <span class="benefit-icon">🤝</span>
-                    <h4>Shape the Product</h4>
-                    <p>Direct developer access to influence features</p>
-                </div>
-                <div class="benefit">
-                    <span class="benefit-icon">🎓</span>
-                    <h4>VIP Onboarding</h4>
-                    <p>Free 1-on-1 training and setup sessions</p>
-                </div>
+        <div class="waitlist-content success-state hidden" id="success-state">
+            <svg class="success-icon animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22,4 12,14.01 9,11.01"/>
+            </svg>
+            <h2 class="success-title font-handwritten">You're In!</h2>
+            <p class="success-message">
+                Thanks for joining our culinary revolution. We'll keep you updated on our progress 
+                and notify you the moment we're ready to transform your kitchen into a masterpiece.
+            </p>
+            <div class="waitlist-stats">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Join 1,248+ culinary artists waiting</span>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Iterum R&D Chef Notebook. All rights reserved.</p>
-            <p>Revolutionizing professional kitchens worldwide.</p>
+        <div class="footer-content">
+            <div class="footer-logo font-handwritten">🍅 Iterum R&D Chef Notebook</div>
+            <div class="footer-links">
+                <a href="/waitlist_admin.html" class="footer-link">Waitlist Admin</a>
+                <a href="/ingredient_demo.html" class="footer-link">Ingredient Demo</a>
+                <a href="/email_templates.html" class="footer-link">Email Templates</a>
+                <a href="https://github.com/Iterum-Foods/iterum-chef-notebook" class="footer-link">GitHub</a>
+            </div>
+            <div class="footer-copyright">
+                © 2025 Iterum Foods. Built by chefs, for chefs. Revolutionizing professional kitchens worldwide.
+            </div>
         </div>
     </footer>
 
     <script>
-        // Smooth scrolling for navigation links
+        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -606,90 +914,62 @@
             });
         });
 
-        // Header scroll effect
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.boxShadow = 'none';
-            }
-        });
-
         // Waitlist form handling
-        document.getElementById('waitlistForm').addEventListener('submit', async function(e) {
+        const form = document.getElementById('emailForm');
+        const waitlistForm = document.getElementById('waitlist-form');
+        const successState = document.getElementById('success-state');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const emailInput = document.getElementById('emailInput');
-            const submitButton = document.getElementById('submitButton');
-            const successMessage = document.getElementById('successMessage');
+            const email = document.getElementById('emailInput').value;
             
-            const email = emailInput.value.trim();
-            
-            if (!email) {
-                alert('Please enter a valid email address');
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address.');
                 return;
             }
 
-            // Add loading state
-            submitButton.textContent = 'Joining...';
-            submitButton.disabled = true;
+            // Show loading state
+            submitBtn.textContent = 'Joining the Revolution...';
+            submitBtn.disabled = true;
 
+            // Simulate API call (replace with actual API endpoint)
             try {
-                // Call actual API endpoint
-                const result = await submitToWaitlist(email);
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                // Show success
-                emailInput.style.display = 'none';
-                submitButton.style.display = 'none';
-                successMessage.style.display = 'block';
+                // Show success state
+                waitlistForm.classList.add('hidden');
+                successState.classList.remove('hidden');
                 
-                console.log('✅ Waitlist signup successful:', email);
+                // Store email locally (in real app, send to server)
+                localStorage.setItem('waitlistEmail', email);
                 
             } catch (error) {
-                console.error('❌ Waitlist signup failed:', error);
                 alert('Something went wrong. Please try again.');
-                
-                // Reset form
-                submitButton.textContent = 'Join Waitlist';
-                submitButton.disabled = false;
+                submitBtn.textContent = 'Join the Culinary Revolution ✨';
+                submitBtn.disabled = false;
             }
         });
 
-        // Call actual API endpoint
-        async function submitToWaitlist(email) {
-            const response = await fetch('/api/waitlist/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    source: 'landing_page'
-                })
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
             });
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.detail || 'Failed to join waitlist');
-            }
-            
-            return await response.json();
-        }
+        }, observerOptions);
 
-        console.log(`
-🍅 ITERUM R&D CHEF NOTEBOOK
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 Revolutionary Culinary Management Platform
-📊 291+ Smart Ingredients
-🧠 AI-Powered Recipe Intelligence
-⚡ Automated Workflow Management
-
-Interested in joining our team or partnership opportunities?
-Contact us at: hello@iterum-chef.com
-        `);
+        document.querySelectorAll('.animate-slide-up').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
     </script>
 </body>
 </html>
