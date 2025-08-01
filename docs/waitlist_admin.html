@@ -43,6 +43,32 @@
             font-weight: 600;
         }
 
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-info {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .logout-button {
+            background: var(--text-light);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: var(--text-dark);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -208,7 +234,15 @@
 </head>
 <body>
     <div class="header">
-        <h1>🍅 Waitlist Admin Dashboard</h1>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>🍅 Waitlist Admin Dashboard</h1>
+                <div class="header-actions">
+                    <span class="user-info" id="userInfo">Loading...</span>
+                    <button class="logout-button" id="logoutButton">Logout</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="container">
@@ -274,9 +308,63 @@
     </div>
 
     <script>
-        // Load data when page loads
+        let authToken = null;
+
+        // Check authentication when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            loadWaitlistData();
+            checkAuthentication();
+        });
+
+        async function checkAuthentication() {
+            authToken = localStorage.getItem('adminToken');
+            
+            if (!authToken) {
+                redirectToLogin();
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/waitlist/admin/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('userInfo').textContent = `Logged in as: ${data.username}`;
+                    loadWaitlistData();
+                } else {
+                    // Invalid token
+                    localStorage.removeItem('adminToken');
+                    redirectToLogin();
+                }
+            } catch (error) {
+                console.error('Auth verification failed:', error);
+                localStorage.removeItem('adminToken');
+                redirectToLogin();
+            }
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'admin-login.html';
+        }
+
+        // Logout functionality
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                await fetch('/api/waitlist/admin/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+            } catch (error) {
+                console.log('Logout request failed');
+            }
+            
+            localStorage.removeItem('adminToken');
+            redirectToLogin();
         });
 
         async function loadWaitlistData() {
@@ -286,10 +374,20 @@
                 // Load stats and entries in parallel
                 const [statsResponse, entriesResponse] = await Promise.all([
                     fetch('/api/waitlist/stats'),
-                    fetch('/api/waitlist/admin/list?limit=100')
+                    fetch('/api/waitlist/admin/list?limit=100', {
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    })
                 ]);
 
                 if (!statsResponse.ok || !entriesResponse.ok) {
+                    if (entriesResponse.status === 401) {
+                        // Token expired
+                        localStorage.removeItem('adminToken');
+                        redirectToLogin();
+                        return;
+                    }
                     throw new Error('Failed to load data');
                 }
 
@@ -376,8 +474,12 @@
             document.getElementById('emptyState').style.display = 'none';
         }
 
-        // Auto-refresh every 30 seconds
-        setInterval(loadWaitlistData, 30000);
+        // Auto-refresh every 30 seconds (only if authenticated)
+        setInterval(() => {
+            if (authToken) {
+                loadWaitlistData();
+            }
+        }, 30000);
 
         // Console branding
         console.log(`

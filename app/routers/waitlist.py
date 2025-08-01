@@ -1,16 +1,28 @@
 """
 Waitlist management router for the landing page
 """
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, status, Request, Response
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 import sqlite3
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
+import secrets
+import hashlib
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+security = HTTPBearer(auto_error=False)
+
+# Simple admin credentials (in production, use environment variables)
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "iterum2025!"  # Change this in production
+ADMIN_PASSWORD_HASH = hashlib.sha256(ADMIN_PASSWORD.encode()).hexdigest()
+
+# Simple session store (in production, use Redis or database)
+active_sessions = {}
 
 class WaitlistEntry(BaseModel):
     email: EmailStr
@@ -24,6 +36,15 @@ class WaitlistResponse(BaseModel):
     success: bool
     message: str
     position: Optional[int] = None
+
+class AdminLogin(BaseModel):
+    username: str
+    password: str
+
+class AdminLoginResponse(BaseModel):
+    success: bool
+    message: str
+    token: Optional[str] = None
 
 def init_waitlist_db():
     """Initialize the waitlist database"""
@@ -178,13 +199,110 @@ async def get_waitlist_stats():
             detail="Failed to retrieve statistics"
         )
 
+def verify_admin_session(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Verify admin session token"""
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required"
+        )
+    
+    token = credentials.credentials
+    if token not in active_sessions:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired session"
+        )
+    
+    # Check if session is expired
+    session = active_sessions[token]
+    if datetime.now() > session['expires']:
+        del active_sessions[token]
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Session expired"
+        )
+    
+    return session
+
+@router.post("/admin/login", response_model=AdminLoginResponse)
+async def admin_login(login_data: AdminLogin):
+    """Admin login for waitlist management"""
+    try:
+        # Verify credentials
+        password_hash = hashlib.sha256(login_data.password.encode()).hexdigest()
+        
+        if login_data.username != ADMIN_USERNAME or password_hash != ADMIN_PASSWORD_HASH:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username or password"
+            )
+        
+        # Create session token
+        token = secrets.token_urlsafe(32)
+        expires = datetime.now() + timedelta(hours=24)
+        
+        active_sessions[token] = {
+            'username': login_data.username,
+            'expires': expires,
+            'created': datetime.now()
+        }
+        
+        logger.info(f"✅ Admin login successful: {login_data.username}")
+        
+        return AdminLoginResponse(
+            success=True,
+            message="Login successful",
+            token=token
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Admin login failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Login failed"
+        )
+
+@router.post("/admin/logout")
+async def admin_logout(session: dict = Depends(verify_admin_session)):
+    """Admin logout"""
+    try:
+        # Find and remove the session
+        for token, sess in list(active_sessions.items()):
+            if sess['username'] == session['username']:
+                del active_sessions[token]
+                break
+        
+        logger.info(f"✅ Admin logout: {session['username']}")
+        
+        return {"success": True, "message": "Logged out successfully"}
+        
+    except Exception as e:
+        logger.error(f"❌ Admin logout failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Logout failed"
+        )
+
+@router.get("/admin/verify")
+async def verify_admin_session_endpoint(session: dict = Depends(verify_admin_session)):
+    """Verify if admin session is valid"""
+    return {
+        "success": True,
+        "username": session['username'],
+        "expires": session['expires'].isoformat()
+    }
+
 @router.get("/admin/list")
 async def get_waitlist_entries(
     limit: int = 100,
     offset: int = 0,
-    status: str = "active"
+    status: str = "active",
+    session: dict = Depends(verify_admin_session)
 ):
-    """Admin endpoint to view waitlist entries (add authentication in production)"""
+    """Admin endpoint to view waitlist entries (requires authentication)"""
     try:
         init_waitlist_db()
         
@@ -236,8 +354,8 @@ async def get_waitlist_entries(
         )
 
 @router.delete("/admin/entry/{email}")
-async def remove_from_waitlist(email: str):
-    """Admin endpoint to remove entry from waitlist"""
+async def remove_from_waitlist(email: str, session: dict = Depends(verify_admin_session)):
+    """Admin endpoint to remove entry from waitlist (requires authentication)"""
     try:
         init_waitlist_db()
         
