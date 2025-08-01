@@ -312,7 +312,7 @@
 
 ---
 
-## Slide 12: Team - Culinary & Technology Expertise
+## Slide 13: Team - Culinary & Technology Expertise
 
 ### **👥 Founding Team**
 
@@ -347,7 +347,7 @@
 
 ---
 
-## Slide 13: Investment Opportunity
+## Slide 14: Investment Opportunity
 
 ### **💰 Investment Terms**
 - **Seeking**: $1.5M Seed Round
@@ -363,14 +363,29 @@
 5. **Experienced Team**: Deep industry expertise + technical skills
 6. **Clear Path to Scale**: Well-defined go-to-market and growth strategy
 
-### **📊 Exit Potential**
-- **Strategic Acquirers**: Toast, Square, Sysco, US Foods, major POS companies
-- **Financial Buyers**: Restaurant-focused PE firms, SaaS specialists
-- **IPO Potential**: $100M+ ARR (achievable in 5-7 years)
-- **Comparable Exits**: 
-  - Toast: $5B+ IPO valuation
-  - TouchBistro: $350M acquisition
-  - Upserve: $130M acquisition
+### **📊 Exit Potential & Investor Returns**
+
+#### **Strategic Acquisition (Years 4-5)**
+- **Revenue Multiple**: 8-12x ARR (industry standard)
+- **Year 4 Valuation**: $336M-504M (8-12x $42M ARR)
+- **Year 5 Valuation**: $576M-864M (8-12x $72M ARR)
+
+#### **Seed Investor Returns ($1.5M at $8M pre-money)**
+- **Conservative Exit** ($350M): 23x return
+- **Base Case Exit** ($500M): 33x return
+- **Optimistic Exit** ($750M): 50x return
+
+#### **Strategic Acquirers**
+- **Toast, Square**: Restaurant technology platforms
+- **Sysco, US Foods**: Food service distribution giants
+- **Oracle, SAP**: Enterprise software companies
+- **Private Equity**: Restaurant-focused investment firms
+
+#### **Comparable Exits**
+- **Toast**: $5B+ IPO (restaurant POS/software)
+- **TouchBistro**: $350M acquisition (restaurant management)
+- **Upserve**: $130M acquisition (restaurant analytics)
+- **Resy**: $100M+ acquisition (restaurant reservations)
 
 ### **🎯 Risk Mitigation**
 - **Market Risk**: Large, growing market with clear demand
@@ -386,7 +401,7 @@
 
 ---
 
-## Slide 14: Appendix - Additional Information
+## Slide 15: Appendix - Additional Information
 
 ### **📈 Market Research**
 - **Industry Reports**: IBISWorld, Technomic, National Restaurant Association
