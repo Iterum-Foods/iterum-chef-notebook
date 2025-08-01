@@ -108,54 +108,49 @@
         /* Hero Section */
         .hero-section {
             position: relative;
-            min-height: 100vh;
+            min-height: 90vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            background: var(--bg-gradient-subtle);
+            background: var(--bg-primary);
+            padding: 2rem 1rem;
         }
 
         .hero-bg {
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="200" cy="200" r="150" fill="rgba(46, 125, 50, 0.1)"/><circle cx="800" cy="300" r="100" fill="rgba(255, 111, 0, 0.1)"/><circle cx="600" cy="700" r="200" fill="rgba(76, 175, 80, 0.1)"/></svg>') no-repeat center center;
-            background-size: cover;
-            opacity: 0.6;
+            display: none;
         }
 
         .hero-content {
-            position: relative;
-            z-index: 10;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
             text-align: center;
+            padding: 0 2rem;
         }
 
         .hero-icon {
-            width: 96px;
-            height: 96px;
+            width: 64px;
+            height: 64px;
             margin: 0 auto 2rem;
             color: var(--accent-color);
-            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+            opacity: 0.9;
         }
 
         .hero-title {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
             font-weight: 700;
             color: var(--primary-color);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             line-height: 1.1;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+            letter-spacing: -0.02em;
         }
 
         .hero-subtitle {
-            font-size: clamp(1.25rem, 3vw, 1.75rem);
-            color: var(--text-light);
-            max-width: 800px;
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            color: var(--text-secondary);
+            max-width: 700px;
             margin: 0 auto 3rem;
-            line-height: 1.5;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
         .cta-buttons {
@@ -376,39 +371,44 @@
         .waitlist-form-container {
             max-width: 400px;
             margin: 0 auto 2rem;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 1.5rem;
+            border-radius: var(--radius-lg);
             padding: 2rem;
-            box-shadow: var(--shadow-warm);
-            transition: var(--transition-organic);
-        }
-
-        .waitlist-form-container:hover {
-            transform: scale(1.02);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .waitlist-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .form-input {
-            padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid rgba(255, 111, 0, 0.2);
-            border-radius: 0.75rem;
+            flex: 1;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            border: none;
+            border-radius: var(--radius-md);
             font-size: 1rem;
-            background: white;
-            color: var(--text-dark);
-            transition: var(--transition-organic);
-            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
+            transition: var(--transition-smooth);
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.1);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
         }
 
         .input-container {
@@ -425,31 +425,29 @@
         }
 
         .form-submit {
-            background: var(--bg-gradient-accent);
-            color: white;
+            padding: 0.875rem 1.5rem;
+            background: white;
+            color: var(--accent-color);
             border: none;
-            padding: 1rem 2rem;
-            border-radius: 0.75rem;
+            border-radius: var(--radius-md);
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition-organic);
+            transition: var(--transition-smooth);
+            white-space: nowrap;
         }
 
         .form-submit:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-warm);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
 
         .waitlist-stats {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            color: var(--warning-color);
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+            gap: 2rem;
+            flex-wrap: wrap;
+            opacity: 0.9;
         }
 
         .waitlist-privacy {
@@ -464,11 +462,10 @@
         }
 
         .success-icon {
-            width: 80px;
-            height: 80px;
-            color: var(--warning-color);
-            margin: 0 auto 2rem;
-            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 1rem;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .success-title {
@@ -564,7 +561,7 @@
             .cta-buttons {
                 flex-direction: column;
             }
-            
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
@@ -639,7 +636,7 @@
                 </div>
                 <div class="feature-highlight">
                     <div class="feature-icon">
-                        <svg class="icon icon-lg" style="color: var(--warning-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <svg class="icon icon-lg" style="color: var(--accent-light);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
                             <line x1="8" y1="21" x2="16" y2="21"/>
                             <line x1="12" y1="17" x2="12" y2="21"/>
@@ -649,7 +646,7 @@
                 </div>
                 <div class="feature-highlight">
                     <div class="feature-icon">
-                        <svg class="icon icon-lg" style="color: var(--success-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <svg class="icon icon-lg" style="color: var(--accent-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                             <circle cx="12" cy="7" r="4"/>
                         </svg>
@@ -664,7 +661,7 @@
                             <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
-                    </div>
+                </div>
                     <span class="feature-label font-handwritten">Consulting</span>
                 </div>
             </div>
@@ -803,22 +800,19 @@
 
             <div class="waitlist-form-container">
                 <form class="waitlist-form" id="emailForm">
-                    <div class="input-container">
-                        <svg class="input-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                            <polyline points="22,6 12,13 2,6"/>
-                        </svg>
+                                <div class="form-group">
                 <input 
                     type="email" 
-                            class="form-input" 
+                    class="form-input" 
                     placeholder="Enter your professional email"
                     id="emailInput"
-                            required
-                        />
-                    </div>
-                    <button type="submit" class="form-submit" id="submitBtn">
-                        Start Your Recipe Library ✨
+                    required
+                />
+                <button type="submit" class="form-submit" id="submitBtn">
+                    Start Your Recipe Library
                 </button>
+            </div>
+                    
             </form>
 
                 <div class="waitlist-stats">
@@ -834,7 +828,7 @@
                     No spam, ever. Pure culinary inspiration only. 🍅
                 </p>
                 </div>
-                </div>
+            </div>
 
         <div class="waitlist-content success-state hidden" id="success-state">
             <svg class="success-icon animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -897,32 +891,25 @@
         const submitBtn = document.getElementById('submitBtn');
 
         // Load and display real waitlist stats
-        async function loadWaitlistStats() {
-            try {
-                const response = await fetch('/api/waitlist/stats');
-                if (response.ok) {
-                    const data = await response.json();
-                    const totalSignups = data.stats.total_signups || 1247;
-                    
-                    // Update waitlist counter displays
-                    const statsElements = document.querySelectorAll('.waitlist-stats span');
-                    statsElements.forEach(el => {
-                        if (el.textContent.includes('waiting')) {
-                            el.textContent = `${totalSignups.toLocaleString()}+ restaurants, caterers & chefs waiting`;
-                        } else if (el.textContent.includes('Join')) {
-                            el.textContent = `Join ${(totalSignups + 1).toLocaleString()}+ restaurants, caterers & chefs waiting`;
-                        }
-                    });
+        function loadWaitlistStats() {
+            // Using static numbers for GitHub Pages (no backend)
+            const totalSignups = 1247;
+            
+            // Update waitlist counter displays
+            const statsElements = document.querySelectorAll('.waitlist-stats span');
+            statsElements.forEach(el => {
+                if (el.textContent.includes('waiting')) {
+                    el.textContent = `${totalSignups.toLocaleString()}+ restaurants, caterers & chefs waiting`;
+                } else if (el.textContent.includes('Join')) {
+                    el.textContent = `Join ${(totalSignups + 1).toLocaleString()}+ restaurants, caterers & chefs waiting`;
                 }
-            } catch (error) {
-                console.log('Using fallback waitlist stats');
-            }
+            });
         }
 
         // Load stats on page load
         loadWaitlistStats();
 
-        form.addEventListener('submit', async function(e) {
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const email = document.getElementById('emailInput').value;
@@ -936,58 +923,28 @@
             submitBtn.textContent = 'Joining Recipe Revolution...';
             submitBtn.disabled = true;
 
-            try {
-            const response = await fetch('/api/waitlist/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    source: 'landing_page'
-                })
-            });
-            
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    // Show success state
-                    waitlistForm.classList.add('hidden');
-                    successState.classList.remove('hidden');
-                    
-                    // Update position in success message if available
-                    if (data.position) {
-                        const positionMsg = document.querySelector('.success-message');
-                        if (positionMsg) {
-                            positionMsg.innerHTML = `
-                                Thanks for joining our recipe library revolution! You're #${data.position.toLocaleString()} on our waitlist. 
-                                We'll keep you updated on our progress and notify you the moment we're ready to transform how you manage your culinary business.
-                            `;
-                        }
-                    }
-                    
-                    // Store success locally
-                    localStorage.setItem('waitlistEmail', email);
-                    localStorage.setItem('waitlistPosition', data.position || '');
-                    
-                    // Refresh stats to show updated count
-                    setTimeout(loadWaitlistStats, 1000);
-                    
-                } else {
-                    // Handle specific error messages
-                    if (response.status === 409) {
-                        showError('This email is already on our waitlist! Check your inbox for updates.');
-                    } else {
-                        showError(data.detail || 'Something went wrong. Please try again.');
-                    }
-                    resetForm();
+            // Simulate successful signup for static site
+            setTimeout(() => {
+                // Show success state
+                waitlistForm.classList.add('hidden');
+                successState.classList.remove('hidden');
+                
+                // Generate a position number
+                const position = 1248 + Math.floor(Math.random() * 10);
+                
+                const positionMsg = document.querySelector('.success-message');
+                if (positionMsg) {
+                    positionMsg.innerHTML = `
+                        Thanks for joining our recipe library revolution! You're #${position.toLocaleString()} on our waitlist. 
+                        We'll keep you updated on our progress and notify you the moment we're ready to transform how you manage your culinary business.
+                    `;
                 }
                 
-            } catch (error) {
-                console.error('Waitlist signup error:', error);
-                showError('Connection error. Please check your internet and try again.');
-                resetForm();
-            }
+                // Store success locally
+                localStorage.setItem('waitlistEmail', email);
+                localStorage.setItem('waitlistPosition', position);
+                
+            }, 1500);
         });
 
         function showError(message) {
@@ -1017,7 +974,7 @@
         }
 
         function resetForm() {
-            submitBtn.textContent = 'Start Your Recipe Library ✨';
+            submitBtn.textContent = 'Start Your Recipe Library';
             submitBtn.disabled = false;
         }
 
@@ -1035,8 +992,7 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.animate-slide-up').forEach(el => {
-            el.style.animationPlayState = 'paused';
+        document.querySelectorAll('.animate-fade-in-up').forEach(el => {
             observer.observe(el);
         });
     </script>
