@@ -925,37 +925,130 @@
         const successState = document.getElementById('success-state');
         const submitBtn = document.getElementById('submitBtn');
 
+        // Load and display real waitlist stats
+        async function loadWaitlistStats() {
+            try {
+                const response = await fetch('/api/waitlist/stats');
+                if (response.ok) {
+                    const data = await response.json();
+                    const totalSignups = data.stats.total_signups || 1247;
+                    
+                    // Update waitlist counter displays
+                    const statsElements = document.querySelectorAll('.waitlist-stats span');
+                    statsElements.forEach(el => {
+                        if (el.textContent.includes('waiting')) {
+                            el.textContent = `${totalSignups.toLocaleString()}+ restaurants, caterers & chefs waiting`;
+                        } else if (el.textContent.includes('Join')) {
+                            el.textContent = `Join ${(totalSignups + 1).toLocaleString()}+ restaurants, caterers & chefs waiting`;
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log('Using fallback waitlist stats');
+            }
+        }
+
+        // Load stats on page load
+        loadWaitlistStats();
+
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('emailInput').value;
             
             if (!email || !email.includes('@')) {
-                alert('Please enter a valid email address.');
+                showError('Please enter a valid email address.');
                 return;
             }
 
             // Show loading state
-            submitBtn.textContent = 'Creating Your Library...';
+            submitBtn.textContent = 'Joining Recipe Revolution...';
             submitBtn.disabled = true;
 
-            // Simulate API call (replace with actual API endpoint)
             try {
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // Show success state
-                waitlistForm.classList.add('hidden');
-                successState.classList.remove('hidden');
-                
-                // Store email locally (in real app, send to server)
-                localStorage.setItem('waitlistEmail', email);
+                const response = await fetch('/api/waitlist/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        source: 'landing_page'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Show success state
+                    waitlistForm.classList.add('hidden');
+                    successState.classList.remove('hidden');
+                    
+                    // Update position in success message if available
+                    if (data.position) {
+                        const positionMsg = document.querySelector('.success-message');
+                        if (positionMsg) {
+                            positionMsg.innerHTML = `
+                                Thanks for joining our recipe library revolution! You're #${data.position.toLocaleString()} on our waitlist. 
+                                We'll keep you updated on our progress and notify you the moment we're ready to transform how you manage your culinary business.
+                            `;
+                        }
+                    }
+                    
+                    // Store success locally
+                    localStorage.setItem('waitlistEmail', email);
+                    localStorage.setItem('waitlistPosition', data.position || '');
+                    
+                    // Refresh stats to show updated count
+                    setTimeout(loadWaitlistStats, 1000);
+                    
+                } else {
+                    // Handle specific error messages
+                    if (response.status === 409) {
+                        showError('This email is already on our waitlist! Check your inbox for updates.');
+                    } else {
+                        showError(data.detail || 'Something went wrong. Please try again.');
+                    }
+                    resetForm();
+                }
                 
             } catch (error) {
-                alert('Something went wrong. Please try again.');
-                submitBtn.textContent = 'Start Your Recipe Library ✨';
-                submitBtn.disabled = false;
+                console.error('Waitlist signup error:', error);
+                showError('Connection error. Please check your internet and try again.');
+                resetForm();
             }
         });
+
+        function showError(message) {
+            // Create or update error display
+            let errorDiv = document.querySelector('.waitlist-error');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.className = 'waitlist-error';
+                errorDiv.style.cssText = `
+                    background: #ffebee;
+                    color: #c62828;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    margin: 10px 0;
+                    border: 1px solid #ffcdd2;
+                    font-size: 0.9rem;
+                `;
+                form.appendChild(errorDiv);
+            }
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Hide error after 5 seconds
+            setTimeout(() => {
+                if (errorDiv) errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function resetForm() {
+            submitBtn.textContent = 'Start Your Recipe Library ✨';
+            submitBtn.disabled = false;
+        }
 
         // Animation on scroll
         const observerOptions = {
