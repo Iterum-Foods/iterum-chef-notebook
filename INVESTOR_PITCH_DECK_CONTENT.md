@@ -12,7 +12,36 @@
 
 ---
 
-## Slide 2: The Problem - Recipe Chaos Costs Businesses
+## Slide 2: Live Website - iterumfoods.xyz
+
+### **Professional Landing Page Demonstrating Market Readiness**
+
+#### **🌐 Website Highlights**
+- **Live Domain**: iterumfoods.xyz (professional branding)
+- **Professional Design**: Modern, mobile-responsive interface
+- **Clear Value Proposition**: "Ultimate Recipe Library for Professional Kitchens"
+- **Target Market Focus**: Restaurants, catering, private chefs, consultants
+
+#### **📊 Current Traction Metrics**
+- **1,247+ Waitlist Signups** in 6 months (organic growth)
+- **73% Primary Market** (restaurants & catering companies)
+- **42% Monthly Growth** in signups without marketing spend
+- **Professional Features**: Ingredient demo, email templates, admin dashboard
+
+#### **🎯 Market Validation Proof Points**
+- **"Restaurant Ready"** - Clear positioning for 660K restaurants
+- **"Catering Scale"** - Targeting 73K catering businesses  
+- **"Private Chef"** - Addressing 180K private chef market
+- **"Consulting"** - Serving 25K culinary consultants
+
+#### **💡 Investor Takeaway**
+*"Professional website with proven organic traction demonstrates product-market fit and go-to-market readiness"*
+
+**Live Demo Available**: [iterumfoods.xyz](https://iterumfoods.xyz)
+
+---
+
+## Slide 3: The Problem - Recipe Chaos Costs Businesses
 
 ### **$2.4B+ Lost Annually** in the US Restaurant Industry Due to:
 
@@ -39,7 +68,7 @@
 
 ---
 
-## Slide 3: The Solution - Professional Recipe Library Management
+## Slide 4: The Solution - Professional Recipe Library Management
 
 ### **The First Unified Platform for Professional Recipe Management**
 
@@ -71,7 +100,7 @@
 
 ---
 
-## Slide 4: Market Opportunity - $42B+ Addressable Market
+## Slide 5: Market Opportunity - $42B+ Addressable Market
 
 ### **🎯 Target Market Size**
 
@@ -100,7 +129,7 @@
 
 ---
 
-## Slide 5: Business Model - Recurring Revenue with High LTV
+## Slide 6: Business Model - Recurring Revenue with High LTV
 
 ### **💰 Revenue Streams**
 
@@ -130,7 +159,7 @@
 
 ---
 
-## Slide 6: Traction - Proven Product-Market Fit
+## Slide 7: Traction - Proven Product-Market Fit
 
 ### **📈 Current Metrics (Beta Phase)**
 - **1,247+ Waitlist Signups** in 6 months (no marketing spend)
@@ -158,7 +187,7 @@
 
 ---
 
-## Slide 7: Competitive Advantage - Deep Industry Focus
+## Slide 8: Competitive Advantage - Deep Industry Focus
 
 ### **🎯 Why We Win**
 
@@ -190,7 +219,7 @@
 
 ---
 
-## Slide 8: Competition Analysis
+## Slide 9: Competition Analysis
 
 ### **🔍 Competitive Landscape**
 
@@ -217,7 +246,7 @@
 
 ---
 
-## Slide 9: Go-to-Market Strategy
+## Slide 10: Go-to-Market Strategy
 
 ### **🎯 Customer Acquisition**
 
@@ -247,7 +276,7 @@
 
 ---
 
-## Slide 10: Financial Projections
+## Slide 11: Financial Projections
 
 ### **📊 5-Year Revenue Forecast**
 
@@ -283,7 +312,7 @@
 
 ---
 
-## Slide 11: Team - Culinary & Technology Expertise
+## Slide 12: Team - Culinary & Technology Expertise
 
 ### **👥 Founding Team**
 
@@ -318,7 +347,7 @@
 
 ---
 
-## Slide 12: Investment Opportunity
+## Slide 13: Investment Opportunity
 
 ### **💰 Investment Terms**
 - **Seeking**: $1.5M Seed Round
@@ -357,7 +386,7 @@
 
 ---
 
-## Slide 13: Appendix - Additional Information
+## Slide 14: Appendix - Additional Information
 
 ### **📈 Market Research**
 - **Industry Reports**: IBISWorld, Technomic, National Restaurant Association
