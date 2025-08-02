@@ -47,9 +47,9 @@ def main():
         print("\nFrontend server stopped")
     except OSError as e:
         if e.errno == 48:  # Address already in use
-            print(f"❌ Port {PORT} is already in use. Please stop any other servers using this port.")
+            print(f"Error: Port {PORT} is already in use. Please stop any other servers using this port.")
         else:
-            print(f"❌ Error starting server: {e}")
+            print(f"Error starting server: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

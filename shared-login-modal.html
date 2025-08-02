@@ -1,21 +1,18 @@
 <!-- Standardized Login Modal for Iterum R&D Chef Notebook -->
 <!-- This template should be included in all pages for consistent authentication -->
 
-<!-- Loading Overlay for Authentication -->
-<div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(120deg,#eafcd7 0%,#b6e388 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;">
-  <div style="display:flex;flex-direction:column;align-items:center;">
-    <svg class="pea-plant-anim" viewBox="0 0 120 180" fill="none" style="width: 80px; height: 120px;">
-      <path id="stem" d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <ellipse id="pod" cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2" opacity="0"/>
-      <ellipse id="pea1" cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
-      <ellipse id="pea2" cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
-      <ellipse id="pea3" cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
-      <path id="leafL" d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>
-      <ellipse id="leafL2" cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1" opacity="0"/>
-      <path id="leafR" d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>
-      <ellipse id="leafR2" cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1" opacity="0"/>
-    </svg>
-    <div class="loading-text" style="font-family:'Shadows Into Light',cursive;color:#3a5a40;font-size:1.3rem;margin-top:1.2rem;text-align:center;letter-spacing:0.03em;">Loading Iterum R&D Chef Notebook…</div>
+<!-- Modern Dark Loading Overlay -->
+<div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;backdrop-filter:blur(10px);">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;">
+    <div style="width:80px;height:80px;border:3px solid rgba(255,255,255,0.1);border-top:3px solid #64ffda;border-radius:50%;animation:spin 1.2s cubic-bezier(0.68,-0.55,0.265,1.55) infinite;position:relative;">
+      <div style="display:flex;gap:8px;margin-top:1rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.2s;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.4s;"></div>
+      </div>
+    </div>
+    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#e2e8f0;font-size:1.1rem;font-weight:500;text-align:center;letter-spacing:0.05em;margin-top:1rem;opacity:0.9;">Iterum R&D Chef Notebook</div>
+    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#64ffda;font-size:0.9rem;font-weight:400;text-align:center;margin-top:0.5rem;opacity:0.7;">Initializing your culinary workspace...</div>
   </div>
 </div>
 
@@ -33,6 +30,14 @@
     <!-- Login Form -->
     <div id="login-form-container" class="p-6">
       <form id="login-form" class="space-y-4">
+        <!-- Quick Access Option -->
+        <div class="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+          <p class="text-sm text-orange-800 mb-2">🚀 Local Development:</p>
+          <button type="button" id="quick-offline-login" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-3 rounded-lg font-medium transition-all text-sm">
+            Continue Offline (No Password Required)
+          </button>
+        </div>
+        <div class="text-center text-gray-400 text-sm mb-4">— or sign in normally —</div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
           <input type="email" id="login-email" name="email" required 
@@ -42,11 +47,16 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
           <div class="relative">
-            <input type="password" id="login-password" name="password" required 
+                                        <input type="password" id="login-password" name="password" 
                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12" 
-                   placeholder="Enter your password">
+                   placeholder="Enter your password (optional for local dev)">
             <button type="button" id="toggle-login-password" 
                     class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">👁️</button>
+          </div>
+          <div class="text-center mt-2">
+            <button type="button" id="skip-password-btn" class="text-sm text-blue-600 hover:text-blue-800 underline">
+              🚀 Skip Password (Local Development)
+            </button>
           </div>
         </div>
         <div class="flex items-center justify-between">
@@ -116,14 +126,15 @@
                  placeholder="Enter restaurant or kitchen name">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Password <span class="text-gray-400 text-xs">(Optional)</span></label>
           <div class="relative">
-            <input type="password" id="signup-password" name="password" required 
+            <input type="password" id="signup-password" name="password"
                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-12" 
-                   placeholder="Create a password">
+                   placeholder="Leave blank for default password">
             <button type="button" id="toggle-signup-password" 
                     class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">👁️</button>
           </div>
+          <p class="text-xs text-gray-500 mt-1">For local development, password is optional. Default will be used if left blank.</p>
         </div>
         <div id="signup-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
         <button type="submit" id="signup-submit-btn" 
@@ -241,6 +252,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submissions
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
+    
+    // Handle skip password button
+    const skipPasswordBtn = document.getElementById('skip-password-btn');
+    if (skipPasswordBtn) {
+        skipPasswordBtn.addEventListener('click', function() {
+            const emailInput = document.getElementById('login-email');
+            if (emailInput && emailInput.value) {
+                // Perform login without password
+                const loginData = {
+                    email: emailInput.value,
+                    password: ''
+                };
+                window.unifiedAuth.handleLogin(loginData);
+            } else {
+                alert('Please enter your email first');
+            }
+        });
+    }
+    
+    // Handle quick offline login button
+    const quickOfflineBtn = document.getElementById('quick-offline-login');
+    if (quickOfflineBtn) {
+        quickOfflineBtn.addEventListener('click', function() {
+            // Close modal and create offline profile
+            const modal = document.getElementById('login-modal');
+            if (modal) modal.classList.add('hidden');
+            window.unifiedAuth.createOfflineProfile();
+        });
+    }
     }
     
     if (signupForm) {
@@ -375,19 +415,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- Animation styles for loading overlay -->
+<!-- Modern Dark Loading Styles -->
 <style>
-.pea-plant-anim {
-    animation: gentle-sway 3s ease-in-out infinite;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-@keyframes gentle-sway {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(2deg); }
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
 }
 
 #loading-overlay.fade-out {
     opacity: 0;
     pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    #loading-overlay div[style*="width:80px"] {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    #loading-overlay div[style*="font-size:1.1rem"] {
+        font-size: 1rem !important;
+    }
+    #loading-overlay div[style*="font-size:0.9rem"] {
+        font-size: 0.8rem !important;
+    }
 }
 </style> 

@@ -1,0 +1,7 @@
+Contact: hello@iterumfoods.xyz
+Contact: https://github.com/Iterum-Foods/iterum-chef-notebook/security/advisories/new
+Expires: 2026-01-08T23:59:59.000Z
+Acknowledgments: https://github.com/Iterum-Foods/iterum-chef-notebook/security/advisories
+Preferred-Languages: en
+Canonical: https://iterumfoods.xyz/.well-known/security.txt
+Policy: https://github.com/Iterum-Foods/iterum-chef-notebook/security/policy

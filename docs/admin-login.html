@@ -6,20 +6,36 @@
     <title>Admin Login - Iterum Recipe Library</title>
     <link rel="icon" type="image/x-icon" href="iterum.ico">
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #2e7d32;
-            --primary-dark: #1b5e20;
-            --primary-light: #4caf50;
-            --accent-color: #ff6f00;
-            --text-dark: #1a1a1a;
-            --text-light: #666;
+            --primary-color: #1a1a1a;
+            --primary-dark: #000000;
+            --primary-light: #333333;
+            --accent-color: #0066FF;
+            --accent-light: #3399FF;
+            --accent-dark: #0052CC;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-light: #888888;
             --bg-light: #f8f9fa;
+            --bg-subtle: #fafbfc;
             --white: #ffffff;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
             --error-color: #d32f2f;
             --success-color: #4caf50;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -29,23 +45,40 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-dark);
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="200" cy="200" r="150" fill="rgba(0, 102, 255, 0.1)"/><circle cx="800" cy="300" r="100" fill="rgba(51, 153, 255, 0.1)"/><circle cx="600" cy="700" r="200" fill="rgba(0, 82, 204, 0.1)"/></svg>') no-repeat center center;
+            background-size: cover;
+            opacity: 0.6;
+            pointer-events: none;
         }
 
         .login-container {
             background: var(--white);
             padding: 3rem;
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
             width: 100%;
             max-width: 400px;
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
 
         .logo {
@@ -81,21 +114,23 @@
 
         .form-input {
             width: 100%;
-            padding: 12px 16px;
+            padding: 0.875rem 1rem;
             border: 2px solid #e1e5e9;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            transition: var(--transition-smooth);
+            font-family: inherit;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
         }
 
         .login-button {
             width: 100%;
-            background: var(--primary-color);
+            background: var(--accent-color);
             color: var(--white);
             border: none;
             padding: 14px 20px;

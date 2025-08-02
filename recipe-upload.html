@@ -8,83 +8,134 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
-  <header class="bg-white shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
+  <!-- Enhanced Uniform Header -->
+  <header class="bg-gradient-to-r from-white to-green-50 shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
       <!-- Logo and Brand -->
       <div class="flex items-center gap-3">
-        <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10">
+        <div class="relative">
+          <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10 transition-transform hover:scale-110">
+          <div class="absolute -inset-1 bg-green-200 rounded-full opacity-0 hover:opacity-20 transition-opacity"></div>
+        </div>
         <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
           Iterum R&D Chef Notebook
         </span>
       </div>
       
       <!-- Desktop Navigation -->
-      <nav class="hidden lg:flex gap-6 text-gray-700 font-medium">
-        <a href="index.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Dashboard</a>
-        <a href="recipe-library.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Recipe Library</a>
-        <a href="recipe-developer.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">🧪 Recipe Developer</a>
-        <a href="recipe-upload.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Quick Recipe Upload</a>
-        <a href="automated-workflow.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">🤖 Batch Processor</a>
-        <a href="menu-builder.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Menu Builder</a>
-        <a href="ingredients.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Ingredients</a>
-        <a href="equipment-management.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Equipment</a>
-        <a href="vendor-management.html" class="hover:text-green-600 transition-colors px-2 py-1 rounded">Vendors</a>
+      <nav class="hidden lg:flex gap-1 text-gray-700 font-medium">
+        <a href="index.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+          <span class="flex items-center gap-1">🏠 Dashboard</span>
+        </a>
+        <a href="recipe-library.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+          <span class="flex items-center gap-1">📚 Recipe Library</span>
+        </a>
+        <a href="recipe-developer.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+          <span class="flex items-center gap-1">🧪 Recipe Developer</span>
+        </a>
+        <a href="recipe-upload.html" class="nav-active hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+          <span class="flex items-center gap-1">⚡ Quick Upload</span>
+        </a>
+        <a href="menu-builder.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+          <span class="flex items-center gap-1">🍽️ Menu Builder</span>
+        </a>
+        <a href="ingredients.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+          <span class="flex items-center gap-1">🥬 Ingredients</span>
+        </a>
+        <a href="equipment-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+          <span class="flex items-center gap-1">🔧 Equipment</span>
+        </a>
+        <a href="vendor-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+          <span class="flex items-center gap-1">🏪 Vendors</span>
+        </a>
       </nav>
       
       <!-- User Info and Actions -->
-      <div class="flex items-center gap-4">
-        <span id="current-user" class="text-gray-600 text-sm font-medium"></span>
-        <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors hidden">
+      <div class="flex items-center gap-3">
+        <span id="current-user" class="text-gray-600 text-sm font-medium bg-white px-3 py-1 rounded-full border"></span>
+        <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hidden">
           Login
         </button>
         <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
           Logout
         </button>
-        <button onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors">
+        <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors shadow-sm">
           Switch User
         </button>
-        <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 transition-colors">
+        <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors">
           &#9776;
         </button>
       </div>
     </div>
     
     <!-- Mobile Navigation -->
-    <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-2 px-4 pb-4">
-      <a href="index.html" class="block py-2 hover:text-green-600 transition-colors">Dashboard</a>
-      <a href="recipe-library.html" class="block py-2 hover:text-green-600 transition-colors">Recipe Library</a>
-      <a href="recipe-developer.html" class="block py-2 hover:text-green-600 transition-colors">🧪 Recipe Developer</a>
-      <a href="recipe-upload.html" class="block py-2 hover:text-green-600 transition-colors">Quick Recipe Upload</a>
-      <a href="automated-workflow.html" class="block py-2 hover:text-green-600 transition-colors">🤖 Batch Processor</a>
-      <a href="menu-builder.html" class="block py-2 hover:text-green-600 transition-colors">Menu Builder</a>
-      <a href="ingredients.html" class="block py-2 hover:text-green-600 transition-colors">Ingredients</a>
-      <a href="equipment-management.html" class="block py-2 hover:text-green-600 transition-colors">Equipment</a>
-      <a href="vendor-management.html" class="block py-2 hover:text-green-600 transition-colors">Vendors</a>
+    <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-1 px-4 pb-4">
+      <a href="index.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+        <span class="flex items-center gap-2">🏠 Dashboard</span>
+      </a>
+      <a href="recipe-library.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+        <span class="flex items-center gap-2">📚 Recipe Library</span>
+      </a>
+      <a href="recipe-developer.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+        <span class="flex items-center gap-2">🧪 Recipe Developer</span>
+      </a>
+      <a href="recipe-upload.html" class="nav-active block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+        <span class="flex items-center gap-2">⚡ Quick Upload</span>
+      </a>
+      <a href="menu-builder.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+        <span class="flex items-center gap-2">🍽️ Menu Builder</span>
+      </a>
+      <a href="ingredients.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+        <span class="flex items-center gap-2">🥬 Ingredients</span>
+      </a>
+      <a href="equipment-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+        <span class="flex items-center gap-2">🔧 Equipment</span>
+      </a>
+      <a href="vendor-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+        <span class="flex items-center gap-2">🏪 Vendors</span>
+      </a>
     </nav>
   </header>
-  
-  <!-- Mobile Navigation Toggle Script -->
+
+  <!-- Enhanced Mobile Navigation Toggle Script -->
   <script>
-    document.getElementById('nav-toggle').addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+      const navToggle = document.getElementById('nav-toggle');
       const mobileNav = document.getElementById('mobile-nav');
-      mobileNav.classList.toggle('hidden');
+      
+      if (navToggle && mobileNav) {
+        navToggle.addEventListener('click', function() {
+          mobileNav.classList.toggle('hidden');
+          
+          // Add animation class
+          if (!mobileNav.classList.contains('hidden')) {
+            mobileNav.style.animation = 'slideDown 0.3s ease-out';
+          }
+        });
+        
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!navToggle.contains(event.target) && !mobileNav.contains(event.target)) {
+            mobileNav.classList.add('hidden');
+          }
+        });
+      }
     });
   </script>
+  
+
   <!-- Loading Overlay -->
-  <div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(120deg,#eafcd7 0%,#b6e388 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;">
-    <div style="display:flex;flex-direction:column;align-items:center;">
-      <svg class="pea-plant-anim" viewBox="0 0 120 180" fill="none">
-        <path id="stem" d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <ellipse id="pod" cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2" opacity="0"/>
-        <ellipse id="pea1" cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
-        <ellipse id="pea2" cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
-        <ellipse id="pea3" cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1" opacity="0"/>
-        <path id="leafL" d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>
-        <ellipse id="leafL2" cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1" opacity="0"/>
-        <path id="leafR" d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>
-        <ellipse id="leafR2" cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1" opacity="0"/>
-      </svg>
-      <div class="loading-text" style="font-family:'Shadows Into Light',cursive;color:#3a5a40;font-size:1.3rem;margin-top:1.2rem;text-align:center;letter-spacing:0.03em;">Loading Iterum R&D Chef Notebook…</div>
+  <div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;backdrop-filter:blur(10px);">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;">
+      <div style="width:80px;height:80px;border:3px solid rgba(255,255,255,0.1);border-top:3px solid #64ffda;border-radius:50%;animation:spin 1.2s cubic-bezier(0.68,-0.55,0.265,1.55) infinite;position:relative;">
+        <div style="display:flex;gap:8px;margin-top:1rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+          <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.2s;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.4s;"></div>
+        </div>
+      </div>
+      <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#e2e8f0;font-size:1.1rem;font-weight:500;text-align:center;letter-spacing:0.05em;margin-top:1rem;opacity:0.9;">Recipe Upload</div>
+      <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#64ffda;font-size:0.9rem;font-weight:400;text-align:center;margin-top:0.5rem;opacity:0.7;">Loading your recipe workspace...</div>
     </div>
   </div>
 
@@ -138,6 +189,8 @@
   </div>
 
   <script src="unified_auth_system.js"></script>
+  <script src="auto_save_system.js"></script>
+  <script src="auto_save_config.js"></script>
   <script src="standardize-login-modals.js"></script>
   <script src="debug_auth_buttons.js"></script>
   <main class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
@@ -483,6 +536,79 @@ Estimated total cost: $10.00</textarea>
     
     .sticky-btn:active {
       transform: translateY(0);
+    }
+
+    /* Modern Dark Loading Animations */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.3; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    #loading-overlay.fade-out {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+        #loading-overlay div[style*="width:80px"] {
+            width: 60px !important;
+            height: 60px !important;
+        }
+        #loading-overlay div[style*="font-size:1.1rem"] {
+            font-size: 1rem !important;
+        }
+        #loading-overlay div[style*="font-size:0.9rem"] {
+            font-size: 0.8rem !important;
+        }
+    }
+
+    /* Enhanced Header Animations */
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Header Logo Hover Glow */
+    header .relative:hover .absolute {
+        animation: pulse 2s infinite;
+    }
+
+    /* Navigation Active State - Current Page Highlighting */
+    .nav-active {
+        background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
+        color: #15803d !important;
+        font-weight: 600 !important;
+        border: 1px solid #86efac !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transition: left 0.5s;
+    }
+
+    .nav-active:hover::before {
+        left: 100%;
     }
   </style>
   <svg class="pea-bg-sketch" viewBox="0 0 120 180" fill="none" style="">

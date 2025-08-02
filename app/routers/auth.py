@@ -19,7 +19,7 @@ router = APIRouter()
 class UserRegister(BaseModel):
     username: str
     email: str
-    password: str
+    password: Optional[str] = None  # Optional for local development
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     role: Optional[str] = None
@@ -58,15 +58,17 @@ async def register_user(
         )
     
     # Create new user
-    hashed_password = get_password_hash(user.password)
+    # Use provided password or default for local development
+    password_to_hash = user.password if user.password else "localdev123"
+    hashed_password = get_password_hash(password_to_hash)
     db_user = User(
         username=user.username,
         email=user.email,
         hashed_password=hashed_password,
         first_name=user.first_name,
         last_name=user.last_name,
-        role=user.role,
-        restaurant=user.restaurant
+        role=user.role or "chef",  # Default role
+        restaurant=user.restaurant or "My Kitchen"  # Default restaurant
     )
     
     db.add(db_user)

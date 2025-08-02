@@ -1,5 +1,6 @@
-// Debug script for authentication buttons
+// Debug script for authentication buttons - CACHE BUSTER v3.4
 // This helps diagnose why logout and switch user buttons may not be working
+// Last updated: Removed getEventListeners calls for browser compatibility
 
 function debugAuthButtons() {
     console.log('🐛 === AUTH BUTTONS DEBUG ===');
@@ -31,12 +32,14 @@ function debugAuthButtons() {
     console.log('Checking for event listeners...');
     if (logoutBtn) {
         console.log('Logout button onclick:', logoutBtn.onclick);
-        console.log('Logout button event listeners:', getEventListeners ? getEventListeners(logoutBtn) : 'getEventListeners not available');
+        // Event listeners check removed - getEventListeners only available in DevTools
+        console.log('Logout button onclick attribute:', logoutBtn.onclick ? 'Assigned' : 'Not assigned');
     }
     
     if (switchUserBtn) {
         console.log('Switch user button onclick:', switchUserBtn.onclick);
-        console.log('Switch user button event listeners:', getEventListeners ? getEventListeners(switchUserBtn) : 'getEventListeners not available');
+        // Event listeners check removed - getEventListeners only available in DevTools
+        console.log('Switch user button onclick attribute:', switchUserBtn.onclick ? 'Assigned' : 'Not assigned');
     }
     
     // Test button clicks programmatically
@@ -86,4 +89,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('🔍 Auto-running auth button debug...');
         debugAuthButtons();
     }, 2000);
-}); 
+});
+// Cache buster: 20250801233205

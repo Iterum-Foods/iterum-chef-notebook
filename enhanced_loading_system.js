@@ -323,19 +323,19 @@ class LoadingSystem {
      */
     injectStyles() {
         const styles = `
-            /* Loading Overlay */
+            /* Modern Dark Loading Overlay */
             .loading-overlay {
                 position: absolute;
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: rgba(255, 255, 255, 0.9);
+                background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 z-index: 1000;
-                backdrop-filter: blur(2px);
+                backdrop-filter: blur(10px);
             }
 
             .loading-spinner {
@@ -343,13 +343,27 @@ class LoadingSystem {
             }
 
             .spinner {
-                width: 40px;
-                height: 40px;
-                border: 4px solid #f3f3f3;
-                border-top: 4px solid #4f46e5;
+                width: 60px;
+                height: 60px;
+                border: 3px solid rgba(255, 255, 255, 0.1);
+                border-top: 3px solid #64ffda;
                 border-radius: 50%;
-                animation: spin 1s linear infinite;
+                animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
                 margin: 0 auto 10px;
+                position: relative;
+            }
+            
+            .spinner::before {
+                content: '';
+                position: absolute;
+                top: -3px;
+                left: -3px;
+                right: -3px;
+                bottom: -3px;
+                border: 2px solid transparent;
+                border-top: 2px solid #ff6b6b;
+                border-radius: 50%;
+                animation: spin 2s linear infinite reverse;
             }
 
             @keyframes spin {
@@ -358,9 +372,11 @@ class LoadingSystem {
             }
 
             .loading-message {
-                color: #6b7280;
+                color: #e2e8f0;
                 font-size: 14px;
                 font-weight: 500;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                opacity: 0.9;
             }
 
             /* Skeleton Styles */

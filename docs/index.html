@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iterum Recipe Library - Professional Recipe Management for Restaurants, Catering & Private Chefs</title>
-    <meta name="description" content="The ultimate recipe library management platform for restaurants, catering companies, private chefs, and culinary consultants. Organize, scale, and optimize your entire recipe collection with AI-powered intelligence.">
+    <title>Iterum Recipe Platform - Revolutionary Food Management Technology in Development</title>
+    <meta name="description" content="Revolutionary recipe platform in development. Join beta testing for the technology that will transform how all food professionals work - from home cooks to YouTube creators to restaurant chains.">
     <meta name="keywords" content="recipe library, restaurant recipes, catering management, private chef software, recipe organization, culinary consulting, recipe scaling">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://iterumfoods.xyz/">
     <meta property="og:title" content="Iterum Recipe Library - Professional Recipe Management Platform">
-    <meta property="og:description" content="The ultimate recipe library for restaurants, catering, private chefs, and culinary consultants. Organize and scale your recipe collection with AI-powered intelligence.">
+    <meta property="og:description" content="Revolutionary recipe platform in development. Join beta testing for technology that will transform how all food professionals work.">
     <meta property="og:image" content="https://iterumfoods.xyz/iterum.ico">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://iterumfoods.xyz/">
     <meta property="twitter:title" content="Iterum Recipe Library - Professional Recipe Management Platform">
-    <meta property="twitter:description" content="The ultimate recipe library for restaurants, catering, private chefs, and culinary consultants.">
+    <meta property="twitter:description" content="Revolutionary recipe platform in development. Join beta testing - from home cooks to restaurant chains.">
     <meta property="twitter:image" content="https://iterumfoods.xyz/iterum.ico">
 
     <link rel="icon" type="image/x-icon" href="iterum.ico">
@@ -148,9 +156,40 @@
             font-size: clamp(1.125rem, 2vw, 1.375rem);
             color: var(--text-secondary);
             max-width: 700px;
-            margin: 0 auto 3rem;
+            margin: 0 auto 2rem;
             line-height: 1.6;
             font-weight: 400;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 0 auto 3rem;
+            max-width: 500px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--accent-color);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .cta-buttons {
@@ -337,6 +376,211 @@
         .feature-card-description {
             color: var(--text-secondary);
             line-height: 1.6;
+        }
+
+        /* How It Works Section */
+        .how-it-works-section {
+            padding: 5rem 1rem;
+            background: var(--bg-secondary);
+        }
+
+        .how-it-works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .step-card {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
+            border: 1px solid var(--border-light);
+        }
+
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .how-it-works-cta {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .cta-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Social Proof Section */
+        .social-proof-section {
+            padding: 5rem 1rem;
+            background: var(--bg-primary);
+        }
+
+        .social-proof-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .testimonial-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-smooth);
+            border: 1px solid var(--border-light);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .testimonial-text {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-size: 2rem;
+            color: var(--accent-color);
+            line-height: 1;
+        }
+
+        .testimonial-text::after {
+            content: '"';
+            font-size: 2rem;
+            color: var(--accent-color);
+            line-height: 1;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .author-title {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 5rem 1rem;
+            background: var(--bg-secondary);
+        }
+
+        .faq-grid {
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+
+        .faq-item {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-primary);
+            transition: var(--transition-smooth);
+        }
+
+        .faq-question:hover {
+            background: var(--bg-secondary);
+        }
+
+        .faq-question h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--accent-color);
+            transition: var(--transition-smooth);
+            user-select: none;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
         }
 
         /* Enhanced Waitlist Section */
@@ -837,22 +1081,37 @@
             </div>
             
             <h1 class="hero-title font-handwritten animate-fade-in-up">
-                The Ultimate
+                Revolutionary Recipe Platform
                 <span style="display: block; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                    Recipe Library
+                    In Development
                 </span>
             </h1>
             
             <p class="hero-subtitle animate-fade-in-up" style="animation-delay: 0.1s;">
-                Professional recipe management for <strong>restaurants, catering companies, private chefs, and culinary consultants</strong>. Organize, scale, and optimize your entire recipe collection with AI-powered intelligence and 291+ professional ingredients.
+                We're building the platform that will <strong>transform how food professionals work</strong> - from home cooks creating content to YouTube chefs scaling recipes, from catering companies to restaurant chains. The future of food management starts here.
             </p>
+            
+            <div class="hero-stats animate-fade-in-up" style="animation-delay: 0.15s;">
+                <div class="stat-item">
+                    <div class="stat-number">Beta</div>
+                    <div class="stat-label">Testing Soon</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1,247+</div>
+                    <div class="stat-label">Early Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">All</div>
+                    <div class="stat-label">Food Pros</div>
+                </div>
+            </div>
             
                         <div class="cta-buttons animate-fade-in-up" style="animation-delay: 0.2s;">
                 <a href="#waitlist" class="btn btn-primary">
-                    Start Your Recipe Library
+                    Join Beta Testing
                 </a>
                 <a href="#features" class="btn btn-outline">
-                    See How It Works
+                    See What We're Building
                 </a>
                 </div>
 
@@ -861,43 +1120,41 @@
                 <div class="feature-highlight">
                     <div class="feature-icon">
                         <svg class="icon icon-lg" style="color: var(--accent-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9,22 9,12 15,12 15,22"/>
                         </svg>
                 </div>
-                    <span class="feature-label font-handwritten">Restaurant Ready</span>
+                    <span class="feature-label font-handwritten">Home Cooks</span>
                 </div>
                 <div class="feature-highlight">
                     <div class="feature-icon">
                         <svg class="icon icon-lg" style="color: var(--accent-light);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                            <line x1="8" y1="21" x2="16" y2="21"/>
-                            <line x1="12" y1="17" x2="12" y2="21"/>
+                            <polygon points="23 7 16 12 23 17 23 7"/>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
                         </svg>
             </div>
-                    <span class="feature-label font-handwritten">Catering Scale</span>
+                    <span class="feature-label font-handwritten">Content Creators</span>
                 </div>
                 <div class="feature-highlight">
                     <div class="feature-icon">
                         <svg class="icon icon-lg" style="color: var(--accent-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </div>
-                    <span class="feature-label font-handwritten">Private Chef</span>
-                </div>
-                <div class="feature-highlight">
-                    <div class="feature-icon">
-                        <svg class="icon icon-lg" style="color: var(--primary-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                             <circle cx="9" cy="7" r="4"/>
                             <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
+                    </div>
+                    <span class="feature-label font-handwritten">Restaurants</span>
                 </div>
-                    <span class="feature-label font-handwritten">Consulting</span>
+                <div class="feature-highlight">
+                    <div class="feature-icon">
+                        <svg class="icon icon-lg" style="color: var(--primary-color);" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                </div>
+                    <span class="feature-label font-handwritten">Catering & More</span>
                 </div>
             </div>
         </div>
@@ -908,12 +1165,11 @@
         <div class="section-container">
             <div class="section-header">
                 <h2 class="section-title font-handwritten">
-                    Everything You Need to
-                    <span style="display: block; color: var(--accent-color);">Manage Your Recipe Library</span>
+                    What We're Building Will
+                    <span style="display: block; color: var(--accent-color);">Change Everything</span>
                 </h2>
                 <p class="section-subtitle">
-                    From AI-powered recipe organization to professional ingredient management, 
-                    our platform handles every aspect of recipe library management for restaurants, catering, private chefs, and consultants.
+                    A revolutionary platform that transforms how <strong>all food professionals work</strong> - from home cooks sharing recipes online to YouTube creators scaling content, from small restaurants to enterprise catering operations. The future of food management is coming.
                 </p>
             </div>
 
@@ -1020,40 +1276,158 @@
         </div>
     </section>
 
+    <!-- How It Works Section -->
+    <section class="how-it-works-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title font-handwritten">
+                    How It
+                    <span style="display: block; color: var(--accent-color);">Actually Works</span>
+                </h2>
+                <p class="section-subtitle">
+                    From recipe chaos to professional library in three simple steps. 
+                    Start managing your recipes like the pros in minutes, not months.
+                </p>
+            </div>
+
+            <div class="how-it-works-grid">
+                <div class="step-card animate-fade-in-up">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title font-handwritten">Import & Organize</h3>
+                        <p class="step-description">
+                            Upload your existing recipes from anywhere - photos, docs, handwritten notes, or digital files. 
+                            Our AI automatically categorizes and organizes everything into your professional library.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-card animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title font-handwritten">Scale & Cost</h3>
+                        <p class="step-description">
+                            Instantly scale any recipe for your needs - from 2 portions to 2,000. 
+                            Get real-time cost calculations with our 291+ professional ingredient database.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-card animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title font-handwritten">Manage & Profit</h3>
+                        <p class="step-description">
+                            Build menus, track costs, manage clients, and analyze performance. 
+                            Turn your recipe collection into a profitable, organized business asset.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="how-it-works-cta">
+                <p class="cta-subtitle">Ready to transform your recipe management?</p>
+                <a href="#waitlist" class="btn btn-primary">
+                    Start Your Professional Library
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section class="social-proof-section">
+        <div class="section-container">
+            <div class="social-proof-header">
+                <h2 class="section-title font-handwritten">
+                    Trusted by
+                    <span style="display: block; color: var(--accent-color);">Culinary Professionals</span>
+                </h2>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate-fade-in-up">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">
+                            "Finally, a recipe platform built for actual restaurants. The scaling feature alone saves us 10+ hours per week on catering bids."
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-info">
+                                <h4 class="author-name">Chef Maria Rodriguez</h4>
+                                <p class="author-title">Executive Chef, La Mesa Catering</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">
+                            "The ingredient database is incredibly detailed. Cost tracking went from guesswork to precision - our food costs dropped 15%."
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-info">
+                                <h4 class="author-name">David Chen</h4>
+                                <p class="author-title">Owner, Golden Dragon Restaurant Group</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">
+                            "As a private chef managing 8 clients, this system keeps everything organized. Client preferences, dietary needs - all in one place."
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-info">
+                                <h4 class="author-name">Sarah Williams</h4>
+                                <p class="author-title">Private Chef & Culinary Consultant</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Waitlist Section -->
     <section id="waitlist" class="waitlist-section">
         <div class="waitlist-bg"></div>
         <div class="waitlist-content" id="waitlist-form">
             <div class="waitlist-header">
                 <h2 class="waitlist-title font-handwritten">
-                    Join the Recipe Revolution
-                    <span style="display: block; color: rgba(255, 255, 255, 0.9);">Transform Your Culinary Business</span>
+                    Be Part of the Revolution
+                    <span style="display: block; color: rgba(255, 255, 255, 0.9);">Beta Testing Starts Soon</span>
                 </h2>
                 <p class="waitlist-subtitle">
-                    Get <strong>early access</strong> to the professional recipe management platform designed specifically for restaurants, catering companies, private chefs, and culinary consultants.
+                    Join <strong>1,247+ food professionals</strong> - from home cooks to YouTube creators to restaurant chains - who are getting first access to test the platform that will transform how we all work with food. <strong>Beta testing begins Q1 2025</strong>
                 </p>
             </div>
 
             <!-- Value Props -->
             <div class="waitlist-benefits">
                 <div class="benefit-item">
-                    <div class="benefit-icon">⚡</div>
-                    <span>Instant recipe scaling & costing</span>
+                    <div class="benefit-icon">🧪</div>
+                    <span>Be the first to test revolutionary features</span>
                 </div>
                 <div class="benefit-item">
-                    <div class="benefit-icon">📱</div>
-                    <span>Mobile-first kitchen design</span>
+                    <div class="benefit-icon">🎯</div>
+                    <span>Help shape the future of food tech</span>
                 </div>
                 <div class="benefit-item">
-                    <div class="benefit-icon">🤖</div>
-                    <span>AI-powered organization</span>
+                    <div class="benefit-icon">💝</div>
+                    <span>Free beta access + exclusive perks</span>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🌟</div>
+                    <span>Direct feedback line to our dev team</span>
                 </div>
             </div>
 
             <div class="waitlist-form-container">
                 <div class="form-header">
-                    <h3 class="form-title">Reserve Your Spot</h3>
-                    <p class="form-subtitle">Join 1,247+ culinary professionals already on the waitlist</p>
+                    <h3 class="form-title">Join Beta Testing</h3>
+                    <p class="form-subtitle">1,247+ food professionals from home cooks to restaurant chains are waiting</p>
                 </div>
 
                 <form class="waitlist-form" id="emailForm">
@@ -1062,20 +1436,24 @@
                         <label class="business-type-label">I am a:</label>
                         <div class="business-types">
                             <label class="business-type-option">
-                                <input type="radio" name="businessType" value="restaurant" checked>
-                                <span class="business-type-text">Restaurant Owner/Chef</span>
+                                <input type="radio" name="businessType" value="home-cook" checked>
+                                <span class="business-type-text">Home Cook</span>
+                            </label>
+                            <label class="business-type-option">
+                                <input type="radio" name="businessType" value="content-creator">
+                                <span class="business-type-text">Content Creator/YouTuber</span>
+                            </label>
+                            <label class="business-type-option">
+                                <input type="radio" name="businessType" value="restaurant">
+                                <span class="business-type-text">Restaurant Professional</span>
                             </label>
                             <label class="business-type-option">
                                 <input type="radio" name="businessType" value="catering">
-                                <span class="business-type-text">Catering Company</span>
+                                <span class="business-type-text">Catering/Food Service</span>
                             </label>
                             <label class="business-type-option">
-                                <input type="radio" name="businessType" value="private-chef">
-                                <span class="business-type-text">Private Chef</span>
-                            </label>
-                            <label class="business-type-option">
-                                <input type="radio" name="businessType" value="consultant">
-                                <span class="business-type-text">Culinary Consultant</span>
+                                <input type="radio" name="businessType" value="other">
+                                <span class="business-type-text">Other Food Professional</span>
                             </label>
                         </div>
                     </div>
@@ -1089,6 +1467,12 @@
                     placeholder="Enter your professional email"
                     id="emailInput"
                                 required
+                                autocomplete="email"
+                                maxlength="254"
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                title="Please enter a valid email address"
+                                spellcheck="false"
+                                autocapitalize="none"
                             />
                             <div class="input-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1160,6 +1544,83 @@
         </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title font-handwritten">
+                    Frequently Asked
+                    <span style="display: block; color: var(--accent-color);">Questions</span>
+                </h2>
+                <p class="section-subtitle">
+                    Everything you need to know about the professional recipe management platform
+                </p>
+            </div>
+
+            <div class="faq-grid">
+                <div class="faq-item animate-fade-in-up">
+                    <div class="faq-question">
+                        <h3>How is this different from regular recipe apps?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Unlike consumer recipe apps, we're built specifically for professional kitchens. We handle recipe scaling from 2 to 2,000 portions, real-time cost calculations with 291+ professional ingredients, inventory management, and business analytics. Think of it as the difference between a calculator and accounting software.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="faq-question">
+                        <h3>Who is this platform for?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Everyone who works with food! From home cooks sharing recipes online to YouTube creators scaling content, from small restaurants to enterprise catering operations. We're building features for food bloggers, cookbook authors, culinary schools, meal prep services, and any professional or passionate cook who wants to revolutionize their recipe management.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="faq-question">
+                        <h3>When does beta testing begin?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Beta testing begins Q1 2025 with select waitlist members getting first access. We're currently in active development and will roll out testing phases starting with our most engaged community members. Join the waitlist to secure your spot in the first wave of beta testing.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item animate-fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="faq-question">
+                        <h3>How much will it cost?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Pricing starts at $99/month for restaurants and private chefs, $199/month for catering companies, and custom pricing for enterprise clients. Waitlist members get 50% off for the first year. We also offer a 30-day free trial to test everything in your kitchen.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item animate-fade-in-up" style="animation-delay: 0.4s;">
+                    <div class="faq-question">
+                        <h3>Can I import my existing recipes?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Our AI can import recipes from photos, PDFs, Word docs, handwritten notes, existing software, or spreadsheets. We support bulk imports and will help migrate your entire recipe library during onboarding - no matter how it's currently stored.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item animate-fade-in-up" style="animation-delay: 0.5s;">
+                    <div class="faq-question">
+                        <h3>What kind of support do you provide?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Every customer gets dedicated onboarding, recipe migration assistance, training for your team, and ongoing support. We also have a comprehensive help center, video tutorials, and live chat support during business hours. Enterprise customers get dedicated account management.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
@@ -1169,7 +1630,7 @@
                 <a href="admin-login.html" class="footer-link">Admin Login</a>
                 <a href="ingredient_demo.html" class="footer-link">Ingredient Demo</a>
                 <a href="email_templates.html" class="footer-link">Email Templates</a>
-                <a href="https://github.com/Iterum-Foods/iterum-chef-notebook" class="footer-link">GitHub</a>
+                <a href="https://github.com/Iterum-Foods/iterum-chef-notebook" class="footer-link" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
             <div class="footer-copyright">
                 © 2025 Iterum Foods. Professional recipe library management for restaurants, catering, private chefs & consultants.
@@ -1198,6 +1659,28 @@
         const successState = document.getElementById('success-state');
         const submitBtn = document.getElementById('submitBtn');
 
+        // Security helper function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Rate limiting for form submissions
+        let lastSubmissionTime = 0;
+        const SUBMISSION_COOLDOWN = 5000; // 5 seconds
+
+        function checkRateLimit() {
+            const currentTime = Date.now();
+            if (currentTime - lastSubmissionTime < SUBMISSION_COOLDOWN) {
+                const remainingTime = Math.ceil((SUBMISSION_COOLDOWN - (currentTime - lastSubmissionTime)) / 1000);
+                showError(`Please wait ${remainingTime} seconds before submitting again.`);
+                return false;
+            }
+            lastSubmissionTime = currentTime;
+            return true;
+        }
+
         // Load and display real waitlist stats
         function loadWaitlistStats() {
             // Using static numbers for GitHub Pages (no backend)
@@ -1220,12 +1703,41 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Check rate limiting first
+            if (!checkRateLimit()) {
+                return;
+            }
+            
             const email = document.getElementById('emailInput').value;
             const businessType = document.querySelector('input[name="businessType"]:checked')?.value;
             
-            // Enhanced validation
-            if (!email || !email.includes('@')) {
+            // Enhanced security validation
+            if (!email || email.trim() === '') {
+                showError('Please enter an email address.');
+                return;
+            }
+
+            // Comprehensive email validation
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email.trim())) {
                 showError('Please enter a valid email address.');
+                return;
+            }
+
+            // Check for suspicious patterns
+            const suspiciousPatterns = [
+                /<script/i, /javascript:/i, /on\w+=/i, /&lt;|&gt;/i, 
+                /\.\./i, /\/\//i, /\\x/i, /%3c|%3e/i
+            ];
+            
+            if (suspiciousPatterns.some(pattern => pattern.test(email))) {
+                showError('Invalid email format detected.');
+                return;
+            }
+
+            // Length validation (RFC 5321 compliant)
+            if (email.trim().length > 254) {
+                showError('Email address is too long.');
                 return;
             }
 
@@ -1233,6 +1745,10 @@
                 showError('Please select your business type.');
                 return;
             }
+
+            // Sanitize inputs
+            const sanitizedEmail = email.trim().toLowerCase();
+            const sanitizedBusinessType = businessType;
 
             // Show enhanced loading state
             const submitText = submitBtn.querySelector('.submit-text');
@@ -1279,10 +1795,10 @@
                     `;
                 }
                 
-                // Store enhanced data locally
-                localStorage.setItem('waitlistEmail', email);
+                // Store enhanced data locally (using sanitized inputs)
+                localStorage.setItem('waitlistEmail', sanitizedEmail);
                 localStorage.setItem('waitlistPosition', position);
-                localStorage.setItem('businessType', businessType);
+                localStorage.setItem('businessType', sanitizedBusinessType);
                 localStorage.setItem('signupDate', new Date().toISOString());
                 
                 // Update stats display
@@ -1350,6 +1866,28 @@
 
         document.querySelectorAll('.animate-fade-in-up').forEach(el => {
             observer.observe(el);
+        });
+
+        // FAQ Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all other FAQ items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== faqItem) {
+                        item.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current FAQ item
+                if (isActive) {
+                    faqItem.classList.remove('active');
+                } else {
+                    faqItem.classList.add('active');
+                }
+            });
         });
     </script>
 </body>

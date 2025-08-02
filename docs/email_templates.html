@@ -3,68 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iterum R&D Email Templates</title>
+    <title>Iterum Recipe Library - Email Templates</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --primary-dark: #000000;
+            --primary-light: #333333;
+            --accent-color: #0066FF;
+            --accent-light: #3399FF;
+            --accent-dark: #0052CC;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-light: #888888;
+            --bg-light: #f8f9fa;
+            --bg-subtle: #fafbfc;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 600px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 2rem;
             line-height: 1.6;
-            color: #333;
+            color: var(--text-primary);
+            background: var(--bg-light);
         }
         .email-template {
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
+            border: 2px solid rgba(0, 102, 255, 0.1);
+            border-radius: var(--radius-lg);
             margin: 2rem 0;
             overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
         }
+
+        .email-template:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-color);
+        }
+
         .email-header {
-            background: #2e7d32;
-            color: white;
-            padding: 1rem;
-            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
         }
         .email-content {
             padding: 2rem;
-            background: white;
+            background: var(--white);
         }
         .subject-line {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-bottom: 1px solid #e1e5e9;
+            background: var(--bg-subtle);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             font-weight: 600;
-            color: #2e7d32;
+            color: var(--accent-color);
+            font-size: 1rem;
         }
         .cta-button {
-            background: #2e7d32;
-            color: white;
-            padding: 12px 24px;
+            background: var(--accent-color);
+            color: var(--white);
+            padding: 0.875rem 1.5rem;
             text-decoration: none;
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             display: inline-block;
             margin: 1rem 0;
             font-weight: 600;
+            transition: var(--transition-smooth);
         }
+
+        .cta-button:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+            color: var(--white);
+        }
+
         .highlight {
-            background: #fff3e0;
-            padding: 1rem;
-            border-left: 4px solid #ff6f00;
+            background: rgba(0, 102, 255, 0.05);
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent-color);
             margin: 1rem 0;
+            border-radius: var(--radius-md);
         }
         .stats {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 6px;
+            background: var(--bg-subtle);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
             text-align: center;
             margin: 1rem 0;
+            border: 2px solid rgba(0, 102, 255, 0.1);
         }
         .footer {
-            color: #666;
+            color: var(--text-secondary);
             font-size: 0.9rem;
             margin-top: 2rem;
             padding-top: 1rem;
-            border-top: 1px solid #e1e5e9;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File, Request
+from fastapi import APIRouter, HTTPException, UploadFile, File, Request, Query
 from fastapi.responses import FileResponse
 import sqlite3
 import json

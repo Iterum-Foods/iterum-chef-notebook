@@ -9,7 +9,52 @@ class UnifiedAuthSystem {
         this.currentUser = null;
         this.isOnline = false;
         this.savedUsers = JSON.parse(localStorage.getItem('saved_users')) || [];
+        this.setupSessionHandlers();
         this.init();
+    }
+
+    /**
+     * Setup session and browser event handlers
+     */
+    setupSessionHandlers() {
+        // Maintain session across page refreshes
+        window.addEventListener('beforeunload', () => {
+            if (this.currentUser && this.isSessionActive()) {
+                // Session persists across page refreshes
+                console.log('🔄 Page refresh detected, maintaining user session');
+            }
+        });
+
+        // Handle browser tab/window close
+        window.addEventListener('unload', () => {
+            if (this.currentUser) {
+                // Update last activity timestamp
+                localStorage.setItem('last_activity', new Date().toISOString());
+            }
+        });
+
+        // Handle page visibility changes (tab switching)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && this.currentUser) {
+                // User returned to tab - check if session is still valid
+                this.validateSession();
+            }
+        });
+    }
+
+    /**
+     * Validate current session
+     */
+    validateSession() {
+        if (this.isSessionActive() && this.currentUser) {
+            console.log('✅ Session validated for user:', this.currentUser.name);
+            return true;
+        } else if (this.currentUser) {
+            console.log('⚠️ Session expired, logging out user');
+            this.handleLogout();
+            return false;
+        }
+        return false;
     }
 
     /**
@@ -21,17 +66,31 @@ class UnifiedAuthSystem {
         // Check backend connection
         await this.checkBackendConnection();
         
-        // Load current user
-        this.loadCurrentUser();
-        
-        if (this.currentUser) {
-            // User is already logged in
-            this.hideLoadingScreen();
-            this.updateAuthUI(this.currentUser);
-        } else {
-            // Show authentication flow
-            await this.showAuthFlow();
+        // Check if there's an active session
+        if (this.isSessionActive()) {
+            // Load current user
+            this.loadCurrentUser();
+            
+            if (this.currentUser) {
+                // User is already logged in - maintain session
+                console.log('🔐 Active session found, keeping user logged in');
+                this.hideLoadingScreen();
+                this.updateAuthUI(this.currentUser);
+                return;
+            }
         }
+        
+        // No active session or user data - show authentication flow
+        await this.showAuthFlow();
+    }
+
+    /**
+     * Check if there's an active user session
+     */
+    isSessionActive() {
+        const sessionActive = localStorage.getItem('session_active');
+        const currentUser = localStorage.getItem('current_user');
+        return sessionActive === 'true' && currentUser !== null;
     }
 
     /**
@@ -52,11 +111,28 @@ class UnifiedAuthSystem {
     }
 
     /**
-     * Load current user from localStorage
+     * Load current user from localStorage with session validation
      */
     loadCurrentUser() {
-        const user = localStorage.getItem('current_user');
-        this.currentUser = user ? JSON.parse(user) : null;
+        try {
+            const user = localStorage.getItem('current_user');
+            const authToken = localStorage.getItem('iterum_auth_token');
+            
+            if (user) {
+                this.currentUser = JSON.parse(user);
+                
+                // Set session flag to persist login until explicit logout
+                if (this.currentUser) {
+                    localStorage.setItem('session_active', 'true');
+                    console.log('✅ User session restored:', this.currentUser.name);
+                }
+            } else {
+                this.currentUser = null;
+            }
+        } catch (error) {
+            console.warn('⚠️ Error loading current user:', error);
+            this.currentUser = null;
+        }
     }
 
     /**
@@ -221,6 +297,8 @@ class UnifiedAuthSystem {
 
             this.currentUser = user;
             localStorage.setItem('current_user', JSON.stringify(user));
+            localStorage.setItem('session_active', 'true');
+            localStorage.setItem('last_login', new Date().toISOString());
             
             this.hideLoadingScreen();
             this.updateAuthUI(user);
@@ -270,6 +348,8 @@ class UnifiedAuthSystem {
 
             this.currentUser = user;
             localStorage.setItem('current_user', JSON.stringify(user));
+            localStorage.setItem('session_active', 'true');
+            localStorage.setItem('last_login', new Date().toISOString());
             
             this.hideLoadingScreen();
             this.updateAuthUI(user);
@@ -395,6 +475,8 @@ class UnifiedAuthSystem {
 
             this.currentUser = user;
             localStorage.setItem('current_user', JSON.stringify(user));
+            localStorage.setItem('session_active', 'true');
+            localStorage.setItem('last_login', new Date().toISOString());
             
             this.hideLoadingScreen();
             this.updateAuthUI(user);
@@ -489,11 +571,16 @@ class UnifiedAuthSystem {
             } else {
                 // Offline mode: check saved users
                 const savedUser = this.savedUsers.find(u => 
-                    u.email === loginData.email && u.password === loginData.password
+                    u.email === loginData.email || u.username === loginData.email
                 );
                 
                 if (!savedUser) {
                     throw new Error('User not found in offline mode');
+                }
+                
+                // For local development, allow passwordless login if no password set
+                if (savedUser.password && savedUser.password !== 'localdev123' && loginData.password !== savedUser.password) {
+                    throw new Error('Invalid password');
                 }
                 
                 user = savedUser;
@@ -502,6 +589,8 @@ class UnifiedAuthSystem {
             // Set current user
             this.currentUser = user;
             localStorage.setItem('current_user', JSON.stringify(user));
+            localStorage.setItem('session_active', 'true');
+            localStorage.setItem('last_login', new Date().toISOString());
             
             // Hide modal and update UI
             const loginModal = document.getElementById('login-modal');
@@ -534,10 +623,17 @@ class UnifiedAuthSystem {
             
             if (this.isOnline) {
                 // Try backend user creation
-                const response = await fetch('http://localhost:8000/api/auth/signup', {
+                const response = await fetch('http://localhost:8000/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(signupData)
+                    body: JSON.stringify({
+                        username: signupData.name || signupData.email.split('@')[0],
+                        email: signupData.email,
+                        password: signupData.password || null, // Optional for local dev
+                        first_name: signupData.name,
+                        role: signupData.role,
+                        restaurant: signupData.restaurant
+                    })
                 });
                 
                 if (response.ok) {
@@ -559,9 +655,9 @@ class UnifiedAuthSystem {
                     id: 'user_' + Date.now(),
                     name: signupData.name,
                     email: signupData.email,
-                    role: signupData.role,
+                    role: signupData.role || 'chef',
                     restaurant: signupData.restaurant || 'My Kitchen',
-                    password: signupData.password, // Store for offline auth
+                    password: signupData.password || 'localdev123', // Default password for local dev
                     avatar: null,
                     isGoogleUser: false,
                     recipes: [],
@@ -579,6 +675,8 @@ class UnifiedAuthSystem {
             // Set current user
             this.currentUser = user;
             localStorage.setItem('current_user', JSON.stringify(user));
+            localStorage.setItem('session_active', 'true');
+            localStorage.setItem('last_login', new Date().toISOString());
             
             // Hide modal and update UI
             const loginModal = document.getElementById('login-modal');
@@ -614,6 +712,8 @@ class UnifiedAuthSystem {
         localStorage.removeItem('currentLocalProfile');
         localStorage.removeItem('iterum_auth_token');
         localStorage.removeItem('access_token');
+        localStorage.removeItem('session_active');
+        localStorage.removeItem('last_login');
         
         // Clear any profile-specific data
         const keys = Object.keys(localStorage);
@@ -660,6 +760,35 @@ class UnifiedAuthSystem {
      */
     isLoggedIn() {
         return !!this.currentUser;
+    }
+
+    /**
+     * Get current session info for debugging
+     */
+    getSessionInfo() {
+        return {
+            user: this.currentUser?.name || 'None',
+            sessionActive: this.isSessionActive(),
+            lastLogin: localStorage.getItem('last_login'),
+            lastActivity: localStorage.getItem('last_activity'),
+            isOnline: this.isOnline
+        };
+    }
+    /**
+     * Switch to a different user (maintains session for new user)
+     */
+    async switchUser() {
+        console.log('🔄 Switching user...');
+        
+        // Clear current session but keep saved users
+        this.currentUser = null;
+        localStorage.removeItem('current_user');
+        localStorage.removeItem('session_active');
+        localStorage.removeItem('last_login');
+        
+        // Show user selection or login flow
+        this.showLoadingOverlay();
+        await this.showAuthFlow();
     }
 }
 

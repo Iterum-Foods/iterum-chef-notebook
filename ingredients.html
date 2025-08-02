@@ -171,44 +171,166 @@
             transform: translateY(-2px) scale(1.04) rotate(-2deg);
             box-shadow: 0 6px 18px 0 rgba(255, 235, 59, 0.25);
         }
+
+        /* Enhanced Header Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Logo Hover Glow */
+        header .relative:hover .absolute {
+            animation: pulse 2s infinite;
+        }
+
+        /* Navigation Active State - Current Page Highlighting */
+        .nav-active {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
+            color: #15803d !important;
+            font-weight: 600 !important;
+            border: 1px solid #86efac !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-active:hover::before {
+            left: 100%;
+        }
     </style>
 </head>
 <body>
-        <header class="bg-white shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-            <!-- Logo and Brand -->
-            <div class="flex items-center gap-3">
-                <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10">
-                <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
-                    Iterum R&D Chef Notebook
-                </span>
-            </div>
-    <nav class="hidden md:flex gap-6 text-gray-700 font-medium">
-      <a href="index.html" class="hover:text-green-600">Dashboard</a>
-      <a href="recipe-library.html" class="hover:text-green-600">Recipe Library</a>
-      <a href="recipe-upload.html" class="hover:text-green-600">Recipe Uploader</a>
-      <a href="menu-builder.html" class="hover:text-green-600">Menu Builder</a>
-      <a href="ingredients.html" class="hover:text-green-600">Ingredients</a>
-      <a href="equipment-management.html" class="hover:text-green-600">Equipment</a>
-      <a href="vendor-management.html" class="hover:text-green-600">Vendors</a>
-    </nav>
-    <div class="flex items-center gap-4">
-      <span id="current-user" class="text-gray-600 text-sm"></span>
-      <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded hidden">Login</button>
-      <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded hidden">Logout</button>
-      <button id="nav-toggle" class="md:hidden text-2xl text-gray-700 focus:outline-none">&#9776;</button>
-    </div>
-  </div>
-  <nav id="mobile-nav" class="md:hidden bg-white border-t border-gray-200 hidden flex-col gap-2 px-4 pb-4">
-    <a href="index.html" class="block py-2 hover:text-green-600">Dashboard</a>
-    <a href="recipe-library.html" class="block py-2 hover:text-green-600">Recipe Library</a>
-    <a href="recipe-upload.html" class="block py-2 hover:text-green-600">Recipe Uploader</a>
-    <a href="menu-builder.html" class="block py-2 hover:text-green-600">Menu Builder</a>
-    <a href="ingredients.html" class="block py-2 hover:text-green-600">Ingredients</a>
-    <a href="equipment-management.html" class="block py-2 hover:text-green-600">Equipment</a>
-    <a href="vendor-management.html" class="block py-2 hover:text-green-600">Vendors</a>
-  </nav>
-</header>
+    <!-- Enhanced Uniform Header -->
+    <header class="bg-gradient-to-r from-white to-green-50 shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <!-- Logo and Brand -->
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10 transition-transform hover:scale-110">
+            <div class="absolute -inset-1 bg-green-200 rounded-full opacity-0 hover:opacity-20 transition-opacity"></div>
+          </div>
+          <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
+            Iterum R&D Chef Notebook
+          </span>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="hidden lg:flex gap-1 text-gray-700 font-medium">
+          <a href="index.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+            <span class="flex items-center gap-1">🏠 Dashboard</span>
+          </a>
+          <a href="recipe-library.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+            <span class="flex items-center gap-1">📚 Recipe Library</span>
+          </a>
+          <a href="recipe-developer.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+            <span class="flex items-center gap-1">🧪 Recipe Developer</span>
+          </a>
+          <a href="recipe-upload.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+            <span class="flex items-center gap-1">⚡ Quick Upload</span>
+          </a>
+          <a href="menu-builder.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+            <span class="flex items-center gap-1">🍽️ Menu Builder</span>
+          </a>
+          <a href="ingredients.html" class="nav-active hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+            <span class="flex items-center gap-1">🥬 Ingredients</span>
+          </a>
+          <a href="equipment-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+            <span class="flex items-center gap-1">🔧 Equipment</span>
+          </a>
+          <a href="vendor-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
+            <span class="flex items-center gap-1">🏪 Vendors</span>
+          </a>
+        </nav>
+        
+        <!-- User Info and Actions -->
+        <div class="flex items-center gap-3">
+          <span id="current-user" class="text-gray-600 text-sm font-medium bg-white px-3 py-1 rounded-full border"></span>
+          <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hidden">
+            Login
+          </button>
+          <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
+            Logout
+          </button>
+          <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors shadow-sm">
+            Switch User
+          </button>
+          <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors">
+            &#9776;
+          </button>
+        </div>
+      </div>
+      
+      <!-- Mobile Navigation -->
+      <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-1 px-4 pb-4">
+        <a href="index.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+          <span class="flex items-center gap-2">🏠 Dashboard</span>
+        </a>
+        <a href="recipe-library.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+          <span class="flex items-center gap-2">📚 Recipe Library</span>
+        </a>
+        <a href="recipe-developer.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+          <span class="flex items-center gap-2">🧪 Recipe Developer</span>
+        </a>
+        <a href="recipe-upload.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+          <span class="flex items-center gap-2">⚡ Quick Upload</span>
+        </a>
+        <a href="menu-builder.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+          <span class="flex items-center gap-2">🍽️ Menu Builder</span>
+        </a>
+        <a href="ingredients.html" class="nav-active block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+          <span class="flex items-center gap-2">🥬 Ingredients</span>
+        </a>
+        <a href="equipment-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+          <span class="flex items-center gap-2">🔧 Equipment</span>
+        </a>
+        <a href="vendor-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
+          <span class="flex items-center gap-2">🏪 Vendors</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Enhanced Mobile Navigation Toggle Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const navToggle = document.getElementById('nav-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        
+        if (navToggle && mobileNav) {
+          navToggle.addEventListener('click', function() {
+            mobileNav.classList.toggle('hidden');
+            
+            // Add animation class
+            if (!mobileNav.classList.contains('hidden')) {
+              mobileNav.style.animation = 'slideDown 0.3s ease-out';
+            }
+          });
+          
+          // Close mobile nav when clicking outside
+          document.addEventListener('click', function(event) {
+            if (!navToggle.contains(event.target) && !mobileNav.contains(event.target)) {
+              mobileNav.classList.add('hidden');
+            }
+          });
+        }
+      });
+    </script>
     <main class="w-full px-4 py-8">
         <section class="notebook-card">
             <h1 class="notebook-heading mb-4">Master Ingredient Database</h1>

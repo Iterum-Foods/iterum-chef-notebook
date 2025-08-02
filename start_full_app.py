@@ -20,11 +20,14 @@ class AppManager:
         
     def start_backend(self):
         """Start the FastAPI backend server"""
-        print("Starting Iterum R&D Chef Notebook Backend...")
+        print("🚀 Starting Iterum R&D Chef Notebook Backend...")
         try:
+            # Determine the correct Python executable
+            python_cmd = "py" if os.name == 'nt' else sys.executable
+            
             # Use uvicorn to run the FastAPI app
             self.backend_process = subprocess.Popen([
-                sys.executable, "-m", "uvicorn", "app.main:app", 
+                python_cmd, "-m", "uvicorn", "app.main:app", 
                 "--host", "0.0.0.0", 
                 "--port", "8000", 
                 "--reload"
@@ -34,14 +37,16 @@ class AppManager:
             time.sleep(3)
             
             if self.backend_process.poll() is None:
-                print("Backend server started successfully")
-                print("API Documentation: http://localhost:8000/docs")
-                print("Health Check: http://localhost:8000/health")
+                print("✅ Backend server started successfully")
+                print("   📚 API Documentation: http://localhost:8000/docs")
+                print("   💚 Health Check: http://localhost:8000/health")
                 return True
             else:
                 stdout, stderr = self.backend_process.communicate()
-                print(f"Backend server failed to start")
-                print(f"Error: {stderr}")
+                print(f"❌ Backend server failed to start")
+                print(f"   Error output: {stderr}")
+                if stdout:
+                    print(f"   Standard output: {stdout}")
                 return False
                 
         except Exception as e:
@@ -50,23 +55,28 @@ class AppManager:
     
     def start_frontend(self):
         """Start the frontend HTTP server"""
-        print("Starting Iterum R&D Chef Notebook Frontend...")
+        print("🌐 Starting Iterum R&D Chef Notebook Frontend...")
         try:
+            # Determine the correct Python executable
+            python_cmd = "py" if os.name == 'nt' else sys.executable
+            
             self.frontend_process = subprocess.Popen([
-                sys.executable, "serve_frontend.py"
+                python_cmd, "serve_frontend.py"
             ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding='utf-8')
             
             # Wait a moment for startup
             time.sleep(2)
             
             if self.frontend_process.poll() is None:
-                print("Frontend server started successfully")
-                print("Frontend: http://localhost:8080")
+                print("✅ Frontend server started successfully")
+                print("   🌐 Application: http://localhost:8080")
                 return True
             else:
                 stdout, stderr = self.frontend_process.communicate()
-                print(f"Frontend server failed to start")
-                print(f"Error: {stderr}")
+                print(f"❌ Frontend server failed to start")
+                print(f"   Error output: {stderr}")
+                if stdout:
+                    print(f"   Standard output: {stdout}")
                 return False
                 
         except Exception as e:
@@ -97,10 +107,10 @@ class AppManager:
     
     def run(self):
         """Run the complete application"""
-        print("=" * 50)
-        print("Iterum R&D Chef Notebook")
-        print("Professional Recipe R&D and Publishing System")
-        print("=" * 50)
+        print("🍴" + "=" * 48 + "🍴")
+        print("      Iterum R&D Chef Notebook")
+        print("   Professional Recipe R&D and Publishing System")
+        print("🍴" + "=" * 48 + "🍴")
         
         # Start backend
         if not self.start_backend():
@@ -118,12 +128,15 @@ class AppManager:
         browser_thread.daemon = True
         browser_thread.start()
         
-        print("\n" + "=" * 50)
-        print("Iterum R&D Chef Notebook is now running!")
-        print("Frontend: http://localhost:8080")
-        print("API Docs: http://localhost:8000/docs")
-        print("Press Ctrl+C to stop the servers")
-        print("=" * 50)
+        print("\n🎉" + "=" * 48 + "🎉")
+        print("    ✨ Iterum R&D Chef Notebook is now running! ✨")
+        print("")
+        print("    🌐 Frontend Application: http://localhost:8080")
+        print("    📚 API Documentation: http://localhost:8000/docs")
+        print("    💚 Health Check: http://localhost:8000/health")
+        print("")
+        print("    Press Ctrl+C to stop the servers")
+        print("🎉" + "=" * 48 + "🎉")
         
         try:
             # Keep the script running
