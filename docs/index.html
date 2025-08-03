@@ -195,11 +195,16 @@
         .cta-buttons {
             display: flex;
             flex-direction: column;
-            sm:flex-direction: row;
             gap: 1.5rem;
             justify-content: center;
             align-items: center;
             margin-bottom: 4rem;
+        }
+
+        @media (min-width: 640px) {
+            .cta-buttons {
+                flex-direction: row;
+            }
         }
 
         .btn {
@@ -863,6 +868,43 @@
             margin-top: 1rem;
         }
 
+        /* Secondary CTA Below Form */
+        .secondary-cta {
+            text-align: center;
+            margin: 2rem 0 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        .secondary-cta-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            margin-bottom: 0;
+        }
+
         /* Social Proof Section */
         .social-proof {
             margin-top: 2rem;
@@ -958,6 +1000,124 @@
             opacity: 0.9;
             line-height: 1.6;
             margin-bottom: 2rem;
+        }
+
+        /* Sharing Section */
+        .sharing-section {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sharing-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .sharing-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .sharing-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .sharing-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .share-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .twitter-share {
+            background: #1DA1F2;
+            color: white;
+        }
+
+        .twitter-share:hover {
+            background: #1991DB;
+            transform: translateY(-1px);
+        }
+
+        .linkedin-share {
+            background: #0077B5;
+            color: white;
+        }
+
+        .linkedin-share:hover {
+            background: #006699;
+            transform: translateY(-1px);
+        }
+
+        .copy-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .copy-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .sharing-reward {
+            padding: 1rem;
+            background: rgba(0, 102, 255, 0.1);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .reward-text {
+            margin: 0;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .reward-icon {
+            font-size: 1.1rem;
+        }
+
+        @media (min-width: 640px) {
+            .sharing-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+            
+            .share-btn {
+                flex: 1;
+                max-width: 200px;
+            }
         }
 
         /* Clean Footer */
@@ -1107,7 +1267,7 @@
             </div>
             
                         <div class="cta-buttons animate-fade-in-up" style="animation-delay: 0.2s;">
-                <a href="#waitlist" class="btn btn-primary">
+                <a href="#waitlist" class="btn btn-primary scroll-to-section">
                     Join Beta Testing
                 </a>
                 <a href="#features" class="btn btn-outline">
@@ -1328,7 +1488,7 @@
             <div class="how-it-works-cta">
                 <p class="cta-subtitle">Ready to transform your recipe management?</p>
                 <a href="#waitlist" class="btn btn-primary">
-                    Start Your Professional Library
+                    Join Our Beta Program
                 </a>
             </div>
         </div>
@@ -1482,7 +1642,7 @@
                             </div>
                         </div>
                         <button type="submit" class="form-submit-primary" id="submitBtn">
-                            <span class="submit-text">Get Early Access</span>
+                            <span class="submit-text">Join Beta Testing</span>
                             <span class="submit-icon">→</span>
                 </button>
                     </div>
@@ -1490,6 +1650,15 @@
                     <!-- Error Display -->
                     <div class="form-error" id="formError" style="display: none;"></div>
             </form>
+            
+            <!-- Secondary CTA -->
+            <div class="secondary-cta">
+                <a href="#features" class="btn btn-secondary">
+                    <span>Explore the Platform Features</span>
+                    <span>↓</span>
+                </a>
+                <p class="secondary-cta-text">Learn about the revolutionary features we're building</p>
+            </div>
 
                 <!-- Social Proof -->
                 <div class="social-proof">
@@ -1540,6 +1709,45 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
                 <span>Join 1,248+ restaurants, caterers & chefs waiting</span>
+            </div>
+
+            <!-- Sharing Section -->
+            <div class="sharing-section">
+                <div class="sharing-header">
+                    <h3 class="sharing-title">🚀 Move Up the Waitlist!</h3>
+                    <p class="sharing-subtitle">Share with a friend and jump ahead in line</p>
+                </div>
+                
+                <div class="sharing-buttons">
+                    <button class="share-btn twitter-share" data-platform="twitter">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                        </svg>
+                        Share on Twitter
+                    </button>
+                    
+                    <button class="share-btn linkedin-share" data-platform="linkedin">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                        Share on LinkedIn
+                    </button>
+                    
+                    <button class="share-btn copy-link" data-platform="copy">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/>
+                        </svg>
+                        Copy Referral Link
+                    </button>
+                </div>
+                
+                <div class="sharing-reward">
+                    <p class="reward-text">
+                        <span class="reward-icon">⭐</span>
+                        Each successful referral moves you up 10 spots!
+                    </p>
+                </div>
             </div>
         </div>
     </section>
@@ -1832,7 +2040,7 @@
             const submitText = submitBtn.querySelector('.submit-text');
             const submitIcon = submitBtn.querySelector('.submit-icon');
             
-            submitText.textContent = 'Get Early Access';
+            submitText.textContent = 'Join Beta Testing';
             submitIcon.textContent = '→';
             submitBtn.disabled = false;
             submitBtn.style.opacity = '1';
@@ -1889,6 +2097,89 @@
                 }
             });
         });
+
+        // Smooth Scrolling for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Sharing Functionality
+        function setupSharingButtons() {
+            const shareButtons = document.querySelectorAll('.share-btn');
+            const email = localStorage.getItem('waitlistEmail') || 'chef@example.com';
+            const referralCode = btoa(email).slice(0, 8); // Simple referral code based on email
+            
+            shareButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const platform = this.dataset.platform;
+                    const shareText = "🚀 Join me on the waitlist for the revolutionary Recipe Library Management platform that's transforming how food professionals work! Get early access and help shape the future of culinary technology.";
+                    const shareUrl = `https://iterumfoods.xyz?ref=${referralCode}`;
+                    
+                    switch(platform) {
+                        case 'twitter':
+                            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+                            window.open(twitterUrl, '_blank', 'width=600,height=400');
+                            break;
+                            
+                        case 'linkedin':
+                            const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&summary=${encodeURIComponent(shareText)}`;
+                            window.open(linkedinUrl, '_blank', 'width=600,height=400');
+                            break;
+                            
+                        case 'copy':
+                            const referralLink = `${shareUrl}\n\n${shareText}`;
+                            navigator.clipboard.writeText(referralLink).then(() => {
+                                // Show temporary success message
+                                const originalText = this.innerHTML;
+                                this.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Copied!`;
+                                setTimeout(() => {
+                                    this.innerHTML = originalText;
+                                }, 2000);
+                                
+                                // Simulate moving up in waitlist
+                                setTimeout(() => {
+                                    const currentPosition = parseInt(localStorage.getItem('waitlistPosition')) || 1250;
+                                    const newPosition = Math.max(1, currentPosition - 10);
+                                    localStorage.setItem('waitlistPosition', newPosition);
+                                    
+                                    // Update the display if visible
+                                    const positionElement = document.querySelector('.position-number');
+                                    if (positionElement) {
+                                        positionElement.textContent = `#${newPosition}`;
+                                    }
+                                }, 1000);
+                            }).catch(() => {
+                                // Fallback for browsers that don't support clipboard API
+                                alert(`Copy this referral link:\n\n${referralLink}`);
+                            });
+                            break;
+                    }
+                });
+            });
+        }
+
+        // Initialize sharing buttons when success state is shown
+        if (successState) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        if (!successState.classList.contains('hidden')) {
+                            setupSharingButtons();
+                        }
+                    }
+                });
+            });
+            observer.observe(successState, { attributes: true });
+        }
     </script>
 </body>
 </html>
