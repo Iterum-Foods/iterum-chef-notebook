@@ -50,6 +50,11 @@ class Settings(BaseSettings):
     # Firebase settings (optional)
     firebase_config_path: Optional[str] = Field(default=None, env="FIREBASE_CONFIG_PATH")
     
+    # HTTPS/SSL settings
+    https_enabled: bool = Field(default=False, env="HTTPS_ENABLED")
+    ssl_cert_path: str = Field(default="./certs/localhost.pem", env="SSL_CERT_PATH")
+    ssl_key_path: str = Field(default="./certs/localhost-key.pem", env="SSL_KEY_PATH")
+    
     @property
     def is_development(self) -> bool:
         """Check if running in development mode"""

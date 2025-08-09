@@ -145,6 +145,32 @@
         .nav-active:hover::before {
             left: 100%;
         }
+        /* Modern Loading Screen Animations */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        #loading-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            #loading-overlay div[style*="width:80px"] {
+                width: 60px !important;
+                height: 60px !important;
+            }
+            #loading-overlay div[style*="font-size:1.1rem"] {
+                font-size: 1rem !important;
+            }
+            #loading-overlay div[style*="font-size:0.9rem"] {
+                font-size: 0.8rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -264,12 +290,20 @@
     </script>
 
     <!-- Shared Auth/Loading UI -->
-    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg p-6 flex items-center space-x-4">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-            <span class="text-lg font-semibold">Loading...</span>
-        </div>
+    <!-- Modern Dark Loading Overlay -->
+<div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;backdrop-filter:blur(10px);">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;">
+    <div style="width:80px;height:80px;border:3px solid rgba(255,255,255,0.1);border-top:3px solid #64ffda;border-radius:50%;animation:spin 1.2s cubic-bezier(0.68,-0.55,0.265,1.55) infinite;position:relative;">
+      <div style="display:flex;gap:8px;margin-top:1rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.2s;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.4s;"></div>
+      </div>
     </div>
+    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#e2e8f0;font-size:1.1rem;font-weight:500;text-align:center;letter-spacing:0.05em;margin-top:1rem;opacity:0.9;">Iterum R&D Chef Notebook</div>
+    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#64ffda;font-size:0.9rem;font-weight:400;text-align:center;margin-top:0.5rem;opacity:0.7;">Loading equipment management...</div>
+  </div>
+</div>
 
     <!-- Standardized Login Modal (loaded from template) -->
     <script>

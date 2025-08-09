@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Project Modal Demo - Iterum R&D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="apiConfig.js"></script>
+    <script src="projectManager.js"></script>
+    <script src="enhanced-project-modal.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Demo Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <h1 class="text-2xl font-bold text-gray-900">Enhanced Project Creation Modal Demo</h1>
+            <p class="text-gray-600 mt-1">Test the improved project creation UI</p>
+        </div>
+    </header>
+
+    <!-- Demo Content -->
+    <main class="max-w-4xl mx-auto px-6 py-8">
+        <div class="bg-white rounded-lg shadow-sm border p-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-600">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        <line x1="12" y1="11" x2="12" y2="17"/>
+                        <line x1="9" y1="14" x2="15" y2="14"/>
+                    </svg>
+                </div>
+                
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">Project Creation Modal</h2>
+                <p class="text-gray-600 mb-6">Click the button below to test the enhanced project creation modal</p>
+                
+                <button onclick="showEnhancedModal()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline-block mr-2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        <line x1="12" y1="11" x2="12" y2="17"/>
+                        <line x1="9" y1="14" x2="15" y2="14"/>
+                    </svg>
+                    Create New Project
+                </button>
+            </div>
+        </div>
+
+        <!-- Features List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <div class="bg-white rounded-lg shadow-sm border p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">✨ Enhanced Features</h3>
+                <ul class="space-y-2 text-gray-600">
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Perfectly centered modal
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Beautiful animations
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Professional styling
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Enhanced color picker
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Better form validation
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Responsive design
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">🎨 UI Improvements</h3>
+                <ul class="space-y-2 text-gray-600">
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Modern gradient backgrounds
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Clear section organization
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Intuitive color selection
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Enhanced cuisine options
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Better button design
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Smooth interactions
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Demo Controls -->
+        <div class="bg-gray-50 rounded-lg p-6 mt-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Demo Controls</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <button onclick="showEnhancedModal()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Show Enhanced Modal
+                </button>
+                <button onclick="showOriginalModal()" 
+                        class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Show Original Modal
+                </button>
+                <button onclick="testValidation()" 
+                        class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Test Validation
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Demo functions
+        function showEnhancedModal() {
+            if (window.enhancedProjectModal) {
+                window.enhancedProjectModal.show();
+            } else {
+                alert('Enhanced modal not loaded yet. Please wait a moment and try again.');
+            }
+        }
+
+        function showOriginalModal() {
+            if (window.projectManager && window.projectManager.createNewProjectModal) {
+                const modal = window.projectManager.createNewProjectModal();
+                document.body.appendChild(modal);
+            } else {
+                alert('Original modal not available');
+            }
+        }
+
+        function testValidation() {
+            showEnhancedModal();
+            setTimeout(() => {
+                const createBtn = document.querySelector('.btn-create');
+                if (createBtn) {
+                    alert('Try clicking "Create Project" without filling in the required fields to see validation in action!');
+                }
+            }, 500);
+        }
+
+        // Initialize demo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎬 Project Modal Demo loaded');
+        });
+    </script>
+</body>
+</html>

@@ -52,6 +52,45 @@ This document provides a comprehensive map of all features in the Iterum R&D Che
 - `recipe_version_ingredients` - Version-specific ingredients
 - `recipe_version_instructions` - Version-specific instructions
 
+### ✅ Documentation Management System
+**Status**: Complete
+**Description**: Comprehensive system for tracking and maintaining documentation dependencies
+
+**Components**:
+- Documentation dependencies flowchart
+- Quick update checklists
+- File relationship mapping
+- Update priority guidelines
+- Automation recommendations
+
+**Files**:
+- `DOCUMENTATION_DEPENDENCIES_FLOWCHART.md` - Main flowchart and guide
+- `QUICK_UPDATE_CHECKLIST.md` - Fast reference checklist
+- Visual Mermaid diagram for change workflows
+
+### ✅ URL-Based Ingredient Import System
+**Status**: Complete
+**Description**: Import ingredient data by pasting URLs from Wikipedia, nutrition databases, and food websites
+
+**Components**:
+- Backend web scraping API endpoints (`/api/ingredients/import-from-url`, `/api/ingredients/preview-url`)
+- Intelligent content extraction for Wikipedia, USDA databases, and general food sites
+- Preview functionality to review data before importing
+- Frontend modal interface with URL validation and status feedback
+- Support for nutritional information, allergens, categories, and descriptions
+- Automatic duplicate detection and prevention
+
+**Supported Sources**:
+- Wikipedia ingredient pages
+- USDA nutrition databases
+- General food and cooking websites
+- Automatic categorization and unit detection
+
+**Files**:
+- `app/routers/ingredients.py` - Backend scraping and import endpoints
+- `ingredientLibrary.js` - Frontend URL import modal and functionality
+- `ingredients.html` - URL import button integration
+
 ### ✅ Recipe Import System
 **Status**: Complete
 **Description**: Import recipes from various file formats

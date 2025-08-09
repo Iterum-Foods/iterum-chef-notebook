@@ -563,15 +563,8 @@
                     }
 
                     // Fetch recipes from the backend API
-                    const response = await fetch('/api/recipes/library', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('access_token') || ''}`
-                        }
-                    });
-
-                    if (response.ok) {
+                    try {
+                        const response = await window.apiConfig.get('recipes/library');
                         const data = await response.json();
                         this.recipes = data.recipes.map(recipe => ({
                             id: recipe.id,
@@ -590,21 +583,13 @@
                             ingredients: recipe.ingredients || [],
                             instructions: recipe.instructions || []
                         }));
-                    } else if (response.status === 401) {
-                        console.warn('Authentication failed, using sample data');
-                        this.recipes = this.getSampleRecipes();
-                    } else {
-                        console.error('Failed to load recipes:', response.statusText);
+                        console.log(`✅ Loaded ${this.recipes.length} recipes from API`);
+                    } catch (apiError) {
+                        console.warn('⚠️ API failed, using local recipes:', apiError.message);
                         this.recipes = this.getSampleRecipes();
                     }
                     
                     this.filteredRecipes = [...this.recipes];
-                } catch (error) {
-                    console.error('Error loading recipes:', error);
-                    // Fallback to sample data if API fails
-                    this.recipes = this.getSampleRecipes();
-                    this.filteredRecipes = [...this.recipes];
-                }
                 
                 document.getElementById('loading-recipes').classList.add('hidden');
                 this.updateRecipeCount();
@@ -958,24 +943,19 @@
                     // Try to create recipe via API
                     const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
                     if (currentUser.id) {
-                        const response = await fetch('/api/recipes/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${localStorage.getItem('access_token') || ''}`
-                            },
-                            body: JSON.stringify(formData)
-                        });
-
-                        if (response.ok) {
+                        try {
+                            const response = await window.apiConfig.post('recipes/', formData);
+                            const result = await response.json();
+                            
+                            console.log('✅ Recipe created via API:', result);
                             // Reload recipes from API
                             await this.loadRecipes();
                             this.applyFilters();
-                            this.hideAddRecipeModal();
-                            alert('Recipe created successfully!');
+                            modal.remove();
+                            this.showMessage('Recipe created successfully!', 'success');
                             return;
-                        } else {
-                            console.error('Failed to create recipe:', response.statusText);
+                        } catch (apiError) {
+                            console.error('API recipe creation failed:', apiError);
                         }
                     }
 

@@ -52,6 +52,12 @@ class IngredientLibrary {
             addFirstIngredientBtn.addEventListener('click', () => this.showIngredientForm());
         }
         
+        // URL import ingredient button
+        const urlImportBtn = document.getElementById('url-import-ingredient-btn');
+        if (urlImportBtn) {
+            urlImportBtn.addEventListener('click', () => this.showURLImportModal());
+        }
+        
         // Import/Export buttons
         const importCsvBtn = document.getElementById('import-ingredients-csv');
         if (importCsvBtn) {
@@ -1627,6 +1633,226 @@ class IngredientLibrary {
         const checkboxes = modal.querySelectorAll('.ingredient-select:checked');
         return Array.from(checkboxes).map(cb => parseInt(cb.dataset.id));
     }
+    
+    showURLImportModal() {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50';
+        modal.id = 'url-import-modal';
+        
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="bg-gradient-to-r from-green-600 to-green-800 text-white p-6 rounded-t-lg">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold">🌐 Import Ingredient from URL</h2>
+                        <button onclick="this.closest('.fixed').remove()" class="text-white hover:text-green-200 text-2xl font-bold">
+                            ×
+                        </button>
+                    </div>
+                    <p class="text-green-100 mt-2">Import ingredient data by pasting a URL from Wikipedia, nutrition databases, or other sources</p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="mb-6">
+                        <label for="ingredient-url" class="block text-gray-700 text-sm font-bold mb-2">
+                            Ingredient URL
+                        </label>
+                        <input type="url" id="ingredient-url" placeholder="https://en.wikipedia.org/wiki/Tomato" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <p class="text-gray-600 text-sm mt-2">
+                            📚 <strong>Supported sources:</strong> Wikipedia, USDA nutrition databases, and general food websites
+                        </p>
+                    </div>
+                    
+                    <div class="flex gap-3 mb-6">
+                        <button onclick="ingredientLibrary.previewURLImport()" 
+                                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🔍 Preview Data
+                        </button>
+                        <button onclick="ingredientLibrary.importFromURL()" 
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            ✅ Import Ingredient
+                        </button>
+                    </div>
+                    
+                    <div id="url-import-preview" class="hidden">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Preview Data</h3>
+                        <div id="preview-content" class="bg-gray-50 p-4 rounded-lg border">
+                            <!-- Preview content will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <div id="url-import-status" class="mt-4">
+                        <!-- Status messages will appear here -->
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Example URLs</h3>
+                        <div class="space-y-2 text-sm">
+                            <button onclick="document.getElementById('ingredient-url').value='https://en.wikipedia.org/wiki/Tomato'" 
+                                    class="block w-full text-left text-blue-600 hover:text-blue-800 underline">
+                                https://en.wikipedia.org/wiki/Tomato
+                            </button>
+                            <button onclick="document.getElementById('ingredient-url').value='https://en.wikipedia.org/wiki/Basil'" 
+                                    class="block w-full text-left text-blue-600 hover:text-blue-800 underline">
+                                https://en.wikipedia.org/wiki/Basil
+                            </button>
+                            <button onclick="document.getElementById('ingredient-url').value='https://en.wikipedia.org/wiki/Avocado'" 
+                                    class="block w-full text-left text-blue-600 hover:text-blue-800 underline">
+                                https://en.wikipedia.org/wiki/Avocado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+    
+    async previewURLImport() {
+        const url = document.getElementById('ingredient-url').value.trim();
+        const statusDiv = document.getElementById('url-import-status');
+        const previewDiv = document.getElementById('url-import-preview');
+        const previewContent = document.getElementById('preview-content');
+        
+        if (!url) {
+            this.showURLImportStatus('Please enter a URL', 'error');
+            return;
+        }
+        
+        try {
+            this.showURLImportStatus('⏳ Fetching ingredient data from URL...', 'info');
+            
+            const token = localStorage.getItem('iterum_auth_token');
+            const response = await fetch('/api/ingredients/preview-url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: `url=${encodeURIComponent(url)}`
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                const data = result.preview_data;
+                previewContent.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-2">Basic Information</h4>
+                            <p><strong>Name:</strong> ${data.name || 'Not found'}</p>
+                            <p><strong>Category:</strong> ${data.category || 'Not found'}</p>
+                            <p><strong>Default Unit:</strong> ${data.default_unit || 'Not found'}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-2">Additional Data</h4>
+                            <p><strong>Description:</strong> ${data.description ? data.description.substring(0, 100) + '...' : 'Not found'}</p>
+                            <p><strong>Allergens:</strong> ${data.allergens && data.allergens.length > 0 ? data.allergens.join(', ') : 'None detected'}</p>
+                        </div>
+                    </div>
+                    ${Object.keys(data.nutritional_info || {}).length > 0 ? `
+                        <div class="mt-4">
+                            <h4 class="font-semibold text-gray-700 mb-2">Nutritional Information</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                                ${Object.entries(data.nutritional_info).map(([key, value]) => 
+                                    `<div class="bg-white p-2 rounded border"><strong>${key}:</strong> ${value}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                previewDiv.classList.remove('hidden');
+                this.showURLImportStatus('✅ Preview generated successfully!', 'success');
+            } else {
+                this.showURLImportStatus(`❌ Error: ${result.detail || 'Failed to fetch ingredient data'}`, 'error');
+                previewDiv.classList.add('hidden');
+            }
+        } catch (error) {
+            this.showURLImportStatus(`❌ Network error: ${error.message}`, 'error');
+            previewDiv.classList.add('hidden');
+        }
+    }
+    
+    async importFromURL() {
+        const url = document.getElementById('ingredient-url').value.trim();
+        
+        if (!url) {
+            this.showURLImportStatus('Please enter a URL', 'error');
+            return;
+        }
+        
+        try {
+            this.showURLImportStatus('⏳ Importing ingredient from URL...', 'info');
+            
+            const token = localStorage.getItem('iterum_auth_token');
+            const response = await fetch('/api/ingredients/import-from-url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: `url=${encodeURIComponent(url)}`
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.showURLImportStatus(`✅ Successfully imported "${result.ingredient.name}"!`, 'success');
+                
+                // Add to local ingredients array
+                const newIngredient = {
+                    id: result.ingredient.id,
+                    name: result.ingredient.name,
+                    category: result.ingredient.category,
+                    default_unit: result.ingredient.default_unit || 'piece',
+                    description: result.ingredient.description,
+                    nutritional_info: result.scraped_data.nutritional_info || {},
+                    allergens: result.scraped_data.allergens || [],
+                    is_active: true,
+                    created_at: new Date().toISOString(),
+                    source_url: result.source_url
+                };
+                
+                this.ingredients.unshift(newIngredient);
+                
+                // Update display
+                this.updateIngredientCount();
+                this.displayIngredients();
+                this.saveToLocalStorage();
+                
+                // Close modal after success
+                setTimeout(() => {
+                    document.getElementById('url-import-modal').remove();
+                }, 2000);
+                
+            } else {
+                if (result.existing_ingredient) {
+                    this.showURLImportStatus(`⚠️ Ingredient "${result.existing_ingredient.name}" already exists in your library`, 'warning');
+                } else {
+                    this.showURLImportStatus(`❌ Error: ${result.message || 'Failed to import ingredient'}`, 'error');
+                }
+            }
+        } catch (error) {
+            this.showURLImportStatus(`❌ Network error: ${error.message}`, 'error');
+        }
+    }
+    
+    showURLImportStatus(message, type) {
+        const statusDiv = document.getElementById('url-import-status');
+        const colors = {
+            success: 'bg-green-100 border-green-500 text-green-700',
+            error: 'bg-red-100 border-red-500 text-red-700',
+            warning: 'bg-yellow-100 border-yellow-500 text-yellow-700',
+            info: 'bg-blue-100 border-blue-500 text-blue-700'
+        };
+        
+        statusDiv.innerHTML = `
+            <div class="p-4 border-l-4 rounded ${colors[type] || colors.info}">
+                ${message}
+            </div>
+        `;
+    }
 }
 
 // Utility function for debouncing
@@ -1645,7 +1871,13 @@ function debounce(func, wait) {
 // Initialize ingredient library when DOM is loaded
 let ingredientLibrary;
 document.addEventListener('DOMContentLoaded', () => {
-    ingredientLibrary = new IngredientLibrary();
+    // Only initialize if we're on a page that needs ingredient library
+    if (document.getElementById('ingredient-library-container') || 
+        document.getElementById('existing-ingredients-container') || 
+        document.querySelector('.ingredient-card') ||
+        window.location.pathname.includes('ingredient')) {
+        ingredientLibrary = new IngredientLibrary();
+    }
 }); 
 
 // Helper to get current user ID

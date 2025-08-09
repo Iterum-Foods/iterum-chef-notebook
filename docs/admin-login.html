@@ -31,6 +31,7 @@
             --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
             --error-color: #d32f2f;
             --success-color: #4caf50;
+            --warning-color: #ff9800;
             --radius-sm: 6px;
             --radius-md: 12px;
             --radius-lg: 16px;
@@ -75,7 +76,7 @@
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-xl);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             text-align: center;
             position: relative;
             z-index: 10;
@@ -175,6 +176,17 @@
             display: none;
         }
 
+        .warning-message {
+            background: #fff3e0;
+            color: var(--warning-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border: 1px solid #ffcc02;
+            display: none;
+        }
+
         .back-link {
             color: var(--primary-color);
             text-decoration: none;
@@ -215,6 +227,42 @@
             color: var(--text-dark);
         }
 
+        .server-status {
+            background: #f0f8ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            border: 1px solid #b3d9ff;
+        }
+
+        .server-status.online {
+            background: #f0fff0;
+            border-color: #90ee90;
+        }
+
+        .server-status.offline {
+            background: #fff0f0;
+            border-color: #ffb3b3;
+        }
+
+        .start-server-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .start-server-btn:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 2rem 1.5rem;
@@ -231,6 +279,15 @@
 
         <div class="error-message" id="errorMessage"></div>
         <div class="success-message" id="successMessage"></div>
+        <div class="warning-message" id="warningMessage"></div>
+
+        <!-- Server Status Indicator -->
+        <div class="server-status" id="serverStatus">
+            <div id="statusText">Checking server status...</div>
+            <button class="start-server-btn" id="startServerBtn" style="display: none;">
+                🚀 Start Backend Server
+            </button>
+        </div>
 
         <form id="loginForm">
             <div class="form-group">
@@ -269,14 +326,6 @@
             Username: <code>admin</code><br>
             Password: <code>iterum2025!</code>
         </div>
-
-        <div class="environment-info" id="environmentInfo" style="display: none;">
-            <div style="background: rgba(255, 152, 0, 0.1); color: #ff9800; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.85rem;">
-                <strong>⚠️ Admin Access Notice:</strong><br>
-                For security, admin login requires a local server.<br>
-                Please visit: <strong>http://localhost:8000/admin-login.html</strong>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -284,49 +333,67 @@
         const loginButton = document.getElementById('loginButton');
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
+        const warningMessage = document.getElementById('warningMessage');
+        const serverStatus = document.getElementById('serverStatus');
+        const statusText = document.getElementById('statusText');
+        const startServerBtn = document.getElementById('startServerBtn');
 
-        // Check if already logged in
-        document.addEventListener('DOMContentLoaded', () => {
-            const token = localStorage.getItem('adminToken');
-            if (token) {
-                verifyToken(token);
-            }
+        let serverOnline = false;
 
-            // Show environment warning if not on localhost
-            if (!isLocalhost) {
-                document.getElementById('environmentInfo').style.display = 'block';
-            }
+        // Check server status on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkServerStatus();
         });
 
-        // Detect environment and set API base URL
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const API_BASE = isLocalhost ? 'http://localhost:8000' : window.location.origin;
-
-        async function verifyToken(token) {
+        async function checkServerStatus() {
             try {
-                const response = await fetch(`${API_BASE}/api/waitlist/admin/verify`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                const response = await fetch('http://localhost:8000/health', {
+                    method: 'GET',
+                    timeout: 3000
                 });
-
+                
                 if (response.ok) {
-                    // Already logged in, redirect to admin
-                    window.location.href = 'waitlist_admin.html';
+                    serverOnline = true;
+                    serverStatus.className = 'server-status online';
+                    statusText.innerHTML = '✅ Backend server is running';
+                    startServerBtn.style.display = 'none';
                 } else {
-                    // Invalid token, remove it
-                    localStorage.removeItem('adminToken');
+                    throw new Error('Server responded with error');
                 }
             } catch (error) {
-                console.log('Token verification failed');
-                localStorage.removeItem('adminToken');
+                serverOnline = false;
+                serverStatus.className = 'server-status offline';
+                statusText.innerHTML = '❌ Backend server is not running';
+                startServerBtn.style.display = 'inline-block';
                 
-                // Show environment-specific error message
-                if (!isLocalhost) {
-                    showError('Admin login requires local server. Please use http://localhost:8000/admin-login.html');
-                }
+                showWarning('Backend server is not running. You can still use demo mode or start the server.');
             }
         }
+
+        // Start server button handler
+        startServerBtn.addEventListener('click', async () => {
+            startServerBtn.textContent = 'Starting...';
+            startServerBtn.disabled = true;
+            
+            try {
+                // Try to start the server using the start script
+                const response = await fetch('/start_backend', {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    showSuccess('Server starting... Please wait a moment and try logging in again.');
+                    setTimeout(checkServerStatus, 5000);
+                } else {
+                    showError('Could not start server automatically. Please run the start script manually.');
+                }
+            } catch (error) {
+                showError('Could not start server automatically. Please run: <code>python start.py</code> in your terminal.');
+            } finally {
+                startServerBtn.textContent = '🚀 Start Backend Server';
+                startServerBtn.disabled = false;
+            }
+        });
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -345,40 +412,59 @@
             hideMessages();
 
             try {
-                const response = await fetch(`${API_BASE}/api/waitlist/admin/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password
-                    })
-                });
+                if (serverOnline) {
+                    // Try real login first
+                    const response = await fetch('http://localhost:8000/api/waitlist/admin/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password
+                        })
+                    });
 
-                const data = await response.json();
+                    const data = await response.json();
 
-                if (response.ok && data.success) {
-                    // Store token
-                    localStorage.setItem('adminToken', data.token);
-                    
-                    // Show success and redirect
-                    showSuccess('Login successful! Redirecting to admin dashboard...');
-                    
-                    setTimeout(() => {
-                        window.location.href = 'waitlist_admin.html';
-                    }, 1500);
-                    
+                    if (response.ok && data.success) {
+                        // Store token
+                        localStorage.setItem('adminToken', data.token);
+                        
+                        // Show success and redirect
+                        showSuccess('Login successful! Redirecting to admin dashboard...');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'waitlist_admin.html';
+                        }, 1500);
+                        
+                    } else {
+                        showError(data.detail || 'Invalid username or password.');
+                        resetForm();
+                    }
                 } else {
-                    showError(data.detail || 'Invalid username or password.');
-                    resetForm();
+                    // Demo mode - check credentials locally
+                    if (username === 'admin' && password === 'iterum2025!') {
+                        showSuccess('Demo login successful! Redirecting to admin dashboard...');
+                        
+                        // Store demo token
+                        localStorage.setItem('adminToken', 'demo_token_' + Date.now());
+                        localStorage.setItem('adminMode', 'demo');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'waitlist_admin.html';
+                        }, 1500);
+                    } else {
+                        showError('Invalid username or password. Use admin/iterum2025! for demo mode.');
+                        resetForm();
+                    }
                 }
                 
             } catch (error) {
                 console.error('Login error:', error);
                 
-                if (!isLocalhost) {
-                    showError('Admin login requires local server running. Please start your FastAPI server and access via http://localhost:8000/admin-login.html');
+                if (!serverOnline) {
+                    showError('Backend server is not running. Please start the server or use demo mode.');
                 } else {
                     showError('Connection error. Please check that the server is running and try again.');
                 }
@@ -387,20 +473,30 @@
         });
 
         function showError(message) {
-            errorMessage.textContent = message;
+            errorMessage.innerHTML = message;
             errorMessage.style.display = 'block';
             successMessage.style.display = 'none';
+            warningMessage.style.display = 'none';
         }
 
         function showSuccess(message) {
-            successMessage.textContent = message;
+            successMessage.innerHTML = message;
             successMessage.style.display = 'block';
             errorMessage.style.display = 'none';
+            warningMessage.style.display = 'none';
+        }
+
+        function showWarning(message) {
+            warningMessage.innerHTML = message;
+            warningMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
         }
 
         function hideMessages() {
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
+            warningMessage.style.display = 'none';
         }
 
         function resetForm() {
@@ -415,6 +511,7 @@
 🔒 Secure waitlist administration
 🛡️ Session-based authentication
 ⚡ Professional admin interface
+🌐 Works with or without backend server
         `);
     </script>
 </body>

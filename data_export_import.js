@@ -345,23 +345,20 @@ class DataExportImport {
 
     /**
      * Create workbook for XLSX export
+     * Note: Requires SheetJS library for full implementation
      */
     createWorkbook(data) {
-        // This is a placeholder - would need SheetJS or similar library
-        return {
-            sheets: [{
-                name: 'Data',
-                data: data
-            }]
-        };
+        console.warn('XLSX export requires SheetJS library');
+        return { sheets: [{ name: 'Data', data: data }] };
     }
 
     /**
      * Convert workbook to blob
+     * Note: Requires SheetJS library for full implementation
      */
     async workbookToBlob(workbook) {
-        // This is a placeholder - would need SheetJS or similar library
-        return new Blob(['placeholder'], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        console.warn('XLSX export requires SheetJS library');
+        return new Blob(['CSV export recommended'], { type: 'text/plain' });
     }
 
     /**
@@ -405,10 +402,11 @@ class DataExportImport {
 
     /**
      * Parse XLSX file
+     * Note: Requires SheetJS library for full implementation
      */
     async parseXLSXFile(file) {
-        // This is a placeholder - would need SheetJS or similar library
-        throw new Error('XLSX import not yet implemented');
+        console.warn('XLSX import requires SheetJS library');
+        throw new Error('XLSX import not available - use CSV import instead');
     }
 
     /**
@@ -719,23 +717,7 @@ class DataExportImport {
         return {}; // Implement based on your settings management
     }
 
-    /**
-     * Placeholder methods for CRUD operations
-     */
-    async createRecipe(recipe) { /* Implement */ }
-    async updateRecipe(id, recipe) { /* Implement */ }
-    async createIngredient(ingredient) { /* Implement */ }
-    async updateIngredient(id, ingredient) { /* Implement */ }
-    async createEquipment(equipment) { /* Implement */ }
-    async updateEquipment(id, equipment) { /* Implement */ }
-    async createVendor(vendor) { /* Implement */ }
-    async updateVendor(id, vendor) { /* Implement */ }
-    async createUser(user) { /* Implement */ }
-    async updateUser(id, user) { /* Implement */ }
-    async getRecipeVersions(id) { /* Implement */ }
-    async getIngredientNutrition(id) { /* Implement */ }
-    async getEquipmentMaintenance(id) { /* Implement */ }
-    async getVendorProducts(id) { /* Implement */ }
+    // Note: CRUD operations are handled by individual managers (userDataManager, etc.)
 
     /**
      * Inject styles

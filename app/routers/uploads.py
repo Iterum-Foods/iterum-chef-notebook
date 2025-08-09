@@ -6,11 +6,15 @@ import uuid
 from typing import Optional
 import json
 
-from app.database import get_db, RecipeUpload, User
-from app.schemas import RecipeUpload as RecipeUploadSchema
+from app.database import get_db, RecipeUpload, User, Recipe, RecipeIngredient, RecipeInstruction, Ingredient
+from app.schemas import RecipeUpload as RecipeUploadSchema, RecipeCreate
 from app.core.auth import get_current_user
 from app.core.config import settings
 from app.services.recipe_parser import RecipeParser
+try:
+    from app.services.ocr_processor import OCRProcessor
+except ImportError:
+    from app.services.ocr_processor_fallback import OCRProcessorFallback as OCRProcessor
 import openpyxl
 from docx import Document
 import io
@@ -152,7 +156,7 @@ async def process_upload(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Manually trigger OCR processing for an upload"""
+    """Trigger OCR processing for an uploaded file"""
     
     upload = db.query(RecipeUpload).filter(
         RecipeUpload.id == upload_id,
@@ -162,19 +166,66 @@ async def process_upload(
     if not upload:
         raise HTTPException(status_code=404, detail="Upload not found")
     
+    if upload.upload_status == "completed":
+        return {
+            "message": "Upload already processed",
+            "upload_id": upload_id,
+            "status": "completed"
+        }
+    
     # Update status to processing
-    upload.upload_status = str("processing")
+    upload.upload_status = "processing"
     db.commit()
     
-    # TODO: Implement actual OCR processing
-    # This would use pytesseract or similar for image processing
-    # For now, return a placeholder response
-    
-    return {
-        "message": "OCR processing started",
-        "upload_id": upload_id,
-        "note": "OCR processing will be implemented in the next iteration"
-    }
+    try:
+        # Initialize OCR processor
+        ocr_processor = OCRProcessor()
+        
+        # Process the file based on its type
+        file_path = str(upload.file_path)
+        if not os.path.exists(file_path):
+            raise Exception("Uploaded file not found on disk")
+        
+        # Extract text using OCR
+        ocr_result = ocr_processor.extract_text_from_file(file_path, upload.mime_type)
+        
+        if not ocr_result['success']:
+            upload.upload_status = "failed"
+            upload.error_message = ocr_result.get('error', 'OCR processing failed')
+            db.commit()
+            raise HTTPException(status_code=500, detail=ocr_result.get('error', 'OCR processing failed'))
+        
+        # Validate extracted text
+        validation_result = ocr_processor.validate_extracted_text(ocr_result['text'])
+        
+        # Store OCR results
+        upload.ocr_text = ocr_result['text']
+        upload.processing_info = ocr_result['processing_info']
+        
+        if validation_result['is_valid']:
+            upload.upload_status = "completed"
+            upload.error_message = None
+        else:
+            upload.upload_status = "completed_with_warnings"
+            upload.error_message = f"Low confidence: {validation_result['reason']}"
+        
+        db.commit()
+        
+        return {
+            "message": "OCR processing completed successfully",
+            "upload_id": upload_id,
+            "status": upload.upload_status,
+            "ocr_text_length": len(ocr_result['text']),
+            "processing_info": ocr_result['processing_info'],
+            "validation": validation_result,
+            "preview_text": ocr_result['text'][:200] + "..." if len(ocr_result['text']) > 200 else ocr_result['text']
+        }
+        
+    except Exception as e:
+        upload.upload_status = "failed"
+        upload.error_message = str(e)
+        db.commit()
+        raise HTTPException(status_code=500, detail=f"OCR processing failed: {str(e)}")
 
 
 @router.get("/{upload_id}/ocr-text")
@@ -365,7 +416,7 @@ async def create_recipe_from_upload(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Create a recipe from a processed upload"""
+    """Create a recipe from a processed upload with OCR text"""
     
     upload = db.query(RecipeUpload).filter(
         RecipeUpload.id == upload_id,
@@ -375,20 +426,116 @@ async def create_recipe_from_upload(
     if not upload:
         raise HTTPException(status_code=404, detail="Upload not found")
     
-    if upload.upload_status != "completed":
+    if upload.upload_status not in ["completed", "completed_with_warnings"]:
         raise HTTPException(
             status_code=400,
-            detail="Upload must be processed before creating a recipe"
+            detail="Upload must be processed successfully before creating a recipe"
         )
     
-    # TODO: Implement recipe creation from parsed data
-    # This would use the parsed_data to create a new recipe
+    if not upload.ocr_text:
+        raise HTTPException(
+            status_code=400,
+            detail="No OCR text available for recipe creation"
+        )
     
-    return {
-        "message": "Recipe creation from upload will be implemented",
-        "upload_id": upload_id,
-        "note": "This will create a recipe from the OCR parsed data"
-    }
+    try:
+        # Parse the OCR text into structured recipe data
+        parser = RecipeParser()
+        parsed_recipe = parser.parse_recipe_text(upload.ocr_text)
+        
+        # Create the recipe in the database
+        recipe_data = {
+            "title": parsed_recipe.title or f"Recipe from {upload.original_filename}",
+            "description": f"Imported from {upload.original_filename}",
+            "instructions": "\n".join([f"{i+1}. {inst}" for i, inst in enumerate(parsed_recipe.instructions)]),
+            "prep_time": parsed_recipe.prep_time,
+            "cook_time": parsed_recipe.cook_time,
+            "servings": parsed_recipe.yield_info or 4,
+            "difficulty": parsed_recipe.difficulty or "Medium",
+            "cuisine": parsed_recipe.cuisine or "Unknown",
+            "category": "Imported",
+            "tags": parsed_recipe.tags or [],
+            "created_by": current_user.id,
+            "source": f"OCR Import: {upload.original_filename}"
+        }
+        
+        # Create the recipe
+        new_recipe = Recipe(**recipe_data)
+        db.add(new_recipe)
+        db.flush()  # Get the recipe ID
+        
+        # Add ingredients
+        for ingredient_info in parsed_recipe.ingredients:
+            # Try to find existing ingredient
+            existing_ingredient = db.query(Ingredient).filter(
+                Ingredient.name.ilike(f"%{ingredient_info.name}%")
+            ).first()
+            
+            if existing_ingredient:
+                ingredient_id = existing_ingredient.id
+            else:
+                # Create new ingredient
+                new_ingredient = Ingredient(
+                    name=ingredient_info.name,
+                    category="Imported",
+                    default_unit=ingredient_info.unit or "piece",
+                    description=f"Imported from recipe: {parsed_recipe.title}"
+                )
+                db.add(new_ingredient)
+                db.flush()
+                ingredient_id = new_ingredient.id
+            
+            # Add recipe-ingredient relationship
+            recipe_ingredient = RecipeIngredient(
+                recipe_id=new_recipe.id,
+                ingredient_id=ingredient_id,
+                quantity=ingredient_info.amount or 1.0,
+                unit=ingredient_info.unit or "piece",
+                preparation=ingredient_info.preparation or ""
+            )
+            db.add(recipe_ingredient)
+        
+        # Add instructions as separate records
+        for i, instruction in enumerate(parsed_recipe.instructions):
+            recipe_instruction = RecipeInstruction(
+                recipe_id=new_recipe.id,
+                step_number=i + 1,
+                instruction=instruction
+            )
+            db.add(recipe_instruction)
+        
+        # Update upload record with recipe reference
+        upload.created_recipe_id = new_recipe.id
+        upload.upload_status = "recipe_created"
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Recipe created successfully from OCR data",
+            "recipe_id": new_recipe.id,
+            "recipe_title": new_recipe.title,
+            "upload_id": upload_id,
+            "ingredients_count": len(parsed_recipe.ingredients),
+            "instructions_count": len(parsed_recipe.instructions),
+            "parsing_summary": {
+                "title": parsed_recipe.title,
+                "ingredients_found": len(parsed_recipe.ingredients),
+                "instructions_found": len(parsed_recipe.instructions),
+                "prep_time": parsed_recipe.prep_time,
+                "cook_time": parsed_recipe.cook_time,
+                "servings": parsed_recipe.yield_info,
+                "difficulty": parsed_recipe.difficulty,
+                "cuisine": parsed_recipe.cuisine
+            }
+        }
+        
+    except Exception as e:
+        db.rollback()
+        upload.error_message = f"Recipe creation failed: {str(e)}"
+        upload.upload_status = "recipe_creation_failed"
+        db.commit()
+        raise HTTPException(status_code=500, detail=f"Failed to create recipe: {str(e)}")
 
 
 @router.post("/extract-text")

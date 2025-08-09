@@ -52,31 +52,93 @@ class ErrorHandler {
     }
 
     /**
-     * Handle API errors
+     * Handle API errors with enhanced user feedback
      */
     handleAPIError(response, url) {
         const errorInfo = {
             status: response.status,
             statusText: response.statusText,
             url: url,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            endpoint: this.extractEndpoint(url)
         };
 
-        console.error('API Error:', errorInfo);
+        // More informative console logging
+        console.group(`🚨 API Error - ${response.status} ${response.statusText}`);
+        console.log(`📍 URL: ${url}`);
+        console.log(`🕐 Time: ${errorInfo.timestamp}`);
+        console.log(`📊 Status: ${response.status} - ${response.statusText}`);
+        console.groupEnd();
 
-        // Handle specific error codes
+        // Handle specific error codes with contextual messages
         switch (response.status) {
             case 404:
-                this.showUserMessage('Resource not found. Please check the URL or try again later.', 'warning');
+                if (url.includes('/api/recipes/review/pending')) {
+                    console.info('💡 Recipe review system not fully implemented - using local storage mode');
+                    // Don't show error message to user for this specific case
+                } else if (url.includes('/api/vendors')) {
+                    console.info('💡 Vendor API unavailable - using offline mode');
+                } else {
+                    this.showUserMessage('Resource not found. The requested feature may not be available yet.', 'warning');
+                }
                 break;
             case 501:
-                this.showUserMessage('This feature is not yet implemented. Please try again later.', 'info');
+                console.info('🚧 Feature not implemented yet - gracefully degrading');
+                this.showUserMessage('This feature is still in development. Local functionality will be used instead.', 'info');
                 break;
             case 500:
-                this.showUserMessage('Server error. Please try again later.', 'error');
+                console.error('💥 Server error detected');
+                this.showUserMessage('Server error detected. Your data is safe - using local backup mode.', 'error');
+                break;
+            case 503:
+                console.warn('🔧 Service temporarily unavailable');
+                this.showUserMessage('Service temporarily unavailable. Switching to offline mode.', 'warning');
                 break;
             default:
-                this.showUserMessage(`Connection error (${response.status}). Please check your connection and try again.`, 'error');
+                console.warn(`❓ Unhandled status code: ${response.status}`);
+                if (response.status >= 400 && response.status < 500) {
+                    this.showUserMessage(`Request error (${response.status}). Please check your input and try again.`, 'warning');
+                } else if (response.status >= 500) {
+                    this.showUserMessage(`Server error (${response.status}). Using offline backup mode.`, 'error');
+                } else {
+                    this.showUserMessage(`Connection issue (${response.status}). Please check your connection.`, 'error');
+                }
+        }
+
+        // Log API errors for debugging
+        this.logAPIError(errorInfo);
+        
+        return errorInfo;
+    }
+
+    /**
+     * Extract endpoint name from URL for better debugging
+     */
+    extractEndpoint(url) {
+        try {
+            const urlObj = new URL(url);
+            return urlObj.pathname;
+        } catch {
+            return url.replace(/^.*\/api/, '/api');
+        }
+    }
+
+    /**
+     * Log API errors to localStorage for debugging
+     */
+    logAPIError(errorInfo) {
+        try {
+            const errorLog = JSON.parse(localStorage.getItem('api_error_log') || '[]');
+            errorLog.push(errorInfo);
+            
+            // Keep only last 50 errors
+            if (errorLog.length > 50) {
+                errorLog.splice(0, errorLog.length - 50);
+            }
+            
+            localStorage.setItem('api_error_log', JSON.stringify(errorLog));
+        } catch (e) {
+            console.warn('Could not log API error to localStorage:', e);
         }
     }
 

@@ -245,24 +245,54 @@ class UserDataManager {
         this.saveUserData('ingredients', ingredients);
     }
 
-    // Get user's equipment
+    // Get user's equipment (project-aware)
     getUserEquipment() {
+        // Use project-specific storage if project manager is available
+        if (window.projectManager && window.projectManager.getCurrentProject()) {
+            const key = window.projectManager.getProjectStorageKey('equipment');
+            const equipment = localStorage.getItem(key);
+            return equipment ? JSON.parse(equipment) : [];
+        }
+        
+        // Fallback to user-specific storage
         return this.getUserData('equipment') || [];
     }
 
-    // Save user's equipment
+    // Save user's equipment (project-aware)
     saveUserEquipment(equipment) {
-        this.saveUserData('equipment', equipment);
+        // Use project-specific storage if project manager is available
+        if (window.projectManager && window.projectManager.getCurrentProject()) {
+            const key = window.projectManager.getProjectStorageKey('equipment');
+            localStorage.setItem(key, JSON.stringify(equipment));
+        } else {
+            // Fallback to user-specific storage
+            this.saveUserData('equipment', equipment);
+        }
     }
 
-    // Get user's recipes
+    // Get user's recipes (project-aware)
     getUserRecipes() {
+        // Use project-specific storage if project manager is available
+        if (window.projectManager && window.projectManager.getCurrentProject()) {
+            const key = window.projectManager.getProjectStorageKey('recipe_library');
+            const recipes = localStorage.getItem(key);
+            return recipes ? JSON.parse(recipes) : [];
+        }
+        
+        // Fallback to user-specific storage
         return this.getUserData('recipe_library') || [];
     }
 
-    // Save user's recipes
+    // Save user's recipes (project-aware)
     saveUserRecipes(recipes) {
-        this.saveUserData('recipe_library', recipes);
+        // Use project-specific storage if project manager is available
+        if (window.projectManager && window.projectManager.getCurrentProject()) {
+            const key = window.projectManager.getProjectStorageKey('recipe_library');
+            localStorage.setItem(key, JSON.stringify(recipes));
+        } else {
+            // Fallback to user-specific storage
+            this.saveUserData('recipe_library', recipes);
+        }
     }
 
     // Get user's inventory

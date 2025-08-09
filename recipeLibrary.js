@@ -761,6 +761,11 @@ if (typeof window.RecipeLibrary !== 'undefined') {
             return currentUser ? JSON.parse(currentUser) : null;
         }
         
+        // Get all recipes (for external systems)
+        getAllRecipes() {
+            return this.recipes || [];
+        }
+        
         // Show notification
         showNotification(message, type = 'info') {
             console.log(`${type.toUpperCase()}: ${message}`);

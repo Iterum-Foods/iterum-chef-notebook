@@ -664,19 +664,16 @@ async def parse_recipe_file(file: UploadFile, default_category: str, default_cui
     
     try:
         if filename.endswith('.pdf'):
-            # PDF parsing would go here
-            # For now, return basic structure
-            pass
+            # PDF parsing requires additional libraries (PyPDF2, pdfplumber)
+            recipe_data["description"] += " (PDF import - text parsing not yet implemented)"
             
         elif filename.endswith(('.xlsx', '.xls')):
-            # Excel parsing would go here
-            # For now, return basic structure
-            pass
+            # Excel parsing requires pandas or openpyxl
+            recipe_data["description"] += " (Excel import - structured parsing not yet implemented)"
             
         elif filename.endswith(('.docx', '.doc')):
-            # Word parsing would go here
-            # For now, return basic structure
-            pass
+            # Word document parsing requires python-docx
+            recipe_data["description"] += " (Word document import - text extraction not yet implemented)"
             
         elif filename.endswith('.txt'):
             # Text parsing

@@ -118,32 +118,134 @@ class RecipeReviewManager {
             try {
                 pendingLocal = JSON.parse(localStorage.getItem('pendingRecipes') || '[]').map(r => ({ ...r, _source: 'Uploaded' }));
             } catch (e) {
+                console.warn('Could not load local pending recipes:', e);
                 pendingLocal = [];
             }
 
-            // 2. Load DB pending recipes
+            // 2. Load DB pending recipes with enhanced error handling
             let pendingDB = [];
+            let dbConnectionStatus = 'unknown';
+            
             try {
+                // Add timeout to prevent hanging
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
                 const response = await fetch(`/api/recipes/review/pending?page=${this.currentPage}&limit=${this.itemsPerPage}`, {
                     method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
+                
                 if (response.ok) {
                     const data = await response.json();
                     pendingDB = (data.recipes || []).map(r => ({ ...r, _source: 'Database' }));
+                    dbConnectionStatus = 'connected';
+                    console.log(`✅ Loaded ${pendingDB.length} recipes from database`);
                 } else {
-                    console.error('Failed to load DB pending reviews');
+                    dbConnectionStatus = 'error';
+                    console.warn(`⚠️ API returned ${response.status}: ${response.statusText}`);
+                    
+                    // Show user-friendly message for specific errors
+                    if (response.status === 404) {
+                        console.info('📝 Recipe review endpoint not implemented yet - using local storage only');
+                    } else if (response.status === 500) {
+                        console.warn('🔧 Database server error - using local storage only');
+                    }
                 }
             } catch (e) {
-                console.error('Error loading DB pending reviews:', e);
+                dbConnectionStatus = 'offline';
+                if (e.name === 'AbortError') {
+                    console.warn('⏱️ Database connection timeout - server may be down');
+                } else if (e.message.includes('Failed to fetch')) {
+                    console.warn('🔌 Cannot connect to backend server - using offline mode');
+                } else {
+                    console.warn('❌ Database connection error:', e.message);
+                }
             }
 
-            // 3. Merge both
+            // 3. Merge both sources
             this.pendingRecipes = [...pendingLocal, ...pendingDB];
+            
+            // 4. Show connection status to user
+            this.showConnectionStatus(dbConnectionStatus, pendingLocal.length, pendingDB.length);
+            
             this.displayPendingReviews();
             this.updateReviewStats();
+            
         } catch (error) {
-            console.error('Error loading pending reviews:', error);
+            console.error('Error in loadPendingReviews:', error);
+            
+            // Fallback to just local recipes
+            try {
+                const fallbackLocal = JSON.parse(localStorage.getItem('pendingRecipes') || '[]');
+                this.pendingRecipes = fallbackLocal.map(r => ({ ...r, _source: 'Uploaded' }));
+                this.displayPendingReviews();
+                this.updateReviewStats();
+                this.showUserMessage('Using offline mode - only locally stored recipes available', 'warning');
+            } catch (fallbackError) {
+                console.error('Complete failure loading reviews:', fallbackError);
+                this.pendingRecipes = [];
+                this.displayPendingReviews();
+                this.showUserMessage('Unable to load recipes. Please refresh the page.', 'error');
+            }
+        }
+    }
+
+    // Show connection status to users
+    showConnectionStatus(status, localCount, dbCount) {
+        const statusContainer = document.getElementById('review-status-indicator');
+        if (!statusContainer) return;
+
+        let statusHTML = '';
+        switch (status) {
+            case 'connected':
+                statusHTML = `
+                    <div class="flex items-center gap-2 text-green-600 text-sm">
+                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                        Connected • ${localCount} local + ${dbCount} database recipes
+                    </div>
+                `;
+                break;
+            case 'error':
+                statusHTML = `
+                    <div class="flex items-center gap-2 text-orange-600 text-sm">
+                        <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+                        Database error • Using ${localCount} local recipes only
+                    </div>
+                `;
+                break;
+            case 'offline':
+                statusHTML = `
+                    <div class="flex items-center gap-2 text-blue-600 text-sm">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        Offline mode • ${localCount} local recipes available
+                    </div>
+                `;
+                break;
+            default:
+                statusHTML = `
+                    <div class="flex items-center gap-2 text-gray-600 text-sm">
+                        <div class="w-2 h-2 bg-gray-500 rounded-full"></div>
+                        ${localCount} recipes loaded
+                    </div>
+                `;
+        }
+        
+        statusContainer.innerHTML = statusHTML;
+    }
+
+    // Show user messages
+    showUserMessage(message, type = 'info') {
+        // You can implement this based on your notification system
+        // For now, just log to console
+        console.log(`[${type.toUpperCase()}] ${message}`);
+        
+        // If you have a toast/notification system, use it here
+        if (window.showNotification) {
+            window.showNotification(message, type);
         }
     }
     

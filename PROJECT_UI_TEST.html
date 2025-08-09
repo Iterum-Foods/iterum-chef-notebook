@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project UI Test - Iterum R&D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="apiConfig.js"></script>
+    <script src="projectManager.js"></script>
+</head>
+<body>
+    <!-- Test Header with Project Selector -->
+    <header class="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100">
+        <div class="bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+            <div class="w-full px-6 sm:px-8 lg:px-12 py-4">
+                <div class="flex items-center justify-between">
+                    <!-- Logo -->
+                    <div class="flex items-center gap-4">
+                        <div class="h-12 w-12 bg-emerald-500 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">I</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-2xl tracking-tight text-gray-900">Iterum R&D</span>
+                            <span class="text-sm text-gray-500 font-medium tracking-wide">Chef Notebook</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Selector Area -->
+                    <div id="header-project-selector" class="flex-1 max-w-md mx-8 hidden lg:block">
+                        <!-- Project selector will be inserted here -->
+                    </div>
+                    
+                    <!-- User Info -->
+                    <div class="flex items-center gap-4">
+                        <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg">Test User</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">Project System Test</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Project Info -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Current Project</h2>
+                <div id="current-project-info">
+                    <p class="text-gray-600">Loading project information...</p>
+                </div>
+            </div>
+            
+            <!-- Project Actions -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Actions</h2>
+                <div class="space-y-3">
+                    <button onclick="testCreateProject()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        Create Test Project
+                    </button>
+                    <button onclick="testLoadProjects()" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                        Reload Projects
+                    </button>
+                    <button onclick="testProjectSwitch()" class="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                        Test Project Switch
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Debug Info -->
+        <div class="mt-8 bg-gray-100 rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Debug Information</h2>
+            <div id="debug-info" class="text-sm text-gray-600 font-mono whitespace-pre-wrap">
+                Loading debug information...
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Test functions
+        function testCreateProject() {
+            if (window.projectManager) {
+                window.projectManager.showCreateProjectModal();
+            } else {
+                alert('Project manager not loaded');
+            }
+        }
+
+        function testLoadProjects() {
+            if (window.projectManager) {
+                window.projectManager.loadUserProjects().then(() => {
+                    updateDebugInfo();
+                });
+            } else {
+                alert('Project manager not loaded');
+            }
+        }
+
+        function testProjectSwitch() {
+            if (window.projectManager && window.projectManager.projects.length > 1) {
+                const project = window.projectManager.projects[1];
+                window.projectManager.selectProject(project);
+            } else {
+                alert('Need at least 2 projects to test switching');
+            }
+        }
+
+        function updateDebugInfo() {
+            const debugInfo = document.getElementById('debug-info');
+            const currentProjectInfo = document.getElementById('current-project-info');
+            
+            if (window.projectManager) {
+                const currentProject = window.projectManager.getCurrentProject();
+                const projects = window.projectManager.projects;
+                
+                // Update current project display
+                if (currentProject) {
+                    currentProjectInfo.innerHTML = `
+                        <div class="space-y-2">
+                            <p><strong>Name:</strong> ${currentProject.name}</p>
+                            <p><strong>Description:</strong> ${currentProject.description || 'No description'}</p>
+                            <p><strong>Type:</strong> ${currentProject.is_default ? 'Default' : 'Custom'}</p>
+                            <p><strong>Recipes:</strong> ${currentProject.recipe_count || 0}</p>
+                            <p><strong>Menus:</strong> ${currentProject.menu_count || 0}</p>
+                        </div>
+                    `;
+                } else {
+                    currentProjectInfo.innerHTML = '<p class="text-red-600">No project selected</p>';
+                }
+                
+                // Update debug info
+                debugInfo.textContent = `
+Project Manager Status:
+- Projects loaded: ${projects.length}
+- Current project: ${currentProject ? currentProject.name : 'None'}
+- API Config available: ${!!window.apiConfig}
+- Header selector found: ${!!document.getElementById('header-project-selector')}
+
+Projects:
+${projects.map(p => `  - ${p.name} (${p.is_default ? 'default' : 'custom'})`).join('\n')}
+
+Local Storage Keys:
+${Object.keys(localStorage).filter(k => k.includes('project')).map(k => `  - ${k}`).join('\n')}
+                `;
+            } else {
+                debugInfo.textContent = 'Project manager not initialized';
+                currentProjectInfo.innerHTML = '<p class="text-red-600">Project manager not loaded</p>';
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for project manager to initialize
+            setTimeout(() => {
+                updateDebugInfo();
+                
+                // Listen for project changes
+                document.addEventListener('projectChanged', function(event) {
+                    console.log('Project changed:', event.detail);
+                    updateDebugInfo();
+                });
+            }, 1000);
+        });
+
+        // Update debug info every 5 seconds
+        setInterval(updateDebugInfo, 5000);
+    </script>
+</body>
+</html>

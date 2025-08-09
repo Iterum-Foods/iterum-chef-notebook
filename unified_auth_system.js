@@ -144,9 +144,19 @@ class UnifiedAuthSystem {
             await this.loadSavedUsers();
         }
 
+        // Load saved users from localStorage for offline mode
+        if (!this.isOnline) {
+            const localUsers = JSON.parse(localStorage.getItem('saved_users') || '[]');
+            this.savedUsers = localUsers;
+        }
+
         // Show the appropriate auth interface
         if (this.savedUsers.length > 0) {
             this.showUserSelection();
+        } else if (!this.isOnline) {
+            // For offline mode with no saved users, automatically create an offline profile
+            console.log('🚀 No saved users found in offline mode, creating automatic offline profile...');
+            await this.createOfflineProfile();
         } else {
             this.showLoginOptions();
         }
@@ -350,6 +360,13 @@ class UnifiedAuthSystem {
             localStorage.setItem('current_user', JSON.stringify(user));
             localStorage.setItem('session_active', 'true');
             localStorage.setItem('last_login', new Date().toISOString());
+            
+            // Save user to saved users list for future use
+            if (!this.savedUsers.find(u => u.id === user.id)) {
+                this.savedUsers.push(user);
+                localStorage.setItem('saved_users', JSON.stringify(this.savedUsers));
+                console.log('💾 Saved offline user for future sessions');
+            }
             
             this.hideLoadingScreen();
             this.updateAuthUI(user);

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from fastapi.responses import JSONResponse
 import os
 from pathlib import Path
@@ -6,6 +6,17 @@ from PyPDF2 import PdfReader
 import logging
 import io
 from docx import Document
+from sqlalchemy.orm import Session
+from datetime import datetime
+import uuid
+
+from app.database import get_db
+from app.core.auth import get_current_user
+from app.services.menu_parser import MenuParser
+try:
+    from app.services.ocr_processor import OCRProcessor
+except ImportError:
+    from app.services.ocr_processor_fallback import OCRProcessorFallback as OCRProcessor
 
 UPLOAD_DIR = Path("uploads/menus")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -113,4 +124,220 @@ async def upload_pdf(file: UploadFile = File(...)):
         raise
     except Exception as e:
         logging.exception("Unexpected error in upload_pdf")
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {e}") 
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")
+
+
+@router.post("/extract-and-parse")
+async def extract_and_parse_menu(
+    file: UploadFile = File(...),
+    current_user = Depends(get_current_user)
+):
+    """
+    Two-stage menu processing:
+    1. Extract text from uploaded menu (PDF/image)
+    2. Parse into structured menu items with titles, descriptions, prices
+    """
+    
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No filename provided")
+    
+    try:
+        # Stage 1: Extract text from uploaded file
+        logging.info(f"Stage 1: Extracting text from {file.filename}")
+        
+        # Save uploaded file temporarily
+        temp_filename = f"{uuid.uuid4()}_{file.filename}"
+        temp_path = UPLOAD_DIR / temp_filename
+        
+        content = await file.read()
+        with open(temp_path, "wb") as f:
+            f.write(content)
+        
+        # Determine processing method based on file type
+        filename_lower = file.filename.lower()
+        extracted_text = ""
+        extraction_method = ""
+        extraction_info = {}
+        
+        if filename_lower.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+            # Use OCR for images
+            ocr_processor = OCRProcessor()
+            ocr_result = ocr_processor.extract_text_from_file(str(temp_path), f"image/{filename_lower.split('.')[-1]}")
+            
+            if ocr_result['success']:
+                extracted_text = ocr_result['text']
+                extraction_method = "OCR"
+                extraction_info = ocr_result['processing_info']
+            else:
+                raise HTTPException(status_code=500, detail=f"OCR failed: {ocr_result.get('error', 'Unknown error')}")
+                
+        elif filename_lower.endswith('.pdf'):
+            # Try direct text extraction first, then OCR if needed
+            try:
+                reader = PdfReader(str(temp_path))
+                extracted_text = "\n".join(page.extract_text() or "" for page in reader.pages)
+                extraction_method = "PDF Text Extraction"
+                extraction_info = {"pages": len(reader.pages), "method": "direct"}
+                
+                # If no text found, try OCR
+                if not extracted_text.strip():
+                    ocr_processor = OCRProcessor()
+                    ocr_result = ocr_processor.extract_text_from_file(str(temp_path), "application/pdf")
+                    
+                    if ocr_result['success']:
+                        extracted_text = ocr_result['text']
+                        extraction_method = "PDF OCR"
+                        extraction_info = ocr_result['processing_info']
+                    
+            except Exception as e:
+                # Fallback to OCR
+                ocr_processor = OCRProcessor()
+                ocr_result = ocr_processor.extract_text_from_file(str(temp_path), "application/pdf")
+                
+                if ocr_result['success']:
+                    extracted_text = ocr_result['text']
+                    extraction_method = "PDF OCR Fallback"
+                    extraction_info = ocr_result['processing_info']
+                else:
+                    raise HTTPException(status_code=500, detail=f"PDF processing failed: {str(e)}")
+                    
+        elif filename_lower.endswith('.docx'):
+            # Extract from Word document
+            doc = Document(io.BytesIO(content))
+            extracted_text = "\n".join([paragraph.text for paragraph in doc.paragraphs if paragraph.text.strip()])
+            extraction_method = "Word Document"
+            extraction_info = {"paragraphs": len(doc.paragraphs)}
+            
+        else:
+            raise HTTPException(
+                status_code=400, 
+                detail="Unsupported file type. Supported: PDF, DOCX, JPG, PNG"
+            )
+        
+        # Clean up temporary file
+        try:
+            os.unlink(temp_path)
+        except:
+            pass
+        
+        if not extracted_text.strip():
+            return {
+                "success": False,
+                "stage": 1,
+                "error": "No text could be extracted from the file",
+                "extraction_method": extraction_method,
+                "suggested_action": "Try a higher quality scan or different file format"
+            }
+        
+        # Stage 2: Parse extracted text into structured menu items
+        logging.info(f"Stage 2: Parsing menu structure from extracted text")
+        
+        menu_parser = MenuParser()
+        parsed_result = menu_parser.parse_menu_text(extracted_text)
+        
+        if not parsed_result['success']:
+            return {
+                "success": False,
+                "stage": 2,
+                "error": parsed_result.get('error', 'Menu parsing failed'),
+                "extracted_text": extracted_text[:500] + "..." if len(extracted_text) > 500 else extracted_text,
+                "extraction_method": extraction_method
+            }
+        
+        # Combine results
+        return {
+            "success": True,
+            "filename": file.filename,
+            "processing_stages": {
+                "stage_1_extraction": {
+                    "method": extraction_method,
+                    "text_length": len(extracted_text),
+                    "info": extraction_info
+                },
+                "stage_2_parsing": {
+                    "method": "Menu Text Parsing",
+                    "confidence": parsed_result['parsing_info']['confidence'],
+                    "items_found": parsed_result['total_items']
+                }
+            },
+            "menu_data": {
+                "sections": parsed_result['sections'],
+                "summary": parsed_result['summary'],
+                "total_items": parsed_result['total_items'],
+                "total_sections": parsed_result['total_sections']
+            },
+            "extracted_text": extracted_text,
+            "parsing_confidence": parsed_result['parsing_info']['confidence']
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.exception("Unexpected error in menu extraction and parsing")
+        raise HTTPException(status_code=500, detail=f"Processing failed: {str(e)}")
+
+
+@router.post("/parse-text")
+async def parse_menu_text(
+    menu_data: dict,
+    current_user = Depends(get_current_user)
+):
+    """
+    Parse already extracted menu text into structured items
+    Input: {"text": "menu text content"}
+    """
+    
+    try:
+        text = menu_data.get("text", "")
+        if not text:
+            raise HTTPException(status_code=400, detail="No text provided")
+        
+        menu_parser = MenuParser()
+        result = menu_parser.parse_menu_text(text)
+        
+        return {
+            "success": result['success'],
+            "menu_data": {
+                "sections": result['sections'],
+                "summary": result['summary'],
+                "total_items": result['total_items'],
+                "total_sections": result['total_sections']
+            },
+            "parsing_info": result['parsing_info']
+        }
+        
+    except Exception as e:
+        logging.exception("Menu text parsing failed")
+        raise HTTPException(status_code=500, detail=f"Parsing failed: {str(e)}")
+
+
+@router.get("/sample")
+async def get_sample_menu():
+    """Get a sample parsed menu for testing"""
+    
+    sample_text = """
+    APPETIZERS
+    
+    Truffle Arancini - Crispy risotto balls with black truffle, parmesan cheese $14.00 (V)
+    Tuna Tartare - Fresh yellowfin, avocado, citrus, sesame oil $18.00 (GF)
+    Burrata Board - House made burrata, prosciutto, fig jam, grilled bread $16.00
+    
+    MAIN COURSES
+    
+    Pan Seared Salmon - Atlantic salmon, lemon herb butter, roasted vegetables $28.00 (GF)
+    Wagyu Ribeye - 12oz prime cut, garlic mashed potatoes, red wine jus $45.00
+    Lobster Ravioli - House made pasta, Maine lobster, saffron cream sauce $32.00
+    
+    DESSERTS
+    
+    Chocolate Lava Cake - Warm chocolate cake, vanilla ice cream $12.00 (V)
+    Tiramisu - Classic Italian, espresso, mascarpone $10.00 (V)
+    """
+    
+    menu_parser = MenuParser()
+    result = menu_parser.parse_menu_text(sample_text)
+    
+    return {
+        "sample_menu": result,
+        "note": "This is a sample parsed menu to demonstrate the structure"
+    } 

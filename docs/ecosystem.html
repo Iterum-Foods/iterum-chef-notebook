@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Restaurant Management Ecosystem | Iterum Foods</title>
+    <meta name="description" content="The only integrated platform that handles recipe management, payroll processing, and business growth - all working together to maximize your restaurant's profitability and efficiency.">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://iterumfoods.xyz/ecosystem">
+    <meta property="og:title" content="Complete Restaurant Management Ecosystem | Iterum Foods">
+    <meta property="og:description" content="The only integrated platform that handles recipe management, payroll processing, and business growth - all working together to maximize your restaurant's profitability and efficiency.">
+    <meta property="og:image" content="https://iterumfoods.xyz/iterum.ico">
+
+    <link rel="icon" type="image/x-icon" href="iterum.ico">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --primary-light: #333333;
+            --accent-color: #0066FF;
+            --accent-light: #4D94FF;
+            --text-primary: #1a1a1a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --gradient-primary: linear-gradient(135deg, #0066FF 0%, #4D94FF 100%);
+            --gradient-recipe: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+            --gradient-payroll: linear-gradient(135deg, #4ECDC4 0%, #6EE7DF 100%);
+            --gradient-business: linear-gradient(135deg, #45B7D1 0%, #6BC5D9 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+        }
+
+        .font-handwritten {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .hero-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        /* Three Pillars Section */
+        .pillars-section {
+            background: var(--bg-secondary);
+        }
+
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pillar-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .pillar-card.recipe::before {
+            background: var(--gradient-recipe);
+        }
+
+        .pillar-card.payroll::before {
+            background: var(--gradient-payroll);
+        }
+
+        .pillar-card.business::before {
+            background: var(--gradient-business);
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pillar-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+        }
+
+        .pillar-card.recipe .pillar-icon {
+            background: var(--gradient-recipe);
+        }
+
+        .pillar-card.payroll .pillar-icon {
+            background: var(--gradient-payroll);
+        }
+
+        .pillar-card.business .pillar-icon {
+            background: var(--gradient-business);
+        }
+
+        .pillar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .pillar-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .pillar-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .pillar-features li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .pillar-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .pillar-cta {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .pillar-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Integration Section */
+        .integration-section {
+            background: var(--bg-primary);
+        }
+
+        .integration-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .integration-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .integration-content p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .integration-benefits {
+            list-style: none;
+        }
+
+        .integration-benefits li {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .integration-benefits li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .integration-visual {
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .integration-visual::before {
+            content: '🔄';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            opacity: 0.8;
+        }
+
+        /* Workflow Section */
+        .workflow-section {
+            background: var(--bg-secondary);
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .workflow-step {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            background: var(--bg-primary);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-4px);
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-period {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .pricing-cta {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .pricing-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--accent-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--accent-color);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-light);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+        }
+
+        .footer-copyright {
+            opacity: 0.7;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .integration-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+
+            .pricing-card.featured:hover {
+                transform: translateY(-4px);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🍅 Iterum</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="ecosystem.html" class="nav-link">Ecosystem</a></li>
+                <li><a href="index.html#waitlist" class="nav-link">Join Waitlist</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <h1 class="hero-title font-handwritten">
+                Complete Restaurant Management Ecosystem
+                <span style="display: block; font-size: 0.8em; opacity: 0.9;">From Recipe Scaling to Business Growth</span>
+            </h1>
+            <p class="hero-subtitle">
+                The only integrated platform that handles recipe management, payroll processing, and business growth - 
+                all working together to maximize your restaurant's profitability and efficiency.
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Integrated Apps</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">40%</span>
+                    <span class="stat-label">Cost Reduction</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Data Integration</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">1</span>
+                    <span class="stat-label">Unified Platform</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Three Pillars Section -->
+    <section class="section pillars-section">
+        <div class="main-content">
+            <h2 class="section-title font-handwritten">The Three Pillars</h2>
+            <p class="section-subtitle">
+                Our integrated ecosystem addresses every critical aspect of restaurant management, 
+                from recipe development to employee management to business growth.
+            </p>
+            
+            <div class="pillars-grid">
+                <div class="pillar-card recipe animate-fade-in-up">
+                    <div class="pillar-icon">🍅</div>
+                    <h3 class="pillar-title">Recipe & Menu Management</h3>
+                    <p class="pillar-description">
+                        Professional recipe library with AI-powered scaling, cost analysis, and menu optimization. 
+                        Transform your recipe collection into a profitable business asset.
+                    </p>
+                    <ul class="pillar-features">
+                        <li>AI-powered recipe scaling (2 to 2,000 portions)</li>
+                        <li>Real-time cost calculations with 291+ ingredients</li>
+                        <li>Menu planning and optimization</li>
+                        <li>Inventory management and tracking</li>
+                        <li>Recipe categorization and search</li>
+                    </ul>
+                    <a href="index.html#features" class="pillar-cta">Explore Recipe Features</a>
+                </div>
+
+                <div class="pillar-card payroll animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="pillar-icon">💰</div>
+                    <h3 class="pillar-title">Payroll & HR Management</h3>
+                    <p class="pillar-description">
+                        Streamline employee management, reduce labor costs, and ensure compliance. 
+                        Integrated with recipe costs for complete profitability analysis.
+                    </p>
+                    <ul class="pillar-features">
+                        <li>Automated payroll processing</li>
+                        <li>Time tracking and scheduling</li>
+                        <li>Labor cost analysis</li>
+                        <li>Tax compliance and reporting</li>
+                        <li>Employee self-service portal</li>
+                    </ul>
+                    <a href="docs/payroll.html" class="pillar-cta">Explore Payroll Features</a>
+                </div>
+
+                <div class="pillar-card business animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="pillar-icon">🚀</div>
+                    <h3 class="pillar-title">Business Intelligence</h3>
+                    <p class="pillar-description">
+                        Data-driven insights for growth, efficiency, and profitability. 
+                        Strategic planning tools powered by integrated data from all operations.
+                    </p>
+                    <ul class="pillar-features">
+                        <li>Financial projections and analysis</li>
+                        <li>Market analysis and trends</li>
+                        <li>Growth strategy planning</li>
+                        <li>Operational efficiency metrics</li>
+                        <li>Performance benchmarking</li>
+                    </ul>
+                    <a href="docs/business-intelligence.html" class="pillar-cta">Explore Business Features</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section class="section integration-section">
+        <div class="main-content">
+            <h2 class="section-title font-handwritten">Why Integration Matters</h2>
+            <p class="section-subtitle">
+                Unlike separate tools that create data silos, our integrated ecosystem provides 
+                unified insights and automated workflows that drive real business results.
+            </p>
+            
+            <div class="integration-grid">
+                <div class="integration-content">
+                    <h3>Data Flows Seamlessly</h3>
+                    <p>
+                        Recipe costs automatically inform labor analysis. Employee schedules impact 
+                        menu planning. Business projections drive recipe optimization. Everything 
+                        works together for maximum efficiency.
+                    </p>
+                    <h3>Unified Decision Making</h3>
+                    <p>
+                        Access all your restaurant data in one place. Make informed decisions 
+                        based on complete insights, not fragmented information from multiple tools.
+                    </p>
+                    <ul class="integration-benefits">
+                        <li><strong>15-25% cost reduction</strong> through integrated efficiency</li>
+                        <li><strong>50% less manual work</strong> with automated data flow</li>
+                        <li><strong>Real-time insights</strong> across all operations</li>
+                        <li><strong>Single source of truth</strong> for all restaurant data</li>
+                        <li><strong>Predictive analytics</strong> for better planning</li>
+                    </ul>
+                </div>
+                <div class="integration-visual">
+                    🔄
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section class="section workflow-section">
+        <div class="main-content">
+            <h2 class="section-title font-handwritten">How It Works Together</h2>
+            <p class="section-subtitle">
+                See how our integrated ecosystem transforms your restaurant operations 
+                from chaos to streamlined efficiency.
+            </p>
+            
+            <div class="workflow-steps">
+                <div class="workflow-step animate-fade-in-up">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Plan & Optimize</h3>
+                    <p class="step-description">
+                        Use business intelligence to plan your menu and operations. 
+                        Analyze market trends and set growth targets.
+                    </p>
+                </div>
+
+                <div class="workflow-step animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Scale & Cost</h3>
+                    <p class="step-description">
+                        Scale recipes for your target volume. Get real-time cost 
+                        calculations and profitability analysis.
+                    </p>
+                </div>
+
+                <div class="workflow-step animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Staff & Execute</h3>
+                    <p class="step-description">
+                        Schedule staff based on menu requirements. Track labor costs 
+                        and ensure optimal efficiency.
+                    </p>
+                </div>
+
+                <div class="workflow-step animate-fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Analyze & Grow</h3>
+                    <p class="step-description">
+                        Review performance across all operations. Use integrated 
+                        insights to optimize and plan for growth.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section pricing-section">
+        <div class="main-content">
+            <h2 class="section-title font-handwritten">Choose Your Plan</h2>
+            <p class="section-subtitle">
+                Start with what you need and scale up as your restaurant grows. 
+                All plans include our unified dashboard and data integration.
+            </p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card animate-fade-in-up">
+                    <h3 class="pricing-title">Starter</h3>
+                    <div class="pricing-price">$99</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>Recipe Management</li>
+                        <li>Menu Planning</li>
+                        <li>Cost Analysis</li>
+                        <li>Ingredient Database</li>
+                        <li>Basic Reporting</li>
+                        <li>Email Support</li>
+                    </ul>
+                    <a href="index.html#waitlist" class="pricing-cta">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card featured animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <h3 class="pricing-title">Professional</h3>
+                    <div class="pricing-price">$199</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Starter</li>
+                        <li>Payroll & HR Management</li>
+                        <li>Time Tracking</li>
+                        <li>Labor Cost Analysis</li>
+                        <li>Tax Compliance</li>
+                        <li>Advanced Reporting</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    <a href="index.html#waitlist" class="pricing-cta">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <h3 class="pricing-title">Enterprise</h3>
+                    <div class="pricing-price">$399</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Professional</li>
+                        <li>Business Intelligence</li>
+                        <li>Financial Projections</li>
+                        <li>Market Analysis</li>
+                        <li>Growth Strategies</li>
+                        <li>Custom Integrations</li>
+                        <li>Dedicated Support</li>
+                    </ul>
+                    <a href="index.html#waitlist" class="pricing-cta">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="main-content">
+            <h2 class="cta-title font-handwritten">Ready to Transform Your Restaurant?</h2>
+            <p class="cta-subtitle">
+                Join thousands of restaurants already using our integrated ecosystem 
+                to streamline operations, reduce costs, and drive growth.
+            </p>
+            <div class="cta-buttons">
+                <a href="index.html#waitlist" class="btn btn-primary">Start Free Trial</a>
+                <a href="about.html" class="btn btn-outline">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo font-handwritten">🍅 Iterum Recipe Library</div>
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="about.html" class="footer-link">About</a>
+                <a href="ecosystem.html" class="footer-link">Ecosystem</a>
+                <a href="pitch-deck.html" class="footer-link">Investor Pitch Deck</a>
+                <a href="admin-login.html" class="footer-link">Admin Login</a>
+                <a href="https://github.com/Iterum-Foods/iterum-chef-notebook" class="footer-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+            <div class="footer-copyright">
+                © 2025 Iterum Foods. Complete restaurant management ecosystem for modern kitchens.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

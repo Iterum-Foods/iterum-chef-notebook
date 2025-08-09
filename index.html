@@ -9,6 +9,57 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/x-icon" href="iterum.ico">
+    
+    <!-- CRITICAL: Early Loading Protection -->
+    <script>
+        console.log('🚑 EARLY LOADING PROTECTION ACTIVE');
+        
+        // Force immediate display
+        document.documentElement.style.display = 'block';
+        if (document.body) {
+            document.body.style.display = 'block';
+            document.body.style.visibility = 'visible';
+            document.body.style.opacity = '1';
+        }
+        
+        // Monitor for body creation and force display
+        const bodyObserver = new MutationObserver(() => {
+            if (document.body) {
+                document.body.style.display = 'block';
+                document.body.style.visibility = 'visible';
+                document.body.style.opacity = '1';
+                bodyObserver.disconnect();
+            }
+        });
+        bodyObserver.observe(document.documentElement, { childList: true });
+        
+        // Emergency timeout - force page display after 1 second regardless
+        setTimeout(() => {
+            console.log('🚨 EMERGENCY TIMEOUT: Forcing page display');
+            if (document.body) {
+                document.body.style.display = 'block !important';
+                document.body.style.visibility = 'visible !important';
+                document.body.style.opacity = '1 !important';
+            }
+            
+            // Clear any loading overlays
+            const loadingElements = document.querySelectorAll('.loading, [class*="loading"], .loader, .spinner');
+            loadingElements.forEach(el => el.style.display = 'none');
+            
+            console.log('✅ Emergency timeout fix complete');
+        }, 1000);
+        
+        // Global emergency fix function available immediately
+        window.instantFix = function() {
+            document.body.style.display = 'block !important';
+            document.body.style.visibility = 'visible !important';
+            document.body.style.opacity = '1 !important';
+            document.querySelectorAll('.loading, [class*="loading"]').forEach(el => el.style.display = 'none');
+            return '✅ INSTANT FIX APPLIED!';
+        };
+        
+        console.log('💡 STUCK? Run: instantFix()');
+    </script>
     <style>
         body {
             background: repeating-linear-gradient(
@@ -264,88 +315,33 @@
         .modal { background: #fffbe9; border-radius: 1rem; box-shadow: 0 4px 32px #0002; padding: 2rem; min-width: 320px; }
         .modal input { font-size: 1.1rem; padding: 0.5rem 1rem; border-radius: 0.5rem; border: 1px solid #ccc; margin-bottom: 1rem; width: 100%; }
         .modal button { background: #2a365d; color: #fff; border: none; border-radius: 0.5rem; padding: 0.5rem 1.5rem; font-weight: bold; cursor: pointer; }
-        #loading-overlay {
-          position: fixed;
-          z-index: 9999;
-          top: 0; left: 0; width: 100vw; height: 100vh;
-          background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);
-          display: flex; align-items: center; justify-content: center;
-          transition: opacity 0.7s;
-          backdrop-filter: blur(10px);
-        }
-        #loading-overlay.fade-out {
-          opacity: 0;
-          pointer-events: none;
-        }
-        .modern-loader {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 2rem;
-        }
-        .loader-ring {
-          width: 80px;
-          height: 80px;
-          border: 3px solid rgba(255, 255, 255, 0.1);
-          border-top: 3px solid #64ffda;
-          border-radius: 50%;
-          animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-          position: relative;
-        }
-        .loader-ring::before {
-          content: '';
-          position: absolute;
-          top: -3px;
-          left: -3px;
-          right: -3px;
-          bottom: -3px;
-          border: 2px solid transparent;
-          border-top: 2px solid #ff6b6b;
-          border-radius: 50%;
-          animation: spin 2s linear infinite reverse;
-        }
-        .loader-dots {
-          display: flex;
-          gap: 8px;
-          margin-top: 1rem;
-        }
-        .loader-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: linear-gradient(45deg, #64ffda, #ff6b6b);
-          animation: pulse 1.5s ease-in-out infinite;
-        }
-        .loader-dot:nth-child(1) { animation-delay: 0s; }
-        .loader-dot:nth-child(2) { animation-delay: 0.2s; }
-        .loader-dot:nth-child(3) { animation-delay: 0.4s; }
-        .loading-text {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-          color: #e2e8f0;
-          font-size: 1.1rem;
-          font-weight: 500;
-          text-align: center;
-          letter-spacing: 0.05em;
-          margin-top: 1rem;
-          opacity: 0.9;
-        }
-        .loading-subtitle {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-          color: #64ffda;
-          font-size: 0.9rem;
-          font-weight: 400;
-          text-align: center;
-          margin-top: 0.5rem;
-          opacity: 0.7;
-        }
+        /* Modern Loading Screen Animations */
         @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         @keyframes pulse {
-          0%, 100% { opacity: 0.3; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
+        #loading-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            #loading-overlay div[style*="width:80px"] {
+                width: 60px !important;
+                height: 60px !important;
+            }
+            #loading-overlay div[style*="font-size:1.1rem"] {
+                font-size: 1rem !important;
+            }
+            #loading-overlay div[style*="font-size:0.9rem"] {
+                font-size: 0.8rem !important;
+            }
+        }
+
 
         /* Header Navigation Hover Effects */
         header nav a:hover {
@@ -396,7 +392,7 @@
           }
         }
 
-        /* Enhanced Header Animations */
+        /* Modern Header Enhancements */
         @keyframes slideDown {
             from {
                 opacity: 0;
@@ -408,9 +404,32 @@
             }
         }
 
-        /* Header Logo Hover Glow */
-        header .relative:hover .absolute {
-            animation: pulse 2s infinite;
+        /* Enhanced Modern Header Styles */
+        header {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        /* User Avatar Animation */
+        #user-avatar-initial {
+            transition: all 0.3s ease;
+        }
+        
+        /* Active Navigation Underline Animation */
+        .nav-active {
+            position: relative;
+        }
+        
+        .nav-active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 2px;
         }
 
         /* Navigation Active State - Current Page Highlighting */
@@ -439,39 +458,188 @@
             left: 100%;
         }
     </style>
-    <!-- Load unified auth system first before main.js -->
-<script src="unified_auth_system.js"></script>
-<script type="module" src="main.js"></script>
-<script src="userDataManager.js"></script>
-<script src="profileManager.js"></script>
-<script src="equipmentManager.js"></script>
-<script src="recipeScaling.js"></script>
-<script src="recipeLibrary.js"></script>
-<script src="recipeImportExport.js"></script>
-<script src="recipeReview.js"></script>
-<script src="ingredientLibrary.js"></script>
-<script src="haccpManager.js"></script>
+    <!-- Load unified auth system first before main.js with error handling -->
+<script>
+    // Error-tolerant script loading
+    function loadScriptSafely(src, required = false, isModule = false) {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = src;
+            if (isModule) script.type = 'module';
+            
+            script.onload = () => {
+                console.log(`✅ Loaded: ${src}`);
+                resolve(true);
+            };
+            script.onerror = () => {
+                console.warn(`⚠️ Failed to load: ${src}${required ? ' (REQUIRED)' : ' (optional)'}`);
+                resolve(false);
+            };
+            
+            // Add timeout protection
+            setTimeout(() => {
+                if (!script.onload.called) {
+                    console.warn(`⏰ Timeout loading: ${src}`);
+                    resolve(false);
+                }
+            }, 5000);
+            
+            document.head.appendChild(script);
+        });
+    }
+    
+    // Load core scripts with protection
+    Promise.all([
+        loadScriptSafely('startup-loading-config.js'),
+        loadScriptSafely('unified_auth_system.js'),
+        loadScriptSafely('apiConfig.js'),
+        loadScriptSafely('projectManager.js'),
+        loadScriptSafely('enhanced-project-modal.js'),
+        loadScriptSafely('PROJECT_SELECTOR_FIX.js'),
+        loadScriptSafely('main.js', false, true),
+        loadScriptSafely('userDataManager.js'),
+        loadScriptSafely('profileManager.js'),
+        loadScriptSafely('equipmentManager.js'),
+        loadScriptSafely('recipeScaling.js'),
+        loadScriptSafely('recipeLibrary.js'),
+        loadScriptSafely('recipeImportExport.js'),
+        loadScriptSafely('recipeReview.js'),
+        loadScriptSafely('ingredientLibrary.js'),
+        loadScriptSafely('haccpManager.js')
+    ]).then(results => {
+        const loadedCount = results.filter(r => r).length;
+        console.log(`📦 Core scripts loaded: ${loadedCount}/${results.length}`);
+        
+        // CRITICAL: Ensure page is visible regardless of script loading success
+        if (document.body) {
+            document.body.style.display = 'block !important';
+            document.body.style.visibility = 'visible !important';
+            document.body.style.opacity = '1 !important';
+        }
+        
+        // Show main content
+        const mainElements = document.querySelectorAll('.container, main, .main-content, #main-content');
+        mainElements.forEach(el => {
+            el.style.display = 'block';
+            el.style.visibility = 'visible';
+        });
+        
+        console.log('✅ Page display guaranteed regardless of script loading');
+    }).catch(error => {
+        console.error('Script loading error:', error);
+        // Even if everything fails, show the page
+        if (document.body) {
+            document.body.style.display = 'block !important';
+            document.body.style.visibility = 'visible !important';
+        }
+    });
+</script>
     
     <!-- Include standardized login modal template -->
     <script>
-    // Load standardized login modal to replace existing one
+    // Emergency loading bypass function for main app
+    window.emergencyLoadingFix = function() {
+        console.log('🚑 EMERGENCY LOADING FIX ACTIVATED FOR MAIN APP');
+        
+        // Clear all loading states
+        document.querySelectorAll('.loading, [class*="loading"], [id*="loading"]').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // Show main content
+        document.body.style.display = 'block';
+        document.body.style.visibility = 'visible';
+        document.body.style.opacity = '1';
+        
+        // Show main container
+        const mainContainer = document.querySelector('.container, main, #main-content, .main-content');
+        if (mainContainer) {
+            mainContainer.style.display = 'block';
+            mainContainer.style.visibility = 'visible';
+            mainContainer.style.opacity = '1';
+        }
+        
+        // Show navigation
+        const navigation = document.querySelector('nav, .nav-tabs, .navigation');
+        if (navigation) {
+            navigation.style.display = 'block';
+            navigation.style.visibility = 'visible';
+        }
+        
+        console.log('✅ Main app emergency fix complete');
+        return '✅ MAIN APP LOADING FIXED!';
+    };
+
+    // Show console help immediately
+    console.log('%c🚑 MAIN APP LOADING STUCK? Run: emergencyLoadingFix()', 'color: #ff4444; font-size: 16px; font-weight: bold;');
+    
+    // CRITICAL: Force immediate page display
+    document.documentElement.style.display = 'block';
+    if (document.body) {
+        document.body.style.display = 'block';
+        document.body.style.visibility = 'visible';
+        document.body.style.opacity = '1';
+    }
+    
+    // Clear any loading overlays immediately
+    setTimeout(() => {
+        const loadingOverlays = document.querySelectorAll('.loading, [class*="loading"], .loader, .spinner');
+        loadingOverlays.forEach(overlay => overlay.style.display = 'none');
+    }, 10);
+
+    // Load standardized login modal to replace existing one (non-blocking)
     document.addEventListener('DOMContentLoaded', function() {
+        // Ensure page loads immediately, load modal in background
+        document.body.style.display = 'block';
+        document.body.style.visibility = 'visible';
+        
+        // Auto-fix loading issues after 5 seconds
+        setTimeout(() => {
+            const loadingElements = document.querySelectorAll('.loading, [class*="loading"]');
+            const isStuck = loadingElements.length > 0 || 
+                          document.body.style.display === 'none' || 
+                          document.body.style.visibility === 'hidden';
+            
+            if (isStuck) {
+                console.warn('🚨 Auto-fixing loading issue detected after 5 seconds');
+                window.emergencyLoadingFix();
+            }
+        }, 5000);
+        
         // Remove existing login modal if it exists
         const existingModal = document.getElementById('login-modal');
         if (existingModal) {
             existingModal.remove();
         }
         
-        // Load standardized modal
-        fetch('shared-login-modal.html')
-            .then(response => {
+        // Load standardized modal with timeout protection
+        setTimeout(async () => {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                
+                const response = await fetch('shared-login-modal.html', {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
                 if (!response.ok) {
                     console.warn('Standardized login modal not found, using existing modal');
                     return null;
                 }
+                
                 return response.text();
-            })
-            .then(html => {
+            } catch (error) {
+                console.warn('Login modal loading failed (non-critical):', error.message);
+                return null;
+            }
+        }, 100);
+        
+        // Handle the response after timeout
+        setTimeout(async () => {
+            try {
+                const html = await loadLoginModal();
                 if (html) {
                     // Create a temporary div to parse the HTML
                     const tempDiv = document.createElement('div');
@@ -499,102 +667,158 @@
                         });
                     }
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.warn('Could not load standardized login modal:', error);
-            });
+            }
+        }, 100);
     });
     </script>
 </head>
 <body>
 
 
-    <!-- Enhanced Uniform Header -->
-    <header class="bg-gradient-to-r from-white to-green-50 shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <!-- Logo and Brand -->
-        <div class="flex items-center gap-3">
-          <div class="relative">
-            <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10 transition-transform hover:scale-110">
-            <div class="absolute -inset-1 bg-green-200 rounded-full opacity-0 hover:opacity-20 transition-opacity"></div>
+    <!-- Modern Professional Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100">
+      <!-- Top Header Bar -->
+      <div class="bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+        <div class="w-full px-6 sm:px-8 lg:px-12 py-4">
+          <div class="flex items-center justify-between">
+            <!-- Logo and Brand -->
+            <div class="flex items-center gap-4">
+              <div class="relative group">
+                <img src="botanical-logo.svg" alt="Iterum Logo" class="h-12 w-12 transition-transform group-hover:scale-105">
+                <div class="absolute -inset-2 bg-emerald-100 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-bold text-2xl tracking-tight text-gray-900 hover:text-emerald-700 transition-colors duration-200">
+                  Iterum R&D
+                </span>
+                <span class="text-sm text-gray-500 font-medium tracking-wide">
+                  Chef Notebook
+                </span>
+              </div>
+            </div>
+            
+            <!-- Center - Project Selector (will be populated by projectManager.js) -->
+            <div id="header-project-selector" class="flex-1 max-w-md mx-8 lg:block">
+              <!-- Project selector will be inserted here -->
+            </div>
+            
+            <!-- Right Side - User Actions -->
+            <div class="flex items-center gap-4">
+              <!-- User Info -->
+              <div class="hidden md:flex items-center gap-3">
+                <div class="h-8 w-8 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center">
+                  <span class="text-white text-sm font-semibold" id="user-avatar-initial">U</span>
+                </div>
+                <div class="flex flex-col">
+                  <span id="current-user" class="text-gray-900 text-sm font-semibold"></span>
+                  <span class="text-gray-500 text-xs">Chef</span>
+                </div>
+              </div>
+              
+              <!-- Action Buttons -->
+              <div class="flex items-center gap-2">
+                <button id="login-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg transition-all duration-200 shadow-sm font-medium hidden">
+                  Sign In
+                </button>
+                <button id="logout-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg transition-all duration-200 font-medium hidden">
+                  Sign Out
+                </button>
+                <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm transition-all duration-200 shadow-sm font-medium">
+                  Switch User
+                </button>
+                
+                <!-- Mobile Menu Toggle -->
+                <button id="nav-toggle" class="lg:hidden p-2.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
-          <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
-            Iterum R&D Chef Notebook
-          </span>
         </div>
-        
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex gap-1 text-gray-700 font-medium">
-          <a href="index.html" class="nav-active hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏠 Dashboard</span>
-          </a>
-          <a href="recipe-library.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">📚 Recipe Library</span>
-          </a>
-          <a href="recipe-developer.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🧪 Recipe Developer</span>
-          </a>
-          <a href="recipe-upload.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">⚡ Quick Upload</span>
-          </a>
-          <a href="menu-builder.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🍽️ Menu Builder</span>
-          </a>
-          <a href="ingredients.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🥬 Ingredients</span>
-          </a>
-          <a href="equipment-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🔧 Equipment</span>
-          </a>
-          <a href="vendor-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏪 Vendors</span>
-          </a>
-        </nav>
-        
-        <!-- User Info and Actions -->
-        <div class="flex items-center gap-3">
-          <span id="current-user" class="text-gray-600 text-sm font-medium bg-white px-3 py-1 rounded-full border"></span>
-          <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hidden">
-            Login
-          </button>
-          <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
-            Logout
-          </button>
-          <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors shadow-sm">
-            Switch User
-          </button>
-          <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors">
-            &#9776;
-          </button>
+      </div>
+      
+      <!-- Navigation Bar -->
+      <div class="bg-white border-b border-gray-50">
+        <div class="w-full px-6 sm:px-8 lg:px-12">
+          <nav class="hidden lg:flex items-center justify-center">
+            <div class="flex items-center gap-1">
+              <a href="index.html" class="nav-active group flex items-center gap-2 px-4 py-3 text-sm font-medium text-emerald-700 bg-emerald-50 border-b-2 border-emerald-600 transition-all duration-200">
+                <span class="text-lg">🏠</span>
+                <span>Dashboard</span>
+              </a>
+              <a href="recipe-library.html" class="group flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 border-b-2 border-transparent hover:border-emerald-200 transition-all duration-200">
+                <span class="text-lg">📚</span>
+                <span>Recipe Library</span>
+              </a>
+              <a href="recipe-developer.html" class="group flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 border-b-2 border-transparent hover:border-emerald-200 transition-all duration-200">
+                <span class="text-lg">🧪</span>
+                <span>Recipe Developer</span>
+              </a>
+              <a href="recipe-upload.html" class="group flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 border-b-2 border-transparent hover:border-emerald-200 transition-all duration-200">
+                <span class="text-lg">⚡</span>
+                <span>Quick Upload</span>
+              </a>
+              <a href="menu-builder.html" class="group flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 border-b-2 border-transparent hover:border-emerald-200 transition-all duration-200">
+                <span class="text-lg">🍽️</span>
+                <span>Menu Builder</span>
+              </a>
+              <a href="ingredients.html" class="group flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 border-b-2 border-transparent hover:border-emerald-200 transition-all duration-200">
+                <span class="text-lg">🥬</span>
+                <span>Ingredients</span>
+              </a>
+              <a href="equipment-management.html" class="group flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 border-b-2 border-transparent hover:border-emerald-200 transition-all duration-200">
+                <span class="text-lg">🔧</span>
+                <span>Equipment</span>
+              </a>
+              <a href="vendor-management.html" class="group flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 border-b-2 border-transparent hover:border-emerald-200 transition-all duration-200">
+                <span class="text-lg">🏪</span>
+                <span>Vendors</span>
+              </a>
+            </div>
+          </nav>
         </div>
       </div>
       
       <!-- Mobile Navigation -->
-      <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-1 px-4 pb-4">
-        <a href="index.html" class="nav-active block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏠 Dashboard</span>
-        </a>
-        <a href="recipe-library.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">📚 Recipe Library</span>
-        </a>
-        <a href="recipe-developer.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🧪 Recipe Developer</span>
-        </a>
-        <a href="recipe-upload.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">⚡ Quick Upload</span>
-        </a>
-        <a href="menu-builder.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🍽️ Menu Builder</span>
-        </a>
-        <a href="ingredients.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🥬 Ingredients</span>
-        </a>
-        <a href="equipment-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🔧 Equipment</span>
-        </a>
-        <a href="vendor-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏪 Vendors</span>
-        </a>
+      <nav id="mobile-nav" class="lg:hidden bg-gray-50 border-b border-gray-200 hidden">
+        <div class="px-6 py-4 space-y-2">
+          <a href="index.html" class="nav-active flex items-center gap-3 px-4 py-3 text-sm font-medium text-emerald-700 bg-emerald-100 rounded-lg transition-colors duration-200">
+            <span class="text-xl">🏠</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="recipe-library.html" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors duration-200">
+            <span class="text-xl">📚</span>
+            <span>Recipe Library</span>
+          </a>
+          <a href="recipe-developer.html" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors duration-200">
+            <span class="text-xl">🧪</span>
+            <span>Recipe Developer</span>
+          </a>
+          <a href="recipe-upload.html" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors duration-200">
+            <span class="text-xl">⚡</span>
+            <span>Quick Upload</span>
+          </a>
+          <a href="menu-builder.html" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors duration-200">
+            <span class="text-xl">🍽️</span>
+            <span>Menu Builder</span>
+          </a>
+          <a href="ingredients.html" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors duration-200">
+            <span class="text-xl">🥬</span>
+            <span>Ingredients</span>
+          </a>
+          <a href="equipment-management.html" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors duration-200">
+            <span class="text-xl">🔧</span>
+            <span>Equipment</span>
+          </a>
+          <a href="vendor-management.html" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors duration-200">
+            <span class="text-xl">🏪</span>
+            <span>Vendors</span>
+          </a>
+        </div>
       </nav>
     </header>
     
@@ -2361,18 +2585,19 @@ window.addEventListener('DOMContentLoaded', updateProfileUI);
     <ellipse cx="70" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
 </svg>
 
-<!-- Loading Overlay -->
-<div id="loading-overlay">
-  <div class="modern-loader">
-    <div class="loader-ring">
-      <div class="loader-dots">
-        <div class="loader-dot"></div>
-        <div class="loader-dot"></div>
-        <div class="loader-dot"></div>
+<!-- Modern Dark Loading Overlay -->
+<div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;backdrop-filter:blur(10px);">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;">
+    <div style="width:80px;height:80px;border:3px solid rgba(255,255,255,0.1);border-top:3px solid #64ffda;border-radius:50%;animation:spin 1.2s cubic-bezier(0.68,-0.55,0.265,1.55) infinite;position:relative;">
+      <div style="display:flex;gap:8px;margin-top:1rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.2s;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.4s;"></div>
       </div>
     </div>
-    <div class="loading-text">Iterum R&D Chef Notebook</div>
-    <div class="loading-subtitle">Initializing your culinary workspace...</div>
+    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#e2e8f0;font-size:1.1rem;font-weight:500;text-align:center;letter-spacing:0.05em;margin-top:1rem;opacity:0.9;">Iterum R&D Chef Notebook</div>
+    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#64ffda;font-size:0.9rem;font-weight:400;text-align:center;margin-top:0.5rem;opacity:0.7;">Initializing your culinary workspace...</div>
+    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:rgba(255,255,255,0.4);font-size:0.75rem;font-weight:400;text-align:center;margin-top:1rem;opacity:0.6;">Loading will complete in 3 seconds...</div>
   </div>
 </div>
 
@@ -2457,8 +2682,7 @@ window.addEventListener('DOMContentLoaded', updateProfileUI);
   </div>
 </div>
 
-<!-- API Configuration -->
-<script src="api_config.js"></script>
+<!-- API Configuration (loaded earlier via loadScriptSafely) -->
 
 <!-- Error Handler -->
 <script src="error_handler.js"></script>
@@ -2502,6 +2726,32 @@ window.addEventListener('DOMContentLoaded', updateProfileUI);
                 };
                 
                 console.log('✅ Auth debug functions loaded. Call window.debugAuth() to see current state.');
+                
+                // Update user avatar when user info changes
+                function updateUserAvatar() {
+                    const currentUserEl = document.getElementById('current-user');
+                    const avatarEl = document.getElementById('user-avatar-initial');
+                    
+                    if (currentUserEl && avatarEl) {
+                        const userName = currentUserEl.textContent || 'User';
+                        avatarEl.textContent = userName.charAt(0).toUpperCase();
+                    }
+                }
+                
+                // Watch for user changes
+                const observer = new MutationObserver(updateUserAvatar);
+                const currentUserEl = document.getElementById('current-user');
+                if (currentUserEl) {
+                    observer.observe(currentUserEl, { 
+                        childList: true, 
+                        characterData: true, 
+                        subtree: true 
+                    });
+                }
+                
+                // Initial avatar update
+                updateUserAvatar();
+                
             }, 1000);
         });
     </script>

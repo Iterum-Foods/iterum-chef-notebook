@@ -93,6 +93,11 @@
    - **Waitlist Admin**: http://localhost:8080/waitlist_admin.html
    - **Ingredient Demo**: http://localhost:8080/ingredient_demo.html
 
+## 📋 Documentation Management
+
+**📊 [Documentation Dependencies Flowchart](DOCUMENTATION_DEPENDENCIES_FLOWCHART.md)** - Complete guide for which files to update when making changes
+**⚡ [Quick Update Checklist](QUICK_UPDATE_CHECKLIST.md)** - Fast reference for keeping documentation synchronized
+
 ## 📁 Project Structure
 
 ```

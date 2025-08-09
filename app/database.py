@@ -64,6 +64,10 @@ class Recipe(Base):
     
     # Image fields
     primary_image = Column(String)  # Main recipe photo filename
+    source = Column(String, nullable=True)  # Source information (e.g., "OCR Import: filename.jpg")
+    
+    # Relationships
+    source_upload = relationship("RecipeUpload", back_populates="created_recipe")
     gallery_images = Column(JSON)  # Array of additional photo filenames
     step_images = Column(JSON)  # Object mapping step numbers to image filenames
     
