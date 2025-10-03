@@ -1,0 +1,383 @@
+<!-- Shared Header Template for Iterum R&D Chef Notebook -->
+<!-- Include this file in all pages for consistent header styling -->
+
+<style>
+    /* Shared Header Styles */
+    :root {
+        /* Modern Color Palette */
+        --primary-50: #f0f9ff;
+        --primary-100: #e0f2fe;
+        --primary-200: #bae6fd;
+        --primary-300: #7dd3fc;
+        --primary-400: #38bdf8;
+        --primary-500: #0ea5e9;
+        --primary-600: #0284c7;
+        --primary-700: #0369a1;
+        --primary-800: #075985;
+        --primary-900: #0c4a6e;
+        
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gray-900: #0f172a;
+        
+        --success-50: #f0fdf4;
+        --success-500: #22c55e;
+        --success-600: #16a34a;
+        --warning-50: #fffbeb;
+        --warning-500: #f59e0b;
+        --error-50: #fef2f2;
+        --error-500: #ef4444;
+        
+        /* Typography */
+        --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --font-size-xs: 0.75rem;
+        --font-size-sm: 0.875rem;
+        --font-size-base: 1rem;
+        --font-size-lg: 1.125rem;
+        --font-size-xl: 1.25rem;
+        --font-size-2xl: 1.5rem;
+        --font-size-3xl: 1.875rem;
+        --font-size-4xl: 2.25rem;
+        
+        /* Spacing */
+        --spacing-1: 0.25rem;
+        --spacing-2: 0.5rem;
+        --spacing-3: 0.75rem;
+        --spacing-4: 1rem;
+        --spacing-5: 1.25rem;
+        --spacing-6: 1.5rem;
+        --spacing-8: 2rem;
+        --spacing-10: 2.5rem;
+        --spacing-12: 3rem;
+        
+        /* Border Radius */
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+        --radius-2xl: 1.5rem;
+        
+        /* Shadows */
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        
+        /* Transitions */
+        --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Modern Header */
+    header {
+        background: white;
+        border-bottom: 1px solid var(--gray-200);
+        box-shadow: var(--shadow-sm);
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .header-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 var(--spacing-6);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 70px;
+    }
+
+    .logo {
+        font-size: var(--font-size-xl);
+        font-weight: 700;
+        color: var(--primary-600);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-2);
+    }
+
+    .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    /* Navigation */
+    nav {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-1);
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-2);
+        padding: var(--spacing-2) var(--spacing-4);
+        color: var(--gray-600);
+        text-decoration: none;
+        font-weight: 500;
+        border-radius: var(--radius-lg);
+        transition: all var(--transition-fast);
+        font-size: var(--font-size-sm);
+    }
+
+    .nav-link:hover {
+        background-color: var(--gray-100);
+        color: var(--gray-900);
+        transform: translateY(-1px);
+    }
+
+    .nav-link.active {
+        background-color: var(--primary-50);
+        color: var(--primary-700);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .nav-link .icon {
+        font-size: var(--font-size-lg);
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-2);
+        padding: var(--spacing-3) var(--spacing-6);
+        border-radius: var(--radius-lg);
+        font-weight: 600;
+        font-size: var(--font-size-sm);
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        white-space: nowrap;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        color: white;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: var(--gray-700);
+        border: 1px solid var(--gray-300);
+    }
+
+    .btn-secondary:hover {
+        background: var(--gray-50);
+        border-color: var(--gray-400);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .header-container {
+            padding: 0 var(--spacing-4);
+            height: 60px;
+        }
+
+        .nav-link {
+            padding: var(--spacing-2) var(--spacing-3);
+            font-size: var(--font-size-xs);
+        }
+
+        .nav-link .icon {
+            font-size: var(--font-size-base);
+        }
+    }
+</style>
+
+<!-- Modern Professional Header -->
+<header>
+    <div class="header-container">
+        <!-- Logo and Brand -->
+        <a href="index.html" class="logo">
+            <div class="logo-icon">
+                <span>🍃</span>
+            </div>
+            <div>
+                <div class="font-bold text-xl text-gray-900">Iterum R&D</div>
+                <div class="text-sm text-gray-500">Chef Notebook</div>
+            </div>
+        </a>
+        
+        <!-- Center - Project Selector -->
+        <div id="header-project-selector" class="flex-1 max-w-md mx-8 hidden lg:block">
+            <!-- Project selector will be inserted here by the new project management system -->
+        </div>
+        
+        <!-- Right Side - Navigation and User Actions -->
+        <div class="flex items-center gap-4">
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex items-center gap-1">
+                <a href="index.html" class="nav-link" id="nav-dashboard">
+                    <span class="icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="recipe-library.html" class="nav-link" id="nav-recipe-library">
+                    <span class="icon">📚</span>
+                    <span>Recipe Library</span>
+                </a>
+                <a href="recipe-developer.html" class="nav-link" id="nav-recipe-developer">
+                    <span class="icon">🧪</span>
+                    <span>Recipe Developer</span>
+                </a>
+                <a href="recipe-upload.html" class="nav-link" id="nav-recipe-upload">
+                    <span class="icon">⚡</span>
+                    <span>Quick Upload</span>
+                </a>
+                <a href="menu-builder.html" class="nav-link" id="nav-menu-builder">
+                    <span class="icon">🍽️</span>
+                    <span>Menu Builder</span>
+                </a>
+                <a href="ingredients.html" class="nav-link" id="nav-ingredients">
+                    <span class="icon">🥬</span>
+                    <span>Ingredients</span>
+                </a>
+                <a href="equipment-management.html" class="nav-link" id="nav-equipment">
+                    <span class="icon">🔧</span>
+                    <span>Equipment</span>
+                </a>
+                <a href="vendor-management.html" class="nav-link" id="nav-vendors">
+                    <span class="icon">🏪</span>
+                    <span>Vendors</span>
+                </a>
+            </nav>
+            
+            <!-- User Actions -->
+            <div class="flex items-center gap-3">
+                <!-- User Info -->
+                <div class="hidden md:flex items-center gap-3">
+                    <div class="h-8 w-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-semibold" id="user-avatar-initial">U</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="current-user" class="text-gray-900 text-sm font-semibold"></span>
+                        <span class="text-gray-500 text-xs">Chef</span>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2">
+                    <button id="login-btn" class="btn btn-primary hidden">
+                        Sign In
+                    </button>
+                    <button id="logout-btn" class="btn btn-secondary hidden">
+                        Sign Out
+                    </button>
+                    <button id="switch-user-btn" onclick="window.switchUser()" class="btn btn-primary">
+                        Switch User
+                    </button>
+                    
+                    <!-- Mobile Menu Toggle -->
+                    <button id="nav-toggle" class="lg:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden">
+        <div class="p-4 space-y-1">
+            <a href="index.html" class="nav-link" id="mobile-nav-dashboard">
+                <span class="icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="recipe-library.html" class="nav-link" id="mobile-nav-recipe-library">
+                <span class="icon">📚</span>
+                <span>Recipe Library</span>
+            </a>
+            <a href="recipe-developer.html" class="nav-link" id="mobile-nav-recipe-developer">
+                <span class="icon">🧪</span>
+                <span>Recipe Developer</span>
+            </a>
+            <a href="recipe-upload.html" class="nav-link" id="mobile-nav-recipe-upload">
+                <span class="icon">⚡</span>
+                <span>Quick Upload</span>
+            </a>
+            <a href="menu-builder.html" class="nav-link" id="mobile-nav-menu-builder">
+                <span class="icon">🍽️</span>
+                <span>Menu Builder</span>
+            </a>
+            <a href="ingredients.html" class="nav-link" id="mobile-nav-ingredients">
+                <span class="icon">🥬</span>
+                <span>Ingredients</span>
+            </a>
+            <a href="equipment-management.html" class="nav-link" id="mobile-nav-equipment">
+                <span class="icon">🔧</span>
+                <span>Equipment</span>
+            </a>
+            <a href="vendor-management.html" class="nav-link" id="mobile-nav-vendors">
+                <span class="icon">🏪</span>
+                <span>Vendors</span>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<script>
+// Header functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile navigation toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    
+    if (navToggle && mobileNav) {
+        navToggle.addEventListener('click', function() {
+            mobileNav.classList.toggle('hidden');
+            
+            if (!mobileNav.classList.contains('hidden')) {
+                mobileNav.style.animation = 'slideDown 0.3s ease-out';
+            }
+        });
+        
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!navToggle.contains(event.target) && !mobileNav.contains(event.target)) {
+                mobileNav.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Set active navigation based on current page
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage || (currentPage === 'index.html' && href === 'index.html')) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>

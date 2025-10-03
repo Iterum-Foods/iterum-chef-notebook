@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test User Loading - Iterum App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test User Loading System</h1>
+        <p>This page tests the user loading functionality of the Iterum App authentication system.</p>
+        
+        <div class="test-section">
+            <h3>🔐 Authentication System Tests</h3>
+            <button class="test-button" onclick="testUserLoading()">Test User Loading</button>
+            <button class="test-button" onclick="testSavedUsers()">Test Saved Users</button>
+            <button class="test-button" onclick="testLocalStorage()">Test Local Storage</button>
+            <button class="test-button" onclick="testAuthSystem()">Test Auth System</button>
+            <button class="test-button" onclick="debugAuthSystem()">Debug Auth System</button>
+            <button class="test-button" onclick="forceReloadUsers()">Force Reload Users</button>
+            <button class="test-button" onclick="createTestUser()">Create Test User</button>
+            <button class="test-button" onclick="clearTestData()">Clear Test Data</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>📊 Test Results</h3>
+            <div id="test-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Debug Information</h3>
+            <div id="debug-info"></div>
+        </div>
+    </div>
+
+    <!-- Load the unified auth system -->
+    <script src="../assets/js/unified_auth_system.js"></script>
+    
+    <script>
+        function log(message, type = 'info') {
+            const resultsDiv = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            resultsDiv.appendChild(resultDiv);
+            console.log(message);
+        }
+
+        function updateDebugInfo() {
+            const debugDiv = document.getElementById('debug-info');
+            debugDiv.innerHTML = `
+                <p><strong>Unified Auth System:</strong> ${window.unifiedAuth ? '✅ Loaded' : '❌ Not Loaded'}</p>
+                <p><strong>Current User:</strong> ${window.unifiedAuth?.currentUser?.name || 'None'}</p>
+                <p><strong>Saved Users Count:</strong> ${window.unifiedAuth?.savedUsers?.length || 0}</p>
+                <p><strong>Session Active:</strong> ${localStorage.getItem('session_active') || 'false'}</p>
+                <p><strong>Local Storage Users:</strong> ${localStorage.getItem('saved_users') ? '✅ Present' : '❌ Not Present'}</p>
+            `;
+        }
+
+        async function testUserLoading() {
+            try {
+                log('🧪 Testing user loading...', 'info');
+                
+                if (!window.unifiedAuth) {
+                    log('❌ Unified auth system not available', 'error');
+                    return;
+                }
+
+                // Test loading saved users
+                const users = await window.unifiedAuth.loadSavedUsers();
+                log(`✅ Loaded ${users.length} users`, 'success');
+                
+                // Test individual user loading
+                if (users.length > 0) {
+                    log(`👤 First user: ${users[0].name} (${users[0].id})`, 'info');
+                }
+                
+                updateDebugInfo();
+                
+            } catch (error) {
+                log(`❌ Error testing user loading: ${error.message}`, 'error');
+            }
+        }
+
+        function testSavedUsers() {
+            try {
+                log('🧪 Testing saved users...', 'info');
+                
+                if (!window.unifiedAuth) {
+                    log('❌ Unified auth system not available', 'error');
+                    return;
+                }
+
+                const savedUsers = window.unifiedAuth.savedUsers;
+                log(`📊 Saved users count: ${savedUsers.length}`, 'info');
+                
+                savedUsers.forEach((user, index) => {
+                    log(`👤 User ${index + 1}: ${user.name} (${user.id})`, 'info');
+                });
+                
+                updateDebugInfo();
+                
+            } catch (error) {
+                log(`❌ Error testing saved users: ${error.message}`, 'error');
+            }
+        }
+
+        function testLocalStorage() {
+            try {
+                log('🧪 Testing local storage...', 'info');
+                
+                const savedUsersData = localStorage.getItem('saved_users');
+                if (savedUsersData) {
+                    const users = JSON.parse(savedUsersData);
+                    log(`📦 Local storage users: ${users.length}`, 'success');
+                    users.forEach((user, index) => {
+                        log(`👤 Local User ${index + 1}: ${user.name}`, 'info');
+                    });
+                } else {
+                    log('ℹ️ No users in local storage', 'info');
+                }
+                
+                const currentUser = localStorage.getItem('current_user');
+                if (currentUser) {
+                    const user = JSON.parse(currentUser);
+                    log(`👤 Current user in storage: ${user.name}`, 'info');
+                } else {
+                    log('ℹ️ No current user in storage', 'info');
+                }
+                
+                updateDebugInfo();
+                
+            } catch (error) {
+                log(`❌ Error testing local storage: ${error.message}`, 'error');
+            }
+        }
+
+        function testAuthSystem() {
+            try {
+                log('🧪 Testing auth system...', 'info');
+                
+                if (!window.unifiedAuth) {
+                    log('❌ Unified auth system not available', 'error');
+                    return;
+                }
+
+                const auth = window.unifiedAuth;
+                
+                log(`🔐 Auth system initialized: ${!!auth}`, 'info');
+                log(`🌐 Online status: ${auth.isOnline}`, 'info');
+                log(`👤 Current user: ${auth.currentUser?.name || 'None'}`, 'info');
+                log(`📊 Saved users: ${auth.savedUsers?.length || 0}`, 'info');
+                log(`🔑 Session active: ${auth.isSessionActive()}`, 'info');
+                
+                updateDebugInfo();
+                
+            } catch (error) {
+                log(`❌ Error testing auth system: ${error.message}`, 'error');
+            }
+        }
+
+        function clearTestData() {
+            try {
+                log('🧹 Clearing test data...', 'info');
+                
+                // Clear test-related data
+                localStorage.removeItem('test_user_1');
+                localStorage.removeItem('test_user_2');
+                
+                log('✅ Test data cleared', 'success');
+                updateDebugInfo();
+                
+            } catch (error) {
+                log(`❌ Error clearing test data: ${error.message}`, 'error');
+            }
+        }
+
+        function debugAuthSystem() {
+            try {
+                log('🔍 Debugging auth system...', 'info');
+                
+                if (!window.unifiedAuth) {
+                    log('❌ Unified auth system not available', 'error');
+                    return;
+                }
+
+                // Use the global debug function
+                const debugInfo = window.debugAuth();
+                if (debugInfo) {
+                    log(`📊 Debug info: ${JSON.stringify(debugInfo, null, 2)}`, 'info');
+                }
+                
+                updateDebugInfo();
+                
+            } catch (error) {
+                log(`❌ Error debugging auth system: ${error.message}`, 'error');
+            }
+        }
+
+        async function forceReloadUsers() {
+            try {
+                log('🔄 Force reloading users...', 'info');
+                
+                if (!window.unifiedAuth) {
+                    log('❌ Unified auth system not available', 'error');
+                    return;
+                }
+
+                // Use the global reload function
+                const users = await window.reloadUsers();
+                if (users) {
+                    log(`✅ Users reloaded: ${users.length} users found`, 'success');
+                    users.forEach((user, index) => {
+                        log(`👤 User ${index + 1}: ${user.name} (${user.id})`, 'info');
+                    });
+                }
+                
+                updateDebugInfo();
+                
+            } catch (error) {
+                log(`❌ Error force reloading users: ${error.message}`, 'error');
+            }
+        }
+
+        function createTestUser() {
+            try {
+                log('👤 Creating test user...', 'info');
+                
+                if (!window.unifiedAuth) {
+                    log('❌ Unified auth system not available', 'error');
+                    return;
+                }
+
+                // Create a test user
+                const testUser = {
+                    id: 'test_' + Date.now(),
+                    name: 'Test Chef',
+                    email: 'test@example.com',
+                    role: 'Chef',
+                    restaurant: 'Test Kitchen',
+                    avatar: null,
+                    isGoogleUser: false,
+                    recipes: [],
+                    ingredients: [],
+                    equipment: [],
+                    createdAt: new Date().toISOString(),
+                    lastUpdated: new Date().toISOString()
+                };
+
+                // Add to saved users
+                window.unifiedAuth.savedUsers.push(testUser);
+                localStorage.setItem('saved_users', JSON.stringify(window.unifiedAuth.savedUsers));
+                
+                log(`✅ Test user created: ${testUser.name}`, 'success');
+                log(`📊 Total users now: ${window.unifiedAuth.savedUsers.length}`, 'info');
+                
+                updateDebugInfo();
+                
+            } catch (error) {
+                log(`❌ Error creating test user: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize debug info on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🚀 Test page loaded', 'info');
+            updateDebugInfo();
+            
+            // Wait a bit for the auth system to initialize
+            setTimeout(() => {
+                log('⏳ Checking auth system after delay...', 'info');
+                updateDebugInfo();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

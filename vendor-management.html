@@ -3,2581 +3,497 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendor & Equipment Management - Iterum R&D</title>
+    <title>Vendor & Equipment Management - Iterum R&D Chef Notebook</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: repeating-linear-gradient(
-                to bottom,
-                #f6fbe7 0px,
-                #f6fbe7 38px,
-                #eafcd7 39px,
-                #f6fbe7 40px
-            );
-            min-height: 100vh;
-            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-            padding: 20px;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 56px;
-            width: 2px;
-            height: 100vh;
-            background: repeating-linear-gradient(
-                to bottom,
-                #e57373 0px,
-                #e57373 16px,
-                transparent 16px,
-                transparent 32px
-            );
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #fffbe7;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 22px 22px 18px 18px;
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.09), 0 1.5px 0 #e2d8b8;
-            position: relative;
-            padding-top: 2.5rem;
-            overflow: hidden;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            left: -18px;
-            top: 18px;
-            width: 12px;
-            height: 80%;
-            background: repeating-linear-gradient(
-                to bottom,
-                #e57373 0px,
-                #e57373 8px,
-                transparent 8px,
-                transparent 24px
-            );
-            border-radius: 8px;
-            opacity: 0.18;
-            z-index: 1;
-        }
-
-        .header {
-            background: #fffbe7;
-            color: #795548;
-            padding: 30px;
-            text-align: center;
-            border-bottom: 3px solid #e2d8b8;
-            position: relative;
-            z-index: 2;
-        }
-
-        .header h1 {
-            font-family: 'Shadows Into Light', cursive;
-            font-size: 2.5rem;
-            color: #b8860b;
-            letter-spacing: 1.5px;
-            text-shadow: 0 2px 8px #fffbe7, 0 1px 0 #e2d8b8;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            color: #795548;
-            opacity: 0.9;
-        }
-
-        .nav-tabs {
-            display: flex;
-            background: #f6fbe7;
-            border-bottom: 2px solid #e2d8b8;
-            position: relative;
-            z-index: 2;
-        }
-
-        .nav-tab {
-            flex: 1;
-            padding: 15px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            background: none;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #795548;
-            border-radius: 0;
-        }
-
-        .nav-tab.active {
-            background: #fffbe7;
-            color: #b8860b;
-            border-bottom: 3px solid #b8860b;
-            box-shadow: 0 2px 8px 0 rgba(184, 134, 11, 0.15);
-        }
-
-        .nav-tab:hover:not(.active) {
-            background: #eafcd7;
-            color: #8d6e63;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 30px;
-            background: #fffbe7;
-            position: relative;
-            z-index: 2;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 1.8em;
-            color: #b8860b;
-            font-weight: 600;
-            font-family: 'Shadows Into Light', cursive;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
-            color: #795548;
-            border: 1.5px solid #ffe082;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
-            font-weight: 600;
-            transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
-            padding: 12px 24px;
-            cursor: pointer;
-            font-size: 1em;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px) scale(1.04) rotate(-2deg);
-            box-shadow: 0 6px 18px 0 rgba(255, 235, 59, 0.25);
-            background: linear-gradient(135deg, #ffe082 80%, #fff176 100%);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
-            color: #795548;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #e2d8b8 80%, #d4c4a8 100%);
-            color: #795548;
-            border-color: #d4c4a8;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #a5d6a7 80%, #81c784 100%);
-            color: #2e7d32;
-            border-color: #81c784;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef9a9a 80%, #e57373 100%);
-            color: #c62828;
-            border-color: #e57373;
-        }
-
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 0.9em;
-            margin-right: 8px;
-        }
-        
-        .btn-sm:last-child {
-            margin-right: 0;
-        }
-
-        .search-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 10px;
-            background: #fffbe7;
-            font-size: 1em;
-            transition: border 0.2s, box-shadow 0.2s;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #b8860b;
-            box-shadow: 0 0 0 2px #ffe082;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fffbe7;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #e2d8b8;
-        }
-
-        .data-table th {
-            background: #f6fbe7;
-            font-weight: 600;
-            color: #b8860b;
-        }
-
-        .data-table tr:hover {
-            background: #eafcd7;
-        }
-
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.85em;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: #a5d6a7;
-            color: #2e7d32;
-        }
-
-        .status-inactive {
-            background: #ef9a9a;
-            color: #c62828;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.3);
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-content {
-            background: #fffbe7;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 22px 22px 18px 18px;
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.09), 0 1.5px 0 #e2d8b8;
-            margin: 5% auto;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e2d8b8;
-        }
-
-        .modal-title {
-            font-family: 'Shadows Into Light', cursive;
-            font-size: 1.8em;
-            color: #b8860b;
-            margin: 0;
-        }
-
-        .close {
-            color: #795548;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close:hover {
-            color: #b8860b;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #795548;
-        }
-
-        .form-input, .form-textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 10px;
-            background: #fffbe7;
-            font-size: 1em;
-            transition: border 0.2s, box-shadow 0.2s;
-        }
-
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #b8860b;
-            box-shadow: 0 0 0 2px #ffe082;
-        }
-
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .form-checkbox input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #b8860b;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #e2d8b8;
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-
-        .alert-error {
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #ef9a9a;
-        }
-
-        .alert-success {
-            background: #e8f5e8;
-            color: #2e7d32;
-            border: 1px solid #a5d6a7;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #795548;
-            font-style: italic;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #795548;
-        }
-
-        .empty-state h3 {
-            font-family: 'Shadows Into Light', cursive;
-            font-size: 1.5em;
-            color: #b8860b;
-            margin-bottom: 10px;
-        }
-
-        .info-box {
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-            border: 2px solid #7bb661;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 4px 12px rgba(123, 182, 97, 0.15);
-        }
-
-        .info-box h3 {
-            color: #4a7c2c;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-
-        .info-box ul {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-
-        .info-box li {
-            margin: 5px 0;
-            color: #4a7c2c;
-        }
-
-        .section-description {
-            color: #795548;
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
-            
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-tabs {
-                flex-direction: column;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
-        }
-
-        /* Modern scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-            background: #fdf6e3;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #e2d8b8;
-            border-radius: 8px;
-        }
-
-        /* Plant Sketches */
-        .plant-sketch {
-            position: fixed;
-            z-index: 0;
-            opacity: 0.08;
-            pointer-events: none;
-            width: 120px;
-            height: 180px;
-        }
-
-        .plant-sketch.top-right {
-            top: 20px;
-            right: 20px;
-            transform: rotate(15deg);
-        }
-
-        .plant-sketch.top-left {
-            top: 20px;
-            left: 20px;
-            transform: rotate(-15deg);
-        }
-
-        .plant-sketch.bottom-left {
-            bottom: 20px;
-            left: 20px;
-            transform: rotate(-10deg);
-        }
-
-        .plant-sketch.center-right {
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%) rotate(5deg);
-        }
-
-        .plant-sketch.center-left {
-            top: 50%;
-            left: 20px;
-            transform: translateY(-50%) rotate(-5deg);
-        }
-
-        .plant-sketch.small {
-            width: 80px;
-            height: 120px;
-            opacity: 0.06;
-        }
-
-        .plant-sketch.tiny {
-            width: 60px;
-            height: 90px;
-            opacity: 0.05;
-        }
-
-        /* Different plant variations */
-        .plant-herb {
-            opacity: 0.07;
-        }
-
-        .plant-vegetable {
-            opacity: 0.06;
-        }
-
-        .plant-flower {
-            opacity: 0.08;
-        }
-
-        /* Floating animation for some plants */
-        .plant-float {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
-        }
-
-        /* Responsive plant positioning */
-        @media (max-width: 768px) {
-            .plant-sketch {
-                width: 60px;
-                height: 90px;
-                opacity: 0.05;
-            }
-            
-            .plant-sketch.top-right,
-            .plant-sketch.top-left,
-            .plant-sketch.bottom-left {
-                display: none;
-            }
-        }
-
-        /* Enhanced Header Animations */
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Header Logo Hover Glow */
-        header .relative:hover .absolute {
-            animation: pulse 2s infinite;
-        }
-
-        /* Navigation Active State - Current Page Highlighting */
-        .nav-active {
-            background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
-            color: #15803d !important;
-            font-weight: 600 !important;
-            border: 1px solid #86efac !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-active::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-active:hover::before {
-            left: 100%;
-        }
-
-        /* Menu Parsing Styles */
-        .parsed-item {
-            background: #fffbe7;
-            border: 2px solid #e2d8b8;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .parsed-item.selected {
-            border-color: #b8860b;
-            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.15);
-            background: linear-gradient(135deg, #fff8e1 0%, #fffbe7 100%);
-        }
-
-        .parsed-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-        }
-
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .item-checkbox {
-            margin-right: 15px;
-            transform: scale(1.2);
-            accent-color: #b8860b;
-        }
-
-        .item-name {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #b8860b;
-            margin-bottom: 5px;
-            flex-grow: 1;
-        }
-
-        .item-price {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #2e7d32;
-            background: #e8f5e8;
-            padding: 4px 12px;
-            border-radius: 8px;
-            border: 1px solid #a5d6a7;
-        }
-
-        .item-description {
-            color: #795548;
-            font-style: italic;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .item-category {
-            display: inline-block;
-            background: #f3e5f5;
-            color: #7b1fa2;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .item-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .vendor-select {
-            flex: 1;
-            min-width: 200px;
-            padding: 8px 12px;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 8px;
-            background: #fffbe7;
-            font-size: 0.9em;
-        }
-
-        .vendor-select:focus {
-            border-color: #b8860b;
-            box-shadow: 0 0 0 2px #ffe082;
-            outline: none;
-        }
-
-        .edit-item-btn {
-            padding: 6px 12px;
-            font-size: 0.85em;
-            border-radius: 6px;
-        }
-
-        .parsing-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            border: 2px solid #e2d8b8;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: #b8860b;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            color: #795548;
-            font-weight: 500;
-        }
-
-        .ingredient-suggestions {
-            margin-top: 10px;
-            padding: 10px;
-            background: #f0f8f0;
-            border-radius: 8px;
-            border: 1px solid #c8e6c9;
-        }
-
-        .ingredient-tag {
-            display: inline-block;
-            background: #e8f5e8;
-            color: #2e7d32;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.8em;
-            margin: 2px;
-            border: 1px solid #a5d6a7;
-        }
-
-        .confidence-indicator {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .confidence-high { background: #4caf50; }
-        .confidence-medium { background: #ff9800; }
-        .confidence-low { background: #f44336; }
-
-        /* Responsive menu parsing */
-        @media (max-width: 768px) {
-            .item-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .item-controls {
-                flex-direction: column;
-            }
-            
-            .vendor-select {
-                min-width: auto;
-            }
-            
-            .parsing-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+    <!-- Tailwind CSS - Built from source -->
+    <link rel="stylesheet" href="assets/css/tailwind-output.css">
+    <link rel="stylesheet" href="assets/css/iterum-design-system.css">
+    <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
 </head>
-<body>
-    <!-- Enhanced Uniform Header -->
-    <header class="bg-gradient-to-r from-white to-green-50 shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <!-- Logo and Brand -->
-        <div class="flex items-center gap-3">
-          <div class="relative">
-            <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10 transition-transform hover:scale-110">
-            <div class="absolute -inset-1 bg-green-200 rounded-full opacity-0 hover:opacity-20 transition-opacity"></div>
-          </div>
-          <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
-            Iterum R&D Chef Notebook
-          </span>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Uniform Centered Header -->
+    <header class="iterum-header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <a href="index.html" class="header-logo">
+                <div class="header-logo-icon">
+                    <span>🍃</span>
+                </div>
+                <div class="header-logo-text">
+                    <div class="header-logo-title">Iterum R&D</div>
+                    <div class="header-logo-subtitle">Chef Notebook</div>
+                </div>
+            </a>
+
+            <!-- Center Navigation -->
+            <nav class="header-navigation">
+                <a href="index.html" class="header-nav-item" data-page="index">
+                    <span class="nav-icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="recipe-library.html" class="header-nav-item" data-page="recipe-library">
+                    <span class="nav-icon">📚</span>
+                    <span>Library</span>
+                </a>
+                <a href="recipe-developer.html" class="header-nav-item" data-page="recipe-developer">
+                    <span class="nav-icon">🧪</span>
+                    <span>Developer</span>
+                </a>
+                <a href="recipe-upload.html" class="header-nav-item" data-page="recipe-upload">
+                    <span class="nav-icon">⚡</span>
+                    <span>Upload</span>
+                </a>
+                <a href="menu-builder.html" class="header-nav-item" data-page="menu-builder">
+                    <span class="nav-icon">🍽️</span>
+                    <span>Menu</span>
+                </a>
+                <a href="ingredients.html" class="header-nav-item" data-page="ingredients">
+                    <span class="nav-icon">🥬</span>
+                    <span>Ingredients</span>
+                </a>
+                <a href="equipment-management.html" class="header-nav-item" data-page="equipment-management">
+                    <span class="nav-icon">🔧</span>
+                    <span>Equipment</span>
+                </a>
+                <a href="vendor-management.html" class="header-nav-item active" data-page="vendor-management">
+                    <span class="nav-icon">🏪</span>
+                    <span>Vendors</span>
+                </a>
+            </nav>
+
+            <!-- Right Side - User Section -->
+            <div class="header-user-section">
+                <!-- Project Selector -->
+                <div class="header-project-selector-container">
+                    <div class="project-selector-display" onclick="window.showProjectSelectionDropdown()">
+                        <div class="project-selector-current">
+                            <span class="project-selector-icon">📋</span>
+                            <span class="project-selector-name" data-project-name>Master Project</span>
+                            <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
+                        <div class="project-status-display">
+                            <span class="project-status-label">Current:</span>
+                            <span class="project-status-value" data-project-name>Master Project</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Info Tab -->
+                <div class="header-user-tab" onclick="toggleUserDropdown()">
+                    <div class="header-user-avatar" id="user-avatar">
+                        <span id="user-avatar-initial">👤</span>
+                    </div>
+                    <div class="header-user-info">
+                        <div class="header-user-name" id="current-user">Guest User</div>
+                        <div class="header-user-role">Chef</div>
+                    </div>
+                    <svg class="header-user-dropdown-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+
+                <!-- User Dropdown Menu -->
+                <div class="header-user-dropdown" id="user-dropdown">
+                    <div class="header-user-dropdown-header">
+                        <div class="header-user-dropdown-title" id="dropdown-user-name">Guest User</div>
+                        <div class="header-user-dropdown-subtitle" id="dropdown-user-role">Chef</div>
+                    </div>
+                    
+                    <div class="header-user-dropdown-menu">
+                        <div class="header-user-dropdown-item" onclick="window.switchUser()">
+                            <span>🔄</span>
+                            <span>Switch User</span>
+                        </div>
+                        <div class="header-user-dropdown-item" onclick="userSystem.showUserModal('create')">
+                            <span>➕</span>
+                            <span>Create New User</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-user-dropdown-divider"></div>
+                    
+                    <div class="header-user-dropdown-menu">
+                        <div class="header-user-dropdown-item" onclick="userSystem.showSettings()">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </div>
+                        <div class="header-user-dropdown-item danger" onclick="userSystem.logout()">
+                            <span>🚪</span>
+                            <span>Sign Out</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Navigation Toggle -->
+                <button class="header-mobile-toggle" onclick="toggleMobileNav()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <nav class="header-mobile-nav" id="mobile-nav">
+                <a href="index.html" class="header-mobile-nav-item">
+                    <span class="nav-icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="recipe-library.html" class="header-mobile-nav-item">
+                    <span class="nav-icon">📚</span>
+                    <span>Library</span>
+                </a>
+                <a href="recipe-developer.html" class="header-mobile-nav-item">
+                    <span class="nav-icon">🧪</span>
+                    <span>Developer</span>
+                </a>
+                <a href="recipe-upload.html" class="header-mobile-nav-item">
+                    <span class="nav-icon">⚡</span>
+                    <span>Upload</span>
+                </a>
+                <a href="menu-builder.html" class="header-mobile-nav-item">
+                    <span class="nav-icon">🍽️</span>
+                    <span>Menu</span>
+                </a>
+                <a href="ingredients.html" class="header-mobile-nav-item">
+                    <span class="nav-icon">🥬</span>
+                    <span>Ingredients</span>
+                </a>
+                <a href="equipment-management.html" class="header-mobile-nav-item">
+                    <span class="nav-icon">🔧</span>
+                    <span>Equipment</span>
+                </a>
+                <a href="vendor-management.html" class="header-mobile-nav-item active">
+                    <span class="nav-icon">🏪</span>
+                    <span>Vendors</span>
+                </a>
+            </nav>
         </div>
-        
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex gap-1 text-gray-700 font-medium">
-          <a href="index.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏠 Dashboard</span>
-          </a>
-          <a href="recipe-library.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">📚 Recipe Library</span>
-          </a>
-          <a href="recipe-developer.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🧪 Recipe Developer</span>
-          </a>
-          <a href="recipe-upload.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">⚡ Quick Upload</span>
-          </a>
-          <a href="menu-builder.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🍽️ Menu Builder</span>
-          </a>
-          <a href="ingredients.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🥬 Ingredients</span>
-          </a>
-          <a href="equipment-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🔧 Equipment</span>
-          </a>
-          <a href="vendor-management.html" class="nav-active hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏪 Vendors</span>
-          </a>
-        </nav>
-        
-        <!-- User Info and Actions -->
-        <div class="flex items-center gap-3">
-          <span id="current-user" class="text-gray-600 text-sm font-medium bg-white px-3 py-1 rounded-full border"></span>
-          <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hidden">
-            Login
-          </button>
-          <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
-            Logout
-          </button>
-          <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors shadow-sm">
-            Switch User
-          </button>
-          <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors">
-            &#9776;
-          </button>
-        </div>
-      </div>
-      
-      <!-- Mobile Navigation -->
-      <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-1 px-4 pb-4">
-        <a href="index.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏠 Dashboard</span>
-        </a>
-        <a href="recipe-library.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">📚 Recipe Library</span>
-        </a>
-        <a href="recipe-developer.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🧪 Recipe Developer</span>
-        </a>
-        <a href="recipe-upload.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">⚡ Quick Upload</span>
-        </a>
-        <a href="menu-builder.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🍽️ Menu Builder</span>
-        </a>
-        <a href="ingredients.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🥬 Ingredients</span>
-        </a>
-        <a href="equipment-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🔧 Equipment</span>
-        </a>
-        <a href="vendor-management.html" class="nav-active block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏪 Vendors</span>
-        </a>
-      </nav>
     </header>
 
-    <!-- Enhanced Mobile Navigation Toggle Script -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const navToggle = document.getElementById('nav-toggle');
-        const mobileNav = document.getElementById('mobile-nav');
-        
-        if (navToggle && mobileNav) {
-          navToggle.addEventListener('click', function() {
-            mobileNav.classList.toggle('hidden');
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-header-content">
+                <h1 class="heading-1">Vendor Management</h1>
+                <p class="page-description">Manage your vendor relationships, import from Excel/CSV, and track supplier information</p>
+            </div>
             
-            // Add animation class
-            if (!mobileNav.classList.contains('hidden')) {
-              mobileNav.style.animation = 'slideDown 0.3s ease-out';
-            }
-          });
-          
-          // Close mobile nav when clicking outside
-          document.addEventListener('click', function(event) {
-            if (!navToggle.contains(event.target) && !mobileNav.contains(event.target)) {
-              mobileNav.classList.add('hidden');
-            }
-          });
-        }
-      });
-    </script>
-
-    <div class="container">
-        <div class="header">
-            <h1>Vendor & Equipment Management</h1>
-            <p>Manage your suppliers, equipment, and vendor relationships</p>
-        </div>
-
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('vendors')">Vendors</button>
-            <button class="nav-tab" onclick="showTab('equipment')">Equipment</button>
-            <button class="nav-tab" onclick="showTab('relationships')">Relationships</button>
-            <button class="nav-tab" onclick="showTab('menu-parsing')">Menu Parsing</button>
-        </div>
-
-        <!-- Vendors Tab -->
-        <div id="vendors" class="tab-content active">
-            <div class="section-header">
-                <h2 class="section-title">Vendor Management</h2>
-                <button class="btn btn-primary" onclick="openVendorModal()">Add Vendor</button>
-            </div>
-
-            <div class="search-bar">
-                <input type="text" id="vendorSearch" class="search-input" placeholder="Search vendors...">
-                <button class="btn btn-secondary" onclick="searchVendors()">Search</button>
-            </div>
-
-            <div id="vendorsTable">
-                <div class="loading">Loading vendors...</div>
+            <!-- Header Actions -->
+            <div class="page-header-actions">
+                <button id="add-vendor-btn" class="btn btn-primary">
+                    <span>➕</span>
+                    <span>Add Vendor</span>
+                </button>
+                <button id="import-vendors-btn" class="btn btn-secondary">
+                    <span>📥</span>
+                    <span>Import</span>
+                </button>
+                <button id="export-vendors-btn" class="btn btn-secondary">
+                    <span>📤</span>
+                    <span>Export</span>
+                </button>
             </div>
         </div>
 
-        <!-- Equipment Tab -->
-        <div id="equipment" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">Equipment Management</h2>
-                <p class="section-description">Equipment management has been moved to the dedicated Equipment Management page for better organization.</p>
-                <a href="equipment-management.html" class="btn btn-primary">Go to Equipment Management</a>
-            </div>
-
-            <div class="info-box">
-                <h3>Equipment Management Features:</h3>
-                <ul>
-                    <li>✅ Add and manage your own equipment</li>
-                    <li>✅ Browse equipment database</li>
-                    <li>✅ Manage vendor equipment relationships</li>
-                    <li>✅ Track maintenance and repairs</li>
-                    <li>✅ Export and import equipment data</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Relationships Tab -->
-        <div id="relationships" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">Vendor Relationships</h2>
-                <div>
-                    <button class="btn btn-primary" onclick="openVendorIngredientModal()">Add Ingredient to Vendor</button>
+        <!-- Vendor Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🏪</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="vendor-count">0</div>
+                    <div class="stat-label">Total Vendors</div>
                 </div>
             </div>
-
-            <div class="info-box">
-                <h3>Equipment Relationships:</h3>
-                <p>Equipment relationships are now managed in the Equipment Management page for better organization.</p>
-                <a href="equipment-management.html" class="btn btn-secondary">Manage Equipment Relationships</a>
+            
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="active-vendors">0</div>
+                    <div class="stat-label">Active Vendors</div>
+                </div>
             </div>
-
-            <div id="relationshipsTable">
-                <div class="loading">Loading relationships...</div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="vendor-locations">0</div>
+                    <div class="stat-label">Locations</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="vendor-specialties">0</div>
+                    <div class="stat-label">Specialties</div>
+                </div>
             </div>
         </div>
 
-        <!-- Menu Parsing Tab -->
-        <div id="menu-parsing" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">Manual Menu Parsing</h2>
-                <div>
-                    <button class="btn btn-primary" onclick="clearMenuParser()">Clear All</button>
-                    <button class="btn btn-success" onclick="exportParsedItems()">Export Results</button>
+        <!-- Search and Filters -->
+        <div class="filters-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="vendor-search" class="filter-label">Search</label>
+                    <input type="text" id="vendor-search" class="filter-input" placeholder="Search vendors, companies, or locations...">
                 </div>
-            </div>
-
-            <div class="info-box">
-                <h3>How to Use Menu Parser:</h3>
-                <ul>
-                    <li>📋 <strong>Paste Menu Text:</strong> Copy and paste any menu or catalog text into the input area</li>
-                    <li>🔍 <strong>Smart Parsing:</strong> The system will automatically detect items, prices, and descriptions</li>
-                    <li>✏️ <strong>Manual Editing:</strong> Edit, merge, or split detected items as needed</li>
-                    <li>🏪 <strong>Vendor Assignment:</strong> Assign parsed items to existing vendors</li>
-                    <li>🥬 <strong>Ingredient Mapping:</strong> Connect menu items to ingredients in your system</li>
-                    <li>💾 <strong>Save & Export:</strong> Save to your vendor catalog or export for later use</li>
-                </ul>
-            </div>
-
-            <!-- Menu Input Section -->
-            <div class="form-group">
-                <label class="form-label" for="menuTextInput">
-                    Paste Menu/Catalog Text Here:
-                    <span style="font-size: 0.9em; color: #795548; font-weight: normal;">
-                        (Supports various formats: restaurant menus, vendor catalogs, price lists, etc.)
-                    </span>
-                </label>
-                <textarea id="menuTextInput" class="form-textarea" style="min-height: 200px;" 
-                    placeholder="Example:
-Appetizers
-- Crispy Calamari Rings - $12.99
-  Fresh squid rings, lightly breaded and fried, served with marinara sauce
-- Bruschetta al Pomodoro - $8.50
-  Grilled Italian bread topped with fresh tomatoes, garlic, and basil
-- Buffalo Wings (8 pieces) - $11.75
-  Crispy chicken wings tossed in spicy buffalo sauce
-
-Main Courses  
-- Grilled Salmon Fillet - $24.99
-  Atlantic salmon grilled to perfection, served with seasonal vegetables
-- Chicken Parmesan - $18.50
-  Breaded chicken breast topped with marinara and mozzarella cheese
-
-Paste your menu text here..."></textarea>
-            </div>
-
-            <div class="form-row" style="margin-bottom: 20px;">
-                <div class="form-group">
-                    <button class="btn btn-primary" onclick="parseMenuText()">🔍 Parse Menu</button>
-                    <button class="btn btn-secondary" onclick="useExampleMenu()">📝 Load Example</button>
+                
+                <div class="filter-group">
+                    <label for="company-filter" class="filter-label">Company</label>
+                    <select id="company-filter" class="filter-select">
+                        <option value="">All Companies</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="defaultVendor">Default Vendor (Optional):</label>
-                    <select id="defaultVendor" class="form-input">
-                        <option value="">Select a vendor...</option>
+                
+                <div class="filter-group">
+                    <label for="city-filter" class="filter-label">City</label>
+                    <select id="city-filter" class="filter-select">
+                        <option value="">All Cities</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="state-filter" class="filter-label">State</label>
+                    <select id="state-filter" class="filter-select">
+                        <option value="">All States</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="status-filter" class="filter-label">Status</label>
+                    <select id="status-filter" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
                     </select>
                 </div>
             </div>
+        </div>
 
-            <!-- Parsing Progress -->
-            <div id="parsingProgress" style="display: none;">
-                <div class="alert alert-success">
-                    <strong>Parsing Complete!</strong> Found <span id="itemCount">0</span> items. Review and edit below.
-                </div>
-            </div>
-
-            <!-- Parsed Items Display -->
-            <div id="parsedItemsContainer" style="display: none;">
-                <div class="section-header">
-                    <h3 class="section-title">Parsed Menu Items</h3>
-                    <div>
-                        <button class="btn btn-sm btn-secondary" onclick="selectAllItems()">Select All</button>
-                        <button class="btn btn-sm btn-secondary" onclick="deselectAllItems()">Deselect All</button>
-                        <button class="btn btn-sm btn-success" onclick="saveSelectedItems()">Save Selected to Vendor</button>
-                    </div>
-                </div>
-
-                <div id="parsedItemsList">
-                    <!-- Parsed items will be inserted here -->
-                </div>
-            </div>
-
-            <!-- Parsing Results Summary -->
-            <div id="parsingSummary" style="display: none;">
-                <div class="info-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%); border-color: #2196f3;">
-                    <h3 style="color: #1976d2;">Parsing Summary</h3>
-                    <div id="summaryContent">
-                        <!-- Summary will be populated here -->
-                    </div>
+        <!-- Bulk Actions -->
+        <div id="bulk-actions" class="bulk-actions" style="display: none;">
+            <div class="bulk-actions-content">
+                <span class="bulk-actions-text">
+                    <span id="selected-count">0</span> vendors selected
+                </span>
+                <div class="bulk-actions-buttons">
+                    <button id="bulk-edit-btn" class="btn btn-sm btn-secondary">
+                        ✏️ Edit Selected
+                    </button>
+                    <button id="bulk-delete-btn" class="btn btn-sm btn-danger">
+                        🗑️ Delete Selected
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Vendor Modal -->
-    <div id="vendorModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="vendorModalTitle">Add Vendor</h3>
-                <span class="close" onclick="closeVendorModal()">&times;</span>
-            </div>
-            <form id="vendorForm">
-                <div class="form-group">
-                    <label class="form-label" for="vendorName">Name *</label>
-                    <input type="text" id="vendorName" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="vendorCompany">Company</label>
-                    <input type="text" id="vendorCompany" class="form-input">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="vendorEmail">Email</label>
-                        <input type="email" id="vendorEmail" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="vendorPhone">Phone</label>
-                        <input type="tel" id="vendorPhone" class="form-input">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="vendorMobile">Mobile</label>
-                        <input type="tel" id="vendorMobile" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="vendorFax">Fax</label>
-                        <input type="tel" id="vendorFax" class="form-input">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="vendorWebsite">Website</label>
-                    <input type="url" id="vendorWebsite" class="form-input">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="vendorStreet">Street Address</label>
-                    <input type="text" id="vendorStreet" class="form-input">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="vendorCity">City</label>
-                        <input type="text" id="vendorCity" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="vendorState">State</label>
-                        <input type="text" id="vendorState" class="form-input">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="vendorZip">ZIP Code</label>
-                    <input type="text" id="vendorZip" class="form-input">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="vendorSpecialties">Specialties</label>
-                    <input type="text" id="vendorSpecialties" class="form-input" placeholder="Comma-separated specialties">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="vendorNotes">Notes</label>
-                    <textarea id="vendorNotes" class="form-textarea"></textarea>
-                </div>
-                
-                <div class="form-checkbox">
-                    <input type="checkbox" id="vendorActive" checked>
-                    <label for="vendorActive">Active</label>
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeVendorModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Vendor</button>
-                </div>
-            </form>
+        <!-- Vendors Container -->
+        <div id="vendors-container" class="vendors-container">
+            <!-- Vendors will be loaded here -->
         </div>
-    </div>
+    </main>
 
-
-
-    <!-- Shared Auth/Loading UI -->
-    <!--#include file="shared-auth.html" -->
-    <script src="unified_auth_system.js"></script>
-<script src="debug_auth_buttons.js"></script>
-    <script src="standardize-login-modals.js"></script>
-
+    <!-- Scripts -->
+    <!-- Load Firebase Configuration -->
+    <script src="assets/js/firebase-config.js"></script>
+    
+    <!-- Load Firebase Authentication -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    
+    <!-- Load Unified Authentication System -->
+    <script src="assets/js/unified_auth_system.js"></script>
+    
+    <!-- Load Page Protection System -->
+    <script src="assets/js/page-protection.js"></script>
+    
+    <!-- Load Header User Synchronization -->
+    <script src="assets/js/header_user_sync.js"></script>
+    
+    <!-- Load Header Sync Loader (ensures sync on all pages) -->
+    <script src="assets/js/header_sync_loader.js"></script>
+    
+    <!-- Load Enhanced User Management System -->
+    <!-- Enhanced User Management now handled by Firebase Auth -->
+    
+    <!-- Project management now handled by new system -->
+    <script src="assets/js/error_handler.js"></script>
+    <script src="assets/js/vendorManager.js"></script>
+    <script src="assets/js/project-management-system.js"></script>
+    
     <script>
-        // Global variables
-        let currentVendorId = null;
-        let currentEquipmentId = null;
-        const API_BASE = 'http://localhost:8000/api';
-
-        // Enhanced error logging utility
-        function logError(context, error, additionalInfo = {}) {
-            const errorDetails = {
-                context: context,
-                name: error.name,
-                message: error.message,
-                timestamp: new Date().toISOString(),
-                ...additionalInfo
-            };
-
-            console.group(`🚨 ${context}`);
-            console.error('Error occurred:', errorDetails);
-            if (error.stack) {
-                console.debug('Stack trace:', error.stack);
-            }
-            console.groupEnd();
-
-            // Also log to our error tracking system
-            try {
-                const errorLog = JSON.parse(localStorage.getItem('app_error_log') || '[]');
-                errorLog.push(errorDetails);
-                
-                // Keep only last 100 errors
-                if (errorLog.length > 100) {
-                    errorLog.splice(0, errorLog.length - 100);
-                }
-                
-                localStorage.setItem('app_error_log', JSON.stringify(errorLog));
-            } catch (logError) {
-                console.warn('Could not save error to log:', logError.message);
-            }
-
-            return errorDetails;
-        }
-
-        // Debug utility to check for error logging issues
-        window.debugAPIErrors = function() {
-            console.group('🔍 API Error Debug Report');
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Initializing Vendor Management Page');
             
-            // Check app error log
-            try {
-                const appErrors = JSON.parse(localStorage.getItem('app_error_log') || '[]');
-                console.log(`📊 App Errors: ${appErrors.length} total`);
-                if (appErrors.length > 0) {
-                    console.log('Recent app errors:', appErrors.slice(-5));
-                }
-            } catch (e) {
-                console.warn('Cannot read app error log:', e.message);
-            }
-
-            // Check API error log
-            try {
-                const apiErrors = JSON.parse(localStorage.getItem('api_error_log') || '[]');
-                console.log(`📊 API Errors: ${apiErrors.length} total`);
-                if (apiErrors.length > 0) {
-                    console.log('Recent API errors:', apiErrors.slice(-5));
-                }
-            } catch (e) {
-                console.warn('Cannot read API error log:', e.message);
-            }
-
-            // Check for common error patterns
-            console.log('🔧 Checking error handlers...');
-            console.log('ErrorHandler available:', typeof window.ErrorHandler !== 'undefined');
-            console.log('Enhanced logging function:', typeof logError === 'function');
+            // Wait for authentication system to be ready
+            await new Promise(resolve => setTimeout(resolve, 500));
             
-            // Test error logging
-            console.log('🧪 Testing error logging...');
-            try {
-                throw new Error('Test error for debugging');
-            } catch (testError) {
-                logError('Debug Test', testError, { test: true });
-                console.log('✅ Error logging working correctly');
-            }
-
-            console.groupEnd();
-            return 'Debug complete - check console output above';
-        };
-
-        // Utility to clear all error logs and reset error tracking
-        window.clearAllErrorLogs = function() {
-            try {
-                localStorage.removeItem('app_error_log');
-                localStorage.removeItem('api_error_log');
-                console.log('✅ All error logs cleared successfully');
-                return 'Error logs cleared';
-            } catch (e) {
-                console.error('❌ Failed to clear error logs:', e.message);
-                return 'Failed to clear logs';
-            }
-        };
-
-        // Utility to show current error status
-        window.showErrorStatus = function() {
-            console.group('📊 Current Error Status');
-            
-            try {
-                const appErrors = JSON.parse(localStorage.getItem('app_error_log') || '[]');
-                const apiErrors = JSON.parse(localStorage.getItem('api_error_log') || '[]');
+            // Ensure unified auth system is initialized and user state is maintained
+            if (window.unifiedAuth) {
+                console.log('🔐 Unified auth system found, checking user state...');
                 
-                console.log(`App Errors: ${appErrors.length}`);
-                console.log(`API Errors: ${apiErrors.length}`);
-                console.log(`Total Errors: ${appErrors.length + apiErrors.length}`);
+                // Check if there's a current user session
+                const currentUser = localStorage.getItem('current_user');
+                const sessionActive = localStorage.getItem('session_active');
                 
-                if (appErrors.length > 0) {
-                    const lastAppError = appErrors[appErrors.length - 1];
-                    console.log(`Last App Error: ${lastAppError.context} - ${lastAppError.message}`);
-                }
-                
-                if (apiErrors.length > 0) {
-                    const lastApiError = apiErrors[apiErrors.length - 1];
-                    console.log(`Last API Error: ${lastApiError.endpoint} - ${lastApiError.status}`);
-                }
-                
-            } catch (e) {
-                console.error('Error reading status:', e.message);
-            }
-            
-            console.groupEnd();
-        };
-
-        // Emergency function to bypass loading issues
-        window.bypassLoading = function() {
-            console.log('🚑 Emergency loading bypass activated');
-            
-            // Force clear any loading states
-            const vendorTableElement = document.getElementById('vendorsTable');
-            if (vendorTableElement) {
-                vendorTableElement.innerHTML = `
-                    <div class="info-box" style="background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%); border-color: #4caf50;">
-                        <h3 style="color: #2e7d32;">✅ Vendor Management Active</h3>
-                        <p style="color: #1b5e20; margin-bottom: 15px;">
-                            Loading bypass successful! All features are available in offline mode.
-                        </p>
-                        <div style="margin-top: 15px;">
-                            <button class="btn btn-primary" onclick="openVendorModal()" style="margin-right: 10px;">➕ Add Vendor</button>
-                            <button class="btn btn-secondary" onclick="showTab('menu-parsing')">📋 Menu Parsing</button>
-                            <button class="btn btn-secondary" onclick="loadVendors()">🔄 Retry Backend</button>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Clear any parsing progress states
-            const parsingProgress = document.getElementById('parsingProgress');
-            if (parsingProgress) {
-                parsingProgress.style.display = 'none';
-            }
-            
-            return '✅ Loading bypass complete - app is ready to use';
-        };
-
-        // Quick access function for loading issues
-        window.fixLoading = function() {
-            return window.bypassLoading();
-        };
-
-        // Utility to get current user ID
-        function getCurrentUserId() {
-            try {
-                if (window.userDataManager && window.userDataManager.getCurrentUserId) {
-                    return window.userDataManager.getCurrentUserId();
-                }
-                const user = localStorage.getItem('current_user');
-                if (user) {
-                    const userData = JSON.parse(user);
-                    return userData.id || userData.user_id || null;
-                }
-                // Fallback to demo user if no auth system is available
-                return 'demo-user';
-            } catch (error) {
-                console.warn('Error getting user ID, using fallback:', error);
-                return 'demo-user';
-            }
-        }
-
-        // Tab management
-        function showTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-            
-            // Load data for the tab
-            if (tabName === 'vendors') {
-                loadVendors();
-            } else if (tabName === 'equipment') {
-                loadEquipment();
-            } else if (tabName === 'relationships') {
-                loadRelationships();
-            } else if (tabName === 'menu-parsing') {
-                loadMenuParsingTab();
-            }
-        }
-
-        // Vendor management with enhanced error handling
-        async function loadVendors() {
-            const vendorTableElement = document.getElementById('vendorsTable');
-            
-            // Safety check - if element doesn't exist, don't proceed
-            if (!vendorTableElement) {
-                console.warn('⚠️ Vendor table element not found, skipping vendor loading');
-                return;
-            }
-            
-            try {
-                const userId = getCurrentUserId();
-                
-                // Check if we have a valid user ID
-                if (!userId) {
-                    throw new Error('No user logged in');
-                }
-                
-                // Show loading state with timeout protection
-                vendorTableElement.innerHTML = '<div class="loading">⏳ Loading vendors...</div>';
-                
-                const url = `${API_BASE}/vendors/?user_id=${encodeURIComponent(userId)}`;
-                
-                // Add timeout to prevent hanging - reduced to 3 seconds for faster fallback
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => {
-                    controller.abort();
-                    console.warn('⏱️ Vendor loading timeout - switching to offline mode');
-                }, 3000); // 3 second timeout
-                
-                const response = await fetch(url, {
-                    signal: controller.signal,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.vendors && data.vendors.length > 0) {
-                    displayVendors(data.vendors);
-                } else {
-                    vendorTableElement.innerHTML = `
-                        <div class="empty-state">
-                            <h3>No vendors found</h3>
-                            <p>Add your first vendor to get started</p>
-                            <button class="btn btn-primary" onclick="openVendorModal()" style="margin-top: 15px;">Add Your First Vendor</button>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                // Use enhanced error logging utility
-                logError('Vendor Loading Error', error, {
-                    endpoint: `${API_BASE}/vendors/`,
-                    userId: getCurrentUserId(),
-                    action: 'loadVendors'
-                });
-                
-                // Show friendly error message with offline mode
-                vendorTableElement.innerHTML = `
-                    <div class="info-box" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-color: #ff9800;">
-                        <h3 style="color: #e65100;">Backend Connection Issue</h3>
-                        <p style="color: #bf360c; margin-bottom: 15px;">
-                            ${error.name === 'AbortError' ? 'Connection timeout - API server may be down' : 
-                              error.message.includes('Failed to fetch') ? 'Cannot connect to API server' : 
-                              error.message}
-                        </p>
-                        <p style="color: #bf360c; margin-bottom: 15px;">
-                            <strong>Don't worry!</strong> You can still use the menu parsing feature and manage vendors locally.
-                        </p>
-                        <div style="margin-top: 15px;">
-                            <button class="btn btn-primary" onclick="openVendorModal()" style="margin-right: 10px;">Add Vendor (Local)</button>
-                            <button class="btn btn-secondary" onclick="loadVendors()">Retry Connection</button>
-                        </div>
-                        <hr style="margin: 15px 0; border-color: #ffcc02;">
-                        <p style="color: #bf360c; font-size: 0.9em;">
-                            <strong>For developers:</strong> Make sure your backend API is running on ${API_BASE}
-                        </p>
-                    </div>
-                `;
-            }
-        }
-
-        function displayVendors(vendors) {
-            const table = `
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Company</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${vendors.map(vendor => `
-                            <tr>
-                                <td>${vendor.name || '-'}</td>
-                                <td>${vendor.company || '-'}</td>
-                                <td>${vendor.email || '-'}</td>
-                                <td>${vendor.phone || '-'}</td>
-                                <td>${vendor.city ? `${vendor.city}, ${vendor.state}` : '-'}</td>
-                                <td>
-                                    <span class="status-badge ${vendor.is_active ? 'status-active' : 'status-inactive'}">
-                                        ${vendor.is_active ? 'Active' : 'Inactive'}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" onclick="editVendor(${vendor.id})">Edit</button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteVendor(${vendor.id})">Delete</button>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('vendorsTable').innerHTML = table;
-        }
-
-        function openVendorModal(vendorId = null) {
-            currentVendorId = vendorId;
-            const modal = document.getElementById('vendorModal');
-            const title = document.getElementById('vendorModalTitle');
-            
-            if (vendorId) {
-                title.textContent = 'Edit Vendor';
-                loadVendorData(vendorId);
-            } else {
-                title.textContent = 'Add Vendor';
-                document.getElementById('vendorForm').reset();
-            }
-            
-            modal.style.display = 'block';
-        }
-
-        function closeVendorModal() {
-            document.getElementById('vendorModal').style.display = 'none';
-            currentVendorId = null;
-        }
-
-        async function loadVendorData(vendorId) {
-            try {
-                const userId = getCurrentUserId();
-                const url = `${API_BASE}/vendors/${vendorId}/?user_id=${encodeURIComponent(userId)}`;
-                const response = await fetch(url);
-                const vendor = await response.json();
-                
-                document.getElementById('vendorName').value = vendor.name || '';
-                document.getElementById('vendorCompany').value = vendor.company || '';
-                document.getElementById('vendorEmail').value = vendor.email || '';
-                document.getElementById('vendorPhone').value = vendor.phone || '';
-                document.getElementById('vendorMobile').value = vendor.mobile || '';
-                document.getElementById('vendorFax').value = vendor.fax || '';
-                document.getElementById('vendorWebsite').value = vendor.website || '';
-                document.getElementById('vendorStreet').value = vendor.street || '';
-                document.getElementById('vendorCity').value = vendor.city || '';
-                document.getElementById('vendorState').value = vendor.state || '';
-                document.getElementById('vendorZip').value = vendor.zip_code || '';
-                document.getElementById('vendorSpecialties').value = vendor.specialties ? vendor.specialties.join(', ') : '';
-                document.getElementById('vendorNotes').value = vendor.notes || '';
-                document.getElementById('vendorActive').checked = vendor.is_active;
-            } catch (error) {
-                console.error('Error loading vendor data:', error);
-                alert('Error loading vendor data');
-            }
-        }
-
-        // Equipment management
-        async function loadEquipment() {
-            try {
-                const response = await fetch(`${API_BASE}/vendors/equipment`);
-                const data = await response.json();
-                
-                if (data.equipment && data.equipment.length > 0) {
-                    displayEquipment(data.equipment);
-                } else {
-                    document.getElementById('equipmentTable').innerHTML = `
-                        <div class="empty-state">
-                            <h3>No equipment found</h3>
-                            <p>Add your first piece of equipment to get started</p>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error loading equipment:', error);
-                document.getElementById('equipmentTable').innerHTML = `
-                    <div class="alert alert-error">Error loading equipment: ${error.message}</div>
-                `;
-            }
-        }
-
-        function displayEquipment(equipment) {
-            const table = `
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                            <th>Description</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${equipment.map(eq => `
-                            <tr>
-                                <td>${eq.name}</td>
-                                <td>${eq.category || '-'}</td>
-                                <td>${eq.location || '-'}</td>
-                                <td>
-                                    <span class="status-badge status-${eq.status}">
-                                        ${eq.status.charAt(0).toUpperCase() + eq.status.slice(1)}
-                                    </span>
-                                </td>
-                                <td>${eq.description ? eq.description.substring(0, 50) + '...' : '-'}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" onclick="editEquipment(${eq.id})">Edit</button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteEquipment(${eq.id})">Delete</button>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('equipmentTable').innerHTML = table;
-        }
-
-        function openEquipmentModal(equipmentId = null) {
-            currentEquipmentId = equipmentId;
-            const modal = document.getElementById('equipmentModal');
-            const title = document.getElementById('equipmentModalTitle');
-            
-            if (equipmentId) {
-                title.textContent = 'Edit Equipment';
-                loadEquipmentData(equipmentId);
-            } else {
-                title.textContent = 'Add Equipment';
-                document.getElementById('equipmentForm').reset();
-            }
-            
-            modal.style.display = 'block';
-        }
-
-        function closeEquipmentModal() {
-            document.getElementById('equipmentModal').style.display = 'none';
-            currentEquipmentId = null;
-        }
-
-        async function loadEquipmentData(equipmentId) {
-            try {
-                const response = await fetch(`${API_BASE}/vendors/equipment/${equipmentId}`);
-                const equipment = await response.json();
-                
-                document.getElementById('equipmentName').value = equipment.name || '';
-                document.getElementById('equipmentCategory').value = equipment.category || '';
-                document.getElementById('equipmentDescription').value = equipment.description || '';
-                document.getElementById('equipmentLocation').value = equipment.location || '';
-                document.getElementById('equipmentStatus').value = equipment.status || 'active';
-                document.getElementById('equipmentMaintenance').value = equipment.maintenance_notes || '';
-                document.getElementById('equipmentWarranty').value = equipment.warranty_info || '';
-            } catch (error) {
-                console.error('Error loading equipment data:', error);
-                alert('Error loading equipment data');
-            }
-        }
-
-        // Form submissions
-        document.getElementById('vendorForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = {
-                name: document.getElementById('vendorName').value,
-                company: document.getElementById('vendorCompany').value,
-                email: document.getElementById('vendorEmail').value,
-                phone: document.getElementById('vendorPhone').value,
-                mobile: document.getElementById('vendorMobile').value,
-                fax: document.getElementById('vendorFax').value,
-                website: document.getElementById('vendorWebsite').value,
-                street: document.getElementById('vendorStreet').value,
-                city: document.getElementById('vendorCity').value,
-                state: document.getElementById('vendorState').value,
-                zip_code: document.getElementById('vendorZip').value,
-                specialties: document.getElementById('vendorSpecialties').value.split(',').map(s => s.trim()).filter(s => s),
-                notes: document.getElementById('vendorNotes').value,
-                is_active: document.getElementById('vendorActive').checked
-            };
-
-            try {
-                const userId = getCurrentUserId();
-                const url = currentVendorId 
-                    ? `${API_BASE}/vendors/${currentVendorId}/?user_id=${encodeURIComponent(userId)}`
-                    : `${API_BASE}/vendors/?user_id=${encodeURIComponent(userId)}`;
-                
-                const method = currentVendorId ? 'PUT' : 'POST';
-                
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ...formData, user_id: userId })
-                });
-
-                if (response.ok) {
-                    closeVendorModal();
-                    loadVendors();
-                    showAlert('Vendor saved successfully!', 'success');
-                } else {
-                    const error = await response.json();
-                    showAlert(`Error saving vendor: ${error.detail}`, 'error');
-                }
-            } catch (error) {
-                console.error('Error saving vendor:', error);
-                showAlert('Error saving vendor', 'error');
-            }
-        });
-
-        document.getElementById('equipmentForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = {
-                name: document.getElementById('equipmentName').value,
-                category: document.getElementById('equipmentCategory').value,
-                description: document.getElementById('equipmentDescription').value,
-                location: document.getElementById('equipmentLocation').value,
-                status: document.getElementById('equipmentStatus').value,
-                maintenance_notes: document.getElementById('equipmentMaintenance').value,
-                warranty_info: document.getElementById('equipmentWarranty').value
-            };
-
-            try {
-                const url = currentEquipmentId 
-                    ? `${API_BASE}/vendors/equipment/${currentEquipmentId}`
-                    : `${API_BASE}/vendors/equipment`;
-                
-                const method = currentEquipmentId ? 'PUT' : 'POST';
-                
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    closeEquipmentModal();
-                    loadEquipment();
-                    showAlert('Equipment saved successfully!', 'success');
-                } else {
-                    const error = await response.json();
-                    showAlert(`Error saving equipment: ${error.detail}`, 'error');
-                }
-            } catch (error) {
-                console.error('Error saving equipment:', error);
-                showAlert('Error saving equipment', 'error');
-            }
-        });
-
-        // Utility functions
-        function showAlert(message, type) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.textContent = message;
-            
-            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.nav-tabs'));
-            
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 5000);
-        }
-
-        async function deleteVendor(vendorId) {
-            if (!confirm('Are you sure you want to delete this vendor?')) {
-                return;
-            }
-
-            try {
-                const userId = getCurrentUserId();
-                const response = await fetch(`${API_BASE}/vendors/${vendorId}/?user_id=${encodeURIComponent(userId)}`, {
-                    method: 'DELETE'
-                });
-
-                if (response.ok) {
-                    loadVendors();
-                    showAlert('Vendor deleted successfully!', 'success');
-                } else {
-                    showAlert('Error deleting vendor', 'error');
-                }
-            } catch (error) {
-                console.error('Error deleting vendor:', error);
-                showAlert('Error deleting vendor', 'error');
-            }
-        }
-
-        async function deleteEquipment(equipmentId) {
-            if (!confirm('Are you sure you want to delete this equipment?')) {
-                return;
-            }
-
-            try {
-                const equipmentResponse = await fetch(`${API_BASE}/vendors/equipment/${equipmentId}`);
-                const equipment = await equipmentResponse.json();
-                const userId = getCurrentUserId();
-                const url = `${API_BASE}/vendors/equipment/${equipmentId}/?user_id=${encodeURIComponent(userId)}`;
-                const method = 'DELETE';
-                const deleteResponse = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (deleteResponse.ok) {
-                    loadEquipment();
-                    showAlert('Equipment deleted successfully!', 'success');
-                } else {
-                    showAlert('Error deleting equipment', 'error');
-                }
-            } catch (error) {
-                console.error('Error deleting equipment:', error);
-                showAlert('Error deleting equipment', 'error');
-            }
-        }
-
-        function editVendor(vendorId) {
-            openVendorModal(vendorId);
-        }
-
-        function editEquipment(equipmentId) {
-            openEquipmentModal(equipmentId);
-        }
-
-        function searchVendors() {
-            const searchTerm = document.getElementById('vendorSearch').value;
-            // Implement search functionality
-            console.log('Searching vendors for:', searchTerm);
-        }
-
-        function searchEquipment() {
-            const searchTerm = document.getElementById('equipmentSearch').value;
-            // Implement search functionality
-            console.log('Searching equipment for:', searchTerm);
-        }
-
-        function loadRelationships() {
-            document.getElementById('relationshipsTable').innerHTML = `
-                <div class="empty-state">
-                    <h3>Vendor Relationships</h3>
-                    <p>Connect vendors with ingredients and equipment to track sourcing and availability.</p>
-                    <p>This feature is coming soon!</p>
-                </div>
-            `;
-        }
-
-        // Menu Parsing Functions
-        let parsedMenuItems = [];
-        let currentParsingResults = null;
-
-        async function loadMenuParsingTab() {
-            // Load vendors for the dropdown
-            await populateVendorDropdown();
-        }
-
-        async function populateVendorDropdown() {
-            try {
-                const userId = getCurrentUserId();
-                const dropdown = document.getElementById('defaultVendor');
-                
-                if (!userId) {
-                    dropdown.innerHTML = '<option value="">Please log in first...</option>';
-                    return;
-                }
-                
-                dropdown.innerHTML = '<option value="">Loading vendors...</option>';
-                
-                // Add timeout to prevent hanging
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3000);
-                
-                const url = `${API_BASE}/vendors/?user_id=${encodeURIComponent(userId)}`;
-                const response = await fetch(url, {
-                    signal: controller.signal,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`API Error: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                dropdown.innerHTML = '<option value="">Select a vendor...</option>';
-                
-                if (data.vendors && data.vendors.length > 0) {
-                    data.vendors.forEach(vendor => {
-                        const option = document.createElement('option');
-                        option.value = vendor.id;
-                        option.textContent = `${vendor.name}${vendor.company ? ` (${vendor.company})` : ''}`;
-                        dropdown.appendChild(option);
-                    });
-                } else {
-                    const option = document.createElement('option');
-                    option.value = "";
-                    option.textContent = "No vendors found - add one first";
-                    dropdown.appendChild(option);
-                }
-            } catch (error) {
-                // Use enhanced error logging utility
-                logError('Vendor Dropdown Loading', error, {
-                    endpoint: `${API_BASE}/vendors/`,
-                    action: 'populateVendorDropdown',
-                    fallback: 'offline mode'
-                });
-                
-                const dropdown = document.getElementById('defaultVendor');
-                dropdown.innerHTML = '<option value="">Offline mode - vendors unavailable</option>';
-            }
-        }
-
-        function useExampleMenu() {
-            const exampleMenu = `Appetizers & Small Plates
-- Crispy Calamari Rings - $12.99
-  Fresh squid rings, lightly breaded and fried until golden, served with spicy marinara sauce and lemon wedges
-- Bruschetta al Pomodoro - $8.50
-  Grilled Italian bread topped with fresh diced tomatoes, garlic, basil, and extra virgin olive oil
-- Buffalo Wings (8 pieces) - $11.75
-  Crispy chicken wings tossed in spicy buffalo sauce, served with celery sticks and blue cheese dressing
-- Spinach & Artichoke Dip - $9.25
-  Creamy blend of spinach, artichokes, and cheese, served hot with tortilla chips
-- Bacon-Wrapped Scallops (4 pieces) - $16.50
-  Fresh sea scallops wrapped in applewood smoked bacon, pan-seared to perfection
-
-Main Courses
-- Grilled Atlantic Salmon - $24.99
-  Fresh Atlantic salmon fillet grilled to perfection, served with seasonal roasted vegetables and lemon butter sauce
-- Chicken Parmesan - $18.50
-  Breaded chicken breast topped with marinara sauce and melted mozzarella cheese, served over spaghetti
-- Ribeye Steak (12 oz) - $32.00
-  USDA Prime ribeye steak grilled to order, served with garlic mashed potatoes and asparagus
-- Vegetarian Pasta Primavera - $16.75
-  Fresh seasonal vegetables sautéed with olive oil and garlic, tossed with penne pasta and parmesan cheese
-- Fish & Chips - $17.25
-  Beer-battered cod fillet served with hand-cut fries, coleslaw, and tartar sauce
-
-Desserts
-- Tiramisu - $7.50
-  Classic Italian dessert with ladyfingers, mascarpone, coffee, and cocoa
-- Chocolate Lava Cake - $8.25
-  Warm chocolate cake with molten center, served with vanilla ice cream
-- Crème Brûlée - $6.75
-  Rich vanilla custard topped with caramelized sugar`;
-
-            document.getElementById('menuTextInput').value = exampleMenu;
-        }
-
-        function parseMenuText() {
-            const textInput = document.getElementById('menuTextInput');
-            const menuText = textInput.value.trim();
-            
-            if (!menuText) {
-                showAlert('Please enter some menu text to parse', 'error');
-                return;
-            }
-
-            try {
-                parsedMenuItems = [];
-                const lines = menuText.split('\n');
-                let currentCategory = null;
-                let currentItem = null;
-                let itemIdCounter = 1;
-
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    
-                    if (!line) continue;
-
-                    // Detect category headers (lines without prices or dashes)
-                    if (!line.includes('$') && !line.startsWith('-') && !line.startsWith('•') && 
-                        line.length > 0 && line.length < 50 && !line.includes('.')) {
-                        currentCategory = line;
-                        continue;
-                    }
-
-                    // Detect menu items (lines with prices)
-                    const priceMatch = line.match(/\$\s*(\d+\.?\d*)/);
-                    const itemMatch = line.match(/^[\-\•]?\s*(.+?)\s*[\-\–\—]\s*\$\s*(\d+\.?\d*)/);
-                    
-                    if (itemMatch) {
-                        // Save previous item if exists
-                        if (currentItem) {
-                            parsedMenuItems.push(currentItem);
-                        }
-
-                        // Create new item
-                        const itemName = itemMatch[1].trim();
-                        const price = parseFloat(itemMatch[2]);
-                        
-                        currentItem = {
-                            id: itemIdCounter++,
-                            name: itemName,
-                            price: price,
-                            category: currentCategory || 'Uncategorized',
-                            description: '',
-                            confidence: 'high',
-                            selected: true,
-                            vendor_id: document.getElementById('defaultVendor').value || null,
-                            ingredients: extractIngredients(itemName)
-                        };
-                    } else if (currentItem && line && !line.includes('$')) {
-                        // This is likely a description line
-                        const cleanDescription = line.replace(/^[\-\•]\s*/, '').trim();
-                        if (cleanDescription) {
-                            currentItem.description += (currentItem.description ? ' ' : '') + cleanDescription;
-                            // Extract more ingredients from description
-                            currentItem.ingredients = [...new Set([
-                                ...currentItem.ingredients,
-                                ...extractIngredients(cleanDescription)
-                            ])];
-                        }
-                    }
-                }
-
-                // Don't forget the last item
-                if (currentItem) {
-                    parsedMenuItems.push(currentItem);
-                }
-
-                displayParsedItems();
-                showParsingResults();
-                
-            } catch (error) {
-                console.error('Error parsing menu:', error);
-                showAlert('Error parsing menu text. Please check the format and try again.', 'error');
-            }
-        }
-
-        function extractIngredients(text) {
-            const commonIngredients = [
-                'chicken', 'beef', 'pork', 'salmon', 'cod', 'tuna', 'shrimp', 'scallops', 'lobster', 'crab',
-                'tomato', 'tomatoes', 'onion', 'onions', 'garlic', 'basil', 'spinach', 'lettuce', 'carrots',
-                'potatoes', 'pasta', 'rice', 'cheese', 'mozzarella', 'parmesan', 'cheddar', 'bread',
-                'olive oil', 'butter', 'cream', 'milk', 'eggs', 'flour', 'sugar', 'salt', 'pepper',
-                'mushrooms', 'peppers', 'asparagus', 'broccoli', 'artichoke', 'artichokes', 'calamari',
-                'bacon', 'prosciutto', 'wine', 'lemon', 'lime', 'herbs', 'cilantro', 'parsley'
-            ];
-
-            const foundIngredients = [];
-            const lowerText = text.toLowerCase();
-
-            commonIngredients.forEach(ingredient => {
-                if (lowerText.includes(ingredient)) {
-                    foundIngredients.push(ingredient);
-                }
-            });
-
-            return foundIngredients;
-        }
-
-        function displayParsedItems() {
-            const container = document.getElementById('parsedItemsList');
-            
-            if (parsedMenuItems.length === 0) {
-                container.innerHTML = '<div class="empty-state"><h3>No items found</h3><p>Try adjusting your menu format or use the example menu.</p></div>';
-                return;
-            }
-
-            let html = '';
-            parsedMenuItems.forEach((item, index) => {
-                html += `
-                    <div class="parsed-item ${item.selected ? 'selected' : ''}" data-item-id="${item.id}">
-                        <div class="confidence-indicator confidence-${item.confidence}" 
-                             title="Parsing confidence: ${item.confidence}"></div>
-                        
-                        <div class="item-header">
-                            <div style="display: flex; align-items: flex-start;">
-                                <input type="checkbox" class="item-checkbox" 
-                                       ${item.selected ? 'checked' : ''} 
-                                       onchange="toggleItemSelection(${item.id})">
-                                <div style="flex-grow: 1;">
-                                    <div class="item-category">${item.category}</div>
-                                    <div class="item-name" contenteditable="true" 
-                                         onblur="updateItemName(${item.id}, this.textContent)">${item.name}</div>
-                                </div>
-                            </div>
-                            <div class="item-price">$${item.price.toFixed(2)}</div>
-                        </div>
-
-                        ${item.description ? `
-                            <div class="item-description" contenteditable="true"
-                                 onblur="updateItemDescription(${item.id}, this.textContent)">${item.description}</div>
-                        ` : ''}
-
-                        ${item.ingredients && item.ingredients.length > 0 ? `
-                            <div class="ingredient-suggestions">
-                                <strong>Detected Ingredients:</strong>
-                                ${item.ingredients.map(ing => `<span class="ingredient-tag">${ing}</span>`).join('')}
-                            </div>
-                        ` : ''}
-
-                        <div class="item-controls">
-                            <select class="vendor-select" onchange="updateItemVendor(${item.id}, this.value)">
-                                <option value="">Select vendor...</option>
-                                ${getVendorOptions(item.vendor_id)}
-                            </select>
-                            <button class="btn btn-sm btn-secondary edit-item-btn" onclick="editItemPrice(${item.id})">
-                                Edit Price
-                            </button>
-                            <button class="btn btn-sm btn-danger edit-item-btn" onclick="removeItem(${item.id})">
-                                Remove
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-        }
-
-        function getVendorOptions(selectedVendorId) {
-            const dropdown = document.getElementById('defaultVendor');
-            let options = '';
-            
-            for (let i = 1; i < dropdown.options.length; i++) {
-                const option = dropdown.options[i];
-                const selected = option.value == selectedVendorId ? 'selected' : '';
-                options += `<option value="${option.value}" ${selected}>${option.textContent}</option>`;
-            }
-            
-            return options;
-        }
-
-        function showParsingResults() {
-            document.getElementById('parsingProgress').style.display = 'block';
-            document.getElementById('parsedItemsContainer').style.display = 'block';
-            document.getElementById('parsingSummary').style.display = 'block';
-            
-            document.getElementById('itemCount').textContent = parsedMenuItems.length;
-            
-            // Generate summary statistics
-            const stats = {
-                totalItems: parsedMenuItems.length,
-                selectedItems: parsedMenuItems.filter(item => item.selected).length,
-                categories: [...new Set(parsedMenuItems.map(item => item.category))].length,
-                avgPrice: parsedMenuItems.length > 0 ? 
-                    (parsedMenuItems.reduce((sum, item) => sum + item.price, 0) / parsedMenuItems.length).toFixed(2) : 0,
-                totalIngredients: [...new Set(parsedMenuItems.flatMap(item => item.ingredients))].length,
-                assignedToVendor: parsedMenuItems.filter(item => item.vendor_id).length
-            };
-
-            document.getElementById('summaryContent').innerHTML = `
-                <div class="parsing-stats">
-                    <div class="stat-card">
-                        <div class="stat-number">${stats.totalItems}</div>
-                        <div class="stat-label">Total Items</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${stats.selectedItems}</div>
-                        <div class="stat-label">Selected</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${stats.categories}</div>
-                        <div class="stat-label">Categories</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">$${stats.avgPrice}</div>
-                        <div class="stat-label">Avg Price</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${stats.totalIngredients}</div>
-                        <div class="stat-label">Ingredients</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${stats.assignedToVendor}</div>
-                        <div class="stat-label">Assigned</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function toggleItemSelection(itemId) {
-            const item = parsedMenuItems.find(item => item.id === itemId);
-            if (item) {
-                item.selected = !item.selected;
-                const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
-                itemElement.classList.toggle('selected', item.selected);
-                showParsingResults(); // Update stats
-            }
-        }
-
-        function updateItemName(itemId, newName) {
-            const item = parsedMenuItems.find(item => item.id === itemId);
-            if (item) {
-                item.name = newName.trim();
-            }
-        }
-
-        function updateItemDescription(itemId, newDescription) {
-            const item = parsedMenuItems.find(item => item.id === itemId);
-            if (item) {
-                item.description = newDescription.trim();
-                // Re-extract ingredients from new description
-                item.ingredients = [...new Set([
-                    ...item.ingredients,
-                    ...extractIngredients(newDescription)
-                ])];
-            }
-        }
-
-        function updateItemVendor(itemId, vendorId) {
-            const item = parsedMenuItems.find(item => item.id === itemId);
-            if (item) {
-                item.vendor_id = vendorId || null;
-                showParsingResults(); // Update stats
-            }
-        }
-
-        function editItemPrice(itemId) {
-            const item = parsedMenuItems.find(item => item.id === itemId);
-            if (item) {
-                const newPrice = prompt('Enter new price:', item.price.toFixed(2));
-                if (newPrice !== null && !isNaN(parseFloat(newPrice))) {
-                    item.price = parseFloat(newPrice);
-                    displayParsedItems();
-                    showParsingResults();
-                }
-            }
-        }
-
-        function removeItem(itemId) {
-            if (confirm('Are you sure you want to remove this item?')) {
-                parsedMenuItems = parsedMenuItems.filter(item => item.id !== itemId);
-                displayParsedItems();
-                showParsingResults();
-            }
-        }
-
-        function selectAllItems() {
-            parsedMenuItems.forEach(item => item.selected = true);
-            displayParsedItems();
-            showParsingResults();
-        }
-
-        function deselectAllItems() {
-            parsedMenuItems.forEach(item => item.selected = false);
-            displayParsedItems();
-            showParsingResults();
-        }
-
-        function clearMenuParser() {
-            if (confirm('This will clear all parsed items and reset the parser. Continue?')) {
-                document.getElementById('menuTextInput').value = '';
-                parsedMenuItems = [];
-                document.getElementById('parsingProgress').style.display = 'none';
-                document.getElementById('parsedItemsContainer').style.display = 'none';
-                document.getElementById('parsingSummary').style.display = 'none';
-            }
-        }
-
-        async function saveSelectedItems() {
-            const selectedItems = parsedMenuItems.filter(item => item.selected);
-            
-            if (selectedItems.length === 0) {
-                showAlert('Please select at least one item to save', 'error');
-                return;
-            }
-
-            try {
-                const userId = getCurrentUserId();
-                const results = [];
-
-                // Check if items without vendor assignment should be allowed in offline mode
-                const itemsWithoutVendor = selectedItems.filter(item => !item.vendor_id);
-                if (itemsWithoutVendor.length > 0) {
-                    const proceed = confirm(
-                        `${itemsWithoutVendor.length} items don't have vendor assignments. ` +
-                        `In offline mode, these will be saved locally. Continue?`
-                    );
-                    if (!proceed) return;
-                }
-
-                for (const item of selectedItems) {
-                    const itemData = {
-                        id: item.id,
-                        name: item.name,
-                        price: item.price,
-                        description: item.description,
-                        category: item.category,
-                        vendor_id: item.vendor_id || 'unassigned',
-                        ingredients: item.ingredients,
-                        user_id: userId,
-                        saved_date: new Date().toISOString(),
-                        saved_locally: true
-                    };
-
-                    // Try to save to backend first, fall back to local storage
+                if (currentUser && sessionActive === 'true') {
                     try {
-                        if (item.vendor_id) {
-                            // Only attempt API save if vendor is assigned
-                            const controller = new AbortController();
-                            const timeoutId = setTimeout(() => controller.abort(), 3000);
-                            
-                            const response = await fetch(`${API_BASE}/vendor-items/`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(itemData),
-                                signal: controller.signal
-                            });
-                            
-                            clearTimeout(timeoutId);
-                            
-                            if (response.ok) {
-                                itemData.saved_to_backend = true;
-                            } else {
-                                throw new Error('Backend save failed');
-                            }
-                        }
-                    } catch (apiError) {
-                        console.warn('Backend save failed, saving locally:', apiError);
-                        itemData.saved_to_backend = false;
-                    }
-
-                    // Always save to local storage as backup
-                    const localItems = JSON.parse(localStorage.getItem('parsed_menu_items') || '[]');
-                    localItems.push(itemData);
-                    localStorage.setItem('parsed_menu_items', JSON.stringify(localItems));
-                    
-                    results.push(itemData);
-                }
-
-                const backendSaves = results.filter(item => item.saved_to_backend).length;
-                const localSaves = results.length - backendSaves;
-
-                let message = `Successfully processed ${results.length} items! `;
-                if (backendSaves > 0) message += `${backendSaves} saved to backend. `;
-                if (localSaves > 0) message += `${localSaves} saved locally.`;
-
-                showAlert(message, 'success');
-                
-                // Remove saved items from the list
-                parsedMenuItems = parsedMenuItems.filter(item => !item.selected);
-                displayParsedItems();
-                showParsingResults();
-
-            } catch (error) {
-                console.error('Error saving items:', error);
-                showAlert('Error processing items. Items may have been saved locally as backup.', 'error');
-            }
-        }
-
-        function exportParsedItems() {
-            if (parsedMenuItems.length === 0) {
-                showAlert('No items to export', 'error');
-                return;
-            }
-
-            const dataToExport = {
-                exportDate: new Date().toISOString(),
-                totalItems: parsedMenuItems.length,
-                items: parsedMenuItems.map(item => ({
-                    name: item.name,
-                    price: item.price,
-                    description: item.description,
-                    category: item.category,
-                    ingredients: item.ingredients,
-                    vendor_id: item.vendor_id,
-                    selected: item.selected
-                }))
-            };
-
-            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `parsed-menu-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            showAlert('Menu items exported successfully!', 'success');
-        }
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            const vendorModal = document.getElementById('vendorModal');
-            const equipmentModal = document.getElementById('equipmentModal');
-            
-            if (event.target === vendorModal) {
-                closeVendorModal();
-            }
-            if (event.target === equipmentModal) {
-                closeEquipmentModal();
-            }
-        }
-
-        // Initialize the page with non-blocking loading
-        document.addEventListener('DOMContentLoaded', function() {
-            // Immediately show the page content and load data in background
-            initializePage();
-        });
-
-        // Show helpful console message immediately
-        console.log('%c🚀 Iterum R&D Vendor Management Loading...', 'color: #4caf50; font-size: 16px; font-weight: bold;');
-        console.log('%c💡 If loading gets stuck, run: bypassLoading()', 'color: #ff9800; font-size: 14px;');
-
-        // Non-blocking page initialization
-        async function initializePage() {
-            try {
-                // First, make sure the page is visible immediately
-                const vendorTableElement = document.getElementById('vendorsTable');
-                if (vendorTableElement) {
-                    vendorTableElement.innerHTML = '<div class="loading">🔄 Connecting to server...</div>';
-                }
-
-                // Emergency fallback timer - if still loading after 10 seconds, auto-bypass
-                const emergencyTimer = setTimeout(() => {
-                    const vendorTableElement = document.getElementById('vendorsTable');
-                    if (vendorTableElement && vendorTableElement.innerHTML.includes('Connecting to server')) {
-                        console.warn('⚠️ Auto-bypassing loading after 10 seconds');
-                        window.bypassLoading();
-                    }
-                }, 10000);
-
-                // Add small delay to ensure UI is rendered
-                setTimeout(async () => {
-                    try {
-                        // Use Promise.race to guarantee loadVendors never hangs beyond 5 seconds
-                        await Promise.race([
-                            loadVendors(),
-                            new Promise((_, reject) => 
-                                setTimeout(() => reject(new Error('Maximum load timeout exceeded')), 5000)
-                            )
-                        ]);
+                        const user = JSON.parse(currentUser);
+                        console.log('✅ User session found:', user.name);
                         
-                        // Clear emergency timer since loading completed
-                        clearTimeout(emergencyTimer);
+                        // Update the header display with current user
+                        updateHeaderUserDisplay(user);
+                        
+                        // Ensure unified auth system has the current user
+                        window.unifiedAuth.currentUser = user;
                         
                     } catch (error) {
-                        console.warn('🔌 Initial vendor loading failed, using offline mode:', error.message);
-                        
-                        // Clear emergency timer since we're handling the error
-                        clearTimeout(emergencyTimer);
-                        
-                        // Ensure we always show something, never stay in loading state
-                        const vendorTableElement = document.getElementById('vendorsTable');
-                        if (vendorTableElement && vendorTableElement.innerHTML.includes('Connecting to server')) {
-                            vendorTableElement.innerHTML = `
-                                <div class="info-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-color: #2196f3;">
-                                    <h3 style="color: #1565c0;">🚀 Welcome to Vendor Management!</h3>
-                                    <p style="color: #0d47a1; margin-bottom: 15px;">
-                                        The system is ready to use. Backend connection will be established automatically when available.
-                                    </p>
-                                    <div style="margin-top: 15px;">
-                                        <button class="btn btn-primary" onclick="openVendorModal()" style="margin-right: 10px;">➕ Add Your First Vendor</button>
-                                        <button class="btn btn-secondary" onclick="showTab('menu-parsing')">📋 Try Menu Parsing</button>
-                                    </div>
-                                </div>
-                            `;
-                        }
+                        console.warn('⚠️ Error parsing current user:', error);
                     }
-                }, 100); // Short delay to ensure UI renders first
-
-            } catch (error) {
-                console.error('🚨 Page initialization error:', error);
-                console.log('🚑 LOADING STUCK? Run this command: bypassLoading()');
-                console.log('💡 Or try: fixLoading()');
-                
-                // Clear emergency timer since we're handling the error
-                if (typeof emergencyTimer !== 'undefined') {
-                    clearTimeout(emergencyTimer);
+                } else {
+                    console.log('⚠️ No active user session found');
                 }
-                
-                // Emergency fallback - always show working UI
-                const vendorTableElement = document.getElementById('vendorsTable');
-                if (vendorTableElement) {
-                    vendorTableElement.innerHTML = `
-                        <div class="empty-state">
-                            <h3>✅ Vendor Management Ready</h3>
-                            <p>Your vendor management system is ready to use</p>
-                            <button class="btn btn-primary" onclick="openVendorModal()" style="margin-top: 15px;">Add Your First Vendor</button>
-                        </div>
-                    `;
+            } else {
+                console.warn('⚠️ Unified auth system not available');
+            }
+            
+            // Initialize header user synchronization
+            if (window.HeaderUserSync) {
+                try {
+                    const headerSync = new window.HeaderUserSync();
+                    headerSync.initialize();
+                    console.log('✅ Header user synchronization initialized');
+                } catch (error) {
+                    console.warn('⚠️ Header user sync initialization failed:', error);
                 }
             }
+            
+            // User system now initializes automatically
+            console.log('🔍 User system auto-initialization enabled');
+            
+            // Vendor manager will initialize automatically
+            console.log('🔍 Vendor manager auto-initialization enabled');
+            
+            // Initialize project management system
+            if (window.projectManager) {
+                try {
+                    // Ensure project manager is ready
+                    if (!window.projectManager.initialized) {
+                        window.projectManager.init();
+                    }
+                    
+                    // Update project UI to reflect current selection
+                    window.projectManager.updateProjectUI();
+                    
+                    // Synchronize project selection across the page
+                    if (window.syncProjectSelection) {
+                        window.syncProjectSelection();
+                    }
+                    
+                    console.log('✅ Project management system initialized');
+                } catch (error) {
+                    console.warn('⚠️ Project management system initialization failed:', error);
+                }
+            } else {
+                console.warn('⚠️ Project management system not available');
+            }
+            
+            console.log('✅ Vendor Management Page initialized');
+        });
+
+        // Function to update header user display
+        function updateHeaderUserDisplay(user) {
+            if (!user) return;
+            
+            // Update user avatar initial
+            const avatarInitial = document.getElementById('user-avatar-initial');
+            if (avatarInitial) {
+                avatarInitial.textContent = user.name.charAt(0).toUpperCase();
+            }
+            
+            // Update current user name
+            const currentUserName = document.getElementById('current-user');
+            if (currentUserName) {
+                currentUserName.textContent = user.name;
+            }
+            
+            // Update dropdown user name
+            const dropdownUserName = document.getElementById('dropdown-user-name');
+            if (dropdownUserName) {
+                dropdownUserName.textContent = user.name;
+            }
+            
+            // Update dropdown user role
+            const dropdownUserRole = document.getElementById('dropdown-user-role');
+            if (dropdownUserRole) {
+                dropdownUserRole.textContent = user.role || 'Chef';
+            }
+            
+            console.log('✅ Header user display updated for:', user.name);
         }
+
+        // User dropdown toggle
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        // Mobile navigation toggle
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobile-nav');
+            if (mobileNav) {
+                mobileNav.classList.toggle('show');
+            }
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('user-dropdown');
+            const userTab = document.querySelector('.header-user-tab');
+            
+            if (dropdown && !userTab.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Listen for user authentication events to keep header synchronized
+        document.addEventListener('userLoggedIn', function(event) {
+            console.log('🔐 User logged in event received on vendor page');
+            if (event.detail && event.detail.user) {
+                updateHeaderUserDisplay(event.detail.user);
+            }
+        });
+
+        document.addEventListener('userSwitched', function(event) {
+            console.log('🔄 User switched event received on vendor page');
+            if (event.detail && event.detail.user) {
+                updateHeaderUserDisplay(event.detail.user);
+            }
+        });
+
+        document.addEventListener('userLoggedOut', function(event) {
+            console.log('🚪 User logged out event received on vendor page');
+            // Reset header to guest state
+            updateHeaderUserDisplay({
+                name: 'Guest User',
+                role: 'Guest'
+            });
+        });
+
+        document.addEventListener('iterumUserDataLoaded', function(event) {
+            console.log('📥 User data loaded event received on vendor page');
+            if (event.detail && event.detail.user) {
+                updateHeaderUserDisplay(event.detail.user);
+            }
+        });
     </script>
-
-    <!-- Plant Sketches -->
-    <!-- Pea Plant (Original) -->
-    <svg class="plant-sketch top-right plant-float" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <ellipse cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
-        <ellipse cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-        <ellipse cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-        <ellipse cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-        <path d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
-        <path d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
-    </svg>
-
-    <!-- Herb Plant (Basil/Rosemary) -->
-    <svg class="plant-sketch top-left plant-herb" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 140 60 100" stroke="#8bc34a" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q40 90 35 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q80 90 85 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q50 80 45 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q70 80 75 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="35" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
-        <ellipse cx="85" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
-        <ellipse cx="45" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
-        <ellipse cx="75" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
-    </svg>
-
-    <!-- Vegetable Plant (Carrot/Tomato) -->
-    <svg class="plant-sketch bottom-left plant-vegetable" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 140 60 120" stroke="#ff9800" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M60 120 Q40 110 30 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 120 Q80 110 90 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 120 Q50 100 45 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 120 Q70 100 75 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="30" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
-        <ellipse cx="90" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
-        <ellipse cx="45" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
-        <ellipse cx="75" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
-        <circle cx="60" cy="120" r="8" fill="#ff5722" stroke="#e64a19" stroke-width="1"/>
-    </svg>
-
-    <!-- Flower Plant (Edible Flowers) -->
-    <svg class="plant-sketch center-right plant-flower" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 140 60 100" stroke="#9c27b0" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q40 90 35 70" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q80 90 85 70" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q50 80 45 60" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q70 80 75 60" stroke="#9c27b0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <circle cx="35" cy="70" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
-        <circle cx="85" cy="70" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
-        <circle cx="45" cy="60" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
-        <circle cx="75" cy="60" r="4" fill="#e1bee7" stroke="#9c27b0" stroke-width="1"/>
-        <circle cx="60" cy="100" r="6" fill="#f3e5f5" stroke="#9c27b0" stroke-width="1"/>
-    </svg>
-
-    <!-- Small Herb Sprig -->
-    <svg class="plant-sketch center-left small plant-herb" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 140 60 100" stroke="#689f38" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q45 90 40 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q75 90 80 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="40" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
-        <ellipse cx="80" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
-    </svg>
-
-    <!-- Tiny Microgreens -->
-    <svg class="plant-sketch tiny plant-vegetable" viewBox="0 0 120 180" fill="none" style="top: 80%; left: 10%;">
-        <path d="M60 160 Q60 150 60 140" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 140 Q55 135 50 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
-        <path d="M60 140 Q65 135 70 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
-        <ellipse cx="50" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
-        <ellipse cx="70" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
-    </svg>
-
 </body>
 </html> 

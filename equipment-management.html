@@ -7,367 +7,180 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/x-icon" href="iterum.ico">
+    <!-- Tailwind CSS - Built from source -->
+    <link rel="stylesheet" href="assets/css/tailwind-output.css">
+    <link rel="stylesheet" href="assets/css/iterum-design-system.css">
+    <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
-    <style>
-        body {
-            background: repeating-linear-gradient(
-                to bottom,
-                #f6fbe7 0px,
-                #f6fbe7 38px,
-                #eafcd7 39px,
-                #f6fbe7 40px
-            );
-            min-height: 100vh;
-            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-            padding-left: 0;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 56px;
-            width: 2px;
-            height: 100vh;
-            background: #e57373;
-            z-index: 0;
-            pointer-events: none;
-        }
-        .notebook-card {
-            background: #fffbe7;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 22px 22px 18px 18px;
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.09), 0 1.5px 0 #e2d8b8;
-            margin-bottom: 2.5rem;
-            position: relative;
-            padding-top: 2.5rem;
-            transition: box-shadow 0.2s, transform 0.2s;
-        }
-        .notebook-card:hover {
-            box-shadow: 0 12px 36px 0 rgba(0,0,0,0.13), 0 2px 0 #e2d8b8;
-            transform: translateY(-2px) scale(1.01);
-        }
-        .sticky-btn {
-            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
-            color: #795548;
-            border: 1.5px solid #ffe082;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
-            font-weight: 600;
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-        .sticky-btn:hover {
-            transform: translateY(-2px) scale(1.04) rotate(-2deg);
-            box-shadow: 0 6px 18px 0 rgba(255, 235, 59, 0.25);
-        }
-        .notebook-input {
-            border-radius: 8px;
-            border: 1.5px solid #e2d8b8;
-            background: #fffbe7;
-            padding: 0.25rem 0.5rem;
-        }
-        .equipment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-        .equipment-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-left: 4px solid #e5e7eb;
-            transition: all 0.3s ease;
-        }
-        .equipment-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-        .status-active { border-left-color: #10b981; }
-        .status-maintenance { border-left-color: #f59e0b; }
-        .status-repair { border-left-color: #ef4444; }
-        .status-retired { border-left-color: #6b7280; }
-        
-        .maintenance-warning {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 1px solid #f59e0b;
-        }
-        .repair-urgent {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            border: 1px solid #ef4444;
-        }
-        .maintenance-overdue {
-            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
-            border: 1px solid #dc2626;
-        }
-
-        /* Enhanced Header Animations */
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Header Logo Hover Glow */
-        header .relative:hover .absolute {
-            animation: pulse 2s infinite;
-        }
-
-        /* Navigation Active State - Current Page Highlighting */
-        .nav-active {
-            background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
-            color: #15803d !important;
-            font-weight: 600 !important;
-            border: 1px solid #86efac !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-active::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-active:hover::before {
-            left: 100%;
-        }
-        /* Modern Loading Screen Animations */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-        #loading-overlay.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-        /* Responsive adjustments */
-        @media (max-width: 480px) {
-            #loading-overlay div[style*="width:80px"] {
-                width: 60px !important;
-                height: 60px !important;
-            }
-            #loading-overlay div[style*="font-size:1.1rem"] {
-                font-size: 1rem !important;
-            }
-            #loading-overlay div[style*="font-size:0.9rem"] {
-                font-size: 0.8rem !important;
-            }
-        }
-    </style>
 </head>
-<body>
-    <!-- Enhanced Uniform Header -->
-    <header class="bg-gradient-to-r from-white to-green-50 shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <!-- Logo and Brand -->
-        <div class="flex items-center gap-3">
-          <div class="relative">
-            <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10 transition-transform hover:scale-110">
-            <div class="absolute -inset-1 bg-green-200 rounded-full opacity-0 hover:opacity-20 transition-opacity"></div>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Uniform Centered Header -->
+    <header class="iterum-header">
+      <div class="header-container">
+        <!-- Logo Section -->
+        <a href="index.html" class="header-logo">
+          <div class="header-logo-icon">
+            <span>🍃</span>
           </div>
-          <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
-            Iterum R&D Chef Notebook
-          </span>
-        </div>
-        
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex gap-1 text-gray-700 font-medium">
-          <a href="index.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏠 Dashboard</span>
+          <div class="header-logo-text">
+            <div class="header-logo-title">Iterum R&D</div>
+            <div class="header-logo-subtitle">Chef Notebook</div>
+          </div>
+        </a>
+
+        <!-- Center Navigation -->
+        <nav class="header-navigation">
+          <a href="index.html" class="header-nav-item" data-page="index">
+            <span class="nav-icon">🏠</span>
+            <span>Dashboard</span>
           </a>
-          <a href="recipe-library.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">📚 Recipe Library</span>
+          <a href="recipe-library.html" class="header-nav-item" data-page="recipe-library">
+            <span class="nav-icon">📚</span>
+            <span>Library</span>
           </a>
-          <a href="recipe-developer.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🧪 Recipe Developer</span>
+          <a href="recipe-developer.html" class="header-nav-item" data-page="recipe-developer">
+            <span class="nav-icon">🧪</span>
+            <span>Developer</span>
           </a>
-          <a href="recipe-upload.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">⚡ Quick Upload</span>
+          <a href="recipe-upload.html" class="header-nav-item" data-page="recipe-upload">
+            <span class="nav-icon">⚡</span>
+            <span>Upload</span>
           </a>
-          <a href="menu-builder.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🍽️ Menu Builder</span>
+          <a href="menu-builder.html" class="header-nav-item" data-page="menu-builder">
+            <span class="nav-icon">🍽️</span>
+            <span>Menu</span>
           </a>
-          <a href="ingredients.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🥬 Ingredients</span>
+          <a href="ingredients.html" class="header-nav-item" data-page="ingredients">
+            <span class="nav-icon">🥬</span>
+            <span>Ingredients</span>
           </a>
-          <a href="equipment-management.html" class="nav-active hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🔧 Equipment</span>
+          <a href="equipment-management.html" class="header-nav-item active" data-page="equipment-management">
+            <span class="nav-icon">🔧</span>
+            <span>Equipment</span>
           </a>
-          <a href="vendor-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏪 Vendors</span>
+          <a href="vendor-management.html" class="header-nav-item" data-page="vendor-management">
+            <span class="nav-icon">🏪</span>
+            <span>Vendors</span>
           </a>
         </nav>
-        
-        <!-- User Info and Actions -->
-        <div class="flex items-center gap-3">
-          <span id="current-user" class="text-gray-600 text-sm font-medium bg-white px-3 py-1 rounded-full border"></span>
-          <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hidden">
-            Login
-          </button>
-          <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
-            Logout
-          </button>
-          <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors shadow-sm">
-            Switch User
-          </button>
-          <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors">
-            &#9776;
+
+        <!-- Right Side - User Section -->
+        <div class="header-user-section">
+          <!-- Project Selector -->
+          <select id="header-project-selector" class="header-project-selector">
+            <option value="">Select Project...</option>
+          </select>
+
+          <!-- User Info Tab -->
+          <div class="header-user-tab" onclick="toggleUserDropdown()">
+            <div class="header-user-avatar" id="user-avatar">
+              <span id="user-avatar-initial">👤</span>
+            </div>
+            <div class="header-user-info">
+              <div class="header-user-name" id="current-user">Guest User</div>
+              <div class="header-user-role">Chef</div>
+            </div>
+            <svg class="header-user-dropdown-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+
+          <!-- User Dropdown Menu -->
+          <div class="header-user-dropdown" id="user-dropdown">
+            <div class="header-user-dropdown-header">
+              <div class="header-user-dropdown-title" id="dropdown-user-name">Guest User</div>
+              <div class="header-user-dropdown-subtitle" id="dropdown-user-role">Chef</div>
+            </div>
+            
+            <div class="header-user-dropdown-menu">
+              <div class="header-user-dropdown-item" onclick="userSystem.showUserModal()">
+                <span>👤</span>
+                <span>Edit Profile</span>
+              </div>
+              <div class="header-user-dropdown-item" onclick="userSystem.quickSwitch()">
+                <span>🔄</span>
+                <span>Switch User</span>
+              </div>
+              <div class="header-user-dropdown-item" onclick="userSystem.showUserModal('create')">
+                <span>➕</span>
+                <span>Create New User</span>
+              </div>
+            </div>
+            
+            <div class="header-user-dropdown-divider"></div>
+            
+            <div class="header-user-dropdown-menu">
+              <div class="header-user-dropdown-item" onclick="userSystem.showSettings()">
+                <span>⚙️</span>
+                <span>Settings</span>
+              </div>
+              <div class="header-user-dropdown-item danger" onclick="userSystem.logout()">
+                <span>🚪</span>
+                <span>Sign Out</span>
+              </div>
+            </div>
+            
+            <div class="header-user-dropdown-footer">
+              <div class="header-user-dropdown-footer-text">Iterum R&D v1.0</div>
+            </div>
+          </div>
+
+          <!-- Mobile Navigation Toggle -->
+          <button class="header-mobile-toggle" onclick="toggleMobileNav()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
           </button>
         </div>
       </div>
-      
+
       <!-- Mobile Navigation -->
-      <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-1 px-4 pb-4">
-        <a href="index.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏠 Dashboard</span>
+      <nav id="mobile-nav" class="header-mobile-nav">
+        <!-- Project Selector for Mobile -->
+        <div style="margin-bottom: 1rem;">
+          <select id="mobile-project-selector" class="header-project-selector" style="width: 100%;">
+            <option value="">Select Project...</option>
+          </select>
+        </div>
+
+        <!-- Mobile Navigation Items -->
+        <a href="index.html" class="header-mobile-nav-item" data-page="index">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard</span>
         </a>
-        <a href="recipe-library.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">📚 Recipe Library</span>
+        <a href="recipe-library.html" class="header-mobile-nav-item" data-page="recipe-library">
+          <span class="nav-icon">📚</span>
+          <span>Library</span>
         </a>
-        <a href="recipe-developer.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🧪 Recipe Developer</span>
+        <a href="recipe-developer.html" class="header-mobile-nav-item" data-page="recipe-developer">
+          <span class="nav-icon">🧪</span>
+          <span>Developer</span>
         </a>
-        <a href="recipe-upload.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">⚡ Quick Upload</span>
+        <a href="recipe-upload.html" class="header-mobile-nav-item" data-page="recipe-upload">
+          <span class="nav-icon">⚡</span>
+          <span>Upload</span>
         </a>
-        <a href="menu-builder.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🍽️ Menu Builder</span>
+        <a href="menu-builder.html" class="header-mobile-nav-item" data-page="menu-builder">
+          <span class="nav-icon">🍽️</span>
+          <span>Menu</span>
         </a>
-        <a href="ingredients.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🥬 Ingredients</span>
+        <a href="ingredients.html" class="header-mobile-nav-item" data-page="ingredients">
+          <span class="nav-icon">🥬</span>
+          <span>Ingredients</span>
         </a>
-        <a href="equipment-management.html" class="nav-active block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🔧 Equipment</span>
+        <a href="equipment-management.html" class="header-mobile-nav-item active" data-page="equipment-management">
+          <span class="nav-icon">🔧</span>
+          <span>Equipment</span>
         </a>
-        <a href="vendor-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏪 Vendors</span>
+        <a href="vendor-management.html" class="header-mobile-nav-item" data-page="vendor-management">
+          <span class="nav-icon">🏪</span>
+          <span>Vendors</span>
         </a>
       </nav>
     </header>
 
-    <!-- Enhanced Mobile Navigation Toggle Script -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const navToggle = document.getElementById('nav-toggle');
-        const mobileNav = document.getElementById('mobile-nav');
-        
-        if (navToggle && mobileNav) {
-          navToggle.addEventListener('click', function() {
-            mobileNav.classList.toggle('hidden');
-            
-            // Add animation class
-            if (!mobileNav.classList.contains('hidden')) {
-              mobileNav.style.animation = 'slideDown 0.3s ease-out';
-            }
-          });
-          
-          // Close mobile nav when clicking outside
-          document.addEventListener('click', function(event) {
-            if (!navToggle.contains(event.target) && !mobileNav.contains(event.target)) {
-              mobileNav.classList.add('hidden');
-            }
-          });
-        }
-      });
-    </script>
-
-    <!-- Shared Auth/Loading UI -->
-    <!-- Modern Dark Loading Overlay -->
-<div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;backdrop-filter:blur(10px);">
-  <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;">
-    <div style="width:80px;height:80px;border:3px solid rgba(255,255,255,0.1);border-top:3px solid #64ffda;border-radius:50%;animation:spin 1.2s cubic-bezier(0.68,-0.55,0.265,1.55) infinite;position:relative;">
-      <div style="display:flex;gap:8px;margin-top:1rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
-        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;"></div>
-        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.2s;"></div>
-        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.4s;"></div>
-      </div>
-    </div>
-    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#e2e8f0;font-size:1.1rem;font-weight:500;text-align:center;letter-spacing:0.05em;margin-top:1rem;opacity:0.9;">Iterum R&D Chef Notebook</div>
-    <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#64ffda;font-size:0.9rem;font-weight:400;text-align:center;margin-top:0.5rem;opacity:0.7;">Loading equipment management...</div>
-  </div>
-</div>
-
-    <!-- Standardized Login Modal (loaded from template) -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('shared-login-modal.html')
-            .then(response => response.text())
-            .then(html => {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
-                const loginModal = tempDiv.querySelector('#login-modal');
-                if (loginModal) {
-                    document.body.appendChild(loginModal);
-                    // Execute scripts from template
-                    const scripts = tempDiv.querySelectorAll('script');
-                    scripts.forEach(script => {
-                        const newScript = document.createElement('script');
-                        newScript.textContent = script.textContent;
-                        document.head.appendChild(newScript);
-                    });
-                    // Execute styles from template
-                    const styles = tempDiv.querySelectorAll('style');
-                    styles.forEach(style => {
-                        document.head.appendChild(style.cloneNode(true));
-                    });
-                }
-            })
-            .catch(() => console.warn('Standardized login modal not available'));
-    });
-    </script>
-
-    <!-- Signup Form (initially hidden) -->
-    <div id="signup-form" class="hidden space-y-4">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
-            <input type="text" id="signup-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-            <input type="email" id="signup-email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-            <div class="relative">
-                <input type="password" id="signup-password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-                <button type="button" id="toggle-signup-password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                    👁️
-                </button>
-            </div>
-        </div>
-        <button type="submit" id="signup-submit" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-semibold">
-            Create Account
-        </button>
-        <div class="text-center">
-            <button id="show-login-form" class="text-blue-500 hover:text-blue-700 text-sm">
-                Already have an account? Login
-            </button>
-        </div>
-    </div>
-
-    <script src="unified_auth_system.js"></script>
-<script src="debug_auth_buttons.js"></script>
-    <script src="standardize-login-modals.js"></script>
-
-    <div class="container mx-auto px-4 py-8">
+    <!-- Main Content -->
+    <div class="container">
         <!-- Page Header -->
         <div class="notebook-card p-8 mb-8">
             <h1 class="text-4xl font-bold text-[#4a7c2c] mb-4" style="font-family: 'Shadows Into Light', cursive;">
@@ -778,189 +591,6 @@
         </div>
     </div>
 
-    <!-- Vendor Equipment Modal -->
-    <div id="vendor-equipment-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center p-6 border-b">
-                <h3 class="text-xl font-bold text-gray-800">🏪 Vendor Equipment Management</h3>
-                <button id="close-vendor-equipment-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
-            </div>
-            
-            <div class="p-6">
-                <!-- Vendor Equipment Controls -->
-                <div class="mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex gap-2">
-                            <select id="vendor-select" class="notebook-input px-3 py-2 w-64">
-                                <option value="">🏪 Select Vendor</option>
-                            </select>
-                            <button id="load-vendor-equipment" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold">
-                                🔄 Load Vendor Equipment
-                            </button>
-                        </div>
-                        <div class="flex gap-2">
-                            <input type="text" id="vendor-equipment-search" placeholder="🔍 Search vendor equipment..." 
-                                   class="notebook-input px-3 py-2 w-64">
-                            <select id="vendor-equipment-category-filter" class="notebook-input px-3 py-2">
-                                <option value="">🏷️ All Categories</option>
-                                <option value="Front of House">🍽️ Front of House</option>
-                                <option value="Small Kitchenware">🥄 Small Kitchenware</option>
-                                <option value="Large Equipment">🏭 Large Equipment</option>
-                                <option value="Beverage Equipment">🥤 Beverage Equipment</option>
-                                <option value="Refrigeration">❄️ Refrigeration</option>
-                                <option value="Storage">📦 Storage</option>
-                                <option value="Safety">🛡️ Safety Equipment</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vendor Equipment Results -->
-                <div id="vendor-equipment-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Vendor equipment items will be populated here -->
-                </div>
-
-                <!-- No Results Message -->
-                <div id="no-vendor-equipment-results" class="hidden text-center py-12">
-                    <div class="text-6xl mb-4">🏪</div>
-                    <h3 class="text-xl font-semibold text-gray-700 mb-2">No vendor equipment found</h3>
-                    <p class="text-gray-500">Select a vendor and load their equipment first</p>
-                </div>
-
-                <!-- Loading Message -->
-                <div id="vendor-equipment-loading" class="hidden text-center py-12">
-                    <div class="text-6xl mb-4">⏳</div>
-                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Loading vendor equipment...</h3>
-                    <p class="text-gray-500">Please wait while we fetch the vendor equipment data</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Equipment to Vendor Modal -->
-    <div id="add-vendor-equipment-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center p-6 border-b">
-                <h3 class="text-xl font-bold text-gray-800">Add Equipment to Vendor</h3>
-                <button id="close-add-vendor-equipment-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
-            </div>
-            <form id="add-vendor-equipment-form" class="p-6 space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Vendor *</label>
-                        <select id="vendor-equipment-vendor" name="vendor-equipment-vendor" class="notebook-input w-full" required>
-                            <option value="">Select Vendor</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Equipment Name *</label>
-                        <input type="text" id="vendor-equipment-name" name="vendor-equipment-name" class="notebook-input w-full" required>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                        <select id="vendor-equipment-category" name="vendor-equipment-category" class="notebook-input w-full" required>
-                            <option value="">Select Category</option>
-                            <option value="Front of House">🍽️ Front of House</option>
-                            <option value="Small Kitchenware">🥄 Small Kitchenware</option>
-                            <option value="Large Equipment">🏭 Large Equipment</option>
-                            <option value="Beverage Equipment">🥤 Beverage Equipment</option>
-                            <option value="Refrigeration">❄️ Refrigeration</option>
-                            <option value="Storage">📦 Storage</option>
-                            <option value="Safety">🛡️ Safety Equipment</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Brand/Model</label>
-                        <input type="text" id="vendor-equipment-brand" name="vendor-equipment-brand" class="notebook-input w-full">
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Price</label>
-                        <input type="number" id="vendor-equipment-price" name="vendor-equipment-price" class="notebook-input w-full" step="0.01" min="0">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Availability</label>
-                        <select id="vendor-equipment-availability" name="vendor-equipment-availability" class="notebook-input w-full">
-                            <option value="In Stock">✅ In Stock</option>
-                            <option value="Limited">⚠️ Limited</option>
-                            <option value="Out of Stock">❌ Out of Stock</option>
-                            <option value="Special Order">📋 Special Order</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Lead Time (days)</label>
-                        <input type="number" id="vendor-equipment-lead-time" name="vendor-equipment-lead-time" class="notebook-input w-full" min="0">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Warranty (months)</label>
-                        <input type="number" id="vendor-equipment-warranty" name="vendor-equipment-warranty" class="notebook-input w-full" min="0">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Service Information</label>
-                    <textarea id="vendor-equipment-service" name="vendor-equipment-service" class="notebook-input w-full" rows="3" placeholder="Service details, maintenance requirements, etc..."></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
-                    <textarea id="vendor-equipment-notes" name="vendor-equipment-notes" class="notebook-input w-full" rows="3" placeholder="Additional notes about this equipment..."></textarea>
-                </div>
-
-                <div class="flex gap-3 pt-4">
-                    <button type="submit" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-semibold">
-                        Add to Vendor
-                    </button>
-                    <button type="button" id="cancel-add-vendor-equipment" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 px-4 rounded-lg">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="userDataManager.js"></script>
-    <script>
-        // Load equipmentManager only if not already loaded
-        window.loadScriptIfNeeded('equipmentManager.js', function() {
-            // Initialize equipment management after script loads
-            if (window.initializeEquipmentManagement) {
-                window.initializeEquipmentManagement();
-            }
-        });
-    </script>
-    <script>
-        // Equipment Management Page Specific JavaScript
-        document.addEventListener('DOMContentLoaded', function() {
-            // Setup view toggle
-            const gridViewBtn = document.getElementById('grid-view');
-            const listViewBtn = document.getElementById('list-view');
-            const equipmentGrid = document.getElementById('equipment-grid-container');
-            
-            if (gridViewBtn && listViewBtn) {
-                gridViewBtn.addEventListener('click', function() {
-                    equipmentGrid.className = 'equipment-grid';
-                    gridViewBtn.className = 'px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm font-medium';
-                    listViewBtn.className = 'px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium';
-                });
-                
-                listViewBtn.addEventListener('click', function() {
-                    equipmentGrid.className = 'space-y-4';
-                    listViewBtn.className = 'px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm font-medium';
-                    gridViewBtn.className = 'px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium';
-                });
-            }
-        });
-    </script>
-
     <!-- URL Import Modal -->
     <div id="url-import-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -1077,5 +707,156 @@
             </div>
         </div>
     </div>
-</body>
+    <script>
+      // Toggle user dropdown menu
+      function toggleUserDropdown() {
+        const dropdown = document.getElementById('user-dropdown');
+        const userTab = document.querySelector('.header-user-tab');
+        
+        if (dropdown && userTab) {
+          dropdown.classList.toggle('active');
+          userTab.classList.toggle('active');
+        }
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('user-dropdown');
+        const userTab = document.querySelector('.header-user-tab');
+        
+        if (dropdown && userTab && !userTab.contains(event.target) && !dropdown.contains(event.target)) {
+          dropdown.classList.remove('active');
+          userTab.classList.remove('active');
+        }
+      });
+
+      // Toggle mobile navigation
+      function toggleMobileNav() {
+        const mobileNav = document.getElementById('mobile-nav');
+        if (mobileNav) {
+          mobileNav.classList.toggle('active');
+        }
+      }
+
+      // Close mobile nav when clicking outside
+      document.addEventListener('click', function(event) {
+        const mobileNav = document.getElementById('mobile-nav');
+        const mobileToggle = document.querySelector('.header-mobile-toggle');
+        
+        if (mobileNav && mobileToggle && !mobileToggle.contains(event.target) && !mobileNav.contains(event.target)) {
+          mobileNav.classList.remove('active');
+        }
+      });
+    </script>
+
+    <!-- Essential Scripts -->
+    <!-- Load Firebase Configuration -->
+    <script src="assets/js/firebase-config.js"></script>
+    
+    <!-- Load Firebase Authentication -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    
+    <!-- Load Unified Authentication System -->
+    <script src="assets/js/unified_auth_system.js"></script>
+    
+    <!-- Load Page Protection System -->
+    <script src="assets/js/page-protection.js"></script>
+    
+    <!-- Load Header User Synchronization -->
+    <script src="assets/js/header_user_sync.js"></script>
+    
+    <!-- Load Header Sync Loader (ensures sync on all pages) -->
+    <script src="assets/js/header_sync_loader.js"></script>
+    
+    <!-- Enhanced User Management now handled by Firebase Auth -->
+    <script src="assets/js/project-management-system.js"></script>
+    <!-- Project management now handled by new system -->
+    <script src="assets/js/error_handler.js"></script>
+    
+    <!-- Equipment Management Functions -->
+    <script>
+      // Equipment Management Functions
+      function openAddEquipmentModal() {
+        const modal = document.getElementById('add-equipment-modal');
+        if (modal) {
+          modal.classList.remove('hidden');
+        }
+      }
+      
+      function openEquipmentDatabaseModal() {
+        alert('Equipment Database feature coming soon!');
+      }
+      
+      function openWebstaurantModal() {
+        alert('WebstaurantStore integration coming soon!');
+      }
+      
+      // Vendor management now handled by dedicated vendor-management.html page
+      function openVendorEquipmentModal() {
+        window.location.href = 'vendor-management.html';
+      }
+      
+      function exportEquipmentData() {
+        alert('Export feature coming soon!');
+      }
+      
+      function importEquipmentData() {
+        alert('Import feature coming soon!');
+      }
+      
+      // Close modal functions
+      function closeAddEquipmentModal() {
+        const modal = document.getElementById('add-equipment-modal');
+        if (modal) {
+          modal.classList.add('hidden');
+        }
+      }
+      
+      // Initialize equipment management
+      document.addEventListener('DOMContentLoaded', function() {
+        // Close modal when clicking close button
+        const closeBtn = document.getElementById('close-add-equipment-modal');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', closeAddEquipmentModal);
+        }
+        
+        // Close modal when clicking outside
+        const modal = document.getElementById('add-equipment-modal');
+        if (modal) {
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+              closeAddEquipmentModal();
+            }
+          });
+        }
+        
+        // Handle form submission
+        const form = document.getElementById('add-equipment-form');
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Equipment added successfully! (Demo mode)');
+            closeAddEquipmentModal();
+            form.reset();
+          });
+        }
+      });
+    </script>
+    
+    <script>
+      // Initialize user system and project manager
+      document.addEventListener('DOMContentLoaded', function() {
+        // User system now initializes automatically
+        console.log('🔍 User system auto-initialization enabled');
+        
+        // Initialize project manager if available
+        if (window.projectManager) {
+          console.log('✅ Project manager ready');
+        } else {
+          console.log('⏳ Waiting for project manager...');
+        }
+      });
+    </script>
+  </body>
 </html> 

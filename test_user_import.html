@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test User Import - Iterum App</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .test-title {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #374151;
+        }
+        .test-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.2s;
+        }
+        .test-button:hover {
+            background-color: #1d4ed8;
+        }
+        .test-button.success {
+            background-color: #059669;
+        }
+        .test-button.warning {
+            background-color: #d97706;
+        }
+        .test-button.danger {
+            background-color: #dc2626;
+        }
+        .test-result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .test-result.success {
+            background-color: #f0fdf4;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+        .test-result.error {
+            background-color: #fef2f2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+        .test-result.info {
+            background-color: #eff6ff;
+            border: 1px solid #3b82f6;
+            color: #1e40af;
+        }
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .user-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .user-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        .user-role {
+            color: #64748b;
+            font-size: 14px;
+        }
+        .user-email {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">🧪 User Import Test</h1>
+        
+        <div class="test-section">
+            <h3>User Import Testing</h3>
+            <p>This page tests the user import functionality from the users.json file.</p>
+            
+            <button class="test-button" onclick="testUserImport()">📥 Test User Import</button>
+            <button class="test-button" onclick="checkCurrentUsers()">👥 Check Current Users</button>
+            <button class="test-button" onclick="clearUsers()">🗑️ Clear Users</button>
+            <button class="test-button" onclick="reloadPage()">🔄 Reload Page</button>
+        </div>
+
+        <div class="test-section">
+            <h3>Test Results</h3>
+            <div id="test-results" class="test-result info">Click a test button to see results...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>Current Users</h3>
+            <div id="current-users">No users loaded yet...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>Debug Information</h3>
+            <button class="test-button" onclick="debugUserSystem()">🐛 Debug User System</button>
+            <button class="test-button" onclick="debugLocalStorage()">💾 Debug LocalStorage</button>
+            <button class="test-button" onclick="checkFileAccess()">📁 Check File Access</button>
+        </div>
+    </div>
+
+    <!-- Include the necessary scripts -->
+    <script src="assets/js/enhanced-user-system.js"></script>
+    <script src="assets/js/unified_auth_system.js"></script>
+
+    <script>
+        // Test user import functionality
+        async function testUserImport() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.className = 'test-result info';
+            resultsDiv.textContent = '🔄 Testing user import...';
+            
+            try {
+                if (window.importUsersFromJSON) {
+                    resultsDiv.textContent = '📥 Calling importUsersFromJSON...';
+                    const users = await window.importUsersFromJSON();
+                    
+                    if (users && users.length > 0) {
+                        resultsDiv.className = 'test-result success';
+                        resultsDiv.textContent = `✅ Successfully imported ${users.length} users!\n\nUsers imported:\n${users.map(u => `- ${u.name} (${u.role})`).join('\n')}`;
+                    } else {
+                        resultsDiv.className = 'test-result error';
+                        resultsDiv.textContent = '❌ Import failed - no users returned';
+                    }
+                } else {
+                    resultsDiv.className = 'test-result error';
+                    resultsDiv.textContent = '❌ importUsersFromJSON function not available';
+                }
+            } catch (error) {
+                resultsDiv.className = 'test-result error';
+                resultsDiv.textContent = `❌ Error during import: ${error.message}`;
+            }
+            
+            // Update the current users display
+            setTimeout(checkCurrentUsers, 1000);
+        }
+
+        // Check current users in the system
+        function checkCurrentUsers() {
+            const usersDiv = document.getElementById('current-users');
+            
+            try {
+                let users = [];
+                
+                // Check unified auth system
+                if (window.unifiedAuth && window.unifiedAuth.savedUsers) {
+                    users = window.unifiedAuth.savedUsers;
+                }
+                
+                // Check enhanced user system
+                if (window.enhancedUserSystem && window.enhancedUserSystem.users) {
+                    if (users.length === 0) {
+                        users = window.enhancedUserSystem.users;
+                    } else {
+                        // Merge users
+                        window.enhancedUserSystem.users.forEach(user => {
+                            if (!users.find(u => u.id === user.id)) {
+                                users.push(user);
+                            }
+                        });
+                    }
+                }
+                
+                // Check localStorage
+                const savedUsers = localStorage.getItem('saved_users');
+                if (savedUsers) {
+                    try {
+                        const localStorageUsers = JSON.parse(savedUsers);
+                        localStorageUsers.forEach(user => {
+                            if (!users.find(u => u.id === user.id)) {
+                                users.push(user);
+                            }
+                        });
+                    } catch (e) {
+                        console.warn('Error parsing saved_users from localStorage:', e);
+                    }
+                }
+                
+                if (users.length > 0) {
+                    usersDiv.innerHTML = `
+                        <p><strong>Found ${users.length} users:</strong></p>
+                        <div class="user-list">
+                            ${users.map(user => `
+                                <div class="user-card">
+                                    <div class="user-name">${user.name}</div>
+                                    <div class="user-role">${user.role || 'No role'}</div>
+                                    <div class="user-email">${user.email || 'No email'}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    usersDiv.innerHTML = '<p>No users found in any system.</p>';
+                }
+            } catch (error) {
+                usersDiv.innerHTML = `<p>Error checking users: ${error.message}</p>`;
+            }
+        }
+
+        // Clear all users from the system
+        function clearUsers() {
+            if (confirm('Are you sure you want to clear all users? This will remove all user data.')) {
+                try {
+                    // Clear from unified auth system
+                    if (window.unifiedAuth) {
+                        window.unifiedAuth.savedUsers = [];
+                        localStorage.removeItem('saved_users');
+                    }
+                    
+                    // Clear from enhanced user system
+                    if (window.enhancedUserSystem) {
+                        window.enhancedUserSystem.users = [];
+                        window.enhancedUserSystem.saveUsersToLocalStorage();
+                    }
+                    
+                    // Clear localStorage
+                    localStorage.removeItem('saved_users');
+                    localStorage.removeItem('current_user');
+                    localStorage.removeItem('session_active');
+                    
+                    document.getElementById('test-results').className = 'test-result success';
+                    document.getElementById('test-results').textContent = '✅ All users cleared successfully';
+                    
+                    checkCurrentUsers();
+                } catch (error) {
+                    document.getElementById('test-results').className = 'test-result error';
+                    document.getElementById('test-results').textContent = `❌ Error clearing users: ${error.message}`;
+                }
+            }
+        }
+
+        // Reload the page
+        function reloadPage() {
+            location.reload();
+        }
+
+        // Debug the user system
+        function debugUserSystem() {
+            const resultsDiv = document.getElementById('test-results');
+            let debugInfo = '🐛 User System Debug Information:\n\n';
+            
+            try {
+                // Check unified auth system
+                if (window.unifiedAuth) {
+                    debugInfo += `✅ Unified Auth System: Available\n`;
+                    debugInfo += `- savedUsers count: ${window.unifiedAuth.savedUsers?.length || 0}\n`;
+                    debugInfo += `- currentUser: ${window.unifiedAuth.currentUser?.name || 'None'}\n`;
+                } else {
+                    debugInfo += `❌ Unified Auth System: Not available\n`;
+                }
+                
+                // Check enhanced user system
+                if (window.enhancedUserSystem) {
+                    debugInfo += `✅ Enhanced User System: Available\n`;
+                    debugInfo += `- users count: ${window.enhancedUserSystem.users?.length || 0}\n`;
+                    debugInfo += `- currentUser: ${window.enhancedUserSystem.currentUser?.name || 'None'}\n`;
+                } else {
+                    debugInfo += `❌ Enhanced User System: Not available\n`;
+                }
+                
+                // Check global functions
+                debugInfo += `\nGlobal Functions:\n`;
+                debugInfo += `- importUsersFromJSON: ${typeof window.importUsersFromJSON === 'function' ? 'Available' : 'Not available'}\n`;
+                debugInfo += `- switchUser: ${typeof window.switchUser === 'function' ? 'Available' : 'Not available'}\n`;
+                
+            } catch (error) {
+                debugInfo += `\n❌ Error during debug: ${error.message}`;
+            }
+            
+            resultsDiv.className = 'test-result info';
+            resultsDiv.textContent = debugInfo;
+        }
+
+        // Debug localStorage
+        function debugLocalStorage() {
+            const resultsDiv = document.getElementById('test-results');
+            let debugInfo = '💾 LocalStorage Debug Information:\n\n';
+            
+            try {
+                const allKeys = Object.keys(localStorage);
+                const userKeys = allKeys.filter(key => 
+                    key.includes('user') || 
+                    key.includes('profile') || 
+                    key.includes('auth')
+                );
+                
+                debugInfo += `Total localStorage keys: ${allKeys.length}\n`;
+                debugInfo += `User-related keys: ${userKeys.length}\n\n`;
+                
+                userKeys.forEach(key => {
+                    try {
+                        const data = localStorage.getItem(key);
+                        const parsed = JSON.parse(data);
+                        debugInfo += `${key}: ${Array.isArray(parsed) ? parsed.length + ' items' : 'Object'}\n`;
+                    } catch (e) {
+                        debugInfo += `${key}: Parse error\n`;
+                    }
+                });
+                
+            } catch (error) {
+                debugInfo += `\n❌ Error during localStorage debug: ${error.message}`;
+            }
+            
+            resultsDiv.className = 'test-result info';
+            resultsDiv.textContent = debugInfo;
+        }
+
+        // Check file access
+        async function checkFileAccess() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.className = 'test-result info';
+            resultsDiv.textContent = '📁 Checking file access...';
+            
+            try {
+                const response = await fetch('./users/users.json');
+                if (response.ok) {
+                    const users = await response.json();
+                    resultsDiv.className = 'test-result success';
+                    resultsDiv.textContent = `✅ File access successful!\n\nFound ${users.length} users in users.json:\n${users.map(u => `- ${u.name} (${u.role})`).join('\n')}`;
+                } else {
+                    resultsDiv.className = 'test-result error';
+                    resultsDiv.textContent = `❌ File access failed: HTTP ${response.status}`;
+                }
+            } catch (error) {
+                resultsDiv.className = 'test-result error';
+                resultsDiv.textContent = `❌ File access error: ${error.message}`;
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧪 User Import Test Page Loaded');
+            
+            // Wait a bit for systems to initialize, then check users
+            setTimeout(checkCurrentUsers, 1000);
+        });
+    </script>
+</body>
+</html>

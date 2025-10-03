@@ -193,6 +193,27 @@ class VersionInstruction(Base):
     version = relationship("RecipeVersion", back_populates="instructions")
 
 
+class Equipment(Base):
+    __tablename__ = "equipment"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False, index=True)
+    category = Column(String, index=True)
+    description = Column(Text)
+    specifications = Column(JSON)  # Store as JSON object
+    maintenance_notes = Column(Text)
+    purchase_date = Column(DateTime)
+    warranty_info = Column(String)
+    location = Column(String)
+    status = Column(String, default="active")  # active, maintenance, retired
+    user_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    user = relationship("User")
+
+
 class RecipeUpload(Base):
     __tablename__ = "recipe_uploads"
     

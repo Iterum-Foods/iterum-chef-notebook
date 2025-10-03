@@ -1,43 +1,63 @@
 {
   "name": "iterum-culinary-app",
-  "version": "2.0.0",
-  "description": "Professional recipe R&D and publishing system for home and commercial kitchens",
+  "version": "1.0.0",
+  "description": "A comprehensive culinary research and development application for chefs and food service professionals",
   "main": "index.html",
   "scripts": {
-    "test": "npm run test:frontend && npm run test:backend",
-    "test:frontend": "jest --config jest.config.js",
-    "test:backend": "pytest tests/ -v",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage && pytest tests/ --cov=app --cov-report=html",
-    "start": "python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
-    "start:prod": "python -m uvicorn app.main:app --host 0.0.0.0 --port 8000",
-    "dev": "concurrently \"python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload\" \"live-server --port=3000\"",
-    "lint": "eslint *.js",
-    "format": "prettier --write *.js *.html *.css",
-    "build": "npm run test && npm run lint",
-    "clean": "rm -rf node_modules coverage .pytest_cache htmlcov .coverage"
-  },
-  "dependencies": {
-    "firebase": "^11.10.0"
-  },
-  "devDependencies": {
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "eslint": "^8.57.0",
-    "prettier": "^3.1.0",
-    "concurrently": "^8.2.0",
-    "live-server": "^1.2.2",
-    "@testing-library/jest-dom": "^6.1.0",
-    "jsdom": "^22.1.0"
+    "start": "http-server -p 8080 -o",
+    "dev": "http-server -p 8080 -o -c-1",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "lint": "eslint assets/js/**/*.js",
+    "lint:fix": "eslint assets/js/**/*.js --fix",
+    "format": "prettier --write assets/js/**/*.js assets/css/**/*.css",
+    "format:check": "prettier --check assets/js/**/*.js assets/css/**/*.css",
+    "build": "echo 'No build step required for static app'",
+    "prepare": "husky install"
   },
   "keywords": [
     "culinary",
-    "recipes",
-    "R&D",
-    "restaurant",
-    "food",
-    "kitchen"
+    "recipe",
+    "chef",
+    "food-service",
+    "research",
+    "development",
+    "project-management"
   ],
-  "author": "Iterum Team",
-  "license": "MIT"
+  "author": "Iterum Culinary Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,html,md}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/iterum-culinary-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/iterum-culinary-app/issues"
+  },
+  "homepage": "https://github.com/yourusername/iterum-culinary-app#readme"
 }

@@ -1,283 +1,188 @@
-# Contributing to Iterum R&D Chef Notebook
+# 🤝 Contributing to Iterum Culinary App
 
-Thank you for your interest in contributing to Iterum R&D Chef Notebook! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to the Iterum Culinary App! This guide will help you get started with testing, reporting issues, and contributing code.
 
-## 🤝 How to Contribute
+## 🚀 Quick Start for Testers
 
-### Reporting Issues
-- **Bug Reports**: Use the GitHub issue tracker to report bugs
-- **Feature Requests**: Suggest new features or improvements
-- **Documentation**: Help improve our documentation
+### **1. Set Up Your Testing Environment**
+1. **Clone the repository** or download the latest release
+2. **Start a local server** (see README.md for instructions)
+3. **Open the app** in your preferred browser
+4. **Create a test user profile** to get started
 
-### Development Contributions
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+### **2. Test the Core Functionality**
+- **User Management**: Create multiple user profiles, switch between them
+- **Project System**: Create projects, switch between them, verify data persistence
+- **Cross-Page Sync**: Navigate between pages, verify user/project info stays consistent
+- **Data Storage**: Create recipe ideas, vendors, ingredients, verify they save correctly
 
-## 🛠️ Development Setup
+### **3. Report Issues**
+Use the appropriate issue template and include:
+- **Detailed reproduction steps**
+- **Console logs** (F12 → Console)
+- **Screenshots** of the problem
+- **Environment details** (OS, browser, version)
 
-### Prerequisites
-- Python 3.8+
-- Git
-- Virtual environment tool (venv, conda, etc.)
+## 🐛 Issue Reporting Guidelines
 
-### Local Development
-```bash
-# Clone your fork
-git clone https://github.com/yourusername/iterum-chef-notebook.git
-cd iterum-chef-notebook
+### **Bug Reports**
+- **Use the Bug Report template** for general issues
+- **Use the User Loading Issue template** for authentication problems
+- **Include console logs** - they're crucial for debugging
+- **Test on multiple browsers** if possible
+- **Check existing issues** before creating duplicates
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+### **Feature Requests**
+- **Use the Feature Request template**
+- **Explain the problem** the feature would solve
+- **Provide use cases** and examples
+- **Consider alternatives** and trade-offs
 
-# Install dependencies
-pip install -r requirements.txt
+### **Issue Labels**
+- `bug`: Something isn't working
+- `enhancement`: New feature or request
+- `user-authentication`: User loading, switching, or profile issues
+- `high-priority`: Critical functionality broken
+- `needs-triage`: Issue needs review and categorization
 
-# Run the application
-python launch_marketing.py
-```
+## 🔧 Development Setup
 
-### Running Tests
-```bash
-python -m pytest
-```
+### **Prerequisites**
+- Modern web browser
+- Text editor (VS Code, Sublime Text, etc.)
+- Git (for version control)
+- Local HTTP server
 
-## 📝 Code Guidelines
+### **Development Workflow**
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/your-feature-name`
+3. **Make your changes**
+4. **Test thoroughly** on multiple browsers
+5. **Commit with clear messages**: `git commit -m "Add feature: description"`
+6. **Push to your fork**: `git push origin feature/your-feature-name`
+7. **Create a pull request**
 
-### Python Style
-- Follow **PEP 8** style guidelines
-- Use **type hints** where appropriate
-- Write **docstrings** for all functions and classes
-- Keep functions **small and focused**
-
-### Example:
-```python
-def calculate_recipe_cost(ingredients: List[Ingredient], servings: int) -> float:
-    """
-    Calculate the total cost of a recipe based on ingredients and servings.
-    
-    Args:
-        ingredients: List of ingredient objects with cost data
-        servings: Number of servings the recipe makes
-        
-    Returns:
-        Total cost per serving as a float
-        
-    Raises:
-        ValueError: If servings is less than 1
-    """
-    if servings < 1:
-        raise ValueError("Servings must be at least 1")
-    
-    total_cost = sum(ingredient.cost for ingredient in ingredients)
-    return total_cost / servings
-```
-
-### Frontend Guidelines
-- Use **semantic HTML**
-- Follow **accessibility best practices**
-- Keep JavaScript **modular and documented**
-- Use **CSS custom properties** for theming
-
-### Database Changes
-- Create **migration scripts** for schema changes
-- Document **breaking changes**
-- Test with **existing data**
-
-## 🚀 Pull Request Process
-
-### Before Submitting
-1. **Test** your changes thoroughly
-2. **Update** documentation if needed
-3. **Add** tests for new functionality
-4. **Check** code style with linting tools
-
-### Pull Request Template
-```markdown
-## Description
-Brief description of changes
-
-## Type of Change
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation update
-
-## Testing
-- [ ] Tests pass locally
-- [ ] Added tests for new functionality
-- [ ] Manual testing completed
-
-## Screenshots (if applicable)
-Include screenshots for UI changes
-
-## Checklist
-- [ ] Code follows style guidelines
-- [ ] Self-review completed
-- [ ] Documentation updated
-- [ ] No breaking changes (or documented)
-```
-
-## 🏷️ Issue Labels
-
-### Types
-- `bug` - Something isn't working
-- `enhancement` - New feature or request
-- `documentation` - Improvements to documentation
-- `good first issue` - Good for newcomers
-- `help wanted` - Extra attention needed
-
-### Priority
-- `priority: high` - Urgent issues
-- `priority: medium` - Standard priority
-- `priority: low` - Nice to have
-
-### Areas
-- `area: frontend` - Frontend/UI related
-- `area: backend` - Backend/API related
-- `area: database` - Database related
-- `area: documentation` - Documentation
-- `area: marketing` - Marketing website
+### **Code Style Guidelines**
+- **JavaScript**: Use ES6+ features, consistent naming conventions
+- **HTML**: Semantic markup, accessibility considerations
+- **CSS**: Use Tailwind CSS classes, maintain responsive design
+- **Comments**: Document complex logic and business rules
 
 ## 🧪 Testing Guidelines
 
-### Unit Tests
-- Test **individual functions** and classes
-- Use **descriptive test names**
-- Include **edge cases** and error conditions
+### **Manual Testing Checklist**
+- [ ] **User Authentication**
+  - [ ] App launch shows user selection popup
+  - [ ] Can create new user profiles
+  - [ ] Can switch between existing users
+  - [ ] User info persists across page navigation
+- [ ] **Project Management**
+  - [ ] Can create new projects
+  - [ ] Project selection persists across pages
+  - [ ] Data is properly tagged to projects
+- [ ] **Data Persistence**
+  - [ ] Recipe ideas save correctly
+  - [ ] Vendor information persists
+  - [ ] Ingredient data is maintained
+  - [ ] Menu data is saved
 
-### Integration Tests
-- Test **API endpoints**
-- Test **database operations**
-- Test **file processing workflows**
+### **Cross-Browser Testing**
+- **Chrome**: Primary development browser
+- **Firefox**: Secondary testing
+- **Safari**: macOS compatibility
+- **Edge**: Windows compatibility
 
-### Test Structure
-```python
-def test_calculate_recipe_cost_valid_input():
-    """Test recipe cost calculation with valid inputs."""
-    # Arrange
-    ingredients = [
-        Ingredient(name="Flour", cost=2.50),
-        Ingredient(name="Sugar", cost=1.00)
-    ]
-    servings = 4
-    
-    # Act
-    result = calculate_recipe_cost(ingredients, servings)
-    
-    # Assert
-    assert result == 0.875  # (2.50 + 1.00) / 4
-```
+### **Testing Scenarios**
+1. **Fresh Installation**: No existing data
+2. **Existing User**: Returning user with saved data
+3. **Multiple Users**: Switching between profiles
+4. **Project Switching**: Moving between different projects
+5. **Data Migration**: Testing data import/export
+
+## 📁 Project Structure
+
+### **Key Files to Understand**
+- **`index.html`**: Main application entry point
+- **`assets/js/unified_auth_system.js`**: User authentication core
+- **`assets/js/project-management-system.js`**: Project organization
+- **`assets/js/userControlledStorage.js`**: Data storage management
+- **`assets/js/header_user_sync.js`**: Cross-page synchronization
+
+### **Data Flow**
+1. **User Selection** → `unified_auth_system.js`
+2. **Project Selection** → `project-management-system.js`
+3. **Data Storage** → `userControlledStorage.js`
+4. **UI Updates** → `header_user_sync.js`
+
+## 🔍 Debugging Tools
+
+### **Built-in Debug Features**
+- **Debug Button**: Available in user selection modals
+- **Console Logging**: Comprehensive logging throughout the app
+- **Test Pages**: Dedicated testing interfaces for specific features
+
+### **Browser Developer Tools**
+- **Console**: View logs and errors
+- **Network**: Monitor API calls (if backend is implemented)
+- **Storage**: Inspect localStorage and IndexedDB
+- **Elements**: Debug DOM structure and CSS
 
 ## 📚 Documentation
 
-### Code Documentation
-- **Docstrings** for all public functions
-- **Type hints** for function parameters
-- **Inline comments** for complex logic
+### **What to Document**
+- **New Features**: How they work and how to use them
+- **API Changes**: Any modifications to data structures
+- **Configuration**: Environment-specific settings
+- **Troubleshooting**: Common problems and solutions
 
-### API Documentation
-- Update **OpenAPI schemas** for new endpoints
-- Include **request/response examples**
-- Document **error responses**
+### **Documentation Standards**
+- Use clear, concise language
+- Include examples and use cases
+- Update README.md for major changes
+- Add inline comments for complex code
 
-### User Documentation
-- Update **README.md** for new features
-- Create **tutorials** for complex workflows
-- Maintain **changelog** for releases
+## 🚨 Critical Areas
 
-## 🔄 Release Process
+### **High Priority Testing**
+- **User Authentication**: Core functionality, must work reliably
+- **Data Persistence**: User data must not be lost
+- **Cross-Page Sync**: User experience consistency
+- **Project Management**: Data organization integrity
 
-### Version Numbering
-We use [Semantic Versioning](https://semver.org/):
-- **MAJOR**: Breaking changes
-- **MINOR**: New features (backward compatible)
-- **PATCH**: Bug fixes
+### **Known Issues to Watch**
+- User loading edge cases
+- Cross-page synchronization timing
+- Data storage consistency
+- Browser compatibility differences
 
-### Release Checklist
-1. Update version numbers
-2. Update CHANGELOG.md
-3. Create release notes
-4. Tag the release
-5. Deploy to production
+## 🤝 Community Guidelines
 
-## 🎯 Areas for Contribution
+### **Communication**
+- **Be respectful** and constructive
+- **Ask questions** if something isn't clear
+- **Share your testing results** and findings
+- **Help other testers** with their questions
 
-### High Priority
-- **Mobile responsiveness** improvements
-- **Performance optimization**
-- **Accessibility** enhancements
-- **Test coverage** expansion
+### **Feedback**
+- **Specific feedback** is more helpful than general comments
+- **Include context** when reporting issues
+- **Suggest improvements** when possible
+- **Test fixes** before marking issues as resolved
 
-### Features Needed
-- **Recipe import** from popular formats
-- **Ingredient substitution** engine
-- **Cost tracking** improvements
-- **Multi-language** support
+## 📞 Getting Help
 
-### Documentation
-- **Video tutorials**
-- **API examples**
-- **Deployment guides**
-- **User onboarding**
+### **When You're Stuck**
+1. **Check existing issues** for similar problems
+2. **Search documentation** for relevant information
+3. **Ask in issues** with clear questions
+4. **Provide context** about what you're trying to do
 
-## 🌍 Community
-
-### Communication
-- **GitHub Issues**: Primary communication
-- **Discussions**: Feature planning and questions
-- **Email**: hello@iterum-chef.com for private matters
-
-### Code of Conduct
-- Be **respectful** and **inclusive**
-- **Constructive** feedback only
-- **No harassment** or discrimination
-- **Help** newcomers learn
-
-## 🏆 Recognition
-
-### Contributors
-All contributors will be:
-- **Listed** in the README
-- **Credited** in release notes
-- **Invited** to beta testing
-- **Given** special recognition badges
-
-### Significant Contributions
-Major contributors may receive:
-- **Collaborator access**
-- **Direct communication** with maintainers
-- **Input** on roadmap decisions
-- **Special mentions** in documentation
-
-## ❓ Questions?
-
-### Getting Help
-- **Check** existing issues and documentation
-- **Search** previous discussions
-- **Ask** in GitHub Discussions
-- **Email** the maintainers
-
-### Feature Discussions
-Before implementing major features:
-1. **Open** a GitHub Discussion
-2. **Describe** the use case
-3. **Get** feedback from maintainers
-4. **Plan** the implementation approach
-
-## 📞 Contact
-
-**Maintainers**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: hello@iterum-chef.com
-
-**Community**
-- GitHub Discussions: [Link to discussions]
-- Discord: [Coming Soon]
+### **Resources**
+- **README.md**: Setup and basic usage
+- **Issue Templates**: Structured reporting
+- **Test Pages**: Dedicated testing interfaces
+- **Console Logs**: Real-time debugging information
 
 ---
 
-Thank you for contributing to Iterum R&D Chef Notebook! Together, we're revolutionizing professional kitchens worldwide. 🍅👨‍🍳
+**Thank you for contributing to making the Iterum Culinary App better! 🍳✨**

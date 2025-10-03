@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth UI Visibility Test - Iterum App</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+        }
+        button:hover { background: #0056b3; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #545b62; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #1e7e34; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .demo-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Auth UI Visibility Test</h1>
+        <p>Testing the improved authentication modal visibility and styling.</p>
+        
+        <div id="status-container">
+            <div class="status info">
+                ⏳ Testing authentication UI visibility improvements...
+            </div>
+        </div>
+        
+        <div class="log" id="test-log"></div>
+        
+        <div class="demo-section">
+            <h3>🔧 Test Controls</h3>
+            <button onclick="testAuthModal()">Show Auth Modal</button>
+            <button onclick="testGoogleSignIn()" class="btn-secondary">Test Google Sign-In</button>
+            <button onclick="testAnonymousSignIn()" class="btn-success">Test Anonymous Sign-In</button>
+            <button onclick="clearLogs()">Clear Logs</button>
+        </div>
+        
+        <div class="demo-section">
+            <h3>🎯 UI Improvements Made</h3>
+            <ul>
+                <li>✅ <strong>Darker Background:</strong> Increased opacity from 0.6 to 0.8</li>
+                <li>✅ <strong>Enhanced Blur:</strong> Increased backdrop blur from 4px to 8px</li>
+                <li>✅ <strong>Blue Header:</strong> Changed to blue gradient with white text</li>
+                <li>✅ <strong>Larger Buttons:</strong> Increased padding and font size</li>
+                <li>✅ <strong>Better Contrast:</strong> Improved button colors and borders</li>
+                <li>✅ <strong>Pulsing Border:</strong> Added animated blue border</li>
+                <li>✅ <strong>Enhanced Shadows:</strong> Deeper, more prominent shadows</li>
+                <li>✅ <strong>Better Error Display:</strong> Larger, more visible error messages</li>
+            </ul>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <!-- Load Firebase Authentication with embedded config -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+
+    <script>
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logEntry.style.color = type === 'error' ? '#dc2626' : type === 'success' ? '#16a34a' : '#374151';
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'info') {
+            const container = document.getElementById('status-container');
+            container.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function testAuthModal() {
+            log('🎨 Testing authentication modal visibility...');
+            
+            if (window.firebaseAuthUI) {
+                try {
+                    window.firebaseAuthUI.showAuthModal();
+                    log('✅ Auth modal opened successfully', 'success');
+                    updateStatus('✅ Auth modal opened - check visibility!', 'success');
+                } catch (error) {
+                    log(`❌ Error opening auth modal: ${error.message}`, 'error');
+                    updateStatus(`❌ Error opening auth modal: ${error.message}`, 'error');
+                }
+            } else {
+                log('❌ Firebase Auth UI not available', 'error');
+                updateStatus('❌ Firebase Auth UI not available', 'error');
+            }
+        }
+
+        function testGoogleSignIn() {
+            log('🔍 Testing Google sign-in button...');
+            
+            if (window.firebaseAuthUI) {
+                window.firebaseAuthUI.showAuthModal();
+                log('✅ Modal opened - Google button should be visible', 'success');
+                updateStatus('✅ Modal opened - check Google button visibility', 'success');
+            } else {
+                log('❌ Firebase Auth UI not available', 'error');
+                updateStatus('❌ Firebase Auth UI not available', 'error');
+            }
+        }
+
+        function testAnonymousSignIn() {
+            log('🔍 Testing anonymous sign-in button...');
+            
+            if (window.firebaseAuthUI) {
+                window.firebaseAuthUI.showAuthModal();
+                log('✅ Modal opened - Anonymous button should be visible', 'success');
+                updateStatus('✅ Modal opened - check Anonymous button visibility', 'success');
+            } else {
+                log('❌ Firebase Auth UI not available', 'error');
+                updateStatus('❌ Firebase Auth UI not available', 'error');
+            }
+        }
+
+        function clearLogs() {
+            document.getElementById('test-log').innerHTML = '';
+            updateStatus('📝 Logs cleared', 'info');
+        }
+
+        // Auto-test on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Page loaded, starting auth UI visibility test...');
+            
+            // Wait for systems to load
+            setTimeout(() => {
+                if (window.firebaseAuthUI) {
+                    log('✅ Firebase Auth UI loaded successfully');
+                    updateStatus('✅ Ready to test auth UI visibility', 'success');
+                } else {
+                    log('❌ Firebase Auth UI not loaded');
+                    updateStatus('❌ Firebase Auth UI not loaded', 'error');
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Modal Test</title>
+    <link rel="stylesheet" href="assets/css/iterum-design-system.css">
+    <style>
+        .test-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .status-display {
+            background: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="heading-1 mb-8">🧪 User Modal Test Page</h1>
+        
+        <!-- Test Controls -->
+        <div class="test-section">
+            <h2 class="heading-2 mb-4">Test Controls</h2>
+            <div class="flex flex-wrap gap-4">
+                <button onclick="testUserModal()" class="iterum-button iterum-button-primary">
+                    🎭 Test User Management Modal
+                </button>
+                <button onclick="testSimpleUserModal()" class="iterum-button iterum-button-primary">
+                    ➕ Test Simple User Creation
+                </button>
+                <button onclick="testMultipleModals()" class="iterum-button iterum-button-secondary">
+                    🔄 Test Multiple Modal Prevention
+                </button>
+                <button onclick="clearStatus()" class="iterum-button iterum-button-secondary">
+                    🗑️ Clear Status
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Display -->
+        <div class="test-section">
+            <h2 class="heading-2 mb-4">Test Status</h2>
+            <div id="status-display" class="status-display">
+                Ready to test user modals...
+            </div>
+        </div>
+
+        <!-- Current User Info -->
+        <div class="test-section">
+            <h2 class="heading-2 mb-4">Current User</h2>
+            <div id="current-user-info">
+                Loading user information...
+            </div>
+        </div>
+
+        <!-- User List -->
+        <div class="test-section">
+            <h2 class="heading-2 mb-4">All Users</h2>
+            <div id="user-list">
+                Loading user list...
+            </div>
+        </div>
+    </div>
+
+    <!-- Load required scripts -->
+    <script src="assets/js/simple-user-system.js"></script>
+
+    <script>
+        let statusLog = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            statusLog.push(logEntry);
+            
+            const statusDisplay = document.getElementById('status-display');
+            if (statusDisplay) {
+                statusDisplay.textContent = statusLog.join('\n');
+                statusDisplay.scrollTop = statusDisplay.scrollHeight;
+            }
+            
+            console.log(logEntry);
+        }
+
+        function clearStatus() {
+            statusLog = [];
+            document.getElementById('status-display').textContent = 'Status cleared...';
+        }
+
+        function updateUserInfo() {
+            // Update current user display
+            const currentUserInfo = document.getElementById('current-user-info');
+            if (currentUserInfo && window.userSystem) {
+                const currentUser = window.userSystem.getCurrentUser();
+                if (currentUser) {
+                    currentUserInfo.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">${currentUser.avatar}</span>
+                            <div>
+                                <div class="font-medium text-lg">${currentUser.name}</div>
+                                <div class="text-gray-600">${currentUser.role}</div>
+                                <div class="text-sm text-gray-500">ID: ${currentUser.id}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    currentUserInfo.innerHTML = '<div class="text-gray-500">No current user</div>';
+                }
+            }
+
+            // Update user list
+            const userList = document.getElementById('user-list');
+            if (userList && window.userSystem) {
+                const allUsers = window.userSystem.getAllUsers();
+                if (allUsers.length > 0) {
+                    userList.innerHTML = allUsers.map(user => `
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-2">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xl">${user.avatar}</span>
+                                <div>
+                                    <div class="font-medium">${user.name}</div>
+                                    <div class="text-sm text-gray-600">${user.role}</div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-gray-500">${user.id}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    userList.innerHTML = '<div class="text-gray-500">No users found</div>';
+                }
+            }
+        }
+
+        function testUserModal() {
+            log('🎭 Testing User Management Modal...', 'info');
+            
+            if (!window.userSystem) {
+                log('❌ User System not found!', 'error');
+                return;
+            }
+
+            try {
+                window.userSystem.showUserModal();
+                log('✅ User management modal should be visible now', 'success');
+                log('📱 Modal should appear as overlay on current page', 'info');
+                log('🔒 Only one modal should be visible at a time', 'info');
+            } catch (error) {
+                log(`❌ Error showing user modal: ${error.message}`, 'error');
+            }
+        }
+
+        function testSimpleUserModal() {
+            log('➕ Testing Simple User Creation Modal...', 'info');
+            
+            if (!window.userSystem) {
+                log('❌ User System not found!', 'error');
+                return;
+            }
+
+            try {
+                window.userSystem.showSimpleUserModal();
+                log('✅ Simple user creation modal should be visible now', 'success');
+                log('📱 Modal should appear as overlay on current page', 'info');
+                log('🔒 Only one modal should be visible at a time', 'info');
+            } catch (error) {
+                log(`❌ Error showing simple user modal: ${error.message}`, 'error');
+            }
+        }
+
+        function testMultipleModals() {
+            log('🔄 Testing Multiple Modal Prevention...', 'info');
+            
+            if (!window.userSystem) {
+                log('❌ User System not found!', 'error');
+                return;
+            }
+
+            try {
+                // Try to show multiple modals
+                log('📱 Showing first modal...', 'info');
+                window.userSystem.showUserModal();
+                
+                setTimeout(() => {
+                    log('📱 Attempting to show second modal...', 'info');
+                    window.userSystem.showSimpleUserModal();
+                    log('✅ Second modal should replace first modal (not stack)', 'success');
+                }, 1000);
+                
+            } catch (error) {
+                log(`❌ Error testing multiple modals: ${error.message}`, 'error');
+            }
+        }
+
+        // Monitor system initialization
+        let initCheckInterval = setInterval(() => {
+            if (window.userSystem) {
+                log('🎉 User System initialized!', 'success');
+                clearInterval(initCheckInterval);
+                updateUserInfo();
+                
+                // Auto-update user info every 2 seconds
+                setInterval(updateUserInfo, 2000);
+            }
+        }, 100);
+
+        // Initial status
+        log('🧪 User Modal Test Page Started', 'info');
+        log('Waiting for User System initialization...', 'info');
+    </script>
+</body>
+</html>

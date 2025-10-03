@@ -6,1011 +6,782 @@
     <title>Recipe Library - Iterum R&D Chef Notebook</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Shadows+Into+Light:wght@400&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/tailwind-output.css">
+    <link rel="stylesheet" href="assets/css/iterum-design-system.css">
+    <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
+    
+    <!-- Essential Scripts -->
+    <!-- Load Firebase Configuration -->
+    <script src="assets/js/firebase-config.js"></script>
+    
+    <!-- Load Firebase Authentication -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    
+    <!-- Load Unified Authentication System -->
+    <script src="assets/js/unified_auth_system.js"></script>
+    
+    <!-- Load Page Protection System -->
+    <script src="assets/js/page-protection.js"></script>
+    
+    <!-- Load Header User Synchronization -->
+    <script src="assets/js/header_user_sync.js"></script>
+    
+    <!-- Load Header Sync Loader (ensures sync on all pages) -->
+    <script src="assets/js/header_sync_loader.js"></script>
+    
+    <!-- Load Enhanced User Management System -->
+    <!-- Enhanced User Management now handled by Firebase Auth -->
+    
+    <!-- Project management now handled by new system -->
+    <script src="assets/js/error_handler.js"></script>
+    <script src="assets/js/project-management-system.js"></script>
+    
     <style>
-        body {
-            background: repeating-linear-gradient(
-                to bottom,
-                #f6fbe7 0px,
-                #f6fbe7 38px,
-                #eafcd7 39px,
-                #f6fbe7 40px
-            );
-            position: relative;
-            min-height: 100vh;
-            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-            padding-left: 0;
+        /* Recipe Library Specific Styles */
+        .recipe-filters {
+            background: white;
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+            margin-bottom: var(--spacing-6);
         }
-        .pea-bg-sketch {
-            position: fixed;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            z-index: 0;
-            opacity: 0.11;
-            pointer-events: none;
-            width: 480px;
-            max-width: 90vw;
-            height: auto;
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-4);
         }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 56px;
-            width: 2px;
-            height: 100vh;
-            background: repeating-linear-gradient(
-                to bottom,
-                #e57373 0px,
-                #e57373 16px,
-                transparent 16px,
-                transparent 32px
-            );
-            z-index: 0;
-            pointer-events: none;
+        
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-8);
         }
-        .notebook-heading {
-            font-family: 'Shadows Into Light', cursive;
-            font-size: 2.5rem;
-            color: #b8860b;
-            letter-spacing: 1.5px;
-            text-shadow: 0 2px 8px #fffbe7, 0 1px 0 #e2d8b8;
-        }
-        .notebook-card {
-            background: #fffbe7;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 22px 22px 18px 18px;
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.09), 0 1.5px 0 #e2d8b8;
-            margin-bottom: 2.5rem;
-            position: relative;
-            z-index: 10;
-        }
+        
         .recipe-card {
             background: white;
-            border: 1px solid #e2d8b8;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
             overflow: hidden;
-            position: relative;
+            transition: all var(--transition-normal);
         }
+        
         .recipe-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            border-color: #4a90e2;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
-        .recipe-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: linear-gradient(135deg, #f0f7ff 0%, #e3f2fd 100%);
-        }
-        .recipe-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .badge-dish {
-            background: #4caf50;
+        
+        .recipe-card-header {
+            background: linear-gradient(135deg, var(--iterum-primary), var(--iterum-secondary));
             color: white;
+            padding: var(--spacing-4);
         }
-        .badge-prep {
-            background: #ff9800;
-            color: white;
+        
+        .recipe-card-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-2);
         }
-        .badge-other {
-            background: #9c27b0;
-            color: white;
-        }
-        .difficulty-indicator {
+        
+        .recipe-card-meta {
             display: flex;
-            gap: 2px;
-        }
-        .difficulty-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #e0e0e0;
-        }
-        .difficulty-dot.active {
-            background: #ff6b35;
-        }
-        .filter-chip {
-            display: inline-flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
         }
-        .filter-chip:hover {
-            border-color: #4a90e2;
-            background: #f0f7ff;
+        
+        .recipe-card-body {
+            padding: var(--spacing-4);
         }
-        .filter-chip.active {
-            background: #4a90e2;
-            color: white;
-            border-color: #4a90e2;
+        
+        .recipe-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-4);
         }
-        .search-container {
-            position: relative;
+        
+        .info-item {
+            text-align: center;
         }
-        .search-input {
-            padding-left: 2.5rem;
-            border-radius: 25px;
-            border: 2px solid #e2d8b8;
-            background: white;
-            transition: border-color 0.3s ease;
+        
+        .info-value {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--iterum-primary);
         }
-        .search-input:focus {
-            border-color: #4a90e2;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        
+        .info-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
         }
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6b7280;
+        
+        .recipe-actions {
+            display: flex;
+            gap: var(--spacing-2);
         }
-
-        /* Enhanced Header Animations */
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
+        
+        .recipe-description {
+            color: var(--gray-600);
+            margin-bottom: var(--spacing-4);
+            line-height: var(--line-height-relaxed);
+        }
+        
+        .recipe-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-4);
+        }
+        
+        .recipe-tag {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            padding: var(--spacing-1) var(--spacing-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+        }
+        
+        @media (max-width: 768px) {
+            .filter-row {
+                grid-template-columns: 1fr;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            
+            .recipe-grid {
+                grid-template-columns: 1fr;
             }
-        }
-
-        /* Header Logo Hover Glow */
-        header .relative:hover .absolute {
-            animation: pulse 2s infinite;
-        }
-
-        /* Navigation Active State - Current Page Highlighting */
-        .nav-active {
-            background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
-            color: #15803d !important;
-            font-weight: 600 !important;
-            border: 1px solid #86efac !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-active::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-active:hover::before {
-            left: 100%;
+            
+            .recipe-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipe-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
-<body>
-    <!-- Enhanced Uniform Header -->
-    <header class="bg-gradient-to-r from-white to-green-50 shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <!-- Logo and Brand -->
-        <div class="flex items-center gap-3">
-          <div class="relative">
-            <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10 transition-transform hover:scale-110">
-            <div class="absolute -inset-1 bg-green-200 rounded-full opacity-0 hover:opacity-20 transition-opacity"></div>
-          </div>
-          <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
-            Iterum R&D Chef Notebook
-          </span>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Uniform Centered Header -->
+    <header class="iterum-header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <a href="index.html" class="header-logo">
+                <div class="header-logo-icon">
+                    <span>🍃</span>
+                </div>
+                <div class="header-logo-text">
+                    <div class="header-logo-title">Iterum R&D</div>
+                    <div class="header-logo-subtitle">Chef Notebook</div>
+                </div>
+            </a>
+
+            <!-- Center Navigation -->
+            <nav class="header-navigation">
+                <a href="index.html" class="header-nav-item" data-page="index">
+                    <span class="nav-icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="recipe-library.html" class="header-nav-item active" data-page="recipe-library">
+                    <span class="nav-icon">📚</span>
+                    <span>Library</span>
+                </a>
+                <a href="recipe-developer.html" class="header-nav-item" data-page="recipe-developer">
+                    <span class="nav-icon">🧪</span>
+                    <span>Developer</span>
+                </a>
+                <a href="recipe-upload.html" class="header-nav-item" data-page="recipe-upload">
+                    <span class="nav-icon">⚡</span>
+                    <span>Upload</span>
+                </a>
+                <a href="menu-builder.html" class="header-nav-item" data-page="menu-builder">
+                    <span class="nav-icon">🍽️</span>
+                    <span>Menu</span>
+                </a>
+                <a href="ingredients.html" class="header-nav-item" data-page="ingredients">
+                    <span class="nav-icon">🥬</span>
+                    <span>Ingredients</span>
+                </a>
+                <a href="equipment-management.html" class="header-nav-item" data-page="equipment-management">
+                    <span class="nav-icon">🔧</span>
+                    <span>Equipment</span>
+                </a>
+                <a href="vendor-management.html" class="header-nav-item" data-page="vendor-management">
+                    <span class="nav-icon">🏪</span>
+                    <span>Vendors</span>
+                </a>
+            </nav>
+
+            <!-- Right Side - User Section -->
+            <div class="header-user-section">
+                <!-- Project Selector -->
+                <div class="header-project-selector-container">
+                    <div class="project-selector-display" onclick="window.showProjectSelectionDropdown()">
+                        <div class="project-selector-current">
+                            <span class="project-selector-icon">📋</span>
+                            <span class="project-selector-name" data-project-name>Master Project</span>
+                            <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
+                        <div class="project-status-display">
+                            <span class="project-status-label">Current:</span>
+                            <span class="project-status-value" data-project-name>Master Project</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Info Tab -->
+                <div class="header-user-tab" onclick="toggleUserDropdown()">
+                    <div class="header-user-avatar" id="user-avatar">
+                        <span id="user-avatar-initial">👤</span>
+                    </div>
+                    <div class="header-user-info">
+                        <div class="header-user-name" id="current-user">Guest User</div>
+                        <div class="header-user-role">Chef</div>
+                    </div>
+                    <svg class="header-user-dropdown-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+
+                <!-- User Dropdown Menu -->
+                <div class="header-user-dropdown" id="user-dropdown">
+                    <div class="header-user-dropdown-header">
+                        <div class="header-user-dropdown-title" id="dropdown-user-name">Guest User</div>
+                        <div class="header-user-dropdown-subtitle" id="dropdown-user-role">Chef</div>
+                    </div>
+                    
+                    <div class="header-user-dropdown-menu">
+                        <div class="header-user-dropdown-item" onclick="window.switchUser()">
+                            <span>🔄</span>
+                            <span>Switch User</span>
+                        </div>
+                        <div class="header-user-dropdown-item" onclick="userSystem.showUserModal('create')">
+                            <span>➕</span>
+                            <span>Create New User</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-user-dropdown-divider"></div>
+                    
+                    <div class="header-user-dropdown-menu">
+                        <div class="header-user-dropdown-item" onclick="userSystem.showSettings()">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </div>
+                        <div class="header-user-dropdown-item danger" onclick="userSystem.logout()">
+                            <span>🚪</span>
+                            <span>Sign Out</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-user-dropdown-footer">
+                        <div class="header-user-dropdown-footer-text">Iterum R&D v1.0</div>
+                    </div>
+                </div>
+
+                <!-- Mobile Navigation Toggle -->
+                <button class="header-mobile-toggle" onclick="toggleMobileNav()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
         </div>
-        
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex gap-1 text-gray-700 font-medium">
-          <a href="index.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏠 Dashboard</span>
-          </a>
-          <a href="recipe-library.html" class="nav-active hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">📚 Recipe Library</span>
-          </a>
-          <a href="recipe-developer.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🧪 Recipe Developer</span>
-          </a>
-          <a href="recipe-upload.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">⚡ Quick Upload</span>
-          </a>
-          <a href="menu-builder.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🍽️ Menu Builder</span>
-          </a>
-          <a href="ingredients.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🥬 Ingredients</span>
-          </a>
-          <a href="equipment-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🔧 Equipment</span>
-          </a>
-          <a href="vendor-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏪 Vendors</span>
-          </a>
+
+        <!-- Mobile Navigation -->
+        <nav id="mobile-nav" class="header-mobile-nav">
+            <!-- Project Selector for Mobile -->
+            <div style="margin-bottom: 1rem;">
+                <select id="mobile-project-selector" class="header-project-selector" style="width: 100%;">
+                    <option value="">Select Project...</option>
+                </select>
+            </div>
+
+            <!-- Mobile Navigation Items -->
+            <a href="index.html" class="header-mobile-nav-item" data-page="index">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="recipe-library.html" class="header-mobile-nav-item active" data-page="recipe-library">
+                <span class="nav-icon">📚</span>
+                <span>Library</span>
+            </a>
+            <a href="recipe-developer.html" class="header-mobile-nav-item" data-page="recipe-developer">
+                <span class="nav-icon">🧪</span>
+                <span>Developer</span>
+            </a>
+            <a href="recipe-upload.html" class="header-mobile-nav-item" data-page="recipe-upload">
+                <span class="nav-icon">⚡</span>
+                <span>Upload</span>
+            </a>
+            <a href="menu-builder.html" class="header-mobile-nav-item" data-page="menu-builder">
+                <span class="nav-icon">🍽️</span>
+                <span>Menu</span>
+            </a>
+            <a href="ingredients.html" class="header-mobile-nav-item" data-page="ingredients">
+                <span class="nav-icon">🥬</span>
+                <span>Ingredients</span>
+            </a>
+            <a href="equipment-management.html" class="header-mobile-nav-item" data-page="equipment-management">
+                <span class="nav-icon">🔧</span>
+                <span>Equipment</span>
+            </a>
+            <a href="vendor-management.html" class="header-mobile-nav-item" data-page="vendor-management">
+                <span class="nav-icon">🏪</span>
+                <span>Vendors</span>
+            </a>
         </nav>
-        
-        <!-- User Info and Actions -->
-        <div class="flex items-center gap-3">
-          <span id="current-user" class="text-gray-600 text-sm font-medium bg-white px-3 py-1 rounded-full border"></span>
-          <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hidden">
-            Login
-          </button>
-          <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
-            Logout
-          </button>
-          <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors shadow-sm">
-            Switch User
-          </button>
-          <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors">
-            &#9776;
-          </button>
-        </div>
-      </div>
-      
-      <!-- Mobile Navigation -->
-      <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-1 px-4 pb-4">
-        <a href="index.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏠 Dashboard</span>
-        </a>
-        <a href="recipe-library.html" class="nav-active block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">📚 Recipe Library</span>
-        </a>
-        <a href="recipe-developer.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🧪 Recipe Developer</span>
-        </a>
-        <a href="recipe-upload.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">⚡ Quick Upload</span>
-        </a>
-        <a href="menu-builder.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🍽️ Menu Builder</span>
-        </a>
-        <a href="ingredients.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🥬 Ingredients</span>
-        </a>
-        <a href="equipment-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🔧 Equipment</span>
-        </a>
-        <a href="vendor-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏪 Vendors</span>
-        </a>
-      </nav>
     </header>
 
-    <!-- Enhanced Mobile Navigation Toggle Script -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const navToggle = document.getElementById('nav-toggle');
-        const mobileNav = document.getElementById('mobile-nav');
-        
-        if (navToggle && mobileNav) {
-          navToggle.addEventListener('click', function() {
-            mobileNav.classList.toggle('hidden');
-            
-            // Add animation class
-            if (!mobileNav.classList.contains('hidden')) {
-              mobileNav.style.animation = 'slideDown 0.3s ease-out';
-            }
-          });
-          
-          // Close mobile nav when clicking outside
-          document.addEventListener('click', function(event) {
-            if (!navToggle.contains(event.target) && !mobileNav.contains(event.target)) {
-              mobileNav.classList.add('hidden');
-            }
-          });
-        }
-      });
-    </script>
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1 class="heading-1">Recipe Library</h1>
+                <p class="body-large">Browse, search, and manage your complete recipe collection with advanced filtering and organization tools.</p>
+            </div>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 relative z-10">
-        <!-- Page Header -->
-        <section class="notebook-card p-8 mb-8">
-            <h1 class="notebook-heading mb-4">Recipe Library</h1>
-            <p class="text-gray-600 text-lg">Explore, manage, and discover your culinary creations</p>
-        </section>
-
-        <!-- Search and Filters -->
-        <section class="notebook-card p-6 mb-8">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <!-- Search -->
-                <div class="lg:col-span-2">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Search Recipes</label>
-                    <div class="search-container">
-                        <div class="search-icon">🔍</div>
-                        <input type="text" id="recipe-search" placeholder="Search by name, ingredient, cuisine..."
-                               class="search-input w-full py-3 pr-4 text-gray-700">
+            <!-- Recipe Filters -->
+            <div class="recipe-filters">
+                <h2 class="heading-2">Search & Filter Recipes</h2>
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="search-query" class="form-label">Search</label>
+                        <input type="text" id="search-query" class="form-input" placeholder="Search recipes...">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-category" class="form-label">Category</label>
+                        <select id="filter-category" class="form-select">
+                            <option value="">All Categories</option>
+                            <option value="appetizer">Appetizer</option>
+                            <option value="main-course">Main Course</option>
+                            <option value="dessert">Dessert</option>
+                            <option value="beverage">Beverage</option>
+                            <option value="sauce">Sauce</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-cuisine" class="form-label">Cuisine</label>
+                        <select id="filter-cuisine" class="form-select">
+                            <option value="">All Cuisines</option>
+                            <option value="italian">Italian</option>
+                            <option value="french">French</option>
+                            <option value="asian">Asian</option>
+                            <option value="mediterranean">Mediterranean</option>
+                            <option value="american">American</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-difficulty" class="form-label">Difficulty</label>
+                        <select id="filter-difficulty" class="form-select">
+                            <option value="">All Levels</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
                     </div>
                 </div>
-
-                <!-- Quick Filters -->
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Recipe Type</label>
-                    <select id="type-filter" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">All Types</option>
-                        <option value="dish">Dishes</option>
-                        <option value="prep">Prep Recipes</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-
-                <!-- Cuisine Filter -->
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Cuisine</label>
-                    <select id="cuisine-filter" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">All Cuisines</option>
-                        <option value="italian">Italian</option>
-                        <option value="french">French</option>
-                        <option value="american">American</option>
-                        <option value="asian">Asian</option>
-                        <option value="mexican">Mexican</option>
-                        <option value="mediterranean">Mediterranean</option>
-                        <option value="indian">Indian</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Additional Filters -->
-            <div class="mt-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Filter by Tags</label>
-                <div class="flex flex-wrap gap-2" id="tag-filters">
-                    <!-- Tag filters will be populated by JavaScript -->
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex gap-4 mt-6">
-                <button id="clear-filters" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
-                    Clear Filters
-                </button>
-                <button id="add-recipe-btn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                    + Add New Recipe
-                </button>
-            </div>
-        </section>
-
-        <!-- Recipe Grid -->
-        <section class="notebook-card p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Your Recipes</h2>
-                <div class="flex items-center gap-4">
-                    <span id="recipe-count" class="text-gray-600">Loading recipes...</span>
-                    <div class="flex gap-2">
-                        <button id="grid-view" class="p-2 rounded-lg bg-blue-100 text-blue-600">⊞</button>
-                        <button id="list-view" class="p-2 rounded-lg text-gray-600 hover:bg-gray-100">☰</button>
+                
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="filter-time" class="form-label">Prep Time</label>
+                        <select id="filter-time" class="form-select">
+                            <option value="">Any Time</option>
+                            <option value="quick">Quick (< 30 min)</option>
+                            <option value="medium">Medium (30-60 min)</option>
+                            <option value="long">Long (> 60 min)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-servings" class="form-label">Servings</label>
+                        <select id="filter-servings" class="form-select">
+                            <option value="">Any</option>
+                            <option value="1-2">1-2 people</option>
+                            <option value="3-4">3-4 people</option>
+                            <option value="5-6">5-6 people</option>
+                            <option value="7+">7+ people</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sort-by" class="form-label">Sort By</label>
+                        <select id="sort-by" class="form-select">
+                            <option value="name">Name</option>
+                            <option value="date-added">Date Added</option>
+                            <option value="difficulty">Difficulty</option>
+                            <option value="prep-time">Prep Time</option>
+                            <option value="rating">Rating</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-
-            <!-- Loading State -->
-            <div id="loading-recipes" class="text-center py-12">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <p class="mt-2 text-gray-600">Loading your delicious recipes...</p>
-            </div>
-
-            <!-- Empty State -->
-            <div id="empty-recipes" class="text-center py-12 hidden">
-                <div class="text-6xl mb-4">👨‍🍳</div>
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">No recipes found</h3>
-                <p class="text-gray-600 mb-4">Start building your culinary library!</p>
-                <div class="flex gap-4 justify-center">
-                    <button onclick="recipeLibrary.showAddRecipeModal()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                        + Create Recipe
-                    </button>
-                    <a href="recipe-developer.html" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                        🧪 Recipe Developer
-                    </a>
-                    <a href="recipe-upload.html" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-                        📁 Upload Recipes
-                    </a>
+                
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="searchRecipes()">🔍 Search</button>
+                    <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+                    <button class="btn btn-secondary" onclick="exportRecipes()">📤 Export</button>
                 </div>
             </div>
 
-            <!-- Recipe Grid -->
-            <div id="recipes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden">
-                <!-- Recipe cards will be populated by JavaScript -->
+            <!-- Recipes Grid -->
+            <div id="recipes-container">
+                <div class="recipe-grid" id="recipes-grid">
+                    <!-- Recipes will be populated here -->
+                </div>
             </div>
-
-            <!-- Recipe List View -->
-            <div id="recipes-list" class="space-y-4 hidden">
-                <!-- Recipe list items will be populated by JavaScript -->
-            </div>
-        </section>
+        </div>
     </main>
 
-    <!-- Recipe Detail Modal -->
-    <div id="recipe-detail-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div id="recipe-detail-content">
-                <!-- Recipe details will be populated by JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Recipe Modal -->
-    <div id="add-recipe-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-gray-800">Add New Recipe</h3>
-                    <button id="close-add-modal" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
-                </div>
-                
-                <form id="add-recipe-form" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Recipe Name</label>
-                        <input type="text" id="new-recipe-name" required 
-                               class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                               placeholder="Enter recipe name...">
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Recipe Type</label>
-                            <select id="new-recipe-type" required class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="dish">Dish (Menu Item)</option>
-                                <option value="prep">Prep Recipe</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Cuisine Type</label>
-                            <select id="new-recipe-cuisine" class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">Select cuisine...</option>
-                                <option value="italian">Italian</option>
-                                <option value="french">French</option>
-                                <option value="american">American</option>
-                                <option value="asian">Asian</option>
-                                <option value="mexican">Mexican</option>
-                                <option value="mediterranean">Mediterranean</option>
-                                <option value="indian">Indian</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                        <textarea id="new-recipe-description" rows="3"
-                                  class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                  placeholder="Brief description of the recipe..."></textarea>
-                    </div>
-
-                    <!-- Primary Image Upload -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Recipe Image</label>
-                        <div id="new-recipe-image-upload"></div>
-                    </div>
-                    
-                    <div class="flex gap-4 pt-4">
-                        <button type="button" id="cancel-add-recipe" 
-                                class="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                            Cancel
-                        </button>
-                        <button type="submit"
-                                class="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                            Create Recipe
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="unified_auth_system.js"></script>
-    <script src="standardize-login-modals.js"></script>
-    <script src="debug_auth_buttons.js"></script>
-    <script src="imageUploadManager.js"></script>
+    <!-- Essential Scripts -->
     <script>
-        // Recipe Library Management
-        class RecipeLibraryManager {
-            constructor() {
-                this.recipes = [];
-                this.filteredRecipes = [];
-                this.currentView = 'grid';
-                this.filters = {
-                    search: '',
-                    type: '',
-                    cuisine: '',
-                    tags: []
-                };
-                this.initialize();
-            }
-
-            async initialize() {
-                await this.loadRecipes();
-                this.setupEventListeners();
-                this.setupImageUpload();
-                this.renderRecipes();
-            }
-
-            async loadRecipes() {
-                try {
-                    // Check if user is authenticated
-                    const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
-                    if (!currentUser.id) {
-                        console.warn('No authenticated user found');
-                        this.recipes = this.getSampleRecipes();
-                        this.filteredRecipes = [...this.recipes];
-                        document.getElementById('loading-recipes').classList.add('hidden');
-                        this.updateRecipeCount();
-                        return;
-                    }
-
-                    // Fetch recipes from the backend API
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Initializing Recipe Library Page');
+            
+            // Wait for authentication system to be ready
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Ensure unified auth system is initialized and user state is maintained
+            if (window.unifiedAuth) {
+                console.log('🔐 Unified auth system found, checking user state...');
+                
+                // Check if there's a current user session
+                const currentUser = localStorage.getItem('current_user');
+                const sessionActive = localStorage.getItem('session_active');
+                
+                if (currentUser && sessionActive === 'true') {
                     try {
-                        const response = await window.apiConfig.get('recipes/library');
-                        const data = await response.json();
-                        this.recipes = data.recipes.map(recipe => ({
-                            id: recipe.id,
-                            title: recipe.name,
-                            description: recipe.description,
-                            type: recipe.type || 'dish',
-                            cuisine_type: recipe.cuisine,
-                            difficulty_level: recipe.difficulty || 'easy',
-                            prep_time: recipe.prep_time || 0,
-                            cook_time: recipe.cook_time || 0,
-                            servings: recipe.servings || 4,
-                            tags: recipe.tags || [],
-                            primary_image: recipe.primary_image,
-                            gallery_images: recipe.gallery_images || [],
-                            created_at: recipe.created_at,
-                            ingredients: recipe.ingredients || [],
-                            instructions: recipe.instructions || []
-                        }));
-                        console.log(`✅ Loaded ${this.recipes.length} recipes from API`);
-                    } catch (apiError) {
-                        console.warn('⚠️ API failed, using local recipes:', apiError.message);
-                        this.recipes = this.getSampleRecipes();
+                        const user = JSON.parse(currentUser);
+                        console.log('✅ User session found:', user.name);
+                        
+                        // Update the header display with current user
+                        updateHeaderUserDisplay(user);
+                        
+                        // Ensure unified auth system has the current user
+                        window.unifiedAuth.currentUser = user;
+                        
+                    } catch (error) {
+                        console.warn('⚠️ Error parsing current user:', error);
                     }
-                    
-                    this.filteredRecipes = [...this.recipes];
-                
-                document.getElementById('loading-recipes').classList.add('hidden');
-                this.updateRecipeCount();
-            }
-
-            getSampleRecipes() {
-                return [
-                    {
-                        id: 1,
-                        title: "Classic Beef Bolognese",
-                        description: "Traditional Italian meat sauce with rich flavors",
-                        type: "dish",
-                        cuisine_type: "italian",
-                        difficulty_level: "intermediate",
-                        prep_time: 30,
-                        cook_time: 180,
-                        servings: 6,
-                        tags: ["pasta", "meat", "comfort food"],
-                        primary_image: null,
-                        gallery_images: [],
-                        created_at: "2024-01-15"
-                    },
-                    {
-                        id: 2,
-                        title: "Roasted Vegetable Stock",
-                        description: "Rich vegetable base for soups and sauces",
-                        type: "prep",
-                        cuisine_type: "french",
-                        difficulty_level: "easy",
-                        prep_time: 20,
-                        cook_time: 120,
-                        servings: 8,
-                        tags: ["vegetarian", "stock", "base"],
-                        primary_image: null,
-                        gallery_images: [],
-                        created_at: "2024-01-10"
-                    }
-                ];
-            }
-
-            setupEventListeners() {
-                // Search and filters
-                document.getElementById('recipe-search').addEventListener('input', (e) => {
-                    this.filters.search = e.target.value;
-                    this.applyFilters();
-                });
-
-                document.getElementById('type-filter').addEventListener('change', (e) => {
-                    this.filters.type = e.target.value;
-                    this.applyFilters();
-                });
-
-                document.getElementById('cuisine-filter').addEventListener('change', (e) => {
-                    this.filters.cuisine = e.target.value;
-                    this.applyFilters();
-                });
-
-                document.getElementById('clear-filters').addEventListener('click', () => {
-                    this.clearFilters();
-                });
-
-                // View toggles
-                document.getElementById('grid-view').addEventListener('click', () => {
-                    this.setView('grid');
-                });
-
-                document.getElementById('list-view').addEventListener('click', () => {
-                    this.setView('list');
-                });
-
-                // Add recipe modal
-                document.getElementById('add-recipe-btn').addEventListener('click', () => {
-                    this.showAddRecipeModal();
-                });
-
-                document.getElementById('close-add-modal').addEventListener('click', () => {
-                    this.hideAddRecipeModal();
-                });
-
-                document.getElementById('cancel-add-recipe').addEventListener('click', () => {
-                    this.hideAddRecipeModal();
-                });
-
-                document.getElementById('add-recipe-form').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleAddRecipe();
-                });
-            }
-
-            setupImageUpload() {
-                const uploadContainer = document.getElementById('new-recipe-image-upload');
-                if (uploadContainer) {
-                    window.imageUploadManager.createUploadInterface(uploadContainer, {
-                        multiple: false,
-                        placeholder: 'Upload recipe image here'
-                    });
-                }
-            }
-
-            applyFilters() {
-                this.filteredRecipes = this.recipes.filter(recipe => {
-                    // Search filter
-                    if (this.filters.search) {
-                        const searchTerm = this.filters.search.toLowerCase();
-                        const matchesSearch = recipe.title.toLowerCase().includes(searchTerm) ||
-                                            recipe.description.toLowerCase().includes(searchTerm) ||
-                                            recipe.tags.some(tag => tag.toLowerCase().includes(searchTerm));
-                        if (!matchesSearch) return false;
-                    }
-
-                    // Type filter
-                    if (this.filters.type && recipe.type !== this.filters.type) {
-                        return false;
-                    }
-
-                    // Cuisine filter
-                    if (this.filters.cuisine && recipe.cuisine_type !== this.filters.cuisine) {
-                        return false;
-                    }
-
-                    return true;
-                });
-
-                this.renderRecipes();
-                this.updateRecipeCount();
-            }
-
-            clearFilters() {
-                this.filters = { search: '', type: '', cuisine: '', tags: [] };
-                document.getElementById('recipe-search').value = '';
-                document.getElementById('type-filter').value = '';
-                document.getElementById('cuisine-filter').value = '';
-                this.filteredRecipes = [...this.recipes];
-                this.renderRecipes();
-                this.updateRecipeCount();
-            }
-
-            setView(view) {
-                this.currentView = view;
-                document.getElementById('grid-view').className = view === 'grid' ? 
-                    'p-2 rounded-lg bg-blue-100 text-blue-600' : 
-                    'p-2 rounded-lg text-gray-600 hover:bg-gray-100';
-                document.getElementById('list-view').className = view === 'list' ? 
-                    'p-2 rounded-lg bg-blue-100 text-blue-600' : 
-                    'p-2 rounded-lg text-gray-600 hover:bg-gray-100';
-                this.renderRecipes();
-            }
-
-            renderRecipes() {
-                const gridContainer = document.getElementById('recipes-grid');
-                const listContainer = document.getElementById('recipes-list');
-                const emptyState = document.getElementById('empty-recipes');
-
-                // Hide all containers first
-                gridContainer.classList.add('hidden');
-                listContainer.classList.add('hidden');
-                emptyState.classList.add('hidden');
-
-                if (this.filteredRecipes.length === 0) {
-                    emptyState.classList.remove('hidden');
-                    return;
-                }
-
-                if (this.currentView === 'grid') {
-                    gridContainer.innerHTML = this.filteredRecipes.map(recipe => this.createRecipeCard(recipe)).join('');
-                    gridContainer.classList.remove('hidden');
                 } else {
-                    listContainer.innerHTML = this.filteredRecipes.map(recipe => this.createRecipeListItem(recipe)).join('');
-                    listContainer.classList.remove('hidden');
+                    console.log('⚠️ No active user session found');
                 }
+            } else {
+                console.warn('⚠️ Unified auth system not available');
             }
-
-            createRecipeCard(recipe) {
-                const difficultyDots = this.createDifficultyIndicator(recipe.difficulty_level);
-                const badgeClass = recipe.type === 'dish' ? 'badge-dish' : recipe.type === 'prep' ? 'badge-prep' : 'badge-other';
-                const imageUrl = recipe.primary_image ? `/api/images/recipe/${recipe.primary_image}` : '/static/images/recipe-placeholder.jpg';
-
-                return `
-                    <div class="recipe-card cursor-pointer" onclick="recipeLibrary.viewRecipe(${recipe.id})">
-                        <div class="recipe-badge ${badgeClass}">${recipe.type}</div>
-                        <img src="${imageUrl}" alt="${recipe.title}" class="recipe-image" 
-                             onerror="this.src='/static/images/recipe-placeholder.jpg'">
-                        <div class="p-4">
-                            <h3 class="font-bold text-lg text-gray-800 mb-2 line-clamp-2">${recipe.title}</h3>
-                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">${recipe.description}</p>
-                            
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">${recipe.cuisine_type || 'Cuisine'}</span>
-                                <div class="difficulty-indicator">${difficultyDots}</div>
-                            </div>
-                            
-                            <div class="flex justify-between text-sm text-gray-500">
-                                <span>⏱️ ${recipe.prep_time + recipe.cook_time} min</span>
-                                <span>👥 ${recipe.servings} servings</span>
-                            </div>
-                            
-                            <div class="flex flex-wrap gap-1 mt-3">
-                                ${recipe.tags.slice(0, 3).map(tag => 
-                                    `<span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">${tag}</span>`
-                                ).join('')}
-                                ${recipe.tags.length > 3 ? `<span class="text-xs text-gray-500">+${recipe.tags.length - 3}</span>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            createRecipeListItem(recipe) {
-                const difficultyDots = this.createDifficultyIndicator(recipe.difficulty_level);
-                const badgeClass = recipe.type === 'dish' ? 'badge-dish' : recipe.type === 'prep' ? 'badge-prep' : 'badge-other';
-                const imageUrl = recipe.primary_image ? `/api/images/recipe/${recipe.primary_image}` : '/static/images/recipe-placeholder.jpg';
-
-                return `
-                    <div class="recipe-card cursor-pointer flex" onclick="recipeLibrary.viewRecipe(${recipe.id})">
-                        <img src="${imageUrl}" alt="${recipe.title}" class="w-24 h-24 object-cover rounded-lg mr-4"
-                             onerror="this.src='/static/images/recipe-placeholder.jpg'">
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-bold text-lg text-gray-800">${recipe.title}</h3>
-                                <span class="recipe-badge ${badgeClass}">${recipe.type}</span>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-2">${recipe.description}</p>
-                            <div class="flex items-center gap-4 text-sm text-gray-500">
-                                <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-full">${recipe.cuisine_type || 'Cuisine'}</span>
-                                <span>⏱️ ${recipe.prep_time + recipe.cook_time} min</span>
-                                <span>👥 ${recipe.servings} servings</span>
-                                <div class="difficulty-indicator">${difficultyDots}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            createDifficultyIndicator(level) {
-                const levels = { 'easy': 1, 'intermediate': 2, 'advanced': 3, 'professional': 4 };
-                const activeLevel = levels[level] || 1;
-                return Array.from({ length: 4 }, (_, i) => 
-                    `<div class="difficulty-dot ${i < activeLevel ? 'active' : ''}"></div>`
-                ).join('');
-            }
-
-            updateRecipeCount() {
-                const count = this.filteredRecipes.length;
-                const total = this.recipes.length;
-                document.getElementById('recipe-count').textContent = 
-                    count === total ? `${total} recipes` : `${count} of ${total} recipes`;
-            }
-
-            viewRecipe(id) {
-                const recipe = this.recipes.find(r => r.id === id);
-                if (recipe) {
-                    // Create detailed recipe view
-                    this.showRecipeDetail(recipe);
-                }
-            }
-
-            showRecipeDetail(recipe) {
-                const modal = document.getElementById('recipe-detail-modal');
-                const content = document.getElementById('recipe-detail-content');
-                
-                content.innerHTML = `
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-6">
-                            <div>
-                                <h2 class="text-3xl font-bold text-gray-800">${recipe.title}</h2>
-                                <p class="text-gray-600 mt-2">${recipe.description}</p>
-                            </div>
-                            <button onclick="recipeLibrary.hideRecipeDetail()" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
-                        </div>
-                        
-                        ${recipe.primary_image ? `
-                            <img src="/api/images/recipe/${recipe.primary_image}" alt="${recipe.title}" 
-                                 class="w-full h-64 object-cover rounded-lg mb-6">
-                        ` : ''}
-                        
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-green-600">${recipe.prep_time}</div>
-                                <div class="text-sm text-gray-600">Prep Time (min)</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-blue-600">${recipe.cook_time}</div>
-                                <div class="text-sm text-gray-600">Cook Time (min)</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-purple-600">${recipe.servings}</div>
-                                <div class="text-sm text-gray-600">Servings</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-orange-600">${recipe.difficulty_level}</div>
-                                <div class="text-sm text-gray-600">Difficulty</div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            ${recipe.tags.map(tag => 
-                                `<span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm">${tag}</span>`
-                            ).join('')}
-                        </div>
-                        
-                        <div class="flex gap-4">
-                            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                Edit Recipe
-                            </button>
-                            <button class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                                Add to Menu
-                            </button>
-                            <button class="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                                Export
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                modal.classList.remove('hidden');
-            }
-
-            hideRecipeDetail() {
-                document.getElementById('recipe-detail-modal').classList.add('hidden');
-            }
-
-            showAddRecipeModal() {
-                document.getElementById('add-recipe-modal').classList.remove('hidden');
-            }
-
-            hideAddRecipeModal() {
-                document.getElementById('add-recipe-modal').classList.add('hidden');
-                document.getElementById('add-recipe-form').reset();
-            }
-
-            async handleAddRecipe() {
+            
+            // Initialize header user synchronization
+            if (window.HeaderUserSync) {
                 try {
-                    const formData = {
-                        title: document.getElementById('new-recipe-name').value,
-                        type: document.getElementById('new-recipe-type').value,
-                        cuisine_type: document.getElementById('new-recipe-cuisine').value,
-                        description: document.getElementById('new-recipe-description').value,
-                        difficulty_level: 'easy',
-                        prep_time: 30,
-                        cook_time: 60,
-                        servings: 4,
-                        tags: [],
-                        dietary_restrictions: [],
-                        allergens: [],
-                        equipment_needed: [],
-                        ingredients: [],
-                        instructions: [],
-                        status: 'draft'
-                    };
-
-                    // Try to create recipe via API
-                    const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
-                    if (currentUser.id) {
-                        try {
-                            const response = await window.apiConfig.post('recipes/', formData);
-                            const result = await response.json();
-                            
-                            console.log('✅ Recipe created via API:', result);
-                            // Reload recipes from API
-                            await this.loadRecipes();
-                            this.applyFilters();
-                            modal.remove();
-                            this.showMessage('Recipe created successfully!', 'success');
-                            return;
-                        } catch (apiError) {
-                            console.error('API recipe creation failed:', apiError);
-                        }
-                    }
-
-                    // Fallback to localStorage if API fails
-                    const newId = Math.max(...this.recipes.map(r => r.id), 0) + 1;
-                    const newRecipe = { 
-                        id: newId, 
-                        ...formData,
-                        primary_image: null,
-                        gallery_images: [],
-                        created_at: new Date().toISOString().split('T')[0]
-                    };
-                    
-                    this.recipes.push(newRecipe);
-                    localStorage.setItem('iterum_recipes', JSON.stringify(this.recipes));
-                    
-                    this.applyFilters();
-                    this.hideAddRecipeModal();
-                    alert('Recipe created successfully (saved locally)!');
-                    
+                    const headerSync = new window.HeaderUserSync();
+                    headerSync.initialize();
+                    console.log('✅ Header user synchronization initialized');
                 } catch (error) {
-                    console.error('Error creating recipe:', error);
-                    alert('Failed to create recipe. Please try again.');
+                    console.warn('⚠️ Header user sync initialization failed:', error);
                 }
+            }
+            
+            console.log('✅ Recipe Library Page initialized');
+        });
+
+        // Wait for app to be ready
+        document.addEventListener('iterumAppReady', function() {
+            initializeRecipeLibrary();
+            updateUserInfo();
+            initializeProjectSelector();
+        });
+
+        // Wait for loading screen to be hidden
+        document.addEventListener('loadingScreenHidden', function() {
+            initializeRecipeLibrary();
+            updateUserInfo();
+            initializeProjectSelector();
+        });
+
+        function initializeRecipeLibrary() {
+            console.log('📚 Initializing Recipe Library');
+            loadRecipes();
+            setupEventListeners();
+        }
+
+        function updateUserInfo() {
+            const currentUser = window.userSystem?.getCurrentUser();
+            if (currentUser) {
+                document.getElementById('current-user').textContent = currentUser.name || 'User';
+                document.getElementById('dropdown-user-name').textContent = currentUser.name || 'User';
+                document.getElementById('user-avatar-initial').textContent = (currentUser.name || 'U')[0].toUpperCase();
             }
         }
 
-        // Initialize the recipe library
-        let recipeLibrary;
-        document.addEventListener('DOMContentLoaded', function() {
-            recipeLibrary = new RecipeLibraryManager();
+        function initializeProjectSelector() {
+            if (window.projectManager) {
+                window.projectManager.loadUserProjects();
+            }
+        }
+
+        function setupEventListeners() {
+            // Search input
+            document.getElementById('search-query').addEventListener('input', function() {
+                searchRecipes();
+            });
+
+            // Filter changes
+            document.getElementById('filter-category').addEventListener('change', searchRecipes);
+            document.getElementById('filter-cuisine').addEventListener('change', searchRecipes);
+            document.getElementById('filter-difficulty').addEventListener('change', searchRecipes);
+            document.getElementById('filter-time').addEventListener('change', searchRecipes);
+            document.getElementById('filter-servings').addEventListener('change', searchRecipes);
+            document.getElementById('sort-by').addEventListener('change', searchRecipes);
+        }
+
+        function loadRecipes() {
+            // Load recipes from localStorage or API
+            const recipes = JSON.parse(localStorage.getItem('recipes') || '[]');
+            displayRecipes(recipes);
+        }
+
+        function displayRecipes(recipes) {
+            const grid = document.getElementById('recipes-grid');
+            grid.innerHTML = '';
+
+            if (recipes.length === 0) {
+                grid.innerHTML = '<p class="text-center text-gray-500">No recipes found. Start by adding some recipes!</p>';
+                return;
+            }
+
+            recipes.forEach(recipe => {
+                const card = createRecipeCard(recipe);
+                grid.appendChild(card);
+            });
+        }
+
+        function createRecipeCard(recipe) {
+            const card = document.createElement('div');
+            card.className = 'recipe-card';
+            card.innerHTML = `
+                <div class="recipe-card-header">
+                    <div class="recipe-card-title">${recipe.name || 'Untitled Recipe'}</div>
+                    <div class="recipe-card-meta">
+                        <span>${recipe.category || 'Uncategorized'}</span>
+                        <span>${recipe.difficulty || 'Medium'}</span>
+                    </div>
+                </div>
+                <div class="recipe-card-body">
+                    <div class="recipe-description">${recipe.description || 'No description available.'}</div>
+                    
+                    <div class="recipe-tags">
+                        ${(recipe.tags || []).map(tag => `<span class="recipe-tag">${tag}</span>`).join('')}
+                    </div>
+                    
+                    <div class="recipe-info">
+                        <div class="info-item">
+                            <div class="info-value">${recipe.prepTime || '0'}</div>
+                            <div class="info-label">Prep Time</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-value">${recipe.servings || '0'}</div>
+                            <div class="info-label">Servings</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recipe-actions">
+                        <button class="btn btn-primary" onclick="viewRecipe('${recipe.id}')">👁️ View</button>
+                        <button class="btn btn-secondary" onclick="editRecipe('${recipe.id}')">✏️ Edit</button>
+                        <button class="btn btn-secondary" onclick="duplicateRecipe('${recipe.id}')">📋 Copy</button>
+                        <button class="btn btn-secondary danger" onclick="deleteRecipe('${recipe.id}')">🗑️ Delete</button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function searchRecipes() {
+            const query = document.getElementById('search-query').value.toLowerCase();
+            const category = document.getElementById('filter-category').value;
+            const cuisine = document.getElementById('filter-cuisine').value;
+            const difficulty = document.getElementById('filter-difficulty').value;
+            const time = document.getElementById('filter-time').value;
+            const servings = document.getElementById('filter-servings').value;
+            const sortBy = document.getElementById('sort-by').value;
+
+            let recipes = JSON.parse(localStorage.getItem('recipes') || '[]');
+
+            // Filter
+            recipes = recipes.filter(recipe => {
+                const matchesQuery = !query || recipe.name.toLowerCase().includes(query) || 
+                                   (recipe.description && recipe.description.toLowerCase().includes(query));
+                const matchesCategory = !category || recipe.category === category;
+                const matchesCuisine = !cuisine || recipe.cuisine === cuisine;
+                const matchesDifficulty = !difficulty || recipe.difficulty === difficulty;
+                const matchesTime = !time || recipe.prepTime === time;
+                const matchesServings = !servings || recipe.servings === servings;
+                
+                return matchesQuery && matchesCategory && matchesCuisine && 
+                       matchesDifficulty && matchesTime && matchesServings;
+            });
+
+            // Sort
+            recipes.sort((a, b) => {
+                switch (sortBy) {
+                    case 'name': return (a.name || '').localeCompare(b.name || '');
+                    case 'date-added': return new Date(b.dateAdded || 0) - new Date(a.dateAdded || 0);
+                    case 'difficulty': return (a.difficulty || '').localeCompare(b.difficulty || '');
+                    case 'prep-time': return (a.prepTime || 0) - (b.prepTime || 0);
+                    case 'rating': return (b.rating || 0) - (a.rating || 0);
+                    default: return 0;
+                }
+            });
+
+            displayRecipes(recipes);
+        }
+
+        function resetFilters() {
+            document.getElementById('search-query').value = '';
+            document.getElementById('filter-category').value = '';
+            document.getElementById('filter-cuisine').value = '';
+            document.getElementById('filter-difficulty').value = '';
+            document.getElementById('filter-time').value = '';
+            document.getElementById('filter-servings').value = '';
+            document.getElementById('sort-by').value = 'name';
+            searchRecipes();
+        }
+
+        function exportRecipes() {
+            console.log('📤 Exporting recipes...');
+            // Implement export logic
+        }
+
+        function viewRecipe(id) {
+            console.log('👁️ Viewing recipe:', id);
+            // Implement view logic
+        }
+
+        function editRecipe(id) {
+            console.log('✏️ Editing recipe:', id);
+            // Implement edit logic
+        }
+
+        function duplicateRecipe(id) {
+            console.log('📋 Duplicating recipe:', id);
+            // Implement duplicate logic
+        }
+
+        function deleteRecipe(id) {
+            if (confirm('Are you sure you want to delete this recipe?')) {
+                const recipes = JSON.parse(localStorage.getItem('recipes') || '[]');
+                const filtered = recipes.filter(r => r.id !== id);
+                localStorage.setItem('recipes', JSON.stringify(filtered));
+                loadRecipes();
+                console.log('🗑️ Recipe deleted:', id);
+            }
+        }
+
+        // Toggle user dropdown menu
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown');
+            const userTab = document.querySelector('.header-user-tab');
+            
+            if (dropdown && userTab) {
+                dropdown.classList.toggle('active');
+                userTab.classList.toggle('active');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('user-dropdown');
+            const userTab = document.querySelector('.header-user-tab');
+            
+            if (dropdown && userTab && !userTab.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+                userTab.classList.remove('active');
+            }
         });
 
-        // User info update
-        (function updateUserInfo() {
-            const userInfo = document.getElementById('current-user');
-            if (userInfo) {
-                const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
-                const username = currentUser.name || currentUser.username || 'Guest';
-                userInfo.textContent = username;
+        // Toggle mobile navigation
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobile-nav');
+            if (mobileNav) {
+                mobileNav.classList.toggle('active');
             }
-        })();
+        }
+
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobile-nav');
+            const mobileToggle = document.querySelector('.header-mobile-toggle');
+            
+            if (mobileNav && mobileToggle && !mobileToggle.contains(event.target) && !mobileNav.contains(event.target)) {
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        // Function to update header user display
+        function updateHeaderUserDisplay(user) {
+            if (!user) return;
+            
+            // Update user avatar initial
+            const avatarInitial = document.getElementById('user-avatar-initial');
+            if (avatarInitial) {
+                avatarInitial.textContent = user.name.charAt(0).toUpperCase();
+            }
+            
+            // Update current user name
+            const currentUserName = document.getElementById('current-user');
+            if (currentUserName) {
+                currentUserName.textContent = user.name;
+            }
+            
+            // Update dropdown user name
+            const dropdownUserName = document.getElementById('dropdown-user-name');
+            if (dropdownUserName) {
+                dropdownUserName.textContent = user.name;
+            }
+            
+            // Update dropdown user role
+            const dropdownUserRole = document.getElementById('dropdown-user-role');
+            if (dropdownUserRole) {
+                dropdownUserRole.textContent = user.role || 'Chef';
+            }
+            
+            console.log('✅ Header user display updated for:', user.name);
+        }
+
+        // Listen for user authentication events to keep header synchronized
+        document.addEventListener('userLoggedIn', function(event) {
+            console.log('🔐 User logged in event received on recipe library page');
+            if (event.detail && event.detail.user) {
+                updateHeaderUserDisplay(event.detail.user);
+            }
+        });
+
+        document.addEventListener('userSwitched', function(event) {
+            console.log('🔄 User switched event received on recipe library page');
+            if (event.detail && event.detail.user) {
+                updateHeaderUserDisplay(event.detail.user);
+            }
+        });
+
+        document.addEventListener('userLoggedOut', function(event) {
+            console.log('🚪 User logged out event received on recipe library page');
+            // Reset header to guest state
+            updateHeaderUserDisplay({
+                name: 'Guest User',
+                role: 'Guest'
+            });
+        });
+
+        document.addEventListener('iterumUserDataLoaded', function(event) {
+            console.log('📥 User data loaded event received on recipe library page');
+            if (event.detail && event.detail.user) {
+                updateHeaderUserDisplay(event.detail.user);
+            }
+        });
     </script>
-
-    <svg class="pea-bg-sketch" viewBox="0 0 120 180" fill="none" style="">
-        <path d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <ellipse cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
-        <ellipse cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-        <ellipse cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-        <ellipse cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-        <path d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
-        <path d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
-    </svg>
-
 </body>
-</html> 
+</html>

@@ -3,941 +3,700 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Ingredient Database</title>
+    <title>Master Ingredient Database | Iterum R&D Chef Notebook</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Shadows+Into+Light:wght@400&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/tailwind-output.css">
+    <link rel="stylesheet" href="assets/css/iterum-design-system.css">
+    <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
+    
+    <!-- Essential Scripts -->
+    <!-- Load Firebase Configuration -->
+    <script src="assets/js/firebase-config.js"></script>
+    
+    <!-- Load Firebase Authentication -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    
+    <!-- Load Unified Authentication System -->
+    <script src="assets/js/unified_auth_system.js"></script>
+    
+    <!-- Load Page Protection System -->
+    <script src="assets/js/page-protection.js"></script>
+    
+    <!-- Load Header User Synchronization -->
+    <script src="assets/js/header_user_sync.js"></script>
+    
+    <!-- Load Header Sync Loader (ensures sync on all pages) -->
+    <script src="assets/js/header_sync_loader.js"></script>
+    
+    <!-- Load Enhanced User Management System -->
+    <!-- Enhanced User Management now handled by Firebase Auth -->
+    <script src="assets/js/project-management-system.js"></script>
+    <!-- Project management now handled by new system -->
+    <script src="assets/js/error_handler.js"></script>
+    
     <style>
-        body {
-            background: repeating-linear-gradient(
-                to bottom,
-                #f6fbe7 0px,
-                #f6fbe7 38px,
-                #eafcd7 39px,
-                #f6fbe7 40px
-            ), url('data:image/svg+xml;utf8,<svg width="180" height="180" xmlns="http://www.w3.org/2000/svg"><g opacity="0.13"><path d="M60 140 Q90 80 120 140" stroke="%237bb661" stroke-width="2.5" fill="none"/><ellipse cx="90" cy="140" rx="22" ry="9" fill="%23b6e388" stroke="%237bb661" stroke-width="1.5"/><ellipse cx="80" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><ellipse cx="90" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><ellipse cx="100" cy="140" rx="4" ry="4" fill="%23eafcd7" stroke="%237bb661" stroke-width="1"/><path d="M90 140 Q95 120 110 110 Q125 100 140 120" stroke="%237bb661" stroke-width="1.2" fill="none"/><ellipse cx="140" cy="120" rx="4" ry="2.5" fill="%23b6e388" stroke="%237bb661" stroke-width="1"/></g></svg>');
-            min-height: 100vh;
-            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-            position: relative;
+        /* Ingredients Page Specific Styles */
+        .ingredient-search {
+            background: white;
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+            margin-bottom: var(--spacing-6);
         }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 56px;
-            width: 2px;
-            height: 100vh;
-            background: #e57373;
-            z-index: 0;
-            pointer-events: none;
+        
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-4);
         }
-        .pea-bg-sketch {
-            position: fixed;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            z-index: 0;
-            opacity: 0.11;
-            pointer-events: none;
-            width: 480px;
-            max-width: 90vw;
-            height: auto;
+        
+        .ingredient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-8);
         }
-
-        /* Additional Plant Sketches */
-        .plant-sketch {
-            position: fixed;
-            z-index: 0;
-            opacity: 0.08;
-            pointer-events: none;
-            width: 120px;
-            height: 180px;
+        
+        .ingredient-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            transition: all var(--transition-normal);
         }
-
-        .plant-sketch.top-right {
-            top: 20px;
-            right: 20px;
-            transform: rotate(15deg);
+        
+        .ingredient-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
-
-        .plant-sketch.top-left {
-            top: 20px;
-            left: 20px;
-            transform: rotate(-15deg);
+        
+        .ingredient-card-header {
+            background: linear-gradient(135deg, var(--iterum-primary), var(--iterum-secondary));
+            color: white;
+            padding: var(--spacing-4);
         }
-
-        .plant-sketch.middle-right {
-            top: 40%;
-            right: 20px;
-            transform: translateY(-50%) rotate(5deg);
+        
+        .ingredient-card-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-2);
         }
-
-        .plant-sketch.middle-left {
-            top: 40%;
-            left: 20px;
-            transform: translateY(-50%) rotate(-5deg);
+        
+        .ingredient-card-category {
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
         }
-
-        .plant-sketch.small {
-            width: 80px;
-            height: 120px;
-            opacity: 0.06;
+        
+        .ingredient-card-body {
+            padding: var(--spacing-4);
         }
-
-        .plant-sketch.tiny {
-            width: 60px;
-            height: 90px;
-            opacity: 0.05;
+        
+        .ingredient-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-4);
         }
-
-        /* Different plant variations */
-        .plant-herb {
-            opacity: 0.07;
+        
+        .info-item {
+            text-align: center;
         }
-
-        .plant-vegetable {
-            opacity: 0.06;
+        
+        .info-value {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--iterum-primary);
         }
-
-        .plant-fruit {
-            opacity: 0.08;
+        
+        .info-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
         }
-
-        .plant-grain {
-            opacity: 0.07;
+        
+        .ingredient-actions {
+            display: flex;
+            gap: var(--spacing-2);
         }
-
-        /* Floating animation for some plants */
-        .plant-float {
-            animation: float 6s ease-in-out infinite;
+        
+        .add-ingredient-section {
+            background: white;
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+            margin-bottom: var(--spacing-6);
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-4);
         }
-
-        /* Responsive plant positioning */
+        
         @media (max-width: 768px) {
-            .plant-sketch {
-                width: 60px;
-                height: 90px;
-                opacity: 0.05;
+            .search-filters {
+                grid-template-columns: 1fr;
             }
             
-            .plant-sketch.top-right,
-            .plant-sketch.top-left,
-            .plant-sketch.middle-right,
-            .plant-sketch.middle-left {
-                display: none;
+            .ingredient-grid {
+                grid-template-columns: 1fr;
             }
-        }
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            background: #fffbe7;
-            border-bottom: 3px solid #e2d8b8;
-            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
-            border-radius: 0 0 18px 18px;
-        }
-        .notebook-heading {
-            font-family: 'Shadows Into Light', cursive;
-            font-size: 2.2rem;
-            color: #b8860b;
-            letter-spacing: 1px;
-        }
-        .notebook-card {
-            background: #fffbe7;
-            border: 1.5px solid #e2d8b8;
-            border-radius: 18px;
-            box-shadow: 0 4px 16px 0 rgba(0,0,0,0.07);
-            margin-bottom: 2.5rem;
-            position: relative;
-        }
-        .sticky-btn {
-            background: linear-gradient(135deg, #fff176 80%, #ffe082 100%);
-            color: #795548;
-            border: 1.5px solid #ffe082;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px 0 rgba(255, 235, 59, 0.15);
-            font-weight: 600;
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-        .sticky-btn:hover {
-            transform: translateY(-2px) scale(1.04) rotate(-2deg);
-            box-shadow: 0 6px 18px 0 rgba(255, 235, 59, 0.25);
-        }
-
-        /* Enhanced Header Animations */
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
+            
+            .ingredient-info {
+                grid-template-columns: 1fr;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Header Logo Hover Glow */
-        header .relative:hover .absolute {
-            animation: pulse 2s infinite;
-        }
-
-        /* Navigation Active State - Current Page Highlighting */
-        .nav-active {
-            background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
-            color: #15803d !important;
-            font-weight: 600 !important;
-            border: 1px solid #86efac !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-active::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-active:hover::before {
-            left: 100%;
-        }
-        /* Modern Loading Screen Animations */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-        #loading-overlay.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-        /* Responsive adjustments */
-        @media (max-width: 480px) {
-            #loading-overlay div[style*="width:80px"] {
-                width: 60px !important;
-                height: 60px !important;
-            }
-            #loading-overlay div[style*="font-size:1.1rem"] {
-                font-size: 1rem !important;
-            }
-            #loading-overlay div[style*="font-size:0.9rem"] {
-                font-size: 0.8rem !important;
+            
+            .form-row {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
-<body>
-    <!-- Modern Dark Loading Overlay -->
-    <div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;backdrop-filter:blur(10px);">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;">
-        <div style="width:80px;height:80px;border:3px solid rgba(255,255,255,0.1);border-top:3px solid #64ffda;border-radius:50%;animation:spin 1.2s cubic-bezier(0.68,-0.55,0.265,1.55) infinite;position:relative;">
-          <div style="display:flex;gap:8px;margin-top:1rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
-            <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.2s;"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.4s;"></div>
-          </div>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Uniform Centered Header -->
+    <header class="iterum-header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <a href="index.html" class="header-logo">
+                <div class="header-logo-icon">
+                    <span>🍃</span>
+                </div>
+                <div class="header-logo-text">
+                    <div class="header-logo-title">Iterum R&D</div>
+                    <div class="header-logo-subtitle">Chef Notebook</div>
+                </div>
+            </a>
+
+            <!-- Center Navigation -->
+            <nav class="header-navigation">
+                <a href="index.html" class="header-nav-item" data-page="index">
+                    <span class="nav-icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="recipe-library.html" class="header-nav-item" data-page="recipe-library">
+                    <span class="nav-icon">📚</span>
+                    <span>Library</span>
+                </a>
+                <a href="recipe-developer.html" class="header-nav-item" data-page="recipe-developer">
+                    <span class="nav-icon">🧪</span>
+                    <span>Developer</span>
+                </a>
+                <a href="recipe-upload.html" class="header-nav-item" data-page="recipe-upload">
+                    <span class="nav-icon">⚡</span>
+                    <span>Upload</span>
+                </a>
+                <a href="menu-builder.html" class="header-nav-item" data-page="menu-builder">
+                    <span class="nav-icon">🍽️</span>
+                    <span>Menu</span>
+                </a>
+                <a href="ingredients.html" class="header-nav-item active" data-page="ingredients">
+                    <span class="nav-icon">🥬</span>
+                    <span>Ingredients</span>
+                </a>
+                <a href="equipment-management.html" class="header-nav-item" data-page="equipment-management">
+                    <span class="nav-icon">🔧</span>
+                    <span>Equipment</span>
+                </a>
+                <a href="vendor-management.html" class="header-nav-item" data-page="vendor-management">
+                    <span class="nav-icon">🏪</span>
+                    <span>Vendors</span>
+                </a>
+            </nav>
+
+            <!-- Right Side - User Section -->
+            <div class="header-user-section">
+                <!-- Project Selector -->
+                <select id="header-project-selector" class="header-project-selector">
+                    <option value="">Select Project...</option>
+                </select>
+
+                <!-- User Info Tab -->
+                <div class="header-user-tab" onclick="toggleUserDropdown()">
+                    <div class="header-user-avatar" id="user-avatar">
+                        <span id="user-avatar-initial">👤</span>
+                    </div>
+                    <div class="header-user-info">
+                        <div class="header-user-name" id="current-user">Guest User</div>
+                        <div class="header-user-role">Chef</div>
+                    </div>
+                    <svg class="header-user-dropdown-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+
+                <!-- User Dropdown Menu -->
+                <div class="header-user-dropdown" id="user-dropdown">
+                    <div class="header-user-dropdown-header">
+                        <div class="header-user-dropdown-title" id="dropdown-user-name">Guest User</div>
+                        <div class="header-user-dropdown-subtitle" id="dropdown-user-role">Chef</div>
+                    </div>
+                    
+                    <div class="header-user-dropdown-menu">
+                        <div class="header-user-dropdown-item" onclick="userSystem.quickSwitch()">
+                            <span>🔄</span>
+                            <span>Switch User</span>
+                        </div>
+                        <div class="header-user-dropdown-item" onclick="userSystem.showUserModal('create')">
+                            <span>➕</span>
+                            <span>Create New User</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-user-dropdown-divider"></div>
+                    
+                    <div class="header-user-dropdown-menu">
+                        <div class="header-user-dropdown-item" onclick="userSystem.showSettings()">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </div>
+                        <div class="header-user-dropdown-item danger" onclick="userSystem.logout()">
+                            <span>🚪</span>
+                            <span>Sign Out</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-user-dropdown-footer">
+                        <div class="header-user-dropdown-footer-text">Iterum R&D v1.0</div>
+                    </div>
+                </div>
+
+                <!-- Mobile Navigation Toggle -->
+                <button class="header-mobile-toggle" onclick="toggleMobileNav()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
         </div>
-        <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#e2e8f0;font-size:1.1rem;font-weight:500;text-align:center;letter-spacing:0.05em;margin-top:1rem;opacity:0.9;">Iterum R&D Chef Notebook</div>
-        <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#64ffda;font-size:0.9rem;font-weight:400;text-align:center;margin-top:0.5rem;opacity:0.7;">Loading ingredients library...</div>
-      </div>
-    </div>
-    <!-- Enhanced Uniform Header -->
-    <header class="bg-gradient-to-r from-white to-green-50 shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <!-- Logo and Brand -->
-        <div class="flex items-center gap-3">
-          <div class="relative">
-            <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10 transition-transform hover:scale-110">
-            <div class="absolute -inset-1 bg-green-200 rounded-full opacity-0 hover:opacity-20 transition-opacity"></div>
-          </div>
-          <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
-            Iterum R&D Chef Notebook
-          </span>
-        </div>
-        
-        <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex gap-1 text-gray-700 font-medium">
-          <a href="index.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏠 Dashboard</span>
-          </a>
-          <a href="recipe-library.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">📚 Recipe Library</span>
-          </a>
-          <a href="recipe-developer.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🧪 Recipe Developer</span>
-          </a>
-          <a href="recipe-upload.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">⚡ Quick Upload</span>
-          </a>
-          <a href="menu-builder.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🍽️ Menu Builder</span>
-          </a>
-          <a href="ingredients.html" class="nav-active hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🥬 Ingredients</span>
-          </a>
-          <a href="equipment-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🔧 Equipment</span>
-          </a>
-          <a href="vendor-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-            <span class="flex items-center gap-1">🏪 Vendors</span>
-          </a>
+
+        <!-- Mobile Navigation -->
+        <nav id="mobile-nav" class="header-mobile-nav">
+            <!-- Project Selector for Mobile -->
+            <div style="margin-bottom: 1rem;">
+                <select id="mobile-project-selector" class="header-project-selector" style="width: 100%;">
+                    <option value="">Select Project...</option>
+                </select>
+            </div>
+
+            <!-- Mobile Navigation Items -->
+            <a href="index.html" class="header-mobile-nav-item" data-page="index">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="recipe-library.html" class="header-mobile-nav-item" data-page="recipe-library">
+                <span class="nav-icon">📚</span>
+                <span>Library</span>
+            </a>
+            <a href="recipe-developer.html" class="header-mobile-nav-item" data-page="recipe-developer">
+                <span class="nav-icon">🧪</span>
+                <span>Developer</span>
+            </a>
+            <a href="recipe-upload.html" class="header-mobile-nav-item" data-page="recipe-upload">
+                <span class="nav-icon">⚡</span>
+                <span>Upload</span>
+            </a>
+            <a href="menu-builder.html" class="header-mobile-nav-item" data-page="menu-builder">
+                <span class="nav-icon">🍽️</span>
+                <span>Menu</span>
+            </a>
+            <a href="ingredients.html" class="header-mobile-nav-item active" data-page="ingredients">
+                <span class="nav-icon">🥬</span>
+                <span>Ingredients</span>
+            </a>
+            <a href="equipment-management.html" class="header-mobile-nav-item" data-page="equipment-management">
+                <span class="nav-icon">🔧</span>
+                <span>Equipment</span>
+            </a>
+            <a href="vendor-management.html" class="header-mobile-nav-item" data-page="vendor-management">
+                <span class="nav-icon">🏪</span>
+                <span>Vendors</span>
+            </a>
         </nav>
-        
-        <!-- User Info and Actions -->
-        <div class="flex items-center gap-3">
-          <span id="current-user" class="text-gray-600 text-sm font-medium bg-white px-3 py-1 rounded-full border"></span>
-          <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hidden">
-            Login
-          </button>
-          <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
-            Logout
-          </button>
-          <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors shadow-sm">
-            Switch User
-          </button>
-          <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors">
-            &#9776;
-          </button>
-        </div>
-      </div>
-      
-      <!-- Mobile Navigation -->
-      <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-1 px-4 pb-4">
-        <a href="index.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏠 Dashboard</span>
-        </a>
-        <a href="recipe-library.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">📚 Recipe Library</span>
-        </a>
-        <a href="recipe-developer.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🧪 Recipe Developer</span>
-        </a>
-        <a href="recipe-upload.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">⚡ Quick Upload</span>
-        </a>
-        <a href="menu-builder.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🍽️ Menu Builder</span>
-        </a>
-        <a href="ingredients.html" class="nav-active block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🥬 Ingredients</span>
-        </a>
-        <a href="equipment-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🔧 Equipment</span>
-        </a>
-        <a href="vendor-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-          <span class="flex items-center gap-2">🏪 Vendors</span>
-        </a>
-      </nav>
     </header>
 
-    <!-- Enhanced Mobile Navigation Toggle Script -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const navToggle = document.getElementById('nav-toggle');
-        const mobileNav = document.getElementById('mobile-nav');
-        
-        if (navToggle && mobileNav) {
-          navToggle.addEventListener('click', function() {
-            mobileNav.classList.toggle('hidden');
-            
-            // Add animation class
-            if (!mobileNav.classList.contains('hidden')) {
-              mobileNav.style.animation = 'slideDown 0.3s ease-out';
-            }
-          });
-          
-          // Close mobile nav when clicking outside
-          document.addEventListener('click', function(event) {
-            if (!navToggle.contains(event.target) && !mobileNav.contains(event.target)) {
-              mobileNav.classList.add('hidden');
-            }
-          });
-        }
-      });
-    </script>
-    <main class="w-full px-4 py-8">
-        <section class="notebook-card">
-            <h1 class="notebook-heading mb-4">Master Ingredient Database</h1>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Ingredient Database</h3>
-                <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <h4 class="font-semibold text-yellow-800 mb-2">Debug Controls</h4>
-                    <div class="flex gap-2 flex-wrap">
-                        <button onclick="clearIngredientsAndReload()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">Clear & Reload CSV</button>
-                        <button onclick="forceLoadCSV()" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">Force Load CSV</button>
-                        <button onclick="checkIngredients()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">Check Ingredients</button>
-                        <button onclick="enhanceAllIngredients()" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm">🔍 Enhance All with Specialty Produce</button>
-                        <button id="url-import-ingredient-btn" onclick="ingredientLibrary.showURLImportModal()" class="bg-teal-500 hover:bg-teal-600 text-white px-3 py-1 rounded text-sm">🌐 Import from URL</button>
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1 class="heading-1">Master Ingredient Database</h1>
+                <p class="body-large">Comprehensive ingredient management with nutritional data, suppliers, and cost tracking.</p>
+            </div>
+
+            <!-- Add New Ingredient Section -->
+            <div class="add-ingredient-section">
+                <h2 class="heading-2">Add New Ingredient</h2>
+                <form id="add-ingredient-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ingredient-name" class="form-label">Ingredient Name</label>
+                            <input type="text" id="ingredient-name" class="form-input" placeholder="e.g., Organic Kale" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ingredient-category" class="form-label">Category</label>
+                            <select id="ingredient-category" class="form-select" required>
+                                <option value="">Select category</option>
+                                <option value="vegetables">Vegetables</option>
+                                <option value="fruits">Fruits</option>
+                                <option value="proteins">Proteins</option>
+                                <option value="grains">Grains</option>
+                                <option value="dairy">Dairy</option>
+                                <option value="spices">Spices & Herbs</option>
+                                <option value="oils">Oils & Fats</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ingredient-unit" class="form-label">Base Unit</label>
+                            <select id="ingredient-unit" class="form-select" required>
+                                <option value="g">Grams (g)</option>
+                                <option value="kg">Kilograms (kg)</option>
+                                <option value="ml">Milliliters (ml)</option>
+                                <option value="l">Liters (l)</option>
+                                <option value="piece">Piece</option>
+                                <option value="bunch">Bunch</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ingredient-cost" class="form-label">Cost per Unit</label>
+                            <input type="number" id="ingredient-cost" class="form-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ingredient-supplier" class="form-label">Primary Supplier</label>
+                            <input type="text" id="ingredient-supplier" class="form-input" placeholder="Supplier name">
+                        </div>
+                        <div class="form-group">
+                            <label for="ingredient-url" class="form-label">URL Import</label>
+                            <div class="flex gap-2">
+                                <input type="url" id="ingredient-url" class="form-input" placeholder="Paste ingredient URL">
+                                <button type="button" class="btn btn-secondary" onclick="previewURLImport()">Preview</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">➕ Add Ingredient</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div class="ingredient-search">
+                <h2 class="heading-2">Search Ingredients</h2>
+                <div class="search-filters">
+                    <div class="form-group">
+                        <label for="search-query" class="form-label">Search</label>
+                        <input type="text" id="search-query" class="form-input" placeholder="Search ingredients...">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-category" class="form-label">Category</label>
+                        <select id="filter-category" class="form-select">
+                            <option value="">All Categories</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                            <option value="proteins">Proteins</option>
+                            <option value="grains">Grains</option>
+                            <option value="dairy">Dairy</option>
+                            <option value="spices">Spices & Herbs</option>
+                            <option value="oils">Oils & Fats</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-supplier" class="form-label">Supplier</label>
+                        <select id="filter-supplier" class="form-select">
+                            <option value="">All Suppliers</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sort-by" class="form-label">Sort By</label>
+                        <select id="sort-by" class="form-select">
+                            <option value="name">Name</option>
+                            <option value="category">Category</option>
+                            <option value="cost">Cost</option>
+                            <option value="date-added">Date Added</option>
+                        </select>
                     </div>
                 </div>
-                <div class="mb-2 flex flex-wrap items-center gap-2">
-                    <input id="ingredient-search" type="text" placeholder="Search ingredients..." class="border rounded px-3 py-1 w-64 focus:outline-none focus:ring-2 focus:ring-blue-300" oninput="renderIngredients()">
-                </div>
-                <div id="existing-ingredients-container" class="w-full">
-                    <!-- Ingredients will be loaded here -->
+                <button class="btn btn-primary" onclick="searchIngredients()">🔍 Search</button>
+                <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+            </div>
+
+            <!-- Ingredients Grid -->
+            <div id="ingredients-container">
+                <div class="ingredient-grid" id="ingredients-grid">
+                    <!-- Ingredients will be populated here -->
                 </div>
             </div>
-        </section>
+        </div>
     </main>
-    <!-- Ingredient Detail Modal -->
-    <div id="ingredient-detail-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
-        <div id="ingredient-detail-content" class="notebook-modal w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <!-- Content will be populated by JavaScript -->
-        </div>
-    </div>
-    <!-- Shared Auth/Loading UI -->
-    <!--#include file="shared-auth.html" -->
-    <script src="unified_auth_system.js"></script>
-<script src="debug_auth_buttons.js"></script>
-    <script src="standardize-login-modals.js"></script>
+
+    <!-- Essential Scripts -->
     <script>
-    // --- Ingredient Database Logic (copied from index-local.html) ---
-    const STORAGE_KEYS = {
-        INGREDIENTS: 'iterum_ingredients',
-    };
-    let currentIngredients = [];
-    async function saveIngredientsToBackend(data) {
-        await fetch('/api/data/json/ingredients', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initializing Ingredients Page');
+            
+            // User system now initializes automatically
+            console.log('🔍 User system auto-initialization enabled');
+            
+            // Project management now handled by new system
+            console.log('🔍 Project management handled by new system');
+            
+            // Initialize ingredients
+            initializeIngredients();
+            
+            console.log('✅ Ingredients Page initialized');
         });
-    }
-    async function loadIngredientsFromBackend() {
-        const res = await fetch('/api/data/json/ingredients');
-        if (res.ok) {
-            return await res.json();
+
+        // Wait for app to be ready
+        document.addEventListener('iterumAppReady', function() {
+            initializeIngredientsPage();
+            updateUserInfo();
+            initializeProjectSelector();
+        });
+
+        // Wait for loading screen to be hidden
+        document.addEventListener('loadingScreenHidden', function() {
+            initializeIngredientsPage();
+            updateUserInfo();
+            initializeProjectSelector();
+        });
+
+        function initializeIngredientsPage() {
+            console.log('🥬 Initializing Ingredients Page');
+            loadIngredients();
+            setupEventListeners();
         }
-        return [];
-    }
-    const searchBoxHTML = `
-        <div class="mb-2 flex flex-wrap items-center gap-2">
-            <input id="ingredient-search" type="text" placeholder="Search ingredients..." class="border rounded px-3 py-1 w-64 focus:outline-none focus:ring-2 focus:ring-blue-300" oninput="renderIngredients()">
-        </div>
-    `;
-    function renderIngredients() {
-        const container = document.getElementById('existing-ingredients-container');
-        if (!container) return;
-        const search = (document.getElementById('ingredient-search')?.value || '').toLowerCase();
-        let filtered = currentIngredients;
-        if (search) {
-            filtered = currentIngredients.filter(ing =>
-                (ing.name || '').toLowerCase().includes(search) ||
-                (ing.category || '').toLowerCase().includes(search)
-            );
+
+        function updateUserInfo() {
+            const currentUser = window.userSystem?.getCurrentUser();
+            if (currentUser) {
+                document.getElementById('current-user').textContent = currentUser.name || 'User';
+                document.getElementById('dropdown-user-name').textContent = currentUser.name || 'User';
+                document.getElementById('user-avatar-initial').textContent = (currentUser.name || 'U')[0].toUpperCase();
+            }
         }
-        if (filtered.length === 0) {
-            container.innerHTML = `
-                ${searchBoxHTML}
-                <div class="col-span-full text-center py-8">
-                    <p class="text-gray-600 mb-4">No ingredients found.</p>
-                    <button onclick="clearIngredientsAndReload()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                        Load from CSV
-                    </button>
+
+        function initializeProjectSelector() {
+            if (window.projectManager) {
+                window.projectManager.loadUserProjects();
+            }
+        }
+
+        function setupEventListeners() {
+            // Form submission
+            document.getElementById('add-ingredient-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addIngredient();
+            });
+
+            // Search input
+            document.getElementById('search-query').addEventListener('input', function() {
+                searchIngredients();
+            });
+
+            // Filter changes
+            document.getElementById('filter-category').addEventListener('change', searchIngredients);
+            document.getElementById('filter-supplier').addEventListener('change', searchIngredients);
+            document.getElementById('sort-by').addEventListener('change', searchIngredients);
+        }
+
+        function loadIngredients() {
+            // Load ingredients from localStorage or API
+            const ingredients = JSON.parse(localStorage.getItem('ingredients') || '[]');
+            displayIngredients(ingredients);
+        }
+
+        function displayIngredients(ingredients) {
+            const grid = document.getElementById('ingredients-grid');
+            grid.innerHTML = '';
+
+            if (ingredients.length === 0) {
+                grid.innerHTML = '<p class="text-center text-gray-500">No ingredients found. Add your first ingredient above!</p>';
+                return;
+            }
+
+            ingredients.forEach(ingredient => {
+                const card = createIngredientCard(ingredient);
+                grid.appendChild(card);
+            });
+        }
+
+        function createIngredientCard(ingredient) {
+            const card = document.createElement('div');
+            card.className = 'ingredient-card';
+            card.innerHTML = `
+                <div class="ingredient-card-header">
+                    <div class="ingredient-card-title">${ingredient.name}</div>
+                    <div class="ingredient-card-category">${ingredient.category}</div>
+                </div>
+                <div class="ingredient-card-body">
+                    <div class="ingredient-info">
+                        <div class="info-item">
+                            <div class="info-value">${ingredient.cost || '0'}</div>
+                            <div class="info-label">Cost</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-value">${ingredient.unit || 'g'}</div>
+                            <div class="info-label">Unit</div>
+                        </div>
+                    </div>
+                    <div class="ingredient-actions">
+                        <button class="btn btn-secondary" onclick="editIngredient('${ingredient.id}')">✏️ Edit</button>
+                        <button class="btn btn-secondary" onclick="viewIngredient('${ingredient.id}')">👁️ View</button>
+                        <button class="btn btn-secondary danger" onclick="deleteIngredient('${ingredient.id}')">🗑️ Delete</button>
+                    </div>
                 </div>
             `;
-            return;
+            return card;
         }
-        let table = `${searchBoxHTML}<div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-300 bg-white text-sm">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Name</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Unit</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Category</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Prev. Price</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Current Price</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Cost Level</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Notes</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Nutrition</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Allergens</th>
-                        <th class="px-3 py-2 border-b text-left font-semibold">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-        table += filtered.map((ingredient, idx) => {
-            if (ingredient.previousPrice === undefined) ingredient.previousPrice = '';
-            if (ingredient.currentPrice === undefined) ingredient.currentPrice = '';
-            let priceClass = '';
-            if (ingredient.previousPrice && ingredient.currentPrice) {
-                const prev = parseFloat(ingredient.previousPrice);
-                const curr = parseFloat(ingredient.currentPrice);
-                if (!isNaN(prev) && !isNaN(curr)) {
-                    if (curr > prev) priceClass = 'bg-red-100 text-red-700 font-bold';
-                    else if (curr < prev) priceClass = 'bg-green-100 text-green-700 font-bold';
-                }
-            }
-            return `
-            <tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50 cursor-pointer" onclick="viewIngredientDetail(${ingredient.id})">
-                <td class="px-3 py-2 border-b font-medium">${ingredient.name}</td>
-                <td class="px-3 py-2 border-b">${ingredient.unit || ''}</td>
-                <td class="px-3 py-2 border-b">${ingredient.category || ''}</td>
-                <td class="px-3 py-2 border-b">${ingredient.previousPrice !== undefined ? ingredient.previousPrice : ''}</td>
-                <td class="px-3 py-2 border-b ${priceClass}" onclick="event.stopPropagation(); editPrice(${ingredient.id}, this)">${ingredient.currentPrice !== undefined ? ingredient.currentPrice : ''}</td>
-                <td class="px-3 py-2 border-b">${ingredient.costLevel || ''}</td>
-                <td class="px-3 py-2 border-b">${ingredient.specNotes || ''}</td>
-                <td class="px-3 py-2 border-b">${ingredient.nutritionalInfo ? ingredient.nutritionalInfo.split(',')[0] : ''}</td>
-                <td class="px-3 py-2 border-b">${ingredient.allergenInfo || ''}</td>
-                <td class="px-3 py-2 border-b text-blue-600 underline hover:text-blue-800" onclick="event.stopPropagation(); viewIngredientDetail(${ingredient.id})">View</td>
-            </tr>
-            `;
-        }).join('');
-        table += `</tbody></table></div>`;
-        container.innerHTML = table;
-    }
-    function editPrice(ingredientId, cell) {
-        const ingredient = currentIngredients.find(ing => ing.id === ingredientId);
-        if (!ingredient) return;
-        const oldValue = ingredient.currentPrice || '';
-        cell.innerHTML = `<input type='number' step='0.01' min='0' value='${oldValue}' class='border rounded px-2 py-1 w-24 focus:outline-none focus:ring-2 focus:ring-blue-300' onblur='savePrice(${ingredientId}, this)' onkeydown='if(event.key==="Enter"){this.blur();}' autofocus>`;
-        cell.querySelector('input').focus();
-    }
-    function savePrice(ingredientId, input) {
-        const ingredient = currentIngredients.find(ing => ing.id === ingredientId);
-        if (!ingredient) return;
-        const newValue = input.value;
-        if (newValue !== '' && newValue !== ingredient.currentPrice) {
-            ingredient.previousPrice = ingredient.currentPrice || '';
-            ingredient.currentPrice = newValue;
-            alert(`Price updated for ${ingredient.name}: ${ingredient.previousPrice} → ${ingredient.currentPrice}`);
-            saveIngredientsToBackend(currentIngredients);
-        }
-        renderIngredients();
-    }
-    function viewIngredientDetail(ingredientId) {
-        const ingredient = currentIngredients.find(ing => ing.id === ingredientId);
-        if (!ingredient) return;
-        const detailHTML = `
-            <div class="bg-white rounded-lg shadow-xl max-w-6xl mx-auto">
-                <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-t-lg">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h2 class="text-3xl font-bold mb-2">${ingredient.name}</h2>
-                            <div class="flex items-center gap-4 text-blue-100">
-                                <span class="bg-blue-700 px-3 py-1 rounded-full text-sm">${ingredient.category || 'N/A'}</span>
-                                <span class="text-sm">Unit: ${ingredient.unit || 'N/A'}</span>
-                                ${ingredient.costLevel ? `<span class="text-sm">Cost: ${ingredient.costLevel}</span>` : ''}
-                                ${ingredient.scientificName ? `<span class="text-sm italic">${ingredient.scientificName}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="enhanceIngredientWithSpecialtyProduce(${ingredient.id})" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300">
-                                🔍 Enhance with Specialty Produce
-                            </button>
-                            <button onclick="closeIngredientDetail()" class="text-white hover:text-blue-200 text-2xl font-bold">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <!-- Image Upload Section -->
-                    <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Ingredient Image</h3>
-                        <div id="ingredient-image-upload-${ingredient.id}"></div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Basic Information</h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-1">Description</label>
-                                    <p class="text-gray-600">${ingredient.specNotes || 'No description available'}</p>
-                                </div>
-                                ${ingredient.family ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Family</label><p class="text-gray-600">${ingredient.family}</p></div>` : ''}
-                                ${ingredient.variety ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Variety</label><p class="text-gray-600">${ingredient.variety}</p></div>` : ''}
-                                ${ingredient.origin ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Origin</label><p class="text-gray-600">${ingredient.origin}</p></div>` : ''}
-                                <div><label class="block text-gray-700 text-sm font-bold mb-1">Seasonality</label><p class="text-gray-600">${ingredient.seasonality || 'Year-round'}</p></div>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Physical Characteristics</h3>
-                            <div class="space-y-3">
-                                ${ingredient.appearance ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Appearance</label><p class="text-gray-600">${ingredient.appearance}</p></div>` : ''}
-                                ${ingredient.color ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Color</label><p class="text-gray-600">${ingredient.color}</p></div>` : ''}
-                                ${ingredient.texture ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Texture</label><p class="text-gray-600">${ingredient.texture}</p></div>` : ''}
-                                ${ingredient.aroma ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Aroma</label><p class="text-gray-600">${ingredient.aroma}</p></div>` : ''}
-                                ${ingredient.flavor ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Flavor Profile</label><p class="text-gray-600">${ingredient.flavor}</p></div>` : ''}
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Culinary & Storage</h3>
-                            <div class="space-y-3">
-                                <div><label class="block text-gray-700 text-sm font-bold mb-1">Storage</label><p class="text-gray-600">${ingredient.storageNotes || 'Store as appropriate'}</p></div>
-                                <div><label class="block text-gray-700 text-sm font-bold mb-1">Prep Notes</label><p class="text-gray-600">${ingredient.prepNotes || 'No prep notes'}</p></div>
-                                ${ingredient.cookingMethods ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Cooking Methods</label><p class="text-gray-600">${ingredient.cookingMethods}</p></div>` : ''}
-                                <div><label class="block text-gray-700 text-sm font-bold mb-1">Substitutions</label><p class="text-gray-600">${ingredient.substitutions || 'No substitutions listed'}</p></div>
-                                ${ingredient.pairings ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Flavor Pairings</label><p class="text-gray-600">${ingredient.pairings}</p></div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t">
-                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Nutritional & Health Information</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label class="block text-gray-700 text-sm font-bold mb-1">Nutritional Info</label><p class="text-gray-600">${ingredient.nutritionalInfo || 'Not specified'}</p></div>
-                            <div><label class="block text-gray-700 text-sm font-bold mb-1">Allergen Info</label><p class="text-gray-600">${ingredient.allergenInfo || 'None'}</p></div>
-                            ${ingredient.healthBenefits ? `<div class="md:col-span-2"><label class="block text-gray-700 text-sm font-bold mb-1">Health Benefits</label><p class="text-gray-600">${ingredient.healthBenefits}</p></div>` : ''}
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t">
-                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Commercial Information</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label class="block text-gray-700 text-sm font-bold mb-1">Supplier Notes</label><p class="text-gray-600">${ingredient.supplierNotes || 'Common grocery item'}</p></div>
-                            ${ingredient.availability ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Availability</label><p class="text-gray-600">${ingredient.availability}</p></div>` : ''}
-                            ${ingredient.certifications ? `<div><label class="block text-gray-700 text-sm font-bold mb-1">Certifications</label><p class="text-gray-600">${ingredient.certifications}</p></div>` : ''}
-                        </div>
-                    </div>
-                    ${ingredient.specialtyProduceUrl ? `<div class="mt-6 pt-4 border-t"><h3 class="text-lg font-semibold text-gray-700 mb-3">External Resources</h3><a href="${ingredient.specialtyProduceUrl}" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>View on Specialty Produce</a></div>` : ''}
-                    <div class="flex justify-end mt-6 pt-4 border-t"><button onclick="closeIngredientDetail()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-full transition duration-300">Close</button></div>
-                </div>
-            </div>
-        `;
-        const modal = document.getElementById('ingredient-detail-modal');
-        const content = document.getElementById('ingredient-detail-content');
-        if (modal && content) {
-            content.innerHTML = detailHTML;
-            modal.classList.remove('hidden');
-        }
-    }
-    function closeIngredientDetail() {
-        const modal = document.getElementById('ingredient-detail-modal');
-        if (modal) {
-            modal.classList.add('hidden');
-        }
-    }
-    async function clearIngredientsAndReload() {
-        if (confirm('This will clear all ingredients and reload from CSV. Continue?')) {
-            // localStorage.removeItem(STORAGE_KEYS.INGREDIENTS);
-            await preloadIngredientsFromCSV();
-            currentIngredients = await loadIngredientsFromBackend();
-            renderIngredients();
-        }
-    }
-    async function forceLoadCSV() {
-        // localStorage.removeItem(STORAGE_KEYS.INGREDIENTS);
-        const csvIngredients = await preloadIngredientsFromCSV();
-        if (csvIngredients.length > 0) {
-            currentIngredients = csvIngredients;
-            renderIngredients();
-            alert(`Successfully loaded ${csvIngredients.length} ingredients from CSV!`);
-        } else {
-            alert('No ingredients were loaded from CSV. Check the console for errors.');
-        }
-    }
-    async function enhanceAllIngredients() {
-        if (confirm(`This will enhance all ${currentIngredients.length} ingredients with Specialty Produce data. This may take a while. Continue?`)) {
-            let enhanced = 0;
-            for (let i = 0; i < currentIngredients.length; i++) {
-                const ingredient = currentIngredients[i];
-                try {
-                    const specialtyData = await fetchSpecialtyProduceData(ingredient.name);
-                    const enhancedIngredient = {
-                        ...ingredient,
-                        ...specialtyData,
-                        enhanced_at: new Date().toISOString()
-                    };
-                    currentIngredients[i] = enhancedIngredient;
-                    enhanced++;
-                    if (enhanced % 10 === 0) {
-                        console.log(`Enhanced ${enhanced}/${currentIngredients.length} ingredients...`);
-                    }
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                } catch (error) {
-                    console.error(`Error enhancing ${ingredient.name}:`, error);
-                }
-            }
-            await saveIngredientsToBackend(currentIngredients);
-            renderIngredients();
-            alert(`Successfully enhanced ${enhanced} ingredients with Specialty Produce data!`);
-        }
-    }
-    function checkIngredients() {
-        console.log('Current ingredients in memory:', currentIngredients.length);
-        console.log('Sample ingredients:', currentIngredients.slice(0, 3));
-        alert(`Found ${currentIngredients.length} ingredients in database.\nCheck console for details.`);
-    }
-    async function preloadIngredientsFromCSV() {
-        try {
-            const response = await fetch('Ingredient Database-Sheet1.csv.txt');
-            const text = await response.text();
-            const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
-            const header = lines[0].split(',');
-            const ingredients = [];
-            for (let i = 1; i < lines.length && ingredients.length < 1000; i++) {
-                const line = lines[i];
-                const row = [];
-                let current = '';
-                let inQuotes = false;
-                for (let j = 0; j < line.length; j++) {
-                    const char = line[j];
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        row.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
-                }
-                row.push(current.trim());
-                if (row.length < 4) continue;
-                const [name, unit, category, specNotes, nutritionalInfo, storageNotes, substitutions, seasonality, costLevel, supplierNotes, allergenInfo, bestBefore, prepNotes] = row;
-                if (!name || name.trim() === '') continue;
-                ingredients.push({
-                    id: i,
-                    name: name.trim(),
-                    unit: unit ? unit.trim() : '',
-                    category: category ? category.trim() : '',
-                    specNotes: specNotes ? specNotes.trim() : '',
-                    nutritionalInfo: nutritionalInfo ? nutritionalInfo.trim() : '',
-                    storageNotes: storageNotes ? storageNotes.trim() : '',
-                    substitutions: substitutions ? substitutions.trim() : '',
-                    seasonality: seasonality ? seasonality.trim() : '',
-                    costLevel: costLevel ? costLevel.trim() : '',
-                    supplierNotes: supplierNotes ? supplierNotes.trim() : '',
-                    allergenInfo: allergenInfo ? allergenInfo.trim() : '',
-                    bestBefore: bestBefore ? bestBefore.trim() : '',
-                    prepNotes: prepNotes ? prepNotes.trim() : '',
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
-                });
-            }
-            return ingredients;
-        } catch (e) {
-            console.error('Failed to preload ingredients:', e);
-            return [];
-        }
-    }
-    async function fetchSpecialtyProduceData(ingredientName) {
-        // Mock implementation for demo
-        return {
-            scientificName: '',
-            family: '',
-            variety: '',
-            origin: '',
-            appearance: '',
-            color: '',
-            size: '',
-            texture: '',
-            aroma: '',
-            flavor: '',
-            healthBenefits: '',
-            cookingMethods: '',
-            availability: '',
-            certifications: '',
-            pairings: '',
-            recipes: '',
-            imageUrl: '',
-            specialtyProduceUrl: `https://www.specialtyproduce.com/search?q=${encodeURIComponent(ingredientName)}`
-        };
-    }
-    document.addEventListener('DOMContentLoaded', async function() {
-        currentIngredients = await loadIngredientsFromBackend();
-        renderIngredients();
-    });
-    (function updateUserInfo() {
-      const userInfo = document.getElementById('current-user');
-      if (userInfo) {
-        const username = localStorage.getItem('username') || 'Guest';
-        userInfo.textContent = username;
-      }
-    })();
-    (function(){
-        const langSel = document.getElementById('language-selector');
-        if (!langSel) return;
-        const storedLang = localStorage.getItem('iterum_lang') || 'en';
-        langSel.value = storedLang;
-        langSel.addEventListener('change', function() {
-            localStorage.setItem('iterum_lang', langSel.value);
-            translatePage(langSel.value);
-        });
-        if (storedLang !== 'en') translatePage(storedLang);
 
-        function translatePage(targetLang) {
-            if (targetLang === 'en') return location.reload();
-            const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, label, button, a, p, span, th, td, li');
-            elements.forEach(el => {
-                if (!el.dataset.origText) el.dataset.origText = el.innerText;
-            });
-            const texts = Array.from(elements).map(el => el.dataset.origText);
-            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(texts.join('|||'))}&langpair=en|${targetLang}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.responseData) return;
-                    const translated = data.responseData.translatedText.split('|||');
-                    elements.forEach((el, i) => {
-                        if (translated[i]) el.innerText = translated[i];
-                    });
-                });
-        }
-    })();
-    </script>
-    <svg class="pea-bg-sketch" viewBox="0 0 120 180" fill="none" style="">
-      <path d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <ellipse cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
-      <ellipse cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-      <ellipse cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-      <ellipse cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-      <path d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <ellipse cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
-      <path d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <ellipse cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
-    </svg>
-
-    <!-- Additional Plant Sketches for Ingredients -->
-    <!-- Fruit Tree (Apple/Orange) -->
-    <svg class="plant-sketch top-right plant-fruit" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 140 60 100" stroke="#8d6e63" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q40 90 30 70" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q80 90 90 70" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q50 80 45 60" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q70 80 75 60" stroke="#8d6e63" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="30" cy="70" rx="5" ry="8" fill="#a5d6a7" stroke="#8d6e63" stroke-width="1"/>
-        <ellipse cx="90" cy="70" rx="5" ry="8" fill="#a5d6a7" stroke="#8d6e63" stroke-width="1"/>
-        <ellipse cx="45" cy="60" rx="5" ry="8" fill="#a5d6a7" stroke="#8d6e63" stroke-width="1"/>
-        <ellipse cx="75" cy="60" rx="5" ry="8" fill="#a5d6a7" stroke="#8d6e63" stroke-width="1"/>
-        <circle cx="60" cy="100" r="10" fill="#ff9800" stroke="#f57c00" stroke-width="1"/>
-    </svg>
-
-    <!-- Grain Plant (Wheat/Corn) -->
-    <svg class="plant-sketch top-left plant-grain" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 140 60 100" stroke="#d4a574" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q40 90 35 70" stroke="#d4a574" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q80 90 85 70" stroke="#d4a574" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q50 80 45 60" stroke="#d4a574" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q70 80 75 60" stroke="#d4a574" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="35" cy="70" rx="2" ry="8" fill="#f4e4c1" stroke="#d4a574" stroke-width="1"/>
-        <ellipse cx="85" cy="70" rx="2" ry="8" fill="#f4e4c1" stroke="#d4a574" stroke-width="1"/>
-        <ellipse cx="45" cy="60" rx="2" ry="8" fill="#f4e4c1" stroke="#d4a574" stroke-width="1"/>
-        <ellipse cx="75" cy="60" rx="2" ry="8" fill="#f4e4c1" stroke="#d4a574" stroke-width="1"/>
-        <ellipse cx="60" cy="100" rx="8" ry="4" fill="#ffeb3b" stroke="#fbc02d" stroke-width="1"/>
-    </svg>
-
-    <!-- Herb Plant (Basil/Rosemary) -->
-    <svg class="plant-sketch middle-right plant-herb plant-float" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 140 60 100" stroke="#8bc34a" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q40 90 35 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q80 90 85 70" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q50 80 45 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q70 80 75 60" stroke="#8bc34a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="35" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
-        <ellipse cx="85" cy="70" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
-        <ellipse cx="45" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
-        <ellipse cx="75" cy="60" rx="3" ry="8" fill="#a5d6a7" stroke="#8bc34a" stroke-width="1"/>
-    </svg>
-
-    <!-- Vegetable Plant (Carrot/Tomato) -->
-    <svg class="plant-sketch middle-left plant-vegetable" viewBox="0 0 120 180" fill="none">
-        <path d="M60 160 Q60 140 60 120" stroke="#ff9800" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M60 120 Q40 110 30 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 120 Q80 110 90 90" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 120 Q50 100 45 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 120 Q70 100 75 80" stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="30" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
-        <ellipse cx="90" cy="90" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
-        <ellipse cx="45" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
-        <ellipse cx="75" cy="80" rx="4" ry="6" fill="#81c784" stroke="#4caf50" stroke-width="1"/>
-        <circle cx="60" cy="120" r="8" fill="#ff5722" stroke="#e64a19" stroke-width="1"/>
-    </svg>
-
-    <!-- Small Herb Sprig -->
-    <svg class="plant-sketch small plant-herb" viewBox="0 0 120 180" fill="none" style="top: 70%; left: 10%;">
-        <path d="M60 160 Q60 140 60 100" stroke="#689f38" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q45 90 40 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 100 Q75 90 80 75" stroke="#689f38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="40" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
-        <ellipse cx="80" cy="75" rx="2" ry="6" fill="#8bc34a" stroke="#689f38" stroke-width="1"/>
-    </svg>
-
-    <!-- Tiny Microgreens -->
-    <svg class="plant-sketch tiny plant-vegetable" viewBox="0 0 120 180" fill="none" style="top: 85%; right: 15%;">
-        <path d="M60 160 Q60 150 60 140" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <path d="M60 140 Q55 135 50 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
-        <path d="M60 140 Q65 135 70 130" stroke="#4caf50" stroke-width="1" fill="none" stroke-linecap="round"/>
-        <ellipse cx="50" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
-        <ellipse cx="70" cy="130" rx="1.5" ry="4" fill="#81c784" stroke="#4caf50" stroke-width="0.5"/>
-    </svg>
-
-    <script src="imageUploadManager.js"></script>
-    <script>
-        // Initialize image upload functionality for ingredients
-        function initializeIngredientImageUpload(ingredientId) {
-            const uploadContainer = document.getElementById(`ingredient-image-upload-${ingredientId}`);
-            if (!uploadContainer) return;
-            
-            window.imageUploadManager.createUploadInterface(uploadContainer, {
-                multiple: false,
-                placeholder: 'Upload ingredient image here'
-            });
-            
-            // Add upload button
-            const uploadBtn = document.createElement('button');
-            uploadBtn.textContent = 'Upload Image';
-            uploadBtn.className = 'mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors';
-            uploadBtn.onclick = async () => {
-                const uploadContainerEl = uploadContainer.querySelector('.image-upload-container');
-                if (uploadContainerEl && uploadContainerEl.pendingFiles && uploadContainerEl.pendingFiles.length > 0) {
-                    const file = uploadContainerEl.pendingFiles[0];
-                    const ingredient = currentIngredients.find(ing => ing.id === ingredientId);
-                    
-                    if (!ingredient) {
-                        alert('Ingredient not found');
-                        return;
-                    }
-                    
-                    try {
-                        const progressCallback = (percent) => {
-                            window.imageUploadManager.showProgress(uploadContainerEl, percent);
-                        };
-                        
-                        // For development, simulate upload
-                        console.log('Would upload image for ingredient:', ingredient.name);
-                        const messagesContainer = uploadContainerEl.querySelector('.upload-messages');
-                        window.imageUploadManager.showMessage(messagesContainer, 'Image uploaded successfully!', 'success');
-                        
-                        // In production, would call:
-                        // await window.imageUploadManager.uploadIngredientImage(ingredientId, file, progressCallback);
-                        
-                    } catch (error) {
-                        const messagesContainer = uploadContainerEl.querySelector('.upload-messages');
-                        window.imageUploadManager.showMessage(messagesContainer, `Upload failed: ${error.message}`, 'error');
-                    }
-                } else {
-                    alert('Please select an image first');
-                }
+        function addIngredient() {
+            const formData = new FormData(document.getElementById('add-ingredient-form'));
+            const ingredient = {
+                id: Date.now().toString(),
+                name: document.getElementById('ingredient-name').value,
+                category: document.getElementById('ingredient-category').value,
+                unit: document.getElementById('ingredient-unit').value,
+                cost: parseFloat(document.getElementById('ingredient-cost').value) || 0,
+                supplier: document.getElementById('ingredient-supplier').value,
+                dateAdded: new Date().toISOString()
             };
-            uploadContainer.appendChild(uploadBtn);
-        }
-        
-        // Override the viewIngredientDetail function to initialize image upload
-        const originalViewIngredientDetail = viewIngredientDetail;
-        viewIngredientDetail = function(ingredientId) {
-            originalViewIngredientDetail(ingredientId);
-            // Initialize image upload after modal content is created
-            setTimeout(() => {
-                initializeIngredientImageUpload(ingredientId);
-            }, 100);
-        };
-    </script>
 
+            // Save to localStorage
+            const ingredients = JSON.parse(localStorage.getItem('ingredients') || '[]');
+            ingredients.push(ingredient);
+            localStorage.setItem('ingredients', JSON.stringify(ingredients));
+
+            // Refresh display
+            loadIngredients();
+            clearForm();
+            
+            console.log('✅ Ingredient added:', ingredient);
+        }
+
+        function clearForm() {
+            document.getElementById('add-ingredient-form').reset();
+        }
+
+        function searchIngredients() {
+            const query = document.getElementById('search-query').value.toLowerCase();
+            const category = document.getElementById('filter-category').value;
+            const supplier = document.getElementById('filter-supplier').value;
+            const sortBy = document.getElementById('sort-by').value;
+
+            let ingredients = JSON.parse(localStorage.getItem('ingredients') || '[]');
+
+            // Filter
+            ingredients = ingredients.filter(ingredient => {
+                const matchesQuery = !query || ingredient.name.toLowerCase().includes(query);
+                const matchesCategory = !category || ingredient.category === category;
+                const matchesSupplier = !supplier || ingredient.supplier === supplier;
+                return matchesQuery && matchesCategory && matchesSupplier;
+            });
+
+            // Sort
+            ingredients.sort((a, b) => {
+                switch (sortBy) {
+                    case 'name': return a.name.localeCompare(b.name);
+                    case 'category': return a.category.localeCompare(b.category);
+                    case 'cost': return a.cost - b.cost;
+                    case 'date-added': return new Date(b.dateAdded) - new Date(a.dateAdded);
+                    default: return 0;
+                }
+            });
+
+            displayIngredients(ingredients);
+        }
+
+        function resetFilters() {
+            document.getElementById('search-query').value = '';
+            document.getElementById('filter-category').value = '';
+            document.getElementById('filter-supplier').value = '';
+            document.getElementById('sort-by').value = 'name';
+            searchIngredients();
+        }
+
+        function previewURLImport() {
+            const url = document.getElementById('ingredient-url').value;
+            if (!url) {
+                alert('Please enter a URL to import from');
+                return;
+            }
+            console.log('🔗 Previewing URL import from:', url);
+            // Implement URL preview logic here
+        }
+
+        function editIngredient(id) {
+            console.log('✏️ Editing ingredient:', id);
+            // Implement edit logic
+        }
+
+        function viewIngredient(id) {
+            console.log('👁️ Viewing ingredient:', id);
+            // Implement view logic
+        }
+
+        function deleteIngredient(id) {
+            if (confirm('Are you sure you want to delete this ingredient?')) {
+                const ingredients = JSON.parse(localStorage.getItem('ingredients') || '[]');
+                const filtered = ingredients.filter(i => i.id !== id);
+                localStorage.setItem('ingredients', JSON.stringify(filtered));
+                loadIngredients();
+                console.log('🗑️ Ingredient deleted:', id);
+            }
+        }
+
+        // Toggle user dropdown menu
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown');
+            const userTab = document.querySelector('.header-user-tab');
+            
+            if (dropdown && userTab) {
+                dropdown.classList.toggle('active');
+                userTab.classList.toggle('active');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('user-dropdown');
+            const userTab = document.querySelector('.header-user-tab');
+            
+            if (dropdown && userTab && !userTab.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+                userTab.classList.remove('active');
+            }
+        });
+
+        // Toggle mobile navigation
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobile-nav');
+            if (mobileNav) {
+                mobileNav.classList.toggle('active');
+            }
+        }
+
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobile-nav');
+            const mobileToggle = document.querySelector('.header-mobile-toggle');
+            
+            if (mobileNav && mobileToggle && !mobileToggle.contains(event.target) && !mobileNav.contains(event.target)) {
+                mobileNav.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html> 

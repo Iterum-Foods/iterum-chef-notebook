@@ -6,7 +6,10 @@
     <title>Enhanced Project Modal Demo - Iterum R&D</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="apiConfig.js"></script>
-    <script src="projectManager.js"></script>
+    <!-- Essential Scripts -->
+    <script src="assets/js/enhanced-user-system.js"></script>
+    <!-- Project management now handled by new system -->
+    <script src="assets/js/error_handler.js"></script>
     <script src="enhanced-project-modal.js"></script>
 </head>
 <body class="bg-gray-100">
@@ -116,7 +119,7 @@
                         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                     Show Enhanced Modal
                 </button>
-                <button onclick="showOriginalModal()" 
+                <button onclick="testProjectModal()" 
                         class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                     Show Original Modal
                 </button>
@@ -138,12 +141,16 @@
             }
         }
 
-        function showOriginalModal() {
-            if (window.projectManager && window.projectManager.createNewProjectModal) {
-                const modal = window.projectManager.createNewProjectModal();
-                document.body.appendChild(modal);
+        // Test project modal creation
+        function testProjectModal() {
+            console.log('🧪 Testing Project Modal...');
+            
+            if (window.projectManager && window.projectManager.showProjectModal) {
+                console.log('✅ Project modal system available');
+                window.projectManager.showProjectModal();
             } else {
-                alert('Original modal not available');
+                console.log('❌ Project modal system not available');
+                alert('Project modal system not available. Please ensure the new project management system is loaded.');
             }
         }
 

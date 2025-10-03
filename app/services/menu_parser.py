@@ -231,7 +231,9 @@ class MenuParser:
                 # Extract any description from the same line
                 remaining_text = line.replace(price_info['text'], '').replace(title, '').strip()
                 if remaining_text:
-                    current_item.description = remaining_text
+                    # Clean up the description
+                    description = self.clean_description(remaining_text)
+                    current_item.description = description
                 
                 # Extract dietary tags and spice level
                 current_item.dietary_tags = self.extract_dietary_tags(line)
@@ -240,16 +242,69 @@ class MenuParser:
             else:
                 # This line is likely a description continuation
                 if current_item:
-                    if current_item.description:
-                        current_item.description += " " + line
-                    else:
-                        current_item.description = line
+                    # Check if this line looks like a description
+                    if self.looks_like_description(line):
+                        cleaned_line = self.clean_description(line)
+                        if current_item.description:
+                            current_item.description += " " + cleaned_line
+                        else:
+                            current_item.description = cleaned_line
         
         # Add final item
         if current_item:
             items.append(current_item)
         
         return items
+    
+    def looks_like_description(self, line: str) -> bool:
+        """Check if line looks like a description"""
+        # Not a title pattern
+        if self.looks_like_title(line):
+            return False
+        
+        # Not a price-only line
+        if re.match(r'^\$?\d+(?:\.\d{2})?$', line):
+            return False
+        
+        # Contains descriptive words
+        descriptive_words = [
+            'with', 'and', 'served', 'topped', 'drizzled', 'garnished', 'fresh', 'seasoned',
+            'accompanied', 'includes', 'features', 'made', 'prepared', 'cooked', 'grilled',
+            'roasted', 'baked', 'steamed', 'sautéed', 'braised', 'marinated', 'glazed',
+            'sauce', 'dressing', 'garnish', 'side', 'topped with', 'served with', 'comes with'
+        ]
+        if any(word in line.lower() for word in descriptive_words):
+            return True
+        
+        # Longer than typical titles
+        if len(line) > 20:
+            return True
+        
+        return False
+    
+    def clean_description(self, description: str) -> str:
+        """Clean up description text"""
+        # Remove dietary and allergen tags
+        for pattern in self.dietary_patterns.values():
+            description = re.sub(pattern, '', description, flags=re.IGNORECASE)
+        
+        # Clean up separators - take text after the separator
+        separators = [' - ', ' – ', ' — ', '...', ' | ', ' • ', ':', ';', '•']
+        for sep in separators:
+            if sep in description:
+                parts = description.split(sep, 1)
+                if len(parts) > 1:
+                    description = parts[1].strip()
+                break
+        
+        # Clean up common prefixes that might be left over
+        prefixes_to_remove = ['with ', 'includes ', 'features ', 'served ', 'comes ']
+        for prefix in prefixes_to_remove:
+            if description.lower().startswith(prefix):
+                description = description[len(prefix):].strip()
+                break
+        
+        return description.strip()
     
     def extract_price(self, text: str) -> Dict[str, Any]:
         """Extract price information from text"""
@@ -361,8 +416,9 @@ class MenuParser:
         
         # Most common dietary tags
         all_tags = []
-        for section in sections for item in section.items:
-            all_tags.extend(item.dietary_tags)
+        for section in sections:
+            for item in section.items:
+                all_tags.extend(item.dietary_tags)
         
         tag_counts = {}
         for tag in all_tags:

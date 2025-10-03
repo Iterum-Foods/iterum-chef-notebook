@@ -6,7 +6,10 @@
     <title>Project UI Test - Iterum R&D</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="apiConfig.js"></script>
-    <script src="projectManager.js"></script>
+    <!-- Essential Scripts -->
+    <script src="assets/js/enhanced-user-system.js"></script>
+    <!-- Project management now handled by new system -->
+    <script src="assets/js/error_handler.js"></script>
 </head>
 <body>
     <!-- Test Header with Project Selector -->
@@ -56,14 +59,17 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-4">Actions</h2>
                 <div class="space-y-3">
-                    <button onclick="testCreateProject()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-                        Create Test Project
+                    <button onclick="testProjectManager()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        Test Project Manager
                     </button>
-                    <button onclick="testLoadProjects()" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
-                        Reload Projects
+                    <button onclick="testProjectCreation()" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                        Test Project Creation
                     </button>
-                    <button onclick="testProjectSwitch()" class="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
-                        Test Project Switch
+                    <button onclick="testProjectSwitching()" class="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                        Test Project Switching
+                    </button>
+                    <button onclick="testProjectInfo()" class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+                        Test Project Info
                     </button>
                 </div>
             </div>
@@ -79,74 +85,129 @@
     </main>
 
     <script>
-        // Test functions
-        function testCreateProject() {
-            if (window.projectManager) {
-                window.projectManager.showCreateProjectModal();
-            } else {
-                alert('Project manager not loaded');
-            }
-        }
-
-        function testLoadProjects() {
-            if (window.projectManager) {
-                window.projectManager.loadUserProjects().then(() => {
-                    updateDebugInfo();
-                });
-            } else {
-                alert('Project manager not loaded');
-            }
-        }
-
-        function testProjectSwitch() {
-            if (window.projectManager && window.projectManager.projects.length > 1) {
-                const project = window.projectManager.projects[1];
-                window.projectManager.selectProject(project);
-            } else {
-                alert('Need at least 2 projects to test switching');
-            }
-        }
-
-        function updateDebugInfo() {
-            const debugInfo = document.getElementById('debug-info');
-            const currentProjectInfo = document.getElementById('current-project-info');
+        // Test project manager functionality
+        function testProjectManager() {
+            console.log('🧪 Testing Project Manager...');
             
-            if (window.projectManager) {
-                const currentProject = window.projectManager.getCurrentProject();
-                const projects = window.projectManager.projects;
+            // Check if project manager is available
+            if (!window.projectManager) {
+                console.log('❌ Project manager not available');
+                alert('Project manager not available. Please ensure the new project management system is loaded.');
+                return;
+            }
+            
+            console.log('✅ Project manager is available');
+            
+            // Get project information
+            const projects = window.projectManager.projects;
+            console.log('📚 Projects:', projects);
+            
+            if (projects && projects.length > 0) {
+                const currentProject = window.projectManager.currentProject;
+                console.log('📋 Current project:', currentProject);
                 
-                // Update current project display
-                if (currentProject) {
-                    currentProjectInfo.innerHTML = `
-                        <div class="space-y-2">
-                            <p><strong>Name:</strong> ${currentProject.name}</p>
-                            <p><strong>Description:</strong> ${currentProject.description || 'No description'}</p>
-                            <p><strong>Type:</strong> ${currentProject.is_default ? 'Default' : 'Custom'}</p>
-                            <p><strong>Recipes:</strong> ${currentProject.recipe_count || 0}</p>
-                            <p><strong>Menus:</strong> ${currentProject.menu_count || 0}</p>
-                        </div>
-                    `;
-                } else {
-                    currentProjectInfo.innerHTML = '<p class="text-red-600">No project selected</p>';
-                }
+                // Display project info
+                const projectInfo = projects.map(p => 
+                    `${p.name} (${p.isMaster ? 'Master' : 'Project'})`
+                ).join('\n');
                 
-                // Update debug info
-                debugInfo.textContent = `
-Project Manager Status:
-- Projects loaded: ${projects.length}
-- Current project: ${currentProject ? currentProject.name : 'None'}
-- API Config available: ${!!window.apiConfig}
-- Header selector found: ${!!document.getElementById('header-project-selector')}
-
-Projects:
-${projects.map(p => `  - ${p.name} (${p.is_default ? 'default' : 'custom'})`).join('\n')}
-
-Local Storage Keys:
-${Object.keys(localStorage).filter(k => k.includes('project')).map(k => `  - ${k}`).join('\n')}
-                `;
+                alert(`Found ${projects.length} projects:\n\n${projectInfo}`);
             } else {
-                debugInfo.textContent = 'Project manager not initialized';
-                currentProjectInfo.innerHTML = '<p class="text-red-600">Project manager not loaded</p>';
+                console.log('📝 No projects found');
+                alert('No projects found. Please create a project first.');
+            }
+        }
+
+        // Test project creation
+        function testProjectCreation() {
+            console.log('🧪 Testing Project Creation...');
+            
+            if (!window.projectManager) {
+                alert('Project manager not available. Please ensure the new project management system is loaded.');
+                return;
+            }
+            
+            // Get project data from form
+            const projectData = {
+                name: document.getElementById('project-name')?.value || 'Test Project',
+                description: document.getElementById('project-description')?.value || 'Test Description',
+                type: document.getElementById('project-type')?.value || 'culinary'
+            };
+            
+            console.log('🔍 Creating project with data:', projectData);
+            
+            // Create project using new system
+            try {
+                const newProject = window.projectManager.createProject(projectData);
+                console.log('✅ Project created:', newProject);
+                
+                if (newProject) {
+                    alert(`Project "${newProject.name}" created successfully!`);
+                    
+                    // Refresh project display
+                    window.projectManager.updateProjectUI();
+                } else {
+                    alert('Failed to create project. Please try again.');
+                }
+            } catch (error) {
+                console.error('❌ Error creating project:', error);
+                alert('Error creating project: ' + error.message);
+            }
+        }
+
+        // Test project switching
+        function testProjectSwitching() {
+            console.log('🧪 Testing Project Switching...');
+            
+            if (!window.projectManager) {
+                alert('Project manager not available. Please ensure the new project management system is loaded.');
+                return;
+            }
+            
+            // Load projects first
+            window.projectManager.updateProjectUI();
+            
+            // Get project information
+            if (window.projectManager.projects && window.projectManager.projects.length > 1) {
+                const project = window.projectManager.projects[1];
+                console.log('🔄 Switching to project:', project);
+                
+                // Switch to project using new system
+                const success = window.projectManager.setCurrentProject(project.id);
+                if (success) {
+                    alert(`Switched to project: ${project.name}`);
+                    console.log('✅ Project switch successful');
+                } else {
+                    alert('Failed to switch project. Please try again.');
+                    console.log('❌ Project switch failed');
+                }
+            } else {
+                console.log('📝 Not enough projects for switching test');
+                alert('Not enough projects for switching test. Please create at least 2 projects first.');
+            }
+        }
+
+        // Test project information display
+        function testProjectInfo() {
+            console.log('🧪 Testing Project Information...');
+            
+            if (!window.projectManager) {
+                alert('Project manager not available. Please ensure the new project management system is loaded.');
+                return;
+            }
+            
+            // Get current project
+            const currentProject = window.projectManager.getCurrentProject();
+            const projects = window.projectManager.projects;
+            
+            console.log('📋 Current project:', currentProject);
+            console.log('📚 All projects:', projects);
+            
+            if (currentProject) {
+                const projectInfo = `Current Project: ${currentProject.name}\nType: ${currentProject.type}\nDescription: ${currentProject.description || 'No description'}\nTotal Projects: ${projects.length}`;
+                alert(projectInfo);
+            } else {
+                alert('No current project selected.');
             }
         }
 

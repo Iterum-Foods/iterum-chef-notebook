@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Ideas Integration Test - Iterum R&D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-gray-900">🍳 Iterum R&D - Integration Test</h1>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="index.html" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        🏠 Main Page
+                    </a>
+                    <a href="recipe-developer.html" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                        🧪 Recipe Developer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">🧪 Recipe Ideas Integration Test</h2>
+                
+                <div class="space-y-6">
+                    <!-- Test Instructions -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-blue-800 mb-2">📋 Test Instructions</h3>
+                        <ol class="list-decimal list-inside space-y-2 text-blue-700">
+                            <li>Go to the <strong>Main Page</strong> and create some recipe ideas</li>
+                            <li>Come back to this test page and check the ideas list below</li>
+                            <li>Go to the <strong>Recipe Developer</strong> page</li>
+                            <li>See your ideas appear in the left sidebar</li>
+                            <li>Click on ideas to create recipes or continue working on existing ones</li>
+                        </ol>
+                    </div>
+                    
+                    <!-- Current Ideas Display -->
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-green-800 mb-2">💡 Current Recipe Ideas</h3>
+                        <div id="current-ideas" class="space-y-2">
+                            <p class="text-green-700">Loading ideas...</p>
+                        </div>
+                        <button onclick="refreshIdeas()" class="mt-3 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                            🔄 Refresh Ideas
+                        </button>
+                    </div>
+                    
+                    <!-- In Progress Recipes -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-yellow-800 mb-2">🔄 Recipes In Progress</h3>
+                        <div id="in-progress-recipes" class="space-y-2">
+                            <p class="text-yellow-700">Loading recipes...</p>
+                        </div>
+                        <button onclick="refreshRecipes()" class="mt-3 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+                            🔄 Refresh Recipes
+                        </button>
+                    </div>
+                    
+                    <!-- Test Actions -->
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-purple-800 mb-2">🧪 Test Actions</h3>
+                        <div class="flex space-x-4">
+                            <button onclick="createTestIdea()" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+                                ➕ Create Test Idea
+                            </button>
+                            <button onclick="createTestRecipe()" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+                                🧪 Create Test Recipe
+                            </button>
+                            <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                                🗑️ Clear All Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Structure Info -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-800 mb-2">📊 Data Structure</h3>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p><strong>recipe_ideas</strong>: Stored in localStorage, contains new ideas</p>
+                            <p><strong>recipes_in_progress</strong>: Stored in localStorage, contains recipes being developed</p>
+                            <p><strong>Integration</strong>: Ideas flow from main page → recipe developer → completed recipes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Load and display current ideas and recipes
+        function refreshIdeas() {
+            const ideas = JSON.parse(localStorage.getItem('recipe_ideas') || '[]');
+            const ideasContainer = document.getElementById('current-ideas');
+            
+            if (ideas.length === 0) {
+                ideasContainer.innerHTML = '<p class="text-green-700">No recipe ideas found</p>';
+                return;
+            }
+            
+            ideasContainer.innerHTML = ideas.map(idea => `
+                <div class="bg-white p-3 rounded border">
+                    <div class="font-medium">${idea.title}</div>
+                    <div class="text-sm text-gray-600">${idea.description || 'No description'}</div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        ${idea.cuisine ? `🌍 ${idea.cuisine}` : ''} 
+                        ${idea.difficulty ? `📊 ${idea.difficulty}` : ''} 
+                        📅 ${new Date(idea.createdAt).toLocaleDateString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function refreshRecipes() {
+            const recipes = JSON.parse(localStorage.getItem('recipes_in_progress') || '[]');
+            const recipesContainer = document.getElementById('in-progress-recipes');
+            
+            if (recipes.length === 0) {
+                recipesContainer.innerHTML = '<p class="text-yellow-700">No recipes in progress</p>';
+                return;
+            }
+            
+            recipesContainer.innerHTML = recipes.map(recipe => `
+                <div class="bg-white p-3 rounded border">
+                    <div class="font-medium">${recipe.title}</div>
+                    <div class="text-sm text-gray-600">${recipe.description || 'No description'}</div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        ${recipe.cuisine ? `🌍 ${recipe.cuisine}` : ''} 
+                        📅 ${new Date(recipe.createdAt).toLocaleDateString()}
+                        🧪 ${recipe.ingredients ? recipe.ingredients.length : 0} ingredients
+                        📋 ${recipe.instructions ? recipe.instructions.length : 0} steps
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function createTestIdea() {
+            const testIdea = {
+                id: 'test_idea_' + Date.now(),
+                title: 'Test Recipe Idea ' + Math.floor(Math.random() * 1000),
+                description: 'This is a test recipe idea created for testing the integration system.',
+                cuisine: 'Test Cuisine',
+                difficulty: 'medium',
+                status: 'idea',
+                createdAt: new Date().toISOString(),
+                lastUpdated: new Date().toISOString()
+            };
+            
+            const existingIdeas = JSON.parse(localStorage.getItem('recipe_ideas') || '[]');
+            existingIdeas.unshift(testIdea);
+            localStorage.setItem('recipe_ideas', JSON.stringify(existingIdeas));
+            
+            refreshIdeas();
+            alert('Test idea created! Check the ideas list above.');
+        }
+        
+        function createTestRecipe() {
+            const testRecipe = {
+                id: 'recipe_' + Date.now(),
+                title: 'Test Recipe ' + Math.floor(Math.random() * 1000),
+                description: 'This is a test recipe created for testing the integration system.',
+                cuisine: 'Test Cuisine',
+                category: 'main-course',
+                servings: 4,
+                ingredients: [
+                    { name: 'Test Ingredient 1', amount: '100', unit: 'g', notes: 'Test note' },
+                    { name: 'Test Ingredient 2', amount: '2', unit: 'tbsp', notes: '' }
+                ],
+                instructions: [
+                    'Test instruction step 1',
+                    'Test instruction step 2'
+                ],
+                status: 'in-progress',
+                createdAt: new Date().toISOString(),
+                lastUpdated: new Date().toISOString()
+            };
+            
+            const existingRecipes = JSON.parse(localStorage.getItem('recipes_in_progress') || '[]');
+            existingRecipes.unshift(testRecipe);
+            localStorage.setItem('recipes_in_progress', JSON.stringify(existingRecipes));
+            
+            refreshRecipes();
+            alert('Test recipe created! Check the recipes list above.');
+        }
+        
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all recipe ideas and recipes? This cannot be undone.')) {
+                localStorage.removeItem('recipe_ideas');
+                localStorage.removeItem('recipes_in_progress');
+                refreshIdeas();
+                refreshRecipes();
+                alert('All data cleared!');
+            }
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧪 Initializing Recipe Ideas Integration Test Page');
+            refreshIdeas();
+            refreshRecipes();
+        });
+    </script>
+</body>
+</html>

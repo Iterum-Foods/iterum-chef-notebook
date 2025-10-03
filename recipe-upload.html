@@ -4,623 +4,1375 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Recipe PDF Upload | Iterum R&D Chef Notebook</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Tailwind CSS - Built from source -->
+  <link rel="stylesheet" href="assets/css/tailwind-output.css">
+  <link rel="stylesheet" href="assets/css/iterum-design-system.css">
+  <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    /* Recipe Upload Page Specific Styles */
+    .upload-section, .test-section {
+      margin-bottom: 2rem;
+    }
+    
+    .upload-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .parsing-results {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: #f8fafc;
+      border-radius: 0.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .parsing-results.hidden {
+      display: none;
+    }
+    
+    .parsed-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .parsed-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .ingredients-list, .instructions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .ingredient-item {
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .ingredient-text {
+      font-weight: 500;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+    
+    .ingredient-parsed {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    
+    .amount {
+      font-weight: 600;
+      color: #059669;
+    }
+    
+    .unit {
+      font-weight: 500;
+      color: #7c3aed;
+    }
+    
+    .name {
+      color: #374151;
+    }
+    
+    .instruction-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .step-number {
+      font-weight: 700;
+      color: #059669;
+      min-width: 2rem;
+    }
+    
+    .instruction-text {
+      color: #1e293b;
+      line-height: 1.5;
+    }
+    
+    .metadata-item {
+      padding: 0.5rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .metadata-item strong {
+      color: #059669;
+    }
+    
+    /* Loading states */
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    /* File input styling */
+    .form-input[type="file"] {
+      padding: 0.5rem;
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .form-input[type="file"]:hover {
+      border-color: #94a3b8;
+      background: #f1f5f9;
+    }
+    
+    .form-input[type="file"]:focus {
+      border-color: #3b82f6;
+      background: white;
+    }
+    
+    /* Success message */
+    .upload-success {
+      background: #dcfce7;
+      border: 1px solid #22c55e;
+      color: #166534;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    
+    .upload-success.show {
+      display: block;
+    }
+  </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-  <!-- Enhanced Uniform Header -->
-  <header class="bg-gradient-to-r from-white to-green-50 shadow-lg sticky top-0 z-40 border-b-2 border-green-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-      <!-- Logo and Brand -->
-      <div class="flex items-center gap-3">
-        <div class="relative">
-          <img src="botanical-logo.svg" alt="Iterum Botanical Logo" class="h-10 w-10 transition-transform hover:scale-110">
-          <div class="absolute -inset-1 bg-green-200 rounded-full opacity-0 hover:opacity-20 transition-opacity"></div>
+  <!-- Uniform Centered Header -->
+  <header class="iterum-header">
+    <div class="header-container">
+      <!-- Logo Section -->
+      <a href="index.html" class="header-logo">
+        <div class="header-logo-icon">
+          <span>🍃</span>
         </div>
-        <span class="font-bold text-xl tracking-tight text-gray-800 hover:text-green-700 transition-colors">
-          Iterum R&D Chef Notebook
-        </span>
-      </div>
-      
-      <!-- Desktop Navigation -->
-      <nav class="hidden lg:flex gap-1 text-gray-700 font-medium">
-        <a href="index.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-          <span class="flex items-center gap-1">🏠 Dashboard</span>
+        <div class="header-logo-text">
+          <div class="header-logo-title">Iterum R&D</div>
+          <div class="header-logo-subtitle">Chef Notebook</div>
+        </div>
+      </a>
+
+      <!-- Center Navigation -->
+      <nav class="header-navigation">
+        <a href="index.html" class="header-nav-item" data-page="index">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard</span>
         </a>
-        <a href="recipe-library.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-          <span class="flex items-center gap-1">📚 Recipe Library</span>
+        <a href="recipe-library.html" class="header-nav-item" data-page="recipe-library">
+          <span class="nav-icon">📚</span>
+          <span>Library</span>
         </a>
-        <a href="recipe-developer.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-          <span class="flex items-center gap-1">🧪 Recipe Developer</span>
+        <a href="recipe-developer.html" class="header-nav-item" data-page="recipe-developer">
+          <span class="nav-icon">🧪</span>
+          <span>Developer</span>
         </a>
-        <a href="recipe-upload.html" class="nav-active hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-          <span class="flex items-center gap-1">⚡ Quick Upload</span>
+        <a href="recipe-upload.html" class="header-nav-item active" data-page="recipe-upload">
+          <span class="nav-icon">⚡</span>
+          <span>Upload</span>
         </a>
-        <a href="menu-builder.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-          <span class="flex items-center gap-1">🍽️ Menu Builder</span>
+        <a href="menu-builder.html" class="header-nav-item" data-page="menu-builder">
+          <span class="nav-icon">🍽️</span>
+          <span>Menu</span>
         </a>
-        <a href="ingredients.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-          <span class="flex items-center gap-1">🥬 Ingredients</span>
+        <a href="ingredients.html" class="header-nav-item" data-page="ingredients">
+          <span class="nav-icon">🥬</span>
+          <span>Ingredients</span>
         </a>
-        <a href="equipment-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-          <span class="flex items-center gap-1">🔧 Equipment</span>
+        <a href="equipment-management.html" class="header-nav-item" data-page="equipment-management">
+          <span class="nav-icon">🔧</span>
+          <span>Equipment</span>
         </a>
-        <a href="vendor-management.html" class="hover:text-green-600 hover:bg-green-50 transition-all px-3 py-2 rounded-lg">
-          <span class="flex items-center gap-1">🏪 Vendors</span>
+        <a href="vendor-management.html" class="header-nav-item" data-page="vendor-management">
+          <span class="nav-icon">🏪</span>
+          <span>Vendors</span>
         </a>
       </nav>
-      
-      <!-- User Info and Actions -->
-      <div class="flex items-center gap-3">
-        <span id="current-user" class="text-gray-600 text-sm font-medium bg-white px-3 py-1 rounded-full border"></span>
-        <button id="login-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hidden">
-          Login
-        </button>
-        <button id="logout-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors hidden">
-          Logout
-        </button>
-        <button id="switch-user-btn" onclick="window.switchUser()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors shadow-sm">
-          Switch User
-        </button>
-        <button id="nav-toggle" class="lg:hidden text-2xl text-gray-700 focus:outline-none hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors">
-          &#9776;
-        </button>
-      </div>
-    </div>
-    
-    <!-- Mobile Navigation -->
-    <nav id="mobile-nav" class="lg:hidden bg-white border-t border-gray-200 hidden flex-col gap-1 px-4 pb-4">
-      <a href="index.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-        <span class="flex items-center gap-2">🏠 Dashboard</span>
-      </a>
-      <a href="recipe-library.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-        <span class="flex items-center gap-2">📚 Recipe Library</span>
-      </a>
-      <a href="recipe-developer.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-        <span class="flex items-center gap-2">🧪 Recipe Developer</span>
-      </a>
-      <a href="recipe-upload.html" class="nav-active block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-        <span class="flex items-center gap-2">⚡ Quick Upload</span>
-      </a>
-      <a href="menu-builder.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-        <span class="flex items-center gap-2">🍽️ Menu Builder</span>
-      </a>
-      <a href="ingredients.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-        <span class="flex items-center gap-2">🥬 Ingredients</span>
-      </a>
-      <a href="equipment-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-        <span class="flex items-center gap-2">🔧 Equipment</span>
-      </a>
-      <a href="vendor-management.html" class="block py-3 px-2 hover:text-green-600 hover:bg-green-50 rounded transition-colors">
-        <span class="flex items-center gap-2">🏪 Vendors</span>
-      </a>
-    </nav>
-  </header>
 
-  <!-- Enhanced Mobile Navigation Toggle Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const navToggle = document.getElementById('nav-toggle');
-      const mobileNav = document.getElementById('mobile-nav');
-      
-      if (navToggle && mobileNav) {
-        navToggle.addEventListener('click', function() {
-          mobileNav.classList.toggle('hidden');
-          
-          // Add animation class
-          if (!mobileNav.classList.contains('hidden')) {
-            mobileNav.style.animation = 'slideDown 0.3s ease-out';
-          }
-        });
-        
-        // Close mobile nav when clicking outside
-        document.addEventListener('click', function(event) {
-          if (!navToggle.contains(event.target) && !mobileNav.contains(event.target)) {
-            mobileNav.classList.add('hidden');
-          }
-        });
-      }
-    });
-  </script>
-  
-
-  <!-- Loading Overlay -->
-  <div id="loading-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;backdrop-filter:blur(10px);">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;">
-      <div style="width:80px;height:80px;border:3px solid rgba(255,255,255,0.1);border-top:3px solid #64ffda;border-radius:50%;animation:spin 1.2s cubic-bezier(0.68,-0.55,0.265,1.55) infinite;position:relative;">
-        <div style="display:flex;gap:8px;margin-top:1rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
-          <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;"></div>
-          <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.2s;"></div>
-          <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#64ffda,#ff6b6b);animation:pulse 1.5s ease-in-out infinite;animation-delay:0.4s;"></div>
-        </div>
-      </div>
-      <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#e2e8f0;font-size:1.1rem;font-weight:500;text-align:center;letter-spacing:0.05em;margin-top:1rem;opacity:0.9;">Recipe Upload</div>
-      <div style="font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#64ffda;font-size:0.9rem;font-weight:400;text-align:center;margin-top:0.5rem;opacity:0.7;">Loading your recipe workspace...</div>
-    </div>
-  </div>
-
-  <!-- Login Modal -->
-  <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
-      <!-- Header -->
-      <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white text-center">
-        <div class="text-3xl mb-2">👨‍🍳</div>
-        <h2 class="text-2xl font-bold">Welcome to Iterum</h2>
-        <p class="text-blue-100">Your Culinary Research & Development Notebook</p>
-      </div>
-      <!-- Login Form -->
-      <div id="login-form-container" class="p-6">
-        <form id="login-form" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-            <input type="email" id="login-email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Enter your email">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-            <div class="relative">
-              <input type="password" id="login-password" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12" placeholder="Enter your password">
-              <button type="button" id="toggle-password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">👁️</button>
-            </div>
-          </div>
-          <div class="flex items-center justify-between">
-            <label class="flex items-center">
-              <input type="checkbox" id="remember-me" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-              <span class="ml-2 text-sm text-gray-600">Remember me</span>
-            </label>
-            <button type="button" id="forgot-password-btn" class="text-sm text-blue-600 hover:text-blue-800">Forgot password?</button>
-          </div>
-          <div id="login-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
-          <button type="submit" id="login-submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all">
-            <span id="login-btn-text">Sign In</span>
-            <div id="login-spinner" class="hidden inline-block ml-2">
-              <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-            </div>
-          </button>
-        </form>
-        <div class="mt-6 text-center">
-          <p class="text-gray-600">Don't have an account?</p>
-          <button type="button" id="show-signup-btn" class="text-blue-600 hover:text-blue-800 font-semibold">Create Account</button>
-        </div>
-        <div class="mt-6 pt-6 border-t border-gray-200">
-          <button type="button" id="continue-offline-btn" class="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-all">🚀 Continue Offline (Local Profile)</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="unified_auth_system.js"></script>
-  <script src="auto_save_system.js"></script>
-  <script src="auto_save_config.js"></script>
-  <script src="standardize-login-modals.js"></script>
-  <script src="debug_auth_buttons.js"></script>
-  <main class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">Upload Recipe Documents</h1>
-    <p class="mb-4">Select one or more files containing recipes. Supported formats: PDF, Excel (.xlsx, .xls), and Word (.docx). Extracted recipes will be queued for review and approval.</p>
-    <!-- Recipe Type Selector -->
-    <div class="mb-4">
-      <label for="recipe-type" class="block font-medium mb-1">Recipe Type</label>
-      <select id="recipe-type" name="type" class="border rounded px-3 py-2 w-full">
-        <option value="dish">Dish (Menu Item)</option>
-        <option value="prep">Prep Recipe (Component)</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
-    <input id="document-upload" type="file" accept=".pdf,.xlsx,.xls,.docx" multiple class="mb-4" />
-    <button id="go-review" class="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Go to Review Page</button>
-    <div id="upload-status" class="mt-4 text-green-700"></div>
-
-        <!-- Test Recipe Parsing Section -->
-        <div class="notebook-card p-8 mb-8">
-            <h2 class="text-2xl font-bold text-[#4a7c2c] mb-4" style="font-family: 'Shadows Into Light', cursive;">
-                🧪 Test Recipe Parsing
-            </h2>
-            <p class="text-lg text-[#795548] mb-6">
-                Test the enhanced recipe parser with sample text to see how it extracts allergy notes, pricing, ingredients, and amounts
-            </p>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Input Section -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Recipe Text to Parse</label>
-                    <textarea id="test-recipe-text" rows="15" class="notebook-input w-full" placeholder="Paste your recipe text here...">Chocolate Chip Cookies
-
-Allergen Warning: Contains wheat, eggs, dairy, and nuts. May contain traces of soy.
-
-Ingredients:
-2 cups all-purpose flour
-1 cup butter, softened
-1 cup brown sugar
-1/2 cup white sugar
-2 large eggs
-1 tsp vanilla extract
-1 tsp baking soda
-1/2 tsp salt
-2 cups chocolate chips
-
-Directions:
-1. Preheat oven to 375°F
-2. Cream butter and sugars together
-3. Beat in eggs and vanilla
-4. Mix in dry ingredients
-5. Stir in chocolate chips
-6. Drop by rounded tablespoons onto baking sheet
-7. Bake for 9-11 minutes
-
-Prep Time: 15 minutes
-Cook Time: 10 minutes
-Yield: 24 cookies
-Difficulty: Easy
-Cuisine: American
-
-Cost Information:
-Total ingredient cost: $8.50
-Cost per serving: $0.35
-Estimated total cost: $10.00</textarea>
-                    
-                    <button id="test-parse-btn" class="mt-4 sticky-btn px-6 py-3">
-                        🔍 Parse Recipe
-                    </button>
-                </div>
-                
-                <!-- Results Section -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Parsed Results</label>
-                    <div id="parse-results" class="bg-gray-50 p-4 rounded-lg min-h-[400px] overflow-y-auto">
-                        <p class="text-gray-500">Click "Parse Recipe" to see the extracted information...</p>
+      <!-- Right Side - User Section -->
+      <div class="header-user-section">
+                        <!-- Project Selector -->
+                <div class="header-project-selector-container">
+                    <div class="project-selector-display" onclick="window.showProjectSelectionDropdown()">
+                        <div class="project-selector-current">
+                            <span class="project-selector-icon">📋</span>
+                            <span class="project-selector-name" data-project-name>Master Project</span>
+                            <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
+                        <div class="project-status-display">
+                            <span class="project-status-label">Current:</span>
+                            <span class="project-status-value" data-project-name>Master Project</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+
+        <!-- User Info Tab -->
+        <div class="header-user-tab" onclick="toggleUserDropdown()">
+          <div class="header-user-avatar" id="user-avatar">
+            <span id="user-avatar-initial">👤</span>
+          </div>
+          <div class="header-user-info">
+            <div class="header-user-name" id="current-user">Guest User</div>
+            <div class="header-user-role">Chef</div>
+          </div>
+          <svg class="header-user-dropdown-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
         </div>
 
-        <!-- File Upload Section -->
+        <!-- Storage Control Button -->
+        <button onclick="showStorageControl()" class="btn btn-success btn-sm" title="Storage Control" style="margin-left: 0.5rem;">
+          <span>🗂️</span>
+          <span>Storage</span>
+        </button>
+
+        <!-- User Dropdown Menu -->
+        <div class="header-user-dropdown" id="user-dropdown">
+          <div class="header-user-dropdown-header">
+            <div class="header-user-dropdown-title" id="dropdown-user-name">Guest User</div>
+            <div class="header-user-dropdown-subtitle" id="dropdown-user-role">Chef</div>
+          </div>
+          
+          <div class="header-user-dropdown-menu">
+            <div class="header-user-dropdown-item" onclick="userSystem.showUserModal()">
+              <span>👤</span>
+              <span>Edit Profile</span>
+            </div>
+            <div class="header-user-dropdown-item" onclick="window.switchUser()">
+              <span>🔄</span>
+              <span>Switch User</span>
+            </div>
+            <div class="header-user-dropdown-item" onclick="userSystem.showUserModal('create')">
+              <span>➕</span>
+              <span>Create New User</span>
+            </div>
+          </div>
+          
+          <div class="header-user-dropdown-divider"></div>
+          
+          <div class="header-user-dropdown-menu">
+            <div class="header-user-dropdown-item" onclick="userSystem.showSettings()">
+              <span>⚙️</span>
+              <span>Settings</span>
+            </div>
+            <div class="header-user-dropdown-item danger" onclick="userSystem.logout()">
+              <span>🚪</span>
+              <span>Sign Out</span>
+            </div>
+          </div>
+          
+          <div class="header-user-dropdown-footer">
+            <div class="header-user-dropdown-footer-text">Iterum R&D v1.0</div>
+          </div>
+        </div>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="header-mobile-toggle" onclick="toggleMobileNav()">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <nav id="mobile-nav" class="header-mobile-nav">
+        <!-- Project Selector for Mobile -->
+        <div style="margin-bottom: 1rem;">
+          <select id="mobile-project-selector" class="header-project-selector" style="width: 100%;">
+            <option value="">Select Project...</option>
+          </select>
+        </div>
+
+        <!-- Mobile Navigation Items -->
+        <a href="index.html" class="header-mobile-nav-item" data-page="index">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="recipe-library.html" class="header-mobile-nav-item" data-page="recipe-library">
+          <span class="nav-icon">📚</span>
+          <span>Library</span>
+        </a>
+        <a href="recipe-developer.html" class="header-mobile-nav-item" data-page="recipe-developer">
+          <span class="nav-icon">🧪</span>
+          <span>Developer</span>
+        </a>
+        <a href="recipe-upload.html" class="header-mobile-nav-item active" data-page="recipe-upload">
+          <span class="nav-icon">⚡</span>
+          <span>Upload</span>
+        </a>
+        <a href="menu-builder.html" class="header-mobile-nav-item" data-page="menu-builder">
+          <span class="nav-icon">🍽️</span>
+          <span>Menu</span>
+        </a>
+        <a href="ingredients.html" class="header-mobile-nav-item" data-page="ingredients">
+          <span class="nav-icon">🥬</span>
+          <span>Ingredients</span>
+        </a>
+        <a href="equipment-management.html" class="header-mobile-nav-item" data-page="equipment-management">
+          <span class="nav-icon">🔧</span>
+          <span>Equipment</span>
+        </a>
+        <a href="vendor-management.html" class="header-mobile-nav-item" data-page="vendor-management">
+          <span class="nav-icon">🏪</span>
+          <span>Vendors</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <h2 class="loading-title">Recipe Upload</h2>
+      <p class="loading-subtitle">Loading your recipe workspace...</p>
+      <button onclick="emergencyLoadingFix()" class="btn btn-danger">🚑 Emergency Exit</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="page-header">
+      <h1 class="heading-1">⚡ Recipe PDF Upload</h1>
+      <p class="body-large">Upload and process recipe PDFs with AI-powered text extraction</p>
+    </div>
+
+    <!-- Recipe Upload Section -->
+    <section class="upload-section">
+      <div class="iterum-card iterum-card-elevated">
+        <div class="iterum-card-header">
+          <h2 class="heading-2">Upload Recipe PDF</h2>
+          <p class="body-medium">Select a PDF file to upload and process</p>
+        </div>
+        
+        <div class="iterum-card-body">
+          <form id="upload-form" class="upload-form">
+            <div class="form-group">
+              <label for="project-select" class="form-label">Project</label>
+              <select id="project-select" class="form-select" required>
+                <option value="">Select a project...</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="recipe-name" class="form-label">Recipe Name</label>
+              <input type="text" id="recipe-name" class="form-input" placeholder="Enter recipe name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="recipe-description" class="form-label">Description</label>
+              <textarea id="recipe-description" class="form-textarea" placeholder="Brief description of the recipe" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="pdf-file" class="form-label">PDF File</label>
+              <input type="file" id="pdf-file" class="form-input" accept=".pdf" required>
+              <p class="form-help">Maximum file size: 10MB</p>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <span>📤</span>
+                <span>Upload Recipe</span>
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="clearUploadForm()">
+                <span>🗑️</span>
+                <span>Clear Form</span>
+              </button>
+            </div>
+            
+            <!-- Progress Indicator -->
+            <div id="upload-progress" class="upload-progress" style="display: none;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span>⏳</span>
+                <span><strong>Processing PDF...</strong></span>
+              </div>
+              <div class="progress-bar" style="width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden;">
+                <div class="progress-fill" style="height: 100%; background: linear-gradient(90deg, #3b82f6, #1d4ed8); width: 0%; transition: width 0.3s ease;"></div>
+              </div>
+              <div class="progress-text" style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">
+                Extracting text from PDF...
+              </div>
+            </div>
+
+            <!-- Success Message -->
+            <div id="upload-success" class="upload-success">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>✅</span>
+                <span><strong>Recipe uploaded successfully!</strong></span>
+              </div>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                Your recipe has been processed and saved. You can now view and edit it in the Recipe Developer.
+              </p>
+              
+              <!-- Enhanced Recipe Details -->
+              <div id="recipe-details" style="margin: 1rem 0; padding: 1rem; background: #f0f9ff; border-radius: 0.5rem; border: 1px solid #0ea5e9;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #0369a1;">📋 Recipe Summary</h4>
+                <div id="recipe-summary" style="font-size: 0.875rem; color: #0c4a6e;">
+                  <!-- Recipe details will be populated here -->
+                </div>
+              </div>
+              
+              <div style="margin-top: 1rem;">
+                <a href="recipe-developer.html" class="btn btn-primary" style="text-decoration: none; display: inline-block;">
+                  <span>🧪</span>
+                  <span>Go to Recipe Developer</span>
+                </a>
+                <button onclick="exportRecipeData()" class="btn btn-secondary" style="margin-left: 0.5rem;">
+                  <span>📥</span>
+                  <span>Export Recipe</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Test Recipe Parsing Section -->
+    <section class="test-section">
+      <div class="iterum-card iterum-card-elevated">
+        <div class="iterum-card-header">
+          <h2 class="heading-2">Test Recipe Parsing</h2>
+          <p class="body-medium">Test the recipe parsing system with sample text</p>
+        </div>
+        
+        <div class="iterum-card-body">
+          <div class="form-group">
+            <label for="test-recipe-text" class="form-label">Recipe Text</label>
+            <textarea id="test-recipe-text" class="form-textarea" placeholder="Paste recipe text here to test parsing..." rows="8"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary" onclick="testRecipeParsing()">
+              <span>🧪</span>
+              <span>Test Parsing</span>
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="clearTestText()">
+              <span>🗑️</span>
+              <span>Clear Text</span>
+            </button>
+          </div>
+          
+          <div id="parsing-results" class="parsing-results hidden">
+            <h3 class="heading-3">Parsing Results</h3>
+            <div id="parsed-ingredients" class="parsed-section">
+              <h4 class="heading-4">Ingredients</h4>
+              <div id="ingredients-list" class="ingredients-list"></div>
+            </div>
+            <div id="parsed-instructions" class="parsed-section">
+              <h4 class="heading-4">Instructions</h4>
+              <div id="instructions-list" class="instructions-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <!-- Scripts -->
+    <!-- Load Firebase Configuration -->
+    <script src="assets/js/firebase-config.js"></script>
+    
+    <!-- Load Firebase Authentication -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    
+    <!-- Load Unified Authentication System -->
+    <script src="assets/js/unified_auth_system.js"></script>
+    
+    <!-- Load Page Protection System -->
+    <script src="assets/js/page-protection.js"></script>
+    
+    <!-- Load Header User Synchronization -->
+    <script src="assets/js/header_user_sync.js"></script>
+    
+    <!-- Load Header Sync Loader (ensures sync on all pages) -->
+    <script src="assets/js/header_sync_loader.js"></script>
+    
+    <script src="assets/js/startup-loading-config.js"></script>
+    <!-- Enhanced User Management now handled by Firebase Auth -->
+    <script src="assets/js/project-management-system.js"></script>
+    <script src="assets/js/error_handler.js"></script>
+    <script src="assets/js/userControlledStorage.js"></script>
+  
   <script>
-    // PDF.js worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-
-    function parseRecipeText(text) {
-      // Basic parsing: split by lines, look for title, ingredients, steps
-      // This can be improved for your format
-      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-      let title = lines[0] || '';
-      let ingredients = [];
-      let steps = [];
-      let inIngredients = false, inSteps = false;
-      for (let line of lines.slice(1)) {
-        if (/ingredients?/i.test(line)) { inIngredients = true; inSteps = false; continue; }
-        if (/steps?|directions?/i.test(line)) { inSteps = true; inIngredients = false; continue; }
-        if (inIngredients) ingredients.push(line);
-        else if (inSteps) steps.push(line);
-      }
-      return { title, ingredients, steps };
-    }
-
-    async function extractTextFromPDF(file) {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      let text = '';
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        text += content.items.map(item => item.str).join(' ') + '\n';
-      }
-      return text;
-    }
-
-    // Helper to get current user ID
-    function getCurrentUserId() {
-        const user = JSON.parse(localStorage.getItem('current_user') || '{}');
-        return user && user.id ? user.id : null;
-    }
-
-    document.getElementById('document-upload').addEventListener('change', async (e) => {
-      const files = Array.from(e.target.files);
-      if (!files.length) return;
-      let pending = JSON.parse(localStorage.getItem('pendingRecipes') || '[]');
-      document.getElementById('upload-status').textContent = 'Processing...';
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 Initializing Recipe Upload Page');
       
-      for (const file of files) {
-        try {
-          let text = '';
-          let parsedData = {};
+      // User system now initializes automatically
+      console.log('🔍 User system auto-initialization enabled');
+      
+      // Initialize project manager
+      if (window.projectManager) {
+        window.projectManager.init();
+      }
+      
+      // Initialize upload form
+      initializeRecipeUpload();
+      
+      // Listen for user authentication events to keep header synchronized
+      document.addEventListener('userLoggedIn', function(event) {
+        console.log('🔐 User logged in event received on recipe upload page');
+        if (event.detail && event.detail.user) {
+          updateUserInfo();
+          initializeProjectSelector();
+        }
+      });
+      
+      document.addEventListener('userSwitched', function(event) {
+        console.log('🔄 User switched event received on recipe upload page');
+        if (event.detail && event.detail.user) {
+          updateUserInfo();
+          initializeProjectSelector();
+        }
+      });
+      
+      // Listen for project changes
+      document.addEventListener('projectChanged', function(event) {
+        console.log('📋 Project changed event received on recipe upload page');
+        if (event.detail && event.detail.project) {
+          // Update project selectors to show current selection
+          const projectSelect = document.getElementById('project-select');
+          const headerSelector = document.getElementById('header-project-selector');
+          const mobileSelector = document.getElementById('mobile-project-selector');
           
-          // Handle different file types
-          if (file.type === 'application/pdf') {
-            // PDF files - use existing PDF extraction
-            text = await extractTextFromPDF(file);
-            // Send extracted text to backend parser
-            const response = await fetch('/api/uploads/parse-text', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ text, user_id: getCurrentUserId() })
-            });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            parsedData = await response.json();
-          } else {
-            // Excel and Word files - use new backend endpoint
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            const response = await fetch('/api/uploads/extract-text', {
-              method: 'POST',
-              body: formData
-            });
-            
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const result = await response.json();
-            text = result.extracted_text;
-            parsedData = result.parsed_data;
-          }
-          
-          // Add source file and status to parsed recipe
-          parsedData.sourceFile = file.name;
-          parsedData.status = 'pending';
-          parsedData.recipeType = document.getElementById('recipe-type').value; // Get the selected recipe type
-          parsedData.user_id = getCurrentUserId(); // Add user_id
-          pending.push(parsedData);
-        } catch (err) {
-          console.error('Document parse error:', err);
-          document.getElementById('upload-status').textContent = `Error parsing ${file.name}: ${err.message}`;
+          [projectSelect, headerSelector, mobileSelector].forEach(selector => {
+            if (selector && event.detail.project) {
+              selector.value = event.detail.project.id;
+            }
+          });
+        }
+      });
+      
+      console.log('✅ Recipe Upload Page initialized');
+    });
+
+    // User dropdown toggle
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('user-dropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('show');
+      }
+    }
+
+    // Mobile navigation toggle
+    function toggleMobileNav() {
+      const mobileNav = document.getElementById('mobile-nav');
+      if (mobileNav) {
+        mobileNav.classList.toggle('show');
+      }
+    }
+
+    // Initialize recipe upload functionality
+    function initializeRecipeUpload() {
+      const uploadForm = document.getElementById('upload-form');
+      if (uploadForm) {
+        uploadForm.addEventListener('submit', handleUploadSubmit);
+      }
+      
+      // Update user info
+      updateUserInfo();
+      
+      // Initialize project selector
+      initializeProjectSelector();
+    }
+
+    // Handle upload form submission
+    function handleUploadSubmit(event) {
+      event.preventDefault();
+      console.log('📤 Upload form submitted');
+      
+      // Get form data
+      const projectId = document.getElementById('project-select').value;
+      const recipeName = document.getElementById('recipe-name').value;
+      const recipeDescription = document.getElementById('recipe-description').value;
+      const pdfFile = document.getElementById('pdf-file').files[0];
+      
+      // Enhanced form validation
+      const validationErrors = [];
+      
+      if (!projectId) {
+        validationErrors.push('Please select a project');
+      }
+      
+      if (!recipeName.trim()) {
+        validationErrors.push('Please enter a recipe name');
+      } else if (recipeName.trim().length < 3) {
+        validationErrors.push('Recipe name must be at least 3 characters long');
+      }
+      
+      if (!pdfFile) {
+        validationErrors.push('Please select a PDF file');
+      } else {
+        // Validate file size (10MB limit)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (pdfFile.size > maxSize) {
+          validationErrors.push('File size exceeds 10MB limit. Please select a smaller file.');
+        }
+        
+        // Validate file type
+        if (pdfFile.type !== 'application/pdf') {
+          validationErrors.push('Please select a valid PDF file');
+        }
+        
+        // Check if file is corrupted or empty
+        if (pdfFile.size === 0) {
+          validationErrors.push('Selected file appears to be empty');
         }
       }
-      localStorage.setItem('pendingRecipes', JSON.stringify(pending));
-      document.getElementById('upload-status').textContent = `Uploaded ${files.length} file(s). Go to review page to approve.`;
-    });
-    document.getElementById('go-review').onclick = () => {
-      window.location.href = 'recipe-review.html';
-    };
-
-    // Test Recipe Parsing Functionality
-    document.getElementById('test-parse-btn').addEventListener('click', async () => {
-      const recipeText = document.getElementById('test-recipe-text').value;
-      const resultsDiv = document.getElementById('parse-results');
       
-      if (!recipeText.trim()) {
-        resultsDiv.innerHTML = '<p class="text-red-500">Please enter some recipe text to parse.</p>';
+      // Show validation errors if any
+      if (validationErrors.length > 0) {
+        const errorMessage = validationErrors.join('\n• ');
+        alert('Please fix the following errors:\n\n• ' + errorMessage);
         return;
       }
       
-      resultsDiv.innerHTML = '<p class="text-blue-500">Parsing recipe...</p>';
+      // Show loading state
+      const submitButton = event.target.querySelector('button[type="submit"]');
+      const originalText = submitButton.innerHTML;
+      submitButton.innerHTML = '<span>⏳</span><span>Processing...</span>';
+      submitButton.disabled = true;
+      
+      // Show progress indicator
+      const progressDiv = document.getElementById('upload-progress');
+      const progressFill = document.querySelector('.progress-fill');
+      const progressText = document.querySelector('.progress-text');
+      if (progressDiv) {
+        progressDiv.style.display = 'block';
+        document.getElementById('upload-success').classList.remove('show');
+      }
       
       try {
-        const response = await fetch('/api/uploads/parse-text', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text: recipeText, user_id: getCurrentUserId() })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        
-        // Display the parsed results in a formatted way
-        let html = '<div class="space-y-4">';
-        
-        if (result.title) {
-          html += `<div><strong>Title:</strong> <span class="text-green-700">${result.title}</span></div>`;
-        }
-        
-        if (result.allergy_notes && result.allergy_notes.length > 0) {
-          html += `<div><strong>Allergy Notes:</strong> <span class="text-red-600">${result.allergy_notes.join(', ')}</span></div>`;
-        }
-        
-        if (result.pricing && Object.keys(result.pricing).length > 0) {
-          html += '<div><strong>Pricing:</strong><ul class="list-disc list-inside ml-4">';
-          for (const [key, value] of Object.entries(result.pricing)) {
-            html += `<li>${key}: <span class="text-blue-600">${value}</span></li>`;
-          }
-          html += '</ul></div>';
-        }
-        
-        if (result.ingredients && result.ingredients.length > 0) {
-          html += '<div><strong>Ingredients / Menu Items:</strong>';
-          html += '<table class="min-w-full text-sm border mt-2 mb-4"><thead><tr><th class="border px-2 py-1">Item</th><th class="border px-2 py-1">Quantity</th><th class="border px-2 py-1">Unit</th></tr></thead><tbody>';
-          result.ingredients.forEach(ingredient => {
-            html += `<tr><td class="border px-2 py-1">${ingredient.name || ''}</td><td class="border px-2 py-1">${ingredient.amount !== undefined && ingredient.amount !== null ? ingredient.amount : ''}</td><td class="border px-2 py-1">${ingredient.unit || ''}</td></tr>`;
+        // Process the PDF file
+        processPDFFile(pdfFile, recipeName, recipeDescription, projectId)
+          .then(result => {
+            console.log('✅ PDF processed successfully:', result);
+            
+            // Show success message
+            const successMessage = document.getElementById('upload-success');
+            if (successMessage) {
+              successMessage.classList.add('show');
+              successMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Show enhanced success details
+            showUploadSuccessDetails(result.recipe);
+            
+            // Clear form
+            clearUploadForm();
+            
+            // Reset button
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
+          })
+          .catch(error => {
+            console.error('❌ PDF processing failed:', error);
+            alert('Failed to process PDF: ' + error.message);
+            
+            // Hide progress indicator on error
+            const progressDiv = document.getElementById('upload-progress');
+            if (progressDiv) {
+              progressDiv.style.display = 'none';
+            }
+            
+            // Reset button
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
           });
-          html += '</tbody></table></div>';
+      } catch (error) {
+        console.error('❌ Upload error:', error);
+        alert('Upload failed: ' + error.message);
+        
+        // Reset button
+        submitButton.innerHTML = originalText;
+        submitButton.disabled = false;
+      }
+    }
+    
+    // Process PDF file
+    async function processPDFFile(file, recipeName, description, projectId) {
+      return new Promise((resolve, reject) => {
+        try {
+          const reader = new FileReader();
+          
+          reader.onload = function(event) {
+            try {
+              const arrayBuffer = event.target.result;
+              
+              // Use PDF.js to extract text
+              pdfjsLib.getDocument({data: arrayBuffer}).promise.then(function(pdf) {
+                console.log('📄 PDF loaded, pages:', pdf.numPages);
+                
+                let fullText = '';
+                let pagesProcessed = 0;
+                const totalPages = pdf.numPages;
+                
+                // Update progress
+                if (progressText) {
+                  progressText.textContent = `Processing PDF with ${totalPages} pages...`;
+                }
+                
+                // Extract text from each page
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                  pdf.getPage(pageNum).then(function(page) {
+                    page.getTextContent().then(function(textContent) {
+                      const pageText = textContent.items.map(item => item.str).join(' ');
+                      fullText += pageText + '\n';
+                      pagesProcessed++;
+                      
+                      // Update progress
+                      if (progressFill && progressText) {
+                        const progressPercent = (pagesProcessed / totalPages) * 100;
+                        progressFill.style.width = progressPercent + '%';
+                        progressText.textContent = `Processed ${pagesProcessed} of ${totalPages} pages...`;
+                      }
+                      
+                      // When all pages are processed
+                      if (pagesProcessed === pdf.numPages) {
+                        console.log('📝 Full text extracted:', fullText.length, 'characters');
+                        
+                        // Update progress to completion
+                        if (progressFill && progressText) {
+                          progressFill.style.width = '100%';
+                          progressText.textContent = 'Saving recipe to storage...';
+                        }
+                        
+                        // Create recipe object
+                        const recipe = {
+                          id: 'recipe_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                          name: recipeName,
+                          description: description,
+                          projectId: projectId,
+                          sourceFile: file.name,
+                          uploadedAt: new Date().toISOString(),
+                          rawText: fullText,
+                          status: 'uploaded',
+                          type: 'pdf_upload'
+                        };
+                        
+                        // Save recipe to storage
+                        saveRecipeToStorage(recipe);
+                        
+                        // Hide progress indicator
+                        if (progressDiv) {
+                          progressDiv.style.display = 'none';
+                        }
+                        
+                        resolve({
+                          success: true,
+                          recipe: recipe,
+                          textLength: fullText.length,
+                          pages: pdf.numPages
+                        });
+                      }
+                    });
+                  });
+                }
+              }).catch(function(error) {
+                reject(new Error('Failed to process PDF: ' + error.message));
+              });
+              
+            } catch (error) {
+              reject(new Error('Failed to read file: ' + error.message));
+            }
+          };
+          
+          reader.onerror = function() {
+            reject(new Error('Failed to read file'));
+          };
+          
+          // Read file as array buffer
+          reader.readAsArrayBuffer(file);
+          
+        } catch (error) {
+          reject(new Error('File processing error: ' + error.message));
+        }
+      });
+    }
+    
+    // Save recipe to storage
+    function saveRecipeToStorage(recipe) {
+      try {
+        // Get current user from user system
+        let currentUser = null;
+        if (window.userSystem) {
+          currentUser = window.userSystem.getCurrentUser();
         }
         
-        if (result.instructions && result.instructions.length > 0) {
-          html += '<div><strong>Instructions:</strong><ol class="list-decimal list-inside ml-4">';
-          result.instructions.forEach(instruction => {
-            html += `<li>${instruction}</li>`;
-          });
-          html += '</ol></div>';
-        }
-        
-        if (result.metadata && Object.keys(result.metadata).length > 0) {
-          html += '<div><strong>Metadata:</strong><ul class="list-disc list-inside ml-4">';
-          for (const [key, value] of Object.entries(result.metadata)) {
-            html += `<li>${key}: <span class="text-gray-600">${value}</span></li>`;
+        if (!currentUser) {
+          // Fallback to localStorage
+          const storedUser = localStorage.getItem('current_user');
+          if (storedUser) {
+            currentUser = JSON.parse(storedUser);
           }
-          html += '</ul></div>';
         }
         
-        html += '</div>';
-        resultsDiv.innerHTML = html;
+        if (currentUser) {
+          const userId = currentUser.id;
+          
+          // Enhanced recipe object with more metadata
+          const enhancedRecipe = {
+            ...recipe,
+            userId: userId,
+            userName: currentUser.name,
+            createdAt: new Date().toISOString(),
+            lastModified: new Date().toISOString(),
+            version: 1,
+            status: 'uploaded',
+            type: 'pdf_upload',
+            source: 'recipe_upload_page',
+            projectId: recipe.projectId || 'master',
+            complexity: calculateRecipeComplexity(recipe),
+            estimatedPrepTime: estimatePrepTime(recipe),
+            tags: generateRecipeTags(recipe)
+          };
+          
+          // Save to multiple storage systems for redundancy
+          
+          // 1. Primary storage (localStorage)
+          const storageKey = `user_${userId}_recipes`;
+          let recipes = [];
+          const existing = localStorage.getItem(storageKey);
+          if (existing) {
+            recipes = JSON.parse(existing);
+          }
+          recipes.push(enhancedRecipe);
+          localStorage.setItem(storageKey, JSON.stringify(recipes));
+          
+          // 2. User-controlled storage system
+          if (window.userControlledStorage) {
+            // Save to user-specific file storage
+            const success = window.userControlledStorage.saveUserFile(`${userId}/recipes.json`, recipes);
+            if (success) {
+              console.log('✅ Recipe saved to user-controlled storage');
+            }
+            
+            // Also save to project-specific storage if project is selected
+            if (recipe.projectId && recipe.projectId !== 'master') {
+              const projectKey = `user_${userId}_project_${recipe.projectId}_recipes.json`;
+              window.userControlledStorage.saveUserFile(projectKey, [enhancedRecipe]);
+            }
+          }
+          
+          // 3. Project-aware storage
+          if (window.projectManager && window.projectManager.currentProject) {
+            const projectKey = `data_recipes_${window.projectManager.currentProject.id}`;
+            let projectRecipes = [];
+            const existingProject = localStorage.getItem(projectKey);
+            if (existingProject) {
+              projectRecipes = JSON.parse(existingProject);
+            }
+            projectRecipes.push(enhancedRecipe);
+            localStorage.setItem(projectKey, JSON.stringify(projectRecipes));
+          }
+          
+          console.log('✅ Recipe saved to multiple storage systems for user:', userId);
+          console.log('📊 Total recipes for user:', recipes.length);
+          
+          // Dispatch events for other components
+          window.dispatchEvent(new CustomEvent('recipeUploaded', {
+            detail: { recipe: enhancedRecipe, userId: userId }
+          }));
+          
+          // Dispatch data saved event for storage system
+          window.dispatchEvent(new CustomEvent('dataSaved', {
+            detail: { dataType: 'recipes', data: recipes }
+          }));
+          
+          return enhancedRecipe;
+          
+        } else {
+          console.warn('⚠️ No current user found, cannot save recipe');
+          throw new Error('No user logged in');
+        }
+      } catch (error) {
+        console.error('❌ Error saving recipe to storage:', error);
+        throw error;
+      }
+    }
+
+    // Calculate recipe complexity based on content
+    function calculateRecipeComplexity(recipe) {
+      let complexity = 'easy';
+      
+      if (recipe.rawText) {
+        const textLength = recipe.rawText.length;
+        const hasComplexInstructions = recipe.rawText.toLowerCase().includes('simmer') || 
+                                     recipe.rawText.toLowerCase().includes('braise') ||
+                                     recipe.rawText.toLowerCase().includes('reduce');
+        
+        if (textLength > 2000 || hasComplexInstructions) {
+          complexity = 'hard';
+        } else if (textLength > 1000) {
+          complexity = 'medium';
+        }
+      }
+      
+      return complexity;
+    }
+
+    // Estimate prep time based on recipe content
+    function estimatePrepTime(recipe) {
+      let estimatedTime = 30; // Default 30 minutes
+      
+      if (recipe.rawText) {
+        const textLength = recipe.rawText.length;
+        const hasComplexSteps = recipe.rawText.toLowerCase().includes('marinate') ||
+                               recipe.rawText.toLowerCase().includes('rest') ||
+                               recipe.rawText.toLowerCase().includes('chill');
+        
+        if (textLength > 3000) {
+          estimatedTime = 90;
+        } else if (textLength > 2000 || hasComplexSteps) {
+          estimatedTime = 60;
+        } else if (textLength > 1000) {
+          estimatedTime = 45;
+        }
+      }
+      
+      return estimatedTime;
+    }
+
+    // Generate recipe tags based on content
+    function generateRecipeTags(recipe) {
+      const tags = [];
+      
+      if (recipe.rawText) {
+        const text = recipe.rawText.toLowerCase();
+        
+        // Cuisine detection
+        if (text.includes('italian') || text.includes('pasta') || text.includes('risotto')) {
+          tags.push('italian');
+        }
+        if (text.includes('french') || text.includes('sauce') || text.includes('wine')) {
+          tags.push('french');
+        }
+        if (text.includes('asian') || text.includes('soy') || text.includes('ginger')) {
+          tags.push('asian');
+        }
+        if (text.includes('mexican') || text.includes('chili') || text.includes('tortilla')) {
+          tags.push('mexican');
+        }
+        
+        // Cooking method detection
+        if (text.includes('grill') || text.includes('bbq')) {
+          tags.push('grilled');
+        }
+        if (text.includes('bake') || text.includes('oven')) {
+          tags.push('baked');
+        }
+        if (text.includes('fry') || text.includes('deep fry')) {
+          tags.push('fried');
+        }
+        if (text.includes('slow cook') || text.includes('crock pot')) {
+          tags.push('slow-cooked');
+        }
+        
+        // Dietary tags
+        if (text.includes('vegetarian') || text.includes('vegan')) {
+          tags.push('vegetarian');
+        }
+        if (text.includes('gluten-free') || text.includes('gluten free')) {
+          tags.push('gluten-free');
+        }
+        if (text.includes('dairy-free') || text.includes('dairy free')) {
+          tags.push('dairy-free');
+        }
+      }
+      
+      return tags;
+    }
+
+    // Test recipe parsing
+    function testRecipeParsing() {
+      const text = document.getElementById('test-recipe-text').value;
+      if (!text.trim()) {
+        alert('Please enter some recipe text to test');
+        return;
+      }
+      
+      console.log('🧪 Testing recipe parsing with:', text);
+      
+      try {
+        // Parse the recipe text
+        const parsedRecipe = parseRecipeText(text);
+        
+        // Display results
+        displayParsingResults(parsedRecipe);
+        
+        // Show results section
+        document.getElementById('parsing-results').classList.remove('hidden');
         
       } catch (error) {
-        console.error('Error parsing recipe:', error);
-        resultsDiv.innerHTML = `<p class="text-red-500">Error parsing recipe: ${error.message}</p>`;
+        console.error('❌ Recipe parsing failed:', error);
+        alert('Failed to parse recipe: ' + error.message);
+      }
+    }
+    
+    // Parse recipe text into structured data
+    function parseRecipeText(text) {
+      const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      
+      const recipe = {
+        ingredients: [],
+        instructions: [],
+        metadata: {}
+      };
+      
+      let currentSection = 'metadata';
+      
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].toLowerCase();
+        
+        // Detect section headers
+        if (line.includes('ingredients') || line.includes('ingredient')) {
+          currentSection = 'ingredients';
+          continue;
+        } else if (line.includes('instructions') || line.includes('directions') || line.includes('method')) {
+          currentSection = 'instructions';
+          continue;
+        } else if (line.includes('prep time') || line.includes('cook time') || line.includes('total time')) {
+          currentSection = 'metadata';
+        }
+        
+        // Parse based on current section
+        switch (currentSection) {
+          case 'ingredients':
+            if (line.length > 0 && !line.includes('ingredients')) {
+              recipe.ingredients.push({
+                text: lines[i],
+                parsed: parseIngredientLine(lines[i])
+              });
+            }
+            break;
+            
+          case 'instructions':
+            if (line.length > 0 && !line.includes('instructions')) {
+              recipe.instructions.push({
+                text: lines[i],
+                step: recipe.instructions.length + 1
+              });
+            }
+            break;
+            
+          case 'metadata':
+            if (line.includes('prep time') || line.includes('cook time') || line.includes('total time')) {
+              const timeMatch = lines[i].match(/(\d+)\s*(min|hour|hr)/i);
+              if (timeMatch) {
+                recipe.metadata[line.split(':')[0].trim()] = timeMatch[0];
+              }
+            } else if (line.includes('servings') || line.includes('yield')) {
+              const servingMatch = lines[i].match(/(\d+)/);
+              if (servingMatch) {
+                recipe.metadata.servings = servingMatch[1];
+              }
+            }
+            break;
+        }
+      }
+      
+      return recipe;
+    }
+    
+    // Parse ingredient line
+    function parseIngredientLine(line) {
+      // Simple ingredient parsing - can be enhanced
+      const parts = line.split(/\s+/);
+      let amount = '';
+      let unit = '';
+      let ingredient = '';
+      
+      // Look for common units and amounts
+      const units = ['cup', 'cups', 'tbsp', 'tbs', 'tablespoon', 'tablespoons', 'tsp', 'teaspoon', 'teaspoons', 'oz', 'ounce', 'ounces', 'lb', 'pound', 'pounds', 'g', 'gram', 'grams', 'kg', 'kilogram', 'kilograms', 'ml', 'milliliter', 'milliliters', 'l', 'liter', 'liters'];
+      
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i].toLowerCase();
+        
+        // Check if it's a number or fraction
+        if (/^\d+$/.test(part) || /^\d+\/\d+$/.test(part) || /^\d+\.\d+$/.test(part)) {
+          amount = part;
+        }
+        // Check if it's a unit
+        else if (units.includes(part)) {
+          unit = part;
+        }
+        // Otherwise it's part of the ingredient name
+        else {
+          ingredient += (ingredient ? ' ' : '') + parts[i];
+        }
+      }
+      
+      return {
+        amount: amount,
+        unit: unit,
+        ingredient: ingredient.trim()
+      };
+    }
+    
+    // Display parsing results
+    function displayParsingResults(parsedRecipe) {
+      // Display ingredients
+      const ingredientsList = document.getElementById('ingredients-list');
+      if (ingredientsList) {
+        ingredientsList.innerHTML = parsedRecipe.ingredients.map(ing => `
+          <div class="ingredient-item">
+            <div class="ingredient-text">${ing.text}</div>
+            ${ing.parsed.amount || ing.parsed.unit ? `
+              <div class="ingredient-parsed">
+                <span class="amount">${ing.parsed.amount || ''}</span>
+                <span class="unit">${ing.parsed.unit || ''}</span>
+                <span class="name">${ing.parsed.ingredient || ''}</span>
+              </div>
+            ` : ''}
+          </div>
+        `).join('');
+      }
+      
+      // Display instructions
+      const instructionsList = document.getElementById('instructions-list');
+      if (instructionsList) {
+        instructionsList.innerHTML = parsedRecipe.instructions.map(inst => `
+          <div class="instruction-item">
+            <span class="step-number">${inst.step}.</span>
+            <span class="instruction-text">${inst.text}</span>
+          </div>
+        `).join('');
+      }
+      
+      // Display metadata if available
+      if (Object.keys(parsedRecipe.metadata).length > 0) {
+        const metadataHtml = Object.entries(parsedRecipe.metadata).map(([key, value]) => 
+          `<div class="metadata-item"><strong>${key}:</strong> ${value}</div>`
+        ).join('');
+        
+        // Add metadata section if it doesn't exist
+        let metadataSection = document.getElementById('parsed-metadata');
+        if (!metadataSection) {
+          metadataSection = document.createElement('div');
+          metadataSection.id = 'parsed-metadata';
+          metadataSection.className = 'parsed-section';
+          metadataSection.innerHTML = '<h4 class="heading-4">Recipe Details</h4><div id="metadata-list"></div>';
+          document.getElementById('parsing-results').appendChild(metadataSection);
+        }
+        
+        document.getElementById('metadata-list').innerHTML = metadataHtml;
+      }
+    }
+
+    // Clear upload form
+    function clearUploadForm() {
+      document.getElementById('upload-form').reset();
+      document.getElementById('upload-success').classList.remove('show'); // Hide success message
+      
+      // Hide progress indicator
+      const progressDiv = document.getElementById('upload-progress');
+      if (progressDiv) {
+        progressDiv.style.display = 'none';
+      }
+      
+      // Reset progress bar
+      const progressFill = document.querySelector('.progress-fill');
+      if (progressFill) {
+        progressFill.style.width = '0%';
+      }
+    }
+
+    // Clear test text
+    function clearTestText() {
+      document.getElementById('test-recipe-text').value = '';
+      document.getElementById('parsing-results').classList.add('hidden');
+    }
+
+    // Show enhanced upload success details
+    function showUploadSuccessDetails(recipe) {
+      const summaryDiv = document.getElementById('recipe-summary');
+      if (summaryDiv && recipe) {
+        const complexity = recipe.complexity || 'unknown';
+        const prepTime = recipe.estimatedPrepTime || 'unknown';
+        const tags = recipe.tags && recipe.tags.length > 0 ? recipe.tags.join(', ') : 'none';
+        const textLength = recipe.rawText ? recipe.rawText.length : 0;
+        
+        summaryDiv.innerHTML = `
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.5rem;">
+            <div><strong>Name:</strong> ${recipe.name}</div>
+            <div><strong>Complexity:</strong> <span style="text-transform: capitalize;">${complexity}</span></div>
+            <div><strong>Prep Time:</strong> ${prepTime} minutes</div>
+            <div><strong>Text Length:</strong> ${textLength.toLocaleString()} characters</div>
+            <div><strong>Project:</strong> ${recipe.projectId || 'Master'}</div>
+            <div><strong>Status:</strong> <span style="text-transform: capitalize;">${recipe.status}</span></div>
+          </div>
+          <div style="margin-top: 0.5rem;">
+            <strong>Tags:</strong> ${tags}
+          </div>
+          <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #64748b;">
+            <strong>Uploaded:</strong> ${new Date(recipe.createdAt).toLocaleString()}
+          </div>
+        `;
+      }
+    }
+
+    // Export recipe data
+    function exportRecipeData() {
+      try {
+        // Get the most recently uploaded recipe
+        const currentUser = window.userSystem ? window.userSystem.getCurrentUser() : null;
+        if (!currentUser) {
+          alert('Please log in to export recipe data');
+          return;
+        }
+        
+        const storageKey = `user_${currentUser.id}_recipes`;
+        const existing = localStorage.getItem(storageKey);
+        if (existing) {
+          const recipes = JSON.parse(existing);
+          if (recipes.length > 0) {
+            const latestRecipe = recipes[recipes.length - 1];
+            
+            // Create export data
+            const exportData = {
+              exportInfo: {
+                type: 'single_recipe',
+                recipeName: latestRecipe.name,
+                exportedAt: new Date().toISOString(),
+                exportedBy: currentUser.name
+              },
+              recipe: latestRecipe
+            };
+            
+            // Download as JSON file
+            const filename = `${latestRecipe.name.replace(/[^a-z0-9]/gi, '_')}_recipe_${new Date().toISOString().split('T')[0]}.json`;
+            const jsonString = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            URL.revokeObjectURL(url);
+            
+            console.log('✅ Recipe exported successfully:', filename);
+          } else {
+            alert('No recipes found to export');
+          }
+        } else {
+          alert('No recipes found to export');
+        }
+      } catch (error) {
+        console.error('❌ Error exporting recipe:', error);
+        alert('Failed to export recipe: ' + error.message);
+      }
+    }
+
+    // Update user info display
+    function updateUserInfo() {
+      if (window.userSystem) {
+        const currentUser = window.userSystem.getCurrentUser();
+        if (currentUser) {
+          document.getElementById('current-user').textContent = currentUser.name;
+          document.getElementById('dropdown-user-name').textContent = currentUser.name;
+          document.getElementById('user-avatar-initial').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+      }
+    }
+
+    // Initialize project selector
+    function initializeProjectSelector() {
+      if (window.projectManager) {
+        const projectSelect = document.getElementById('project-select');
+        const headerSelector = document.getElementById('header-project-selector');
+        const mobileSelector = document.getElementById('mobile-project-selector');
+        
+        // Wait for project manager to be ready
+        setTimeout(() => {
+          if (window.projectManager.projects && window.projectManager.projects.length > 0) {
+            // Populate project selectors
+            const projects = window.projectManager.projects;
+            
+            [projectSelect, headerSelector, mobileSelector].forEach(selector => {
+              if (selector) {
+                selector.innerHTML = projects.map(project => `
+                  <option value="${project.id}" ${project.id === window.projectManager.currentProject?.id ? 'selected' : ''}>
+                    ${project.icon} ${project.name}
+                  </option>
+                `).join('');
+                
+                // Add change event listener
+                selector.addEventListener('change', function() {
+                  const selectedProjectId = this.value;
+                  if (selectedProjectId && window.projectManager) {
+                    window.projectManager.setCurrentProject(selectedProjectId);
+                  }
+                });
+              }
+            });
+            
+            console.log('✅ Project selectors initialized with', projects.length, 'projects');
+          } else {
+            console.log('⏳ Waiting for projects to load...');
+            // Retry after a short delay
+            setTimeout(initializeProjectSelector, 500);
+          }
+        }, 100);
+      } else {
+        console.log('⏳ Project manager not ready, retrying...');
+        setTimeout(initializeProjectSelector, 500);
+      }
+    }
+
+    // Emergency loading fix
+    function emergencyLoadingFix() {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      if (loadingOverlay) {
+        loadingOverlay.style.display = 'none';
+      }
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('user-dropdown');
+      const userTab = document.querySelector('.header-user-tab');
+      
+      if (dropdown && !userTab.contains(event.target)) {
+        dropdown.classList.remove('show');
       }
     });
 
-    (function updateUserInfo() {
-      const userInfo = document.getElementById('current-user');
-      if (userInfo) {
-        const username = localStorage.getItem('username') || 'Guest';
-        userInfo.textContent = username;
-      }
-    })();
+    // Auto-hide loading screen after 5 seconds as backup
+    setTimeout(function() {
+      emergencyLoadingFix();
+    }, 5000);
   </script>
-  <style>
-    body {
-      background: repeating-linear-gradient(
-        to bottom,
-        #f6fbe7 0px,
-        #f6fbe7 38px,
-        #eafcd7 39px,
-        #f6fbe7 40px
-      );
-      position: relative;
-    }
-    .pea-bg-sketch {
-      position: fixed;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      z-index: 0;
-      opacity: 0.11;
-      pointer-events: none;
-      width: 480px;
-      max-width: 90vw;
-      height: auto;
-    }
-    
-    /* Notebook card styling */
-    .notebook-card {
-      background: #fff;
-      border: 2px solid #7bb661;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(123, 182, 97, 0.15);
-      position: relative;
-    }
-    
-    .notebook-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #b6e388, #7bb661, #b6e388);
-      border-radius: 10px 10px 0 0;
-    }
-    
-    .notebook-input {
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 12px;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      line-height: 1.5;
-      transition: all 0.3s ease;
-    }
-    
-    .notebook-input:focus {
-      outline: none;
-      border-color: #7bb661;
-      box-shadow: 0 0 0 3px rgba(123, 182, 97, 0.1);
-    }
-    
-    .sticky-btn {
-      background: linear-gradient(135deg, #7bb661, #b6e388);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(123, 182, 97, 0.3);
-    }
-    
-    .sticky-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(123, 182, 97, 0.4);
-    }
-    
-    .sticky-btn:active {
-      transform: translateY(0);
-    }
-
-    /* Modern Dark Loading Animations */
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    @keyframes pulse {
-        0%, 100% { opacity: 0.3; transform: scale(0.8); }
-        50% { opacity: 1; transform: scale(1.2); }
-    }
-
-    #loading-overlay.fade-out {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 480px) {
-        #loading-overlay div[style*="width:80px"] {
-            width: 60px !important;
-            height: 60px !important;
-        }
-        #loading-overlay div[style*="font-size:1.1rem"] {
-            font-size: 1rem !important;
-        }
-        #loading-overlay div[style*="font-size:0.9rem"] {
-            font-size: 0.8rem !important;
-        }
-    }
-
-    /* Enhanced Header Animations */
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Header Logo Hover Glow */
-    header .relative:hover .absolute {
-        animation: pulse 2s infinite;
-    }
-
-    /* Navigation Active State - Current Page Highlighting */
-    .nav-active {
-        background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
-        color: #15803d !important;
-        font-weight: 600 !important;
-        border: 1px solid #86efac !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .nav-active::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        transition: left 0.5s;
-    }
-
-    .nav-active:hover::before {
-        left: 100%;
-    }
-  </style>
-  <svg class="pea-bg-sketch" viewBox="0 0 120 180" fill="none" style="">
-    <path d="M60 160 Q60 120 60 80" stroke="#7bb661" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <ellipse cx="60" cy="80" rx="22" ry="9" fill="#b6e388" stroke="#7bb661" stroke-width="2"/>
-    <ellipse cx="52" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-    <ellipse cx="60" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-    <ellipse cx="68" cy="80" rx="4" ry="4" fill="#eafcd7" stroke="#7bb661" stroke-width="1"/>
-    <path d="M60 120 Q40 110 50 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <ellipse cx="48" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
-    <path d="M60 120 Q80 110 70 90" stroke="#7bb661" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <ellipse cx="72" cy="100" rx="7" ry="3.5" fill="#b6e388" stroke="#7bb661" stroke-width="1"/>
-  </svg>
 </body>
 </html> 

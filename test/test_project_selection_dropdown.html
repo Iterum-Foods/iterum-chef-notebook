@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Project Selection Dropdown</title>
+    <link rel="stylesheet" href="../assets/css/tailwind-output.css">
+    <link rel="stylesheet" href="../assets/css/iterum-design-system.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Test Project Selection Dropdown</h1>
+        
+        <!-- Test Header with Project Selector -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Header Project Selector Section</h2>
+            <div class="header-project-selector-container">
+                <div class="project-selector-display" onclick="window.showProjectSelectionDropdown()">
+                    <div class="project-selector-current">
+                        <span class="project-selector-icon">📋</span>
+                        <span class="project-selector-name" data-project-name>Master Project</span>
+                        <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="project-status-display">
+                        <span class="project-status-label">Current:</span>
+                        <span class="project-status-value" data-project-name>Master Project</span>
+                    </div>
+                    <div class="project-stats-display" data-project-stats>
+                        <div class="project-stats">
+                            <span class="stat-item">🥕 0</span>
+                            <span class="stat-item">📖 0</span>
+                            <span class="stat-item">🍽️ 0</span>
+                            <span class="stat-item total">📊 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Controls -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Test Controls</h2>
+            <div class="space-y-4">
+                <button onclick="testProjectDropdown()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                    🧪 Test Project Dropdown
+                </button>
+                <button onclick="testProjectDropdownPositioning()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                    📍 Test Positioning
+                </button>
+                <button onclick="testProjectDropdownClose()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                    ❌ Test Close
+                </button>
+                <button onclick="testProjectChange()" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+                    🔄 Test Project Change
+                </button>
+            </div>
+        </div>
+        
+        <!-- Test Results -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Test Results</h2>
+            <div id="test-results" class="space-y-2 text-sm">
+                <div>Ready to test...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load required scripts -->
+    <script src="../assets/js/project-management-system.js"></script>
+    
+    <script>
+        // Test functions
+        function testProjectDropdown() {
+            addTestResult('🧪 Testing project dropdown display...');
+            try {
+                if (window.projectManager) {
+                    window.showProjectSelectionDropdown();
+                    addTestResult('✅ Project dropdown displayed successfully');
+                } else {
+                    addTestResult('❌ Project manager not available');
+                }
+            } catch (error) {
+                addTestResult('❌ Error displaying project dropdown: ' + error.message);
+            }
+        }
+        
+        function testProjectDropdownPositioning() {
+            addTestResult('📍 Testing project dropdown positioning...');
+            try {
+                const dropdown = document.getElementById('project-selection-dropdown');
+                if (dropdown) {
+                    const rect = dropdown.getBoundingClientRect();
+                    addTestResult(`✅ Project dropdown positioned at: top=${Math.round(rect.top)}px, left=${Math.round(rect.left)}px`);
+                    addTestResult(`📏 Project dropdown dimensions: ${Math.round(rect.width)}x${Math.round(rect.height)}px`);
+                } else {
+                    addTestResult('❌ Project dropdown not found');
+                }
+            } catch (error) {
+                addTestResult('❌ Error testing positioning: ' + error.message);
+            }
+        }
+        
+        function testProjectDropdownClose() {
+            addTestResult('❌ Testing project dropdown close...');
+            try {
+                if (window.projectManager) {
+                    window.projectManager.removeProjectSelectionDropdown();
+                    addTestResult('✅ Project dropdown closed successfully');
+                } else {
+                    addTestResult('❌ Project manager not available');
+                }
+            } catch (error) {
+                addTestResult('❌ Error closing project dropdown: ' + error.message);
+            }
+        }
+        
+        function testProjectChange() {
+            addTestResult('🔄 Testing project change...');
+            try {
+                if (window.projectManager && window.projectManager.projects.length > 1) {
+                    const nextProject = window.projectManager.projects.find(p => p.id !== window.projectManager.currentProject?.id);
+                    if (nextProject) {
+                        window.projectManager.setCurrentProject(nextProject.id);
+                        addTestResult(`✅ Project changed to: ${nextProject.name}`);
+                    } else {
+                        addTestResult('⚠️ No other projects available to switch to');
+                    }
+                } else {
+                    addTestResult('⚠️ Project manager not available or only one project');
+                }
+            } catch (error) {
+                addTestResult('❌ Error changing project: ' + error.message);
+            }
+        }
+        
+        function addTestResult(message) {
+            const results = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'p-2 bg-gray-50 rounded border-l-4 border-blue-500';
+            resultDiv.textContent = message;
+            results.appendChild(resultDiv);
+            
+            // Keep only last 10 results
+            while (results.children.length > 10) {
+                results.removeChild(results.firstChild);
+            }
+        }
+        
+        // Initialize test environment
+        document.addEventListener('DOMContentLoaded', function() {
+            addTestResult('🚀 Test page loaded');
+            addTestResult('📋 Testing project selection dropdown functionality');
+            
+            // Wait for project manager to be ready
+            setTimeout(() => {
+                if (window.projectManager) {
+                    addTestResult('✅ Project manager loaded');
+                    
+                    // Mock some projects for testing if none exist
+                    if (window.projectManager.projects.length === 0) {
+                        window.projectManager.projects = [
+                            { id: 'master', name: 'Master Project', description: 'Complete data repository', icon: '📋', isMaster: true },
+                            { id: 'test1', name: 'Test Project 1', description: 'First test project', icon: '🧪' },
+                            { id: 'test2', name: 'Test Project 2', description: 'Second test project', icon: '🔬' }
+                        ];
+                        window.projectManager.currentProject = window.projectManager.projects[0];
+                        addTestResult('✅ Mock projects created for testing');
+                    }
+                } else {
+                    addTestResult('❌ Project manager not available');
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

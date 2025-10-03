@@ -31,6 +31,8 @@ class LoginRequest(BaseModel):
     email: str
     password: str
     name: Optional[str] = None
+    role: Optional[str] = None
+    restaurant: Optional[str] = None
 
 class LoginResponse(BaseModel):
     user: ProfileData
@@ -58,8 +60,8 @@ def login(login_request: LoginRequest):
             'id': user_id,
             'name': login_request.name or login_request.email.split('@')[0],  # Use provided name or email prefix
             'email': login_request.email,
-            'role': 'Chef',
-            'restaurant': 'My Kitchen',
+            'role': login_request.role or 'Chef',
+            'restaurant': login_request.restaurant or 'My Kitchen',
             'avatar': None,
             'isGoogleUser': False,
             'recipes': [],

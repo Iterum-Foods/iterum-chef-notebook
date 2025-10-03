@@ -1,383 +1,186 @@
-# 🍅 Iterum R&D Chef Notebook
+# 🍳 Iterum Culinary R&D App
 
-> **The Future of Professional Cooking is Here**  
-> Revolutionary culinary management platform combining AI-powered recipe intelligence, smart ingredient tracking, and automated workflow optimization for professional kitchens.
+A comprehensive culinary research and development application for chefs, food service professionals, and culinary enthusiasts.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
+## 🚀 Features
 
-## 🌟 Features
+### **User Management System**
+- **Multi-User Profiles**: Create and manage multiple chef profiles
+- **Project-Based Organization**: Organize work by projects (Master, Client, etc.)
+- **Cross-Page Synchronization**: User and project selection persists across all pages
 
-### 🧠 AI-Powered Recipe Intelligence
-- **Smart Recipe Analysis**: Automatic parsing and nutritional calculations
-- **Intelligent Substitutions**: AI-powered ingredient recommendations
-- **Recipe Optimization**: Cost and nutrition optimization suggestions
-- **Batch Processing**: Upload hundreds of recipes in minutes
+### **Recipe Development**
+- **Recipe Ideas Management**: Capture and organize culinary concepts
+- **Recipe Builder**: Comprehensive recipe development with ingredients, instructions, and notes
+- **PDF Recipe Import**: Convert existing recipe PDFs into structured data
+- **Recipe Versioning**: Track changes and improvements over time
 
-### 📊 Advanced Ingredient Database
-- **291+ Professional Ingredients**: Comprehensive database with nutritional data
-- **Smart Search**: Natural language queries ("high protein, gluten-free, under $3")
-- **Dietary Tags**: Automatic detection (Vegan, GF, Keto, etc.)
-- **Seasonal Tracking**: Availability and pricing optimization
-- **Cost Intelligence**: Real-time market data and cost projections
+### **Project Management**
+- **Project Organization**: Separate data by project for different clients or purposes
+- **Data Tagging**: Organize information with custom tags and categories
+- **Progress Tracking**: Monitor development status and milestones
 
-### ⚡ Automated Workflow Management
-- **Recipe Discovery**: Automatic file scanning and organization
-- **Smart Categorization**: AI-powered recipe classification
-- **Batch Operations**: Mass import, export, and processing
-- **Version Control**: Track recipe iterations and changes
+### **Data Management**
+- **Ingredient Library**: Comprehensive ingredient database with nutritional information
+- **Vendor Management**: Track suppliers and vendor relationships
+- **Equipment Tracking**: Manage kitchen equipment and maintenance
+- **Menu Planning**: Build and organize menus for different occasions
 
-### 🌍 International Cuisine Support
-- **Global Ingredients**: Asian, Mediterranean, Latin specialties
-- **Fermented Foods**: Probiotics and cultured ingredients
-- **Plant-Based Alternatives**: Complete vegan/vegetarian support
-- **Superfoods**: Nutrient-dense health ingredients
+### **Storage & Security**
+- **User-Controlled Storage**: Local data storage with export/backup capabilities
+- **Offline-First Design**: Works without internet connection
+- **Data Portability**: Easy data export and import between systems
 
-### 📈 Analytics & Insights
-- **Cost Analysis**: Detailed food cost breakdowns
-- **Performance Metrics**: Recipe success tracking
-- **Seasonal Optimization**: Timing and pricing recommendations
-- **Profitability Reports**: Menu optimization insights
+## 🛠️ Technology Stack
 
-### 🌐 Marketing & Waitlist System
-- **Professional Landing Page**: Conversion-optimized marketing website
-- **Waitlist Management**: Email collection and analytics
-- **Email Templates**: 5-email nurture sequence
-- **Social Media Kit**: Complete content framework
-- **Admin Dashboard**: Real-time signup tracking and analytics
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Styling**: Tailwind CSS
+- **Storage**: LocalStorage, IndexedDB
+- **Build Tools**: Modern JavaScript with ES6 modules
+- **Compatibility**: Modern browsers (Chrome, Firefox, Safari, Edge)
+
+## 📋 Prerequisites
+
+- Modern web browser (Chrome 80+, Firefox 75+, Safari 13+, Edge 80+)
+- Local file system access or HTTP server
+- JavaScript enabled
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.8 or higher
-- Git (for cloning the repository)
+### **Option 1: Direct File Access**
+1. Clone or download this repository
+2. Navigate to the `Iterum App` folder
+3. Open `index.html` in your web browser
+4. Create your first user profile and start using the app
 
-### Installation
+### **Option 2: Local HTTP Server (Recommended)**
+1. Clone or download this repository
+2. Navigate to the `Iterum App` folder
+3. Start a local HTTP server:
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/iterum-chef-notebook.git
-   cd iterum-chef-notebook
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Launch the application**
-
-   **For the Main Application:**
-   ```bash
-   # Windows (Recommended)
-   start.bat
-   
-   # Or programmatically
-   python app_launcher.py --mode unified
-   ```
-   
-   **For the Marketing Website:**
-   ```bash
-   # Windows (Recommended)
-   launch_marketing.bat
-   
-   # Or programmatically
-   python launch_marketing.py
-   ```
-
-4. **Access the application**
-   - **Main Application**: http://localhost:8080/index.html
-   - **Marketing Website**: http://localhost:8080/landing_page.html
-   - **API Documentation**: http://localhost:8000/docs
-   - **Waitlist Admin**: http://localhost:8080/waitlist_admin.html
-   - **Ingredient Demo**: http://localhost:8080/ingredient_demo.html
-
-## 📋 Documentation Management
-
-**📊 [Documentation Dependencies Flowchart](DOCUMENTATION_DEPENDENCIES_FLOWCHART.md)** - Complete guide for which files to update when making changes
-**⚡ [Quick Update Checklist](QUICK_UPDATE_CHECKLIST.md)** - Fast reference for keeping documentation synchronized
-
-## 📁 Project Structure
-
-```
-iterum-chef-notebook/
-├── app/                          # FastAPI backend application
-│   ├── routers/                  # API route handlers
-│   │   ├── auth.py              # Authentication
-│   │   ├── recipes.py           # Recipe management
-│   │   ├── ingredients.py       # Ingredient operations
-│   │   ├── ingredient_lists.py  # Custom ingredient lists
-│   │   ├── waitlist.py          # Marketing waitlist
-│   │   └── workflow.py          # Automated workflows
-│   ├── services/                # Business logic
-│   ├── database.py              # Database configuration
-│   └── main.py                  # FastAPI application
-├── static/                      # Frontend assets
-│   ├── css/                     # Stylesheets
-│   ├── js/                      # JavaScript files
-│   └── images/                  # Image assets
-├── marketing/                   # Marketing materials
-│   ├── landing_page.html        # Marketing landing page
-│   ├── waitlist_admin.html      # Waitlist administration
-│   ├── ingredient_demo.html     # Feature demonstration
-│   ├── email_templates.html     # Email templates
-│   ├── marketing_copy.md        # Marketing copy framework
-│   └── social_media_copy.md     # Social media content
-├── launch_marketing.py          # Marketing website launcher
-├── launch_marketing.bat         # Windows marketing launcher
-├── docs/                        # Documentation
-├── requirements.txt             # Python dependencies
-├── .gitignore                   # Git ignore rules
-└── README.md                    # This file
-```
-
-## 🛠️ Development
-
-### Setting up Development Environment
-
-1. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-2. **Install development dependencies**
-   ```bash
-   pip install -r requirements-dev.txt
-   ```
-
-3. **Run tests**
-   ```bash
-   python -m pytest
-   ```
-
-### API Endpoints
-
-The application provides a comprehensive REST API:
-
-- **Authentication**: `/api/auth/*`
-- **Recipes**: `/api/recipes/*`
-- **Ingredients**: `/api/ingredients/*`
-- **Data**: `/api/data/*`
-- **Workflow**: `/api/workflow/*`
-- **Waitlist**: `/api/waitlist/*`
-
-Full API documentation available at: http://localhost:8000/docs
-
-### Database Schema
-
-The application uses SQLite databases:
-- **`iterum_rnd.db`**: Main application data (recipes, users, profiles)
-- **`culinary_data.db`**: Ingredient database and lists
-- **`waitlist.db`**: Marketing waitlist signups
-
-## 🎯 Key Components
-
-### Recipe Management
-- Upload recipes in any format (PDF, Word, text, images)
-- AI-powered parsing and standardization
-- Nutritional analysis and cost calculations
-- Scaling and portion management
-
-### Ingredient Intelligence
-- 291+ preloaded professional ingredients
-- Smart search with natural language processing
-- Dietary restriction filtering
-- Seasonal availability and pricing data
-
-### Workflow Automation
-- Automated recipe discovery and organization
-- Batch processing capabilities
-- Smart categorization and tagging
-- Version control and change tracking
-
-### Analytics Dashboard
-- Real-time cost analysis
-- Recipe performance metrics
-- Seasonal optimization recommendations
-- Profitability insights
-
-## 🌐 Marketing Features
-
-### Landing Page
-Professional marketing website with:
-- Conversion-optimized design
-- Feature showcases and demos
-- Waitlist signup functionality
-- Social proof and testimonials
-
-### Email Marketing
-- 5-email nurture sequence
-- Professional HTML templates
-- Behavioral triggers
-- Conversion tracking
-
-### Social Media
-- Platform-specific content
-- Hashtag strategies
-- Video script templates
-- Community building
-
-## 🔧 Configuration
-
-### Environment Variables
-Create a `.env` file for configuration:
-```env
-# Database
-DATABASE_URL=sqlite:///./iterum_rnd.db
-
-# Security
-SECRET_KEY=your-secret-key-here
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# Email (for notifications)
-SMTP_SERVER=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USERNAME=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-
-# Analytics (optional)
-GOOGLE_ANALYTICS_ID=GA_MEASUREMENT_ID
-```
-
-### Customization
-- **Branding**: Update colors and logos in CSS files
-- **Features**: Enable/disable features in configuration
-- **Integrations**: Add custom API integrations
-- **Deployment**: Configure for your hosting environment
-
-## 📊 Analytics & Tracking
-
-### Waitlist Analytics
-- Real-time signup tracking
-- Source attribution
-- Conversion metrics
-- Growth trends
-
-### Application Analytics
-- User engagement metrics
-- Feature usage tracking
-- Performance monitoring
-- Error logging
-
-## 🚀 Deployment
-
-### Local Development
 ```bash
-python launch_marketing.py
+# Python 3
+python -m http.server 8080
+
+# Python 2
+python -m SimpleHTTPServer 8080
+
+# Node.js
+npx http-server -p 8080
+
+# PHP
+php -S localhost:8080
 ```
 
-### Production Deployment
+4. Open `http://localhost:8080` in your browser
+5. Create your first user profile and start using the app
 
-#### Option 1: Traditional Server
-1. Set up Python environment on server
-2. Configure reverse proxy (nginx/Apache)
-3. Set up SSL certificates
-4. Configure environment variables
-5. Run with production WSGI server
+## 🔧 Development Setup
 
-#### Option 2: Docker (Coming Soon)
-```bash
-docker-compose up -d
+### **Project Structure**
+```
+Iterum App/
+├── index.html                 # Main application entry point
+├── assets/                    # Static assets
+│   ├── js/                   # JavaScript modules
+│   ├── css/                  # Stylesheets
+│   └── images/               # Images and icons
+├── pages/                     # Individual page modules
+├── tests/                     # Test files and debugging tools
+├── docs/                      # Documentation
+└── .github/                   # GitHub templates and workflows
 ```
 
-#### Option 3: Cloud Platforms
-- **Heroku**: One-click deployment
-- **AWS**: EC2, ECS, or Lambda
-- **Google Cloud**: App Engine or Compute Engine
-- **DigitalOcean**: Droplets or App Platform
+### **Key JavaScript Modules**
+- **`unified_auth_system.js`**: User authentication and profile management
+- **`project-management-system.js`**: Project organization and data tagging
+- **`userControlledStorage.js`**: Data storage and management
+- **`header_user_sync.js`**: Cross-page user interface synchronization
 
-## 🤝 Contributing
+## 🧪 Testing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+### **Test Pages**
+- **`test_user_loading_fixed.html`**: Test user loading functionality
+- **`test_user_switch_dropdown.html`**: Test user switching interface
+- **`test_project_persistence.html`**: Test project data persistence
 
-### Development Workflow
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+### **Debug Tools**
+- Built-in debug buttons in the user interface
+- Console logging for troubleshooting
+- User loading diagnostics
 
-### Code Style
-- Follow PEP 8 for Python code
-- Use meaningful variable and function names
-- Add docstrings for all functions
-- Write tests for new features
+## 🐛 Known Issues
 
-## 📜 License
+### **Current Status**
+- ✅ User authentication system implemented
+- ✅ Project management system working
+- ✅ Cross-page data synchronization
+- ✅ Recipe development tools
+- ⚠️ User loading optimization in progress
+- ⚠️ Some cross-page sync edge cases
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### **Recent Fixes**
+- User loading now defaults to offline mode (no more 404 errors)
+- Enhanced user storage scanning and merging
+- Improved project persistence across pages
+
+## 📝 Contributing
+
+### **Reporting Issues**
+1. Use the appropriate issue template:
+   - [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md)
+   - [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md)
+   - [User Loading Issue](.github/ISSUE_TEMPLATE/user_loading_issue.md)
+
+2. Include detailed reproduction steps
+3. Attach console logs and screenshots
+4. Specify your environment details
+
+### **Development Workflow**
+1. Create a feature branch for your changes
+2. Test thoroughly before submitting
+3. Update documentation as needed
+4. Submit a pull request with clear description
+
+## 🔒 Privacy & Data
+
+- **Local Storage**: All data is stored locally on your device
+- **No Cloud Sync**: No data is transmitted to external servers
+- **Export Control**: You control when and how data is exported
+- **Offline Operation**: Full functionality without internet connection
+
+## 📱 Browser Compatibility
+
+| Browser | Version | Status |
+|---------|---------|---------|
+| Chrome  | 80+     | ✅ Full Support |
+| Firefox | 75+     | ✅ Full Support |
+| Safari  | 13+     | ✅ Full Support |
+| Edge    | 80+     | ✅ Full Support |
 
 ## 🆘 Support
 
-### Documentation
-- **API Docs**: http://localhost:8000/docs
-- **User Guide**: [Coming Soon]
-- **Video Tutorials**: [Coming Soon]
+### **Getting Help**
+1. Check the [Issues](../../issues) page for known problems
+2. Search existing issues for similar problems
+3. Create a new issue with detailed information
+4. Include console logs and reproduction steps
 
-### Community
-- **GitHub Issues**: Bug reports and feature requests
-- **Email**: support@iterum-chef.com
-- **Discord**: [Community Server - Coming Soon]
+### **Common Solutions**
+- **User Loading Issues**: Try refreshing the page or clearing browser cache
+- **Data Not Persisting**: Check if you're on the correct project
+- **Interface Sync Issues**: Ensure you're logged in with a valid user profile
 
-### Professional Support
-For enterprise customers and professional kitchens:
-- Priority support response
-- Custom feature development
-- On-site training and setup
-- Integration assistance
+## 📄 License
 
-## 🏆 Recognition
+This project is developed for culinary professionals and enthusiasts. Please respect the work and contribute positively to the community.
 
-### Built For
-- **Professional Chefs**: Restaurant, catering, institutional
-- **Culinary Schools**: Educational institutions
-- **Food Businesses**: R&D departments and test kitchens
-- **Serious Home Cooks**: Advanced culinary enthusiasts
+## 🙏 Acknowledgments
 
-### Awards & Recognition
-- Featured in [Culinary Technology Magazine]
-- Winner of [Food Innovation Award 2024]
-- "Best Kitchen Management Platform" - [Industry Review]
-
-## 🔮 Roadmap
-
-### Version 2.1 (Current)
-- ✅ AI-powered recipe intelligence
-- ✅ 291+ ingredient database
-- ✅ Automated workflow management
-- ✅ Marketing website and waitlist
-
-### Version 2.2 (Q1 2024)
-- 🔄 Mobile application (iOS/Android)
-- 🔄 Advanced analytics dashboard
-- 🔄 Integration marketplace
-- 🔄 Multi-language support
-
-### Version 2.3 (Q2 2024)
-- 📋 Equipment management
-- 📋 Supplier integration
-- 📋 Inventory tracking
-- 📋 Team collaboration tools
-
-### Version 3.0 (Q3 2024)
-- 📋 AI menu optimization
-- 📋 Predictive analytics
-- 📋 Voice recipe input
-- 📋 IoT kitchen integration
-
-## 📞 Contact
-
-**Iterum R&D Team**  
-Email: hello@iterum-chef.com  
-Website: https://iterum-chef.com  
-Twitter: [@IterumRD](https://twitter.com/IterumRD)  
+- Built for the culinary community
+- Designed for real-world kitchen workflows
+- Focused on user experience and data integrity
 
 ---
 
-<div align="center">
-  <strong>🍅 Revolutionizing Professional Kitchens Worldwide 🍅</strong>
-  <br>
-  <em>From Recipe Chaos to Culinary Mastery</em>
-</div>
+**🍳 Happy Cooking and Developing! 🚀**

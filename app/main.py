@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from app.database import engine, Base
-from app.routers import recipes, ingredients, versions, uploads, auth, profiles, data, vendors, menu, integrations, workflow, images, waitlist, autosave, recipe_scaling
+from app.routers import recipes, ingredients, versions, uploads, auth, profiles, data, vendors, menu, integrations, workflow, images, waitlist, autosave, recipe_scaling, projects, ai_enhancements
 from typing import List
 import os
 
@@ -57,6 +57,8 @@ app.include_router(workflow.router, prefix="/api/workflow", tags=["Automated Wor
 app.include_router(autosave.router, tags=["Auto-Save"])
 app.include_router(recipe_scaling.router, tags=["Recipe Scaling"])
 app.include_router(waitlist.router, prefix="/api/waitlist", tags=["Waitlist"])
+app.include_router(projects.router, tags=["Projects"])
+app.include_router(ai_enhancements.router, tags=["AI Enhancements"])
 
 # Health check endpoints
 @app.get("/")

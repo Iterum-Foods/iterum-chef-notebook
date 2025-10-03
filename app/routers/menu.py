@@ -13,6 +13,7 @@ import uuid
 from app.database import get_db
 from app.core.auth import get_current_user
 from app.services.menu_parser import MenuParser
+from app.services.enhanced_menu_parser import EnhancedMenuParser
 try:
     from app.services.ocr_processor import OCRProcessor
 except ImportError:
@@ -202,11 +203,28 @@ async def extract_and_parse_menu(
                     raise HTTPException(status_code=500, detail=f"PDF processing failed: {str(e)}")
                     
         elif filename_lower.endswith('.docx'):
-            # Extract from Word document
-            doc = Document(io.BytesIO(content))
-            extracted_text = "\n".join([paragraph.text for paragraph in doc.paragraphs if paragraph.text.strip()])
-            extraction_method = "Word Document"
-            extraction_info = {"paragraphs": len(doc.paragraphs)}
+            # Use enhanced Word document parser
+            enhanced_parser = EnhancedMenuParser()
+            word_result = enhanced_parser.parse_word_document(content)
+            
+            if word_result['success']:
+                # Return the enhanced parsing result directly
+                return {
+                    "success": True,
+                    "stage": 2,
+                    "extraction_method": "Enhanced Word Document Parser",
+                    "extraction_info": {"enhanced_parsing": True},
+                    "sections": word_result['sections'],
+                    "summary": word_result['summary'],
+                    "total_items": word_result['total_items'],
+                    "parsing_info": word_result['parsing_info']
+                }
+            else:
+                # Fallback to basic Word extraction
+                doc = Document(io.BytesIO(content))
+                extracted_text = "\n".join([paragraph.text for paragraph in doc.paragraphs if paragraph.text.strip()])
+                extraction_method = "Word Document (Basic)"
+                extraction_info = {"paragraphs": len(doc.paragraphs), "enhanced_failed": True}
             
         else:
             raise HTTPException(
@@ -232,8 +250,9 @@ async def extract_and_parse_menu(
         # Stage 2: Parse extracted text into structured menu items
         logging.info(f"Stage 2: Parsing menu structure from extracted text")
         
-        menu_parser = MenuParser()
-        parsed_result = menu_parser.parse_menu_text(extracted_text)
+        # Use enhanced parser for better accuracy
+        enhanced_parser = EnhancedMenuParser()
+        parsed_result = enhanced_parser.parse_menu_text(extracted_text, extraction_method.lower())
         
         if not parsed_result['success']:
             return {
@@ -340,4 +359,114 @@ async def get_sample_menu():
     return {
         "sample_menu": result,
         "note": "This is a sample parsed menu to demonstrate the structure"
+    }
+
+@router.get("/test-parsing")
+async def test_menu_parsing():
+    """Test menu parsing with sample data"""
+    sample_text = """
+    APPETIZERS
+    Bruschetta - Toasted bread with tomatoes, basil, and garlic $12
+    Caesar Salad - Fresh romaine lettuce with parmesan cheese $14
+    
+    MAIN COURSES
+    Grilled Salmon - Atlantic salmon with lemon butter sauce $28
+    Chicken Parmesan - Breaded chicken with marinara and mozzarella $24
+    """
+    
+    # Test both parsers
+    basic_parser = MenuParser()
+    basic_result = basic_parser.parse_menu_text(sample_text)
+    
+    enhanced_parser = EnhancedMenuParser()
+    enhanced_result = enhanced_parser.parse_menu_text(sample_text, "text")
+    
+    return {
+        "sample_text": sample_text,
+        "basic_parser_result": basic_result,
+        "enhanced_parser_result": enhanced_result,
+        "comparison": {
+            "basic_items": basic_result.get('total_items', 0),
+            "enhanced_items": enhanced_result.get('total_items', 0),
+            "basic_confidence": basic_result.get('parsing_info', {}).get('confidence', 0),
+            "enhanced_confidence": enhanced_result.get('parsing_info', {}).get('confidence', 0)
+        }
+    }
+
+@router.post("/test-word-parsing")
+async def test_word_parsing(file: UploadFile = File(...)):
+    """Test Word document parsing specifically"""
+    if not file.filename or not file.filename.lower().endswith('.docx'):
+        raise HTTPException(status_code=400, detail="Please upload a .docx file")
+    
+    try:
+        content = await file.read()
+        enhanced_parser = EnhancedMenuParser()
+        result = enhanced_parser.parse_word_document(content)
+        
+        return {
+            "filename": file.filename,
+            "file_size": len(content),
+            "parsing_result": result,
+            "debug_info": {
+                "success": result['success'],
+                "total_items": result.get('total_items', 0),
+                "total_sections": result.get('total_sections', 0),
+                "confidence": result.get('parsing_info', {}).get('confidence', 0),
+                "quality": result.get('summary', {}).get('parsing_quality', 'Unknown')
+            }
+        }
+        
+    except Exception as e:
+        return {
+            "filename": file.filename,
+            "error": str(e),
+            "success": False
+        }
+
+@router.post("/debug-text-parsing")
+async def debug_text_parsing(text_data: dict):
+    """Debug text parsing with detailed analysis"""
+    text = text_data.get("text", "")
+    
+    if not text:
+        raise HTTPException(status_code=400, detail="No text provided")
+    
+    enhanced_parser = EnhancedMenuParser()
+    
+    # Step-by-step analysis
+    cleaned_text = enhanced_parser.clean_text(text, "text")
+    sections = enhanced_parser.extract_sections_enhanced(cleaned_text)
+    
+    debug_info = {
+        "original_text": text,
+        "cleaned_text": cleaned_text,
+        "sections_found": len(sections),
+        "section_names": [name for name, _ in sections],
+        "section_analysis": []
+    }
+    
+    for section_name, section_text in sections:
+        items = enhanced_parser.extract_menu_items_enhanced(section_text, section_name)
+        debug_info["section_analysis"].append({
+            "section_name": section_name,
+            "section_text": section_text[:200] + "..." if len(section_text) > 200 else section_text,
+            "items_found": len(items),
+            "items": [
+                {
+                    "title": item.title,
+                    "price": item.price,
+                    "description": item.description,
+                    "confidence": item.confidence
+                }
+                for item in items
+            ]
+        })
+    
+    # Full parsing result
+    full_result = enhanced_parser.parse_menu_text(text, "text")
+    
+    return {
+        "debug_info": debug_info,
+        "full_result": full_result
     } 
