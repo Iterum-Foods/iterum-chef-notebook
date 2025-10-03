@@ -1,0 +1,87 @@
+name: Deploy Iterum Culinary App
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'staging') || 'production' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Build application
+      run: |
+        # Create production build
+        npm run build || echo "No build script defined"
+        
+        # Create deployment package
+        mkdir -p dist
+        cp -r assets dist/
+        cp -r app dist/
+        cp -r documentation dist/
+        cp *.html dist/
+        cp *.json dist/
+        cp *.md dist/
+        
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event.inputs.environment != 'production'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
+        cname: iterum-culinary-app.github.io
+        
+    - name: Deploy to production
+      if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.environment == 'production'
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment logic here
+        # This could include:
+        # - Deploying to a cloud service (AWS, Azure, GCP)
+        # - Uploading to a CDN
+        # - Notifying deployment services
+        
+    - name: Notify deployment
+      uses: 8398a7/action-slack@v3
+      if: always()
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        text: 'Iterum Culinary App deployment ${{ job.status }}'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
+    - name: Create deployment summary
+      run: |
+        echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Environment**: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'staging') || 'production' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Branch/Tag**: ${{ github.ref }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
