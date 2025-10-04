@@ -68,40 +68,73 @@ class UnifiedAuthSystem {
         const initTimeout = setTimeout(() => {
             console.warn('⚠️ Authentication initialization timeout, showing auth');
             this.showMandatoryAuthentication();
-        }, 5000); // 5 second timeout
+        }, 3000); // Reduced to 3 seconds
         
         try {
-            // Check backend connection
-            await this.checkBackendConnection();
+            // Quick session check without heavy operations
+            const hasSession = this.quickSessionCheck();
             
-            // Wait for enhanced user system to be ready if available
-            await this.waitForEnhancedUserSystem();
-            
-            // Check for existing session first
-            console.log('🔐 Checking for existing authentication session...');
-            await this.checkExistingSession();
-            
-            // Clear timeout if we got here
+            // Clear timeout
             clearTimeout(initTimeout);
             
-            // STRICT PROTECTION: Block all access if not authenticated
-            if (!this.currentUser && !this.isAuthenticated()) {
+            if (!hasSession) {
                 console.log('🚫 NO ACCESS: User not authenticated, showing mandatory auth');
                 // Use setTimeout to prevent blocking the main thread
                 setTimeout(() => {
                     this.showMandatoryAuthentication();
-                }, 100);
-                return; // Block further initialization
+                }, 50);
+                return;
             }
             
             console.log('✅ User authenticated, allowing app access');
+            
+            // Load user data in background after authentication is confirmed
+            setTimeout(() => {
+                this.loadUserDataInBackground();
+            }, 1000);
+            
         } catch (error) {
             console.error('❌ Error during authentication initialization:', error);
             clearTimeout(initTimeout);
             // Show authentication on error
             setTimeout(() => {
                 this.showMandatoryAuthentication();
-            }, 100);
+            }, 50);
+        }
+    }
+
+    /**
+     * Quick session check without heavy operations
+     */
+    quickSessionCheck() {
+        try {
+            // Check localStorage directly without encryption for speed
+            const sessionActive = localStorage.getItem('session_active');
+            const currentUserStr = localStorage.getItem('current_user');
+            
+            if (sessionActive === 'true' && currentUserStr) {
+                const user = JSON.parse(currentUserStr);
+                this.currentUser = user;
+                console.log('💾 Quick session check found user:', user.name);
+                return true;
+            }
+            
+            return false;
+        } catch (error) {
+            console.warn('⚠️ Quick session check failed:', error);
+            return false;
+        }
+    }
+
+    /**
+     * Load user data in background after authentication
+     */
+    async loadUserDataInBackground() {
+        try {
+            console.log('📥 Loading user data in background...');
+            await this.loadAllUserData(this.currentUser);
+        } catch (error) {
+            console.warn('⚠️ Background user data loading failed:', error);
         }
     }
 
@@ -1675,62 +1708,8 @@ class UnifiedAuthSystem {
         console.log('📥 Loading all data for user:', user.name);
         
         try {
-            // Show loading message
-            this.showLoadingScreen(`Loading data for ${user.name}...`);
-            
-            // Initialize userDataManager if not already done
-            if (!window.userDataManager) {
-                console.log('🔧 Initializing userDataManager...');
-                // The userDataManager should be initialized elsewhere, but we'll ensure it's ready
-                if (typeof window.UserDataManager === 'function') {
-                    window.userDataManager = new window.UserDataManager();
-                }
-            }
-            
-            // Load user-specific data through userDataManager
-            if (window.userDataManager && window.userDataManager.refreshUserData) {
-                console.log('🔄 Refreshing user data...');
-                await window.userDataManager.refreshUserData();
-            }
-            
-            // Load project data if project manager is available
-            if (window.projectManager && window.projectManager.loadProjects) {
-                console.log('📁 Loading user projects...');
-                window.projectManager.loadProjects();
-            }
-            
-            // Load menu data if menu manager is available
-            if (window.menuManager && window.menuManager.loadMenusFromStorage) {
-                console.log('🍽️ Loading user menus...');
-                window.menuManager.loadMenusFromStorage();
-            }
-            
-            // Load ingredient data if ingredient library is available
-            if (window.ingredientLibrary && window.ingredientLibrary.loadFromLocalStorage) {
-                console.log('🥕 Loading user ingredients...');
-                window.ingredientLibrary.loadFromLocalStorage();
-            }
-            
-            // Load vendor data if vendor manager is available
-            if (window.vendorManager && window.vendorManager.loadVendors) {
-                console.log('🏢 Loading user vendors...');
-                window.vendorManager.loadVendors();
-            }
-            
-            // Load recipe ideas if available
-            if (window.loadRecipeIdeasFromFiles) {
-                console.log('💡 Loading user recipe ideas...');
-                window.loadRecipeIdeasFromFiles();
-            }
-            
-            // Load daily notes if available
-            if (window.loadDailyNotes) {
-                console.log('📝 Loading user daily notes...');
-                window.loadDailyNotes();
-            }
-            
-            // Update loading message
-            this.showLoadingScreen('Finalizing user session...');
+            // Load data in small chunks to avoid blocking
+            await this.loadUserDataInChunks(user);
             
             // Dispatch event that user data is loaded
             window.dispatchEvent(new CustomEvent('iterumUserDataLoaded', {
@@ -1743,6 +1722,121 @@ class UnifiedAuthSystem {
             console.warn('⚠️ Some user data failed to load:', error);
             // Continue anyway - partial data is better than no data
         }
+    }
+
+    /**
+     * Load user data in small chunks to avoid blocking
+     */
+    async loadUserDataInChunks(user) {
+        // Chunk 1: Basic user data
+        await this.loadBasicUserData(user);
+        await this.sleep(10); // Small delay between chunks
+        
+        // Chunk 2: Project data
+        await this.loadProjectData(user);
+        await this.sleep(10);
+        
+        // Chunk 3: Menu data
+        await this.loadMenuData(user);
+        await this.sleep(10);
+        
+        // Chunk 4: Ingredient data
+        await this.loadIngredientData(user);
+        await this.sleep(10);
+        
+        // Chunk 5: Other data
+        await this.loadOtherData(user);
+    }
+
+    /**
+     * Load basic user data
+     */
+    async loadBasicUserData(user) {
+        try {
+            if (!window.userDataManager && typeof window.UserDataManager === 'function') {
+                window.userDataManager = new window.UserDataManager();
+            }
+            
+            if (window.userDataManager && window.userDataManager.refreshUserData) {
+                console.log('🔄 Refreshing user data...');
+                await window.userDataManager.refreshUserData();
+            }
+        } catch (error) {
+            console.warn('⚠️ Basic user data loading failed:', error);
+        }
+    }
+
+    /**
+     * Load project data
+     */
+    async loadProjectData(user) {
+        try {
+            if (window.projectManager && window.projectManager.loadProjects) {
+                console.log('📁 Loading user projects...');
+                window.projectManager.loadProjects();
+            }
+        } catch (error) {
+            console.warn('⚠️ Project data loading failed:', error);
+        }
+    }
+
+    /**
+     * Load menu data
+     */
+    async loadMenuData(user) {
+        try {
+            if (window.menuManager && window.menuManager.loadMenusFromStorage) {
+                console.log('🍽️ Loading user menus...');
+                window.menuManager.loadMenusFromStorage();
+            }
+        } catch (error) {
+            console.warn('⚠️ Menu data loading failed:', error);
+        }
+    }
+
+    /**
+     * Load ingredient data
+     */
+    async loadIngredientData(user) {
+        try {
+            if (window.ingredientLibrary && window.ingredientLibrary.loadFromLocalStorage) {
+                console.log('🥕 Loading user ingredients...');
+                window.ingredientLibrary.loadFromLocalStorage();
+            }
+            
+            if (window.vendorManager && window.vendorManager.loadVendors) {
+                console.log('🏢 Loading user vendors...');
+                window.vendorManager.loadVendors();
+            }
+        } catch (error) {
+            console.warn('⚠️ Ingredient data loading failed:', error);
+        }
+    }
+
+    /**
+     * Load other data
+     */
+    async loadOtherData(user) {
+        try {
+            if (window.loadRecipeIdeasFromFiles) {
+                console.log('💡 Loading user recipe ideas...');
+                window.loadRecipeIdeasFromFiles();
+            }
+            
+            if (window.loadDailyNotes) {
+                console.log('📝 Loading user daily notes...');
+                window.loadDailyNotes();
+            }
+        } catch (error) {
+            console.warn('⚠️ Other data loading failed:', error);
+        }
+    }
+
+    /**
+     * Sleep utility function
+     */
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     /**
