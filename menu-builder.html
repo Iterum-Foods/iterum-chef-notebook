@@ -819,7 +819,7 @@
     <!-- Load Firebase Authentication -->
     <script type="module" src="assets/js/firebase-auth.js"></script>
     <script type="module" src="assets/js/firebase-auth-ui.js"></script>
-    
+
     <!-- Load Unified Authentication System -->
     <script src="assets/js/unified_auth_system.js"></script>
     
@@ -2580,6 +2580,25 @@
             `;
             document.head.appendChild(style);
         }
+    </script>
+
+    <!-- Initialize Unified Authentication System -->
+    <script>
+      // Initialize authentication system when DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 DOM loaded, initializing authentication system...');
+        
+        // Wait a moment for all scripts to load
+        setTimeout(() => {
+          if (typeof UnifiedAuthSystem !== 'undefined') {
+            console.log('✅ UnifiedAuthSystem class found, creating instance...');
+            window.unifiedAuthSystem = new UnifiedAuthSystem();
+            console.log('✅ Authentication system initialized');
+          } else {
+            console.error('❌ UnifiedAuthSystem class not found');
+          }
+        }, 100);
+      });
     </script>
 </body>
 </html> 
