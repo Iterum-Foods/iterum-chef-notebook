@@ -64,24 +64,45 @@ class UnifiedAuthSystem {
     async init() {
         console.log('🔐 Initializing Unified Authentication System...');
         
-        // Check backend connection
-        await this.checkBackendConnection();
-        
-        // Wait for enhanced user system to be ready if available
-        await this.waitForEnhancedUserSystem();
-        
-        // Check for existing session first
-        console.log('🔐 Checking for existing authentication session...');
-        await this.checkExistingSession();
-        
-        // STRICT PROTECTION: Block all access if not authenticated
-        if (!this.currentUser && !this.isAuthenticated()) {
-            console.log('🚫 NO ACCESS: User not authenticated, showing mandatory auth');
+        // Set a timeout to prevent hanging
+        const initTimeout = setTimeout(() => {
+            console.warn('⚠️ Authentication initialization timeout, showing auth');
             this.showMandatoryAuthentication();
-            return; // Block further initialization
-        }
+        }, 5000); // 5 second timeout
         
-        console.log('✅ User authenticated, allowing app access');
+        try {
+            // Check backend connection
+            await this.checkBackendConnection();
+            
+            // Wait for enhanced user system to be ready if available
+            await this.waitForEnhancedUserSystem();
+            
+            // Check for existing session first
+            console.log('🔐 Checking for existing authentication session...');
+            await this.checkExistingSession();
+            
+            // Clear timeout if we got here
+            clearTimeout(initTimeout);
+            
+            // STRICT PROTECTION: Block all access if not authenticated
+            if (!this.currentUser && !this.isAuthenticated()) {
+                console.log('🚫 NO ACCESS: User not authenticated, showing mandatory auth');
+                // Use setTimeout to prevent blocking the main thread
+                setTimeout(() => {
+                    this.showMandatoryAuthentication();
+                }, 100);
+                return; // Block further initialization
+            }
+            
+            console.log('✅ User authenticated, allowing app access');
+        } catch (error) {
+            console.error('❌ Error during authentication initialization:', error);
+            clearTimeout(initTimeout);
+            // Show authentication on error
+            setTimeout(() => {
+                this.showMandatoryAuthentication();
+            }, 100);
+        }
     }
 
     /**
@@ -1036,6 +1057,12 @@ class UnifiedAuthSystem {
     showMandatoryAuthentication() {
         console.log('🚫 Showing mandatory authentication - blocking all access');
         
+        // Prevent multiple overlays
+        if (document.querySelector('.mandatory-auth-overlay')) {
+            console.log('⚠️ Mandatory auth overlay already exists, skipping');
+            return;
+        }
+        
         // Hide all existing content
         this.hideAllContent();
         
@@ -1109,17 +1136,27 @@ class UnifiedAuthSystem {
      * Hide all content until authentication is complete
      */
     hideAllContent() {
-        // Hide main content
-        const mainContent = document.querySelector('main') || document.body;
+        // Hide main content sections but NOT the body
+        const mainContent = document.querySelector('main');
         if (mainContent) {
             mainContent.style.display = 'none';
         }
         
+        // Hide header content
+        const header = document.querySelector('header');
+        if (header) {
+            header.style.display = 'none';
+        }
+        
         // Hide any other content sections
-        const contentSections = document.querySelectorAll('.content, .app-content, .main-content, .page-content');
+        const contentSections = document.querySelectorAll('.content, .app-content, .main-content, .page-content, .landing-hero, .features-section, .cta-section');
         contentSections.forEach(section => {
             section.style.display = 'none';
         });
+        
+        // Set body to minimal height and prevent scrolling
+        document.body.style.overflow = 'hidden';
+        document.body.style.height = '100vh';
     }
 
     /**
@@ -1127,16 +1164,26 @@ class UnifiedAuthSystem {
      */
     showContent() {
         // Show main content
-        const mainContent = document.querySelector('main') || document.body;
+        const mainContent = document.querySelector('main');
         if (mainContent) {
             mainContent.style.display = '';
         }
         
+        // Show header
+        const header = document.querySelector('header');
+        if (header) {
+            header.style.display = '';
+        }
+        
         // Show content sections
-        const contentSections = document.querySelectorAll('.content, .app-content, .main-content, .page-content');
+        const contentSections = document.querySelectorAll('.content, .app-content, .main-content, .page-content, .landing-hero, .features-section, .cta-section');
         contentSections.forEach(section => {
             section.style.display = '';
         });
+        
+        // Restore body scrolling
+        document.body.style.overflow = '';
+        document.body.style.height = '';
     }
 
     /**
