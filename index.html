@@ -1710,6 +1710,9 @@
     <!-- Load Unified Authentication System -->
     <script src="assets/js/unified_auth_system.js"></script>
     
+    <!-- Load Page Protection System -->
+    <script src="assets/js/page-protection.js"></script>
+    
     <!-- Load Header User Synchronization -->
     <script src="assets/js/header_user_sync.js"></script>
     
@@ -2901,9 +2904,19 @@
           if (typeof UnifiedAuthSystem !== 'undefined') {
             console.log('✅ UnifiedAuthSystem class found, creating instance...');
             window.unifiedAuthSystem = new UnifiedAuthSystem();
+            window.unifiedAuth = window.unifiedAuthSystem; // Alias for onclick handlers
             console.log('✅ Authentication system initialized');
           } else {
             console.error('❌ UnifiedAuthSystem class not found');
+          }
+          
+          // Initialize page protection if available
+          if (typeof PageProtection !== 'undefined') {
+            console.log('✅ PageProtection class found, creating instance...');
+            window.pageProtection = new PageProtection();
+            console.log('✅ Page protection system initialized');
+          } else {
+            console.warn('⚠️ PageProtection class not found');
           }
         }, 100);
       });

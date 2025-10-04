@@ -1009,7 +1009,7 @@ class UnifiedAuthSystem {
                         <button onclick="unifiedAuth.showLoginModal()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-blue-600 hover:to-indigo-600 transition-all shadow-lg transform hover:scale-105">
                             🔐 Sign In with Different Account
                         </button>
-                        <button onclick="unifiedAuth.showCreateProfile()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg transform hover:scale-105">
+                        <button onclick="unifiedAuth.showCreateProfileModal()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg transform hover:scale-105">
                             ➕ Create New Profile
                         </button>
                         <button onclick="unifiedAuth.createOfflineProfile()" class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-orange-600 hover:to-red-600 transition-all shadow-lg transform hover:scale-105">
@@ -1239,7 +1239,7 @@ class UnifiedAuthSystem {
                     <button onclick="unifiedAuth.showLoginModal()" class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-all">
                         🔐 Sign In
                     </button>
-                    <button onclick="unifiedAuth.showCreateProfile()" class="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-all">
+                    <button onclick="unifiedAuth.showCreateProfileModal()" class="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-all">
                         ➕ Create New Profile
                     </button>
                     <button onclick="unifiedAuth.createOfflineProfile()" class="w-full bg-orange-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-orange-600 transition-all">
@@ -1373,7 +1373,7 @@ class UnifiedAuthSystem {
                     <button onclick="unifiedAuth.showUserSelection()" class="w-full bg-gray-100 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors text-left">
                         ← Back to Profile Selection
                     </button>
-                    <button onclick="unifiedAuth.showCreateProfile()" class="w-full bg-green-500 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors text-left">
+                    <button onclick="unifiedAuth.showCreateProfileModal()" class="w-full bg-green-500 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors text-left">
                         ➕ Create New Profile
                     </button>
                     <button onclick="unifiedAuth.showLoginModal()" class="w-full bg-blue-500 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors text-left">
@@ -1522,7 +1522,7 @@ class UnifiedAuthSystem {
                         <button onclick="unifiedAuth.showUserSelection()" class="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-all">
                             ← Back to Profile Selection
                         </button>
-                        <button onclick="unifiedAuth.showCreateProfile()" class="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-all">
+                        <button onclick="unifiedAuth.showCreateProfileModal()" class="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-all">
                             ➕ Create New Profile
                         </button>
                         <button onclick="unifiedAuth.showLoginModal()" class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-all">
@@ -1839,7 +1839,7 @@ class UnifiedAuthSystem {
     /**
      * Show create profile interface
      */
-    showCreateProfile() {
+    showCreateProfileModal() {
         // Close any open dropdowns
         this.removeUserSwitchDropdown();
         this.removeExistingModals();
@@ -2668,7 +2668,8 @@ window.importUsersFromJSON = async function() {
 };
 
 // Create global instance
-window.unifiedAuthSystem = new UnifiedAuthSystem();
+        window.unifiedAuthSystem = new UnifiedAuthSystem();
+        window.unifiedAuth = window.unifiedAuthSystem; // Alias for onclick handlers
 
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {

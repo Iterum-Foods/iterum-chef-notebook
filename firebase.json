@@ -1,0 +1,61 @@
+{
+  "hosting": {
+    "public": "./",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/venv/**",
+      "**/__pycache__/**",
+      "**/*.py",
+      "**/requirements.txt",
+      "**/pytest.ini",
+      "**/jest.config.js",
+      "**/playwright.config.js",
+      "**/tailwind.config.js",
+      "**/postcss.config.js",
+      "**/*.db",
+      "**/*.csv",
+      "**/migrations/**",
+      "**/tests/**",
+      "**/scripts/**",
+      "**/documentation/**",
+      "**/docs/**",
+      "**/archive/**",
+      "**/Test files/**",
+      "**/*.bat",
+      "**/*.ps1",
+      "**/*.md",
+      "**/*.txt",
+      "**/*.log"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|png|jpg|jpeg|gif|ico|svg)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false
+  }
+}

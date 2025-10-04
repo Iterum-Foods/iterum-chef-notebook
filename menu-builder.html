@@ -2593,9 +2593,19 @@
           if (typeof UnifiedAuthSystem !== 'undefined') {
             console.log('✅ UnifiedAuthSystem class found, creating instance...');
             window.unifiedAuthSystem = new UnifiedAuthSystem();
+            window.unifiedAuth = window.unifiedAuthSystem; // Alias for onclick handlers
             console.log('✅ Authentication system initialized');
           } else {
             console.error('❌ UnifiedAuthSystem class not found');
+          }
+          
+          // Initialize page protection if available
+          if (typeof PageProtection !== 'undefined') {
+            console.log('✅ PageProtection class found, creating instance...');
+            window.pageProtection = new PageProtection();
+            console.log('✅ Page protection system initialized');
+          } else {
+            console.warn('⚠️ PageProtection class not found');
           }
         }, 100);
       });
