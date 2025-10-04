@@ -55,28 +55,24 @@ class PageProtection {
     async checkPageProtection() {
         const currentPage = this.getCurrentPageName();
         
-        // Don't protect the main page
-        if (currentPage === this.mainPage) {
-            console.log('🏠 Main page detected, no protection needed');
+        // Wait for auth system to initialize
+        await this.waitForAuthInitialization();
+        
+        // Check authentication status for ALL pages
+        if (!window.unifiedAuthSystem.isAuthenticated()) {
+            console.log('🚫 User not authenticated, redirecting to main page');
+            this.redirectToMainPage();
             return;
         }
         
         // Check if this is a protected page
         if (this.protectedPages.includes(currentPage)) {
             console.log(`🛡️ Protected page detected: ${currentPage}`);
-            
-            // Wait for auth system to initialize
-            await this.waitForAuthInitialization();
-            
-            // Check authentication status
-            if (!window.unifiedAuthSystem.isAuthenticated()) {
-                console.log('🚫 User not authenticated, redirecting to main page');
-                this.redirectToMainPage();
-            } else {
-                console.log('✅ User authenticated, allowing access to', currentPage);
-            }
+            console.log('✅ User authenticated, allowing access to', currentPage);
+        } else if (currentPage === this.mainPage) {
+            console.log('🏠 Main page detected - authentication verified');
         } else {
-            console.log(`📄 Unprotected page: ${currentPage}`);
+            console.log(`📄 Page: ${currentPage} - authentication verified`);
         }
     }
 

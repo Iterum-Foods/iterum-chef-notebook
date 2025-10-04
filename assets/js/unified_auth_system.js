@@ -74,14 +74,14 @@ class UnifiedAuthSystem {
         console.log('🔐 Checking for existing authentication session...');
         await this.checkExistingSession();
         
-        // Ensure authentication UI is shown if no user is authenticated
-        // Use a single timeout to avoid multiple competing mechanisms
-        setTimeout(() => {
-            if (!this.currentUser && !this.isAuthenticated()) {
-                console.log('🚨 No authenticated user found after initialization, showing auth options');
-                this.showAuthentication();
-            }
-        }, 1000);
+        // STRICT PROTECTION: Block all access if not authenticated
+        if (!this.currentUser && !this.isAuthenticated()) {
+            console.log('🚫 NO ACCESS: User not authenticated, showing mandatory auth');
+            this.showMandatoryAuthentication();
+            return; // Block further initialization
+        }
+        
+        console.log('✅ User authenticated, allowing app access');
     }
 
     /**
@@ -897,7 +897,7 @@ class UnifiedAuthSystem {
      * Remove existing modals
      */
     removeExistingModals() {
-        const existingModals = document.querySelectorAll('.auth-modal-overlay');
+        const existingModals = document.querySelectorAll('.auth-modal-overlay, .mandatory-auth-overlay');
         existingModals.forEach(modal => modal.remove());
     }
 
@@ -1028,6 +1028,136 @@ class UnifiedAuthSystem {
     showAuthentication() {
         console.log('🔐 Manual authentication trigger called');
         this.forceUserSelection();
+    }
+
+    /**
+     * Show mandatory authentication - blocks all access until user authenticates
+     */
+    showMandatoryAuthentication() {
+        console.log('🚫 Showing mandatory authentication - blocking all access');
+        
+        // Hide all existing content
+        this.hideAllContent();
+        
+        // Create mandatory auth overlay that covers everything
+        this.removeExistingModals();
+        
+        const modal = document.createElement('div');
+        modal.className = 'mandatory-auth-overlay fixed inset-0 bg-gray-900 flex items-center justify-center z-[99999]';
+        modal.style.zIndex = '99999';
+        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+        
+        modal.dataset.trusted = 'true';
+        modal.innerHTML = `
+            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden border-4 border-red-500">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-red-600 to-red-700 p-8 text-white text-center">
+                    <div class="text-4xl mb-4">🔒</div>
+                    <h2 class="text-3xl font-bold mb-2">Access Required</h2>
+                    <p class="text-red-100 text-lg">Authentication is mandatory to use this application</p>
+                    <div class="mt-4 text-sm text-red-200 bg-red-800 bg-opacity-50 px-4 py-2 rounded-full">
+                        🚫 No access without valid authentication
+                    </div>
+                </div>
+                
+                <!-- Authentication Options -->
+                <div class="p-8 space-y-4">
+                    <div class="text-center mb-6">
+                        <p class="text-gray-600">Please authenticate to continue:</p>
+                    </div>
+                    
+                    <button onclick="unifiedAuth.showLoginModal()" class="w-full bg-blue-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-all text-lg">
+                        🔐 Sign In
+                    </button>
+                    
+                    <button onclick="unifiedAuth.showCreateProfileModal()" class="w-full bg-green-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-green-600 transition-all text-lg">
+                        ➕ Create New Profile
+                    </button>
+                    
+                    <button onclick="unifiedAuth.createOfflineProfile()" class="w-full bg-orange-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-orange-600 transition-all text-lg">
+                        🚀 Continue Offline
+                    </button>
+                    
+                    <div class="text-center mt-6 text-sm text-gray-500">
+                        <p>Authentication is required for security and data protection</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Animate in
+        setTimeout(() => {
+            modal.style.opacity = '1';
+        }, 100);
+        
+        // Prevent any clicks outside the modal
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🚫 Click outside blocked - authentication required');
+            }
+        });
+        
+        // Prevent page navigation
+        this.preventNavigation();
+    }
+
+    /**
+     * Hide all content until authentication is complete
+     */
+    hideAllContent() {
+        // Hide main content
+        const mainContent = document.querySelector('main') || document.body;
+        if (mainContent) {
+            mainContent.style.display = 'none';
+        }
+        
+        // Hide any other content sections
+        const contentSections = document.querySelectorAll('.content, .app-content, .main-content, .page-content');
+        contentSections.forEach(section => {
+            section.style.display = 'none';
+        });
+    }
+
+    /**
+     * Show content after successful authentication
+     */
+    showContent() {
+        // Show main content
+        const mainContent = document.querySelector('main') || document.body;
+        if (mainContent) {
+            mainContent.style.display = '';
+        }
+        
+        // Show content sections
+        const contentSections = document.querySelectorAll('.content, .app-content, .main-content, .page-content');
+        contentSections.forEach(section => {
+            section.style.display = '';
+        });
+    }
+
+    /**
+     * Prevent navigation until authenticated
+     */
+    preventNavigation() {
+        // Prevent back button
+        window.addEventListener('popstate', (e) => {
+            if (!this.isAuthenticated()) {
+                e.preventDefault();
+                console.log('🚫 Navigation blocked - authentication required');
+            }
+        });
+        
+        // Prevent form submissions
+        document.addEventListener('submit', (e) => {
+            if (!this.isAuthenticated()) {
+                e.preventDefault();
+                console.log('🚫 Form submission blocked - authentication required');
+            }
+        });
     }
 
     /**
@@ -1442,6 +1572,9 @@ class UnifiedAuthSystem {
             this.removeExistingModals();
             this.removeUserSwitchDropdown();
             
+            // Show content after successful authentication
+            this.showContent();
+            
             // Show success message briefly
             this.showSuccessMessage(`Welcome back, ${user.name}!`);
             
@@ -1641,6 +1774,9 @@ class UnifiedAuthSystem {
             
             // Remove authentication modals
             this.removeExistingModals();
+            
+            // Show content after successful authentication
+            this.showContent();
             
             // Show success message briefly
             this.showSuccessMessage(`Welcome to Iterum R&D, ${user.name}!`);
