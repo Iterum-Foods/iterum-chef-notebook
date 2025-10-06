@@ -80,6 +80,41 @@ class FirebaseAuthUI {
                         <span>or</span>
                     </div>
                     
+                    <!-- Email/Password Form -->
+                    <div class="firebase-auth-form">
+                        <div class="firebase-auth-tabs">
+                            <button class="firebase-auth-tab active" onclick="firebaseAuthUI.switchTab('signin')">Sign In</button>
+                            <button class="firebase-auth-tab" onclick="firebaseAuthUI.switchTab('signup')">Sign Up</button>
+                        </div>
+                        
+                        <form id="firebase-auth-email-form" class="firebase-auth-email-form">
+                            <div class="firebase-auth-input-group">
+                                <label for="firebase-auth-email">Email</label>
+                                <input type="email" id="firebase-auth-email" placeholder="Enter your email" required>
+                            </div>
+                            
+                            <div class="firebase-auth-input-group">
+                                <label for="firebase-auth-password">Password</label>
+                                <input type="password" id="firebase-auth-password" placeholder="Enter your password" required>
+                            </div>
+                            
+                            <div class="firebase-auth-input-group" id="firebase-auth-confirm-password-group" style="display: none;">
+                                <label for="firebase-auth-confirm-password">Confirm Password</label>
+                                <input type="password" id="firebase-auth-confirm-password" placeholder="Confirm your password">
+                            </div>
+                            
+                            <button type="submit" class="firebase-auth-btn firebase-auth-email">
+                                <span class="firebase-auth-icon">📧</span>
+                                <span id="firebase-auth-submit-text">Sign In</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Divider -->
+                    <div class="firebase-auth-divider">
+                        <span>or</span>
+                    </div>
+                    
                     <!-- Anonymous User -->
                     <button class="firebase-auth-btn firebase-auth-anonymous" onclick="firebaseAuthUI.signInAnonymously()">
                         <span class="firebase-auth-icon">👤</span>
@@ -119,6 +154,12 @@ class FirebaseAuthUI {
                 this.closeModal();
             }
         });
+        
+        // Add form event listener
+        const emailForm = document.getElementById('firebase-auth-email-form');
+        if (emailForm) {
+            emailForm.addEventListener('submit', (e) => this.handleEmailAuth(e));
+        }
     }
 
     /**
@@ -175,7 +216,28 @@ class FirebaseAuthUI {
     }
 
     /**
-     * Handle email/password sign-in
+     * Switch between sign in and sign up tabs
+     */
+    switchTab(tab) {
+        const tabs = document.querySelectorAll('.firebase-auth-tab');
+        const confirmPasswordGroup = document.getElementById('firebase-auth-confirm-password-group');
+        const submitText = document.getElementById('firebase-auth-submit-text');
+        
+        // Update tab appearance
+        tabs.forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        if (tab === 'signup') {
+            confirmPasswordGroup.style.display = 'block';
+            submitText.textContent = 'Sign Up';
+        } else {
+            confirmPasswordGroup.style.display = 'none';
+            submitText.textContent = 'Sign In';
+        }
+    }
+
+    /**
+     * Handle email/password authentication (both sign in and sign up)
      */
     async handleEmailAuth(event) {
         event.preventDefault();
@@ -185,18 +247,41 @@ class FirebaseAuthUI {
             return;
         }
         
-        const email = document.getElementById('firebase-email').value;
-        const password = document.getElementById('firebase-password').value;
+        const email = document.getElementById('firebase-auth-email').value;
+        const password = document.getElementById('firebase-auth-password').value;
+        const confirmPassword = document.getElementById('firebase-auth-confirm-password').value;
+        const isSignUp = event.target.querySelector('.firebase-auth-tab.active').textContent === 'Sign Up';
         
         if (!email || !password) {
             this.showError('Please fill in all fields');
             return;
         }
         
+        if (isSignUp) {
+            if (!confirmPassword) {
+                this.showError('Please confirm your password');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                this.showError('Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 6) {
+                this.showError('Password must be at least 6 characters');
+                return;
+            }
+        }
+        
         this.showLoading();
         
         try {
-            await this.firebaseAuth.signInWithEmail(email, password);
+            if (isSignUp) {
+                await this.firebaseAuth.createUserWithEmail(email, password);
+            } else {
+                await this.firebaseAuth.signInWithEmail(email, password);
+            }
             this.closeModal();
             
         } catch (error) {
@@ -540,6 +625,78 @@ class FirebaseAuthUI {
             .firebase-auth-loading p {
                 color: #6b7280;
                 margin: 0;
+            }
+            
+            /* New styles for email/password form */
+            .firebase-auth-form {
+                margin: 16px 0;
+            }
+            
+            .firebase-auth-tabs {
+                display: flex;
+                background: #f8fafc;
+                border-radius: 8px;
+                padding: 4px;
+                margin-bottom: 20px;
+            }
+            
+            .firebase-auth-tab {
+                flex: 1;
+                padding: 8px 16px;
+                border: none;
+                background: none;
+                border-radius: 6px;
+                font-weight: 600;
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                color: #6b7280;
+            }
+            
+            .firebase-auth-tab.active {
+                background: white;
+                color: #1e293b;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+            
+            .firebase-auth-input-group {
+                margin-bottom: 16px;
+            }
+            
+            .firebase-auth-input-group label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 600;
+                color: #374151;
+                font-size: 14px;
+            }
+            
+            .firebase-auth-input-group input {
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid #e5e7eb;
+                border-radius: 8px;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+            }
+            
+            .firebase-auth-input-group input:focus {
+                outline: none;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+            
+            .firebase-auth-email {
+                background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+                color: white;
+                margin-top: 8px;
+            }
+            
+            .firebase-auth-email:hover {
+                background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
             }
             
             .firebase-auth-error {
