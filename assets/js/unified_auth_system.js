@@ -64,11 +64,11 @@ class UnifiedAuthSystem {
     async init() {
         console.log('🔐 Initializing Unified Authentication System...');
         
-        // Set a timeout to prevent hanging
+        // Set a shorter timeout to prevent hanging
         const initTimeout = setTimeout(() => {
             console.warn('⚠️ Authentication initialization timeout, showing auth');
             this.showMandatoryAuthentication();
-        }, 3000); // Reduced to 3 seconds
+        }, 1500); // Reduced to 1.5 seconds
         
         try {
             // Quick session check without heavy operations
@@ -79,27 +79,26 @@ class UnifiedAuthSystem {
             
             if (!hasSession) {
                 console.log('🚫 NO ACCESS: User not authenticated, showing mandatory auth');
-                // Use setTimeout to prevent blocking the main thread
-                setTimeout(() => {
-                    this.showMandatoryAuthentication();
-                }, 50);
+                // Show auth immediately without delay
+                this.showMandatoryAuthentication();
                 return;
             }
             
             console.log('✅ User authenticated, allowing app access');
             
+            // Show content immediately
+            this.showContent();
+            
             // Load user data in background after authentication is confirmed
             setTimeout(() => {
                 this.loadUserDataInBackground();
-            }, 1000);
+            }, 500);
             
         } catch (error) {
             console.error('❌ Error during authentication initialization:', error);
             clearTimeout(initTimeout);
-            // Show authentication on error
-            setTimeout(() => {
-                this.showMandatoryAuthentication();
-            }, 50);
+            // Show authentication immediately on error
+            this.showMandatoryAuthentication();
         }
     }
 
