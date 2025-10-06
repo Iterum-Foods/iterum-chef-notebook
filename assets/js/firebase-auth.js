@@ -90,6 +90,9 @@ class FirebaseAuthSystem {
             this.isInitialized = true;
             console.log('✅ Firebase Auth initialized successfully for iterum-culinary-app');
             
+            // Add alias for backward compatibility
+            this.createAccountWithEmail = this.createUserWithEmail;
+            
             // Connect with unified auth system
             this.connectWithUnifiedAuth();
             
@@ -300,7 +303,7 @@ class FirebaseAuthSystem {
     /**
      * Create account with email and password
      */
-    async createAccountWithEmail(email, password, displayName) {
+    async createUserWithEmail(email, password, displayName) {
         if (!this.isInitialized) {
             throw new Error('Firebase Auth not initialized');
         }
