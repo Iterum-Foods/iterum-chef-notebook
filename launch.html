@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterum - Professional Culinary R&D Platform</title>
+    <meta name="description" content="Transform your culinary creativity into reality with Iterum - the professional chef's digital notebook for recipe development, menu planning, and culinary innovation.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #ffffff;
+            color: var(--gray-900);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-left {
+            color: white;
+        }
+
+        .hero-left h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-left .tagline {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+            opacity: 0.95;
+        }
+
+        .hero-left .description {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 32px;
+            opacity: 0.9;
+        }
+
+        .hero-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-feature-icon {
+            font-size: 24px;
+        }
+
+        .hero-feature-text {
+            font-weight: 600;
+        }
+
+        .hero-right {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-container h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--gray-900);
+            text-align: center;
+        }
+
+        .auth-container .subtitle {
+            text-align: center;
+            color: var(--gray-600);
+            margin-bottom: 32px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 32px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gray-600);
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--danger);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
+        .btn-google {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+            margin-bottom: 12px;
+        }
+
+        .btn-google:hover {
+            background: var(--gray-50);
+        }
+
+        .btn-guest {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-guest:hover {
+            background: #d97706;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200);
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .loading-spinner {
+            border: 3px solid var(--gray-200);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            background: white;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+
+        .section-header p {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            border-radius: 16px;
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--gray-900);
+        }
+
+        .feature-card p {
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 80px 20px;
+            color: white;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 20px;
+            background: var(--gray-50);
+        }
+
+        .testimonials-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .testimonial-text {
+            font-size: 1.125rem;
+            color: var(--gray-700);
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .testimonial-info h4 {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .testimonial-info p {
+            color: var(--gray-600);
+            font-size: 14px;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 20px;
+            background: white;
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cta-container h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 24px;
+            color: var(--gray-900);
+        }
+
+        .cta-container p {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn-large {
+            padding: 20px 40px;
+            font-size: 18px;
+            width: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero-left h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-features {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-right {
+                padding: 32px;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn-large {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-left h1 {
+                font-size: 2rem;
+            }
+
+            .hero-left .tagline {
+                font-size: 1.25rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .cta-container h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section with Authentication -->
+    <section class="hero">
+        <div class="hero-content">
+            <!-- Left Side - Marketing Copy -->
+            <div class="hero-left">
+                <h1>Transform Your Culinary Creativity</h1>
+                <p class="tagline">The Professional Chef's Digital R&D Notebook</p>
+                <p class="description">
+                    Iterum empowers culinary professionals to develop recipes, plan menus, 
+                    and innovate with confidence. Join thousands of chefs revolutionizing 
+                    their creative process.
+                </p>
+
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <span class="hero-feature-icon">📝</span>
+                        <span class="hero-feature-text">Recipe Development</span>
+                    </div>
+                    <div class="hero-feature">
+                        <span class="hero-feature-icon">🍽️</span>
+                        <span class="hero-feature-text">Menu Planning</span>
+                    </div>
+                    <div class="hero-feature">
+                        <span class="hero-feature-icon">💰</span>
+                        <span class="hero-feature-text">Cost Analysis</span>
+                    </div>
+                    <div class="hero-feature">
+                        <span class="hero-feature-icon">📊</span>
+                        <span class="hero-feature-text">Analytics & Insights</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Authentication Form -->
+            <div class="hero-right">
+                <div class="auth-container">
+                    <h2>Get Started Free</h2>
+                    <p class="subtitle">No credit card required • Full access • Cancel anytime</p>
+
+                    <div id="success-message" class="success-message"></div>
+                    <div id="error-message-global" class="error-message"></div>
+
+                    <!-- Auth Tabs -->
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="signin" onclick="switchTab('signin')">Sign In</button>
+                        <button class="auth-tab" data-tab="signup" onclick="switchTab('signup')">Sign Up</button>
+                    </div>
+
+                    <!-- Sign In Form -->
+                    <form id="signin-form" class="auth-form active" onsubmit="handleSignIn(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="signin-email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="signin-email" 
+                                class="form-input" 
+                                placeholder="chef@restaurant.com"
+                                required
+                            >
+                            <div id="signin-email-error" class="error-message"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="signin-password">Password</label>
+                            <input 
+                                type="password" 
+                                id="signin-password" 
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required
+                            >
+                            <div id="signin-password-error" class="error-message"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="signin-btn">
+                            <span id="signin-btn-text">Sign In to Iterum</span>
+                            <div id="signin-spinner" class="loading-spinner" style="display: none;"></div>
+                        </button>
+                    </form>
+
+                    <!-- Sign Up Form -->
+                    <form id="signup-form" class="auth-form" onsubmit="handleSignUp(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="signup-name">Full Name</label>
+                            <input 
+                                type="text" 
+                                id="signup-name" 
+                                class="form-input" 
+                                placeholder="Gordon Ramsay"
+                                required
+                            >
+                            <div id="signup-name-error" class="error-message"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="signup-email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="signup-email" 
+                                class="form-input" 
+                                placeholder="chef@restaurant.com"
+                                required
+                            >
+                            <div id="signup-email-error" class="error-message"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="signup-password">Password</label>
+                            <input 
+                                type="password" 
+                                id="signup-password" 
+                                class="form-input" 
+                                placeholder="Minimum 6 characters"
+                                required
+                                minlength="6"
+                            >
+                            <div id="signup-password-error" class="error-message"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="signup-confirm-password">Confirm Password</label>
+                            <input 
+                                type="password" 
+                                id="signup-confirm-password" 
+                                class="form-input" 
+                                placeholder="Re-enter your password"
+                                required
+                            >
+                            <div id="signup-confirm-error" class="error-message"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="signup-btn">
+                            <span id="signup-btn-text">Create Free Account</span>
+                            <div id="signup-spinner" class="loading-spinner" style="display: none;"></div>
+                        </button>
+                    </form>
+
+                    <div class="divider"><span>or</span></div>
+
+                    <button class="btn btn-google" onclick="handleGoogleSignIn()">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+
+                    <button class="btn btn-guest" onclick="handleGuestAccess()">
+                        <span>🚀</span>
+                        Continue as Guest
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <div class="section-header">
+                <h2>Everything You Need to Excel</h2>
+                <p>Powerful tools designed for professional culinary innovation</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Recipe Development</h3>
+                    <p>Create, test, and refine recipes with detailed notes, ingredient lists, and step-by-step instructions. Track multiple versions and iterations.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🍽️</div>
+                    <h3>Menu Builder</h3>
+                    <p>Design beautiful menus with drag-and-drop simplicity. Import existing menus from PDFs, images, or websites instantly.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Cost Analysis</h3>
+                    <p>Calculate food costs, profit margins, and pricing automatically. Make data-driven decisions for your business.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Track recipe performance, menu popularity, and financial metrics. Gain insights to optimize your offerings.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Version Control</h3>
+                    <p>Never lose a recipe iteration. Track changes, compare versions, and roll back when needed. Full history tracking.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Access</h3>
+                    <p>Access your recipes and menus from any device. Work in the kitchen, at home, or on the go seamlessly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">10,000+</div>
+                <div class="stat-label">Professional Chefs</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50,000+</div>
+                <div class="stat-label">Recipes Created</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">5,000+</div>
+                <div class="stat-label">Menus Designed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Satisfaction Rate</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="testimonials-container">
+            <div class="section-header">
+                <h2>Trusted by Culinary Professionals</h2>
+                <p>See what chefs are saying about Iterum</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "Iterum has completely transformed how I develop recipes. The cost analysis 
+                        feature alone has saved me thousands of dollars."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👨‍🍳</div>
+                        <div class="testimonial-info">
+                            <h4>Chef Michael Chen</h4>
+                            <p>Executive Chef, Michelin-starred Restaurant</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "The menu builder is incredible. I can create beautiful menus in minutes 
+                        instead of hours. It's a game-changer for my catering business."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👩‍🍳</div>
+                        <div class="testimonial-info">
+                            <h4>Chef Sarah Johnson</h4>
+                            <p>Owner, Premium Catering Services</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "Finally, a platform that understands professional chefs. The recipe version 
+                        control is brilliant - I never lose track of my experiments anymore."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">🧑‍🍳</div>
+                        <div class="testimonial-info">
+                            <h4>Chef David Martinez</h4>
+                            <p>R&D Chef, International Hotel Chain</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-container">
+            <h2>Ready to Transform Your Culinary Process?</h2>
+            <p>Join thousands of professional chefs already using Iterum to innovate faster and work smarter.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary btn-large" onclick="scrollToSignUp()">
+                    Start Free Trial
+                </button>
+                <button class="btn btn-secondary btn-large" onclick="window.location.href='menu-builder-improved.html'">
+                    View Demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Tab switching
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.auth-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+            // Update forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(`${tab}-form`).classList.add('active');
+
+            // Clear messages
+            clearMessages();
+        }
+
+        // Clear all error and success messages
+        function clearMessages() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+            document.querySelectorAll('.form-input').forEach(el => {
+                el.classList.remove('error');
+            });
+            document.getElementById('success-message').classList.remove('show');
+            document.getElementById('error-message-global').classList.remove('show');
+        }
+
+        // Show error message
+        function showError(elementId, message) {
+            const errorEl = document.getElementById(elementId);
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+                
+                // Highlight input
+                const inputId = elementId.replace('-error', '');
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.classList.add('error');
+                }
+            }
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successEl = document.getElementById('success-message');
+            successEl.textContent = '✅ ' + message;
+            successEl.classList.add('show');
+        }
+
+        // Handle Sign In
+        async function handleSignIn(event) {
+            event.preventDefault();
+            clearMessages();
+
+            const email = document.getElementById('signin-email').value.trim();
+            const password = document.getElementById('signin-password').value;
+
+            // Validation
+            if (!email) {
+                showError('signin-email-error', 'Email is required');
+                return;
+            }
+
+            if (!password) {
+                showError('signin-password-error', 'Password is required');
+                return;
+            }
+
+            // Show loading
+            const btn = document.getElementById('signin-btn');
+            const btnText = document.getElementById('signin-btn-text');
+            const spinner = document.getElementById('signin-spinner');
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+
+            try {
+                // Create offline profile for demo
+                const user = {
+                    id: 'user_' + Date.now(),
+                    userId: 'user_' + Date.now(),
+                    name: email.split('@')[0],
+                    email: email,
+                    type: 'email',
+                    createdAt: new Date().toISOString()
+                };
+
+                // Save to localStorage
+                localStorage.setItem('current_user', JSON.stringify(user));
+                localStorage.setItem('session_active', 'true');
+                localStorage.setItem('last_login', new Date().toISOString());
+
+                // Save to profiles
+                let savedUsers = [];
+                try {
+                    const existing = localStorage.getItem('saved_users');
+                    if (existing) {
+                        savedUsers = JSON.parse(existing);
+                    }
+                } catch (e) {}
+
+                const existingIndex = savedUsers.findIndex(u => u.email === email);
+                if (existingIndex >= 0) {
+                    savedUsers[existingIndex] = user;
+                } else {
+                    savedUsers.push(user);
+                }
+                localStorage.setItem('saved_users', JSON.stringify(savedUsers));
+
+                showSuccess('Sign in successful! Redirecting...');
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Sign in error:', error);
+                showError('signin-password-error', 'Sign in failed. Please try again.');
+                btn.disabled = false;
+                btnText.style.display = 'block';
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Handle Sign Up
+        async function handleSignUp(event) {
+            event.preventDefault();
+            clearMessages();
+
+            const name = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+            // Validation
+            if (!name) {
+                showError('signup-name-error', 'Name is required');
+                return;
+            }
+
+            if (!email) {
+                showError('signup-email-error', 'Email is required');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('signup-password-error', 'Password must be at least 6 characters');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('signup-confirm-error', 'Passwords do not match');
+                return;
+            }
+
+            // Show loading
+            const btn = document.getElementById('signup-btn');
+            const btnText = document.getElementById('signup-btn-text');
+            const spinner = document.getElementById('signup-spinner');
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+
+            try {
+                // Create profile
+                const user = {
+                    id: 'user_' + Date.now(),
+                    userId: 'user_' + Date.now(),
+                    name: name,
+                    email: email,
+                    type: 'email',
+                    createdAt: new Date().toISOString()
+                };
+
+                // Save to localStorage
+                localStorage.setItem('current_user', JSON.stringify(user));
+                localStorage.setItem('session_active', 'true');
+                localStorage.setItem('last_login', new Date().toISOString());
+
+                // Save to profiles
+                let savedUsers = [];
+                try {
+                    const existing = localStorage.getItem('saved_users');
+                    if (existing) {
+                        savedUsers = JSON.parse(existing);
+                    }
+                } catch (e) {}
+
+                savedUsers.push(user);
+                localStorage.setItem('saved_users', JSON.stringify(savedUsers));
+
+                showSuccess('Account created successfully! Redirecting...');
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Sign up error:', error);
+                showError('signup-confirm-error', 'Sign up failed. Please try again.');
+                btn.disabled = false;
+                btnText.style.display = 'block';
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Handle Google Sign In
+        function handleGoogleSignIn() {
+            alert('Google Sign-In will be available soon! For now, please use email sign-in or guest access.');
+        }
+
+        // Handle Guest Access
+        function handleGuestAccess() {
+            clearMessages();
+
+            try {
+                // Create guest profile
+                const user = {
+                    id: 'guest_' + Date.now(),
+                    userId: 'guest_' + Date.now(),
+                    name: 'Guest User',
+                    email: 'guest@iterum.local',
+                    type: 'guest',
+                    createdAt: new Date().toISOString()
+                };
+
+                // Save to localStorage
+                localStorage.setItem('current_user', JSON.stringify(user));
+                localStorage.setItem('session_active', 'true');
+                localStorage.setItem('last_login', new Date().toISOString());
+
+                showSuccess('Guest access granted! Redirecting...');
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+
+            } catch (error) {
+                console.error('Guest access error:', error);
+                alert('Failed to create guest access. Please try again.');
+            }
+        }
+
+        // Scroll to sign up
+        function scrollToSignUp() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                switchTab('signup');
+            }, 500);
+        }
+
+        // Initialize
+        console.log('🚀 Iterum Launch Page Loaded');
+    </script>
+</body>
+</html>
