@@ -2926,17 +2926,42 @@
           loadingIndicator.style.display = 'none';
         }
         
+        // Check for emergency access bypass
+        const emergencyAccess = sessionStorage.getItem('emergency_access');
+        const bypassAuth = sessionStorage.getItem('bypass_auth');
+        
+        if (emergencyAccess === 'true' || bypassAuth === 'true') {
+          console.log('🚨 EMERGENCY ACCESS DETECTED - Bypassing problematic authentication');
+          // Clear the bypass flag
+          sessionStorage.removeItem('emergency_access');
+          sessionStorage.removeItem('bypass_auth');
+          // Show content and skip authentication
+          document.body.style.display = 'block';
+          console.log('✅ Emergency access granted - app loaded without authentication system');
+          return;
+        }
+        
         // Wait a moment for all scripts to load
         setTimeout(() => {
-          if (typeof UnifiedAuthSystem !== 'undefined') {
-            console.log('✅ UnifiedAuthSystem class found, creating instance...');
-            window.unifiedAuthSystem = new UnifiedAuthSystem();
-            window.unifiedAuth = window.unifiedAuthSystem; // Alias for onclick handlers
-            console.log('✅ Authentication system initialized');
-          } else {
-            console.error('❌ UnifiedAuthSystem class not found');
-            // Fallback: show content anyway
+          try {
+            if (typeof UnifiedAuthSystem !== 'undefined') {
+              console.log('✅ UnifiedAuthSystem class found, creating instance...');
+              window.unifiedAuthSystem = new UnifiedAuthSystem();
+              window.unifiedAuth = window.unifiedAuthSystem; // Alias for onclick handlers
+              console.log('✅ Authentication system initialized');
+            } else {
+              console.error('❌ UnifiedAuthSystem class not found');
+              // Fallback: show content anyway
+              document.body.style.display = 'block';
+            }
+          } catch (error) {
+            console.error('❌ CRITICAL ERROR initializing authentication:', error);
+            // Emergency fallback: show content and redirect to emergency page
             document.body.style.display = 'block';
+            alert('Authentication system encountered an error. Redirecting to emergency access page...');
+            setTimeout(() => {
+              window.location.href = 'emergency_fix_index.html';
+            }, 2000);
           }
           
           // Initialize page protection if available
