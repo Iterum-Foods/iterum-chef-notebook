@@ -1463,6 +1463,15 @@
                     timestamp: new Date().toISOString()
                 });
 
+                // Notify backend to send welcome email
+                notifyBackendOfTrialSignup({
+                    name: name,
+                    email: email,
+                    company: company,
+                    role: role,
+                    source: source
+                });
+
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 2000);
@@ -1482,6 +1491,54 @@
             if (errorEl) {
                 errorEl.textContent = message;
                 errorEl.style.display = 'block';
+            }
+        }
+
+        // Notify backend of trial signup (sends welcome email)
+        async function notifyBackendOfTrialSignup(user) {
+            try {
+                // Try multiple backend URLs
+                const backendUrls = [
+                    'http://localhost:8000/api/trial/signup',
+                    'https://your-backend-url.com/api/trial/signup'  // Update with your actual backend URL
+                ];
+
+                let success = false;
+                for (const url of backendUrls) {
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                name: user.name,
+                                email: user.email,
+                                company: user.company || null,
+                                role: user.role || null,
+                                source: user.source || null
+                            })
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log('✅ Backend notified, welcome email will be sent:', data);
+                            success = true;
+                            break;
+                        }
+                    } catch (e) {
+                        // Try next URL
+                        continue;
+                    }
+                }
+
+                if (!success) {
+                    console.warn('⚠️ Backend not available - email will not be sent automatically');
+                    console.info('💡 User data is still saved locally');
+                }
+
+            } catch (error) {
+                console.warn('⚠️ Backend notification failed:', error);
+                // Don't block user - email failure is non-critical
+                // User data is already saved in localStorage
             }
         }
 
