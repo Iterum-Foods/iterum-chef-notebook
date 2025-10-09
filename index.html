@@ -2913,11 +2913,11 @@
 
     <!-- Initialize Unified Authentication System -->
     <script>
-      // Initialize authentication system when DOM is ready
+      // TEMPORARY FIX: Disable authentication to allow app to load
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 DOM loaded, initializing authentication system...');
+        console.log('🚀 DOM loaded - AUTHENTICATION TEMPORARILY DISABLED');
         
-        // Show content immediately to prevent unresponsive state
+        // Show content immediately
         document.body.style.display = 'block';
         
         // Hide loading indicator
@@ -2926,61 +2926,36 @@
           loadingIndicator.style.display = 'none';
         }
         
-        // Check for emergency access bypass
-        const emergencyAccess = sessionStorage.getItem('emergency_access');
-        const bypassAuth = sessionStorage.getItem('bypass_auth');
+        console.log('✅ Page loaded without authentication - temporary fix active');
+        console.log('💡 You can now use the app. Sign-in required features may not work.');
         
-        if (emergencyAccess === 'true' || bypassAuth === 'true') {
-          console.log('🚨 EMERGENCY ACCESS DETECTED - Bypassing problematic authentication');
-          // Clear the bypass flag
-          sessionStorage.removeItem('emergency_access');
-          sessionStorage.removeItem('bypass_auth');
-          // Show content and skip authentication
-          document.body.style.display = 'block';
-          console.log('✅ Emergency access granted - app loaded without authentication system');
-          return;
-        }
-        
-        // Wait a moment for all scripts to load
+        // Show a notice to the user
         setTimeout(() => {
-          try {
-            if (typeof UnifiedAuthSystem !== 'undefined') {
-              console.log('✅ UnifiedAuthSystem class found, creating instance...');
-              window.unifiedAuthSystem = new UnifiedAuthSystem();
-              window.unifiedAuth = window.unifiedAuthSystem; // Alias for onclick handlers
-              console.log('✅ Authentication system initialized');
-            } else {
-              console.error('❌ UnifiedAuthSystem class not found');
-              // Fallback: show content anyway
-              document.body.style.display = 'block';
-            }
-          } catch (error) {
-            console.error('❌ CRITICAL ERROR initializing authentication:', error);
-            // Emergency fallback: show content and redirect to emergency page
-            document.body.style.display = 'block';
-            alert('Authentication system encountered an error. Redirecting to emergency access page...');
-            setTimeout(() => {
-              window.location.href = 'emergency_fix_index.html';
-            }, 2000);
-          }
-          
-          // Initialize page protection if available
-          if (typeof PageProtection !== 'undefined') {
-            console.log('✅ PageProtection class found, creating instance...');
-            window.pageProtection = new PageProtection();
-            console.log('✅ Page protection system initialized');
-          } else {
-            console.warn('⚠️ PageProtection class not found');
-          }
-        }, 100);
-        
-        // Fallback timeout to ensure page is never unresponsive
-        setTimeout(() => {
-          if (document.body.style.display === 'none') {
-            console.warn('⚠️ Fallback: Showing content after timeout');
-            document.body.style.display = 'block';
-          }
-        }, 2000);
+          const notice = document.createElement('div');
+          notice.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            max-width: 350px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          `;
+          notice.innerHTML = `
+            <div style="color: #92400e; font-weight: 600; margin-bottom: 8px;">⚠️ Authentication Temporarily Disabled</div>
+            <div style="color: #92400e; font-size: 14px; line-height: 1.5;">
+              App is running in bypass mode. To sign in properly, go to <a href="launch.html" style="color: #0369a1; text-decoration: underline;">launch.html</a>
+            </div>
+            <button onclick="this.parentElement.remove()" style="margin-top: 12px; padding: 6px 12px; background: #f59e0b; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              Got it
+            </button>
+          `;
+          document.body.appendChild(notice);
+        }, 1000);
       });
     </script>
 </body>
