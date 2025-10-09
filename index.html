@@ -1725,11 +1725,8 @@
     <script type="module" src="assets/js/firebase-auth.js"></script>
     <script type="module" src="assets/js/firebase-auth-ui.js"></script>
     
-    <!-- Load Unified Authentication System -->
-    <script src="assets/js/unified_auth_system.js"></script>
-    
-    <!-- Load Page Protection System -->
-    <script src="assets/js/page-protection.js"></script>
+    <!-- Load Lightweight Authentication System (Non-Blocking) -->
+    <script src="assets/js/auth_lite.js"></script>
     
     <!-- Load Header User Synchronization -->
     <script src="assets/js/header_user_sync.js"></script>
@@ -2911,57 +2908,68 @@
       window.fetchRecipeFromURL = fetchRecipeFromURL;
     </script>
 
-    <!-- Initialize Unified Authentication System -->
+    <!-- Initialize App -->
     <script>
-      // IMMEDIATE FIX: Show page instantly
-      console.log('🚀 Loading app...');
+      console.log('🚀 Iterum App Loading...');
       
-      // Show body IMMEDIATELY - don't wait for anything
+      // Show page immediately
       document.body.style.display = 'block';
       
-      // Remove loading indicator IMMEDIATELY
-      if (document.getElementById('simple-loading')) {
-        document.getElementById('simple-loading').remove();
+      // Remove loading indicator
+      const loadingIndicator = document.getElementById('simple-loading');
+      if (loadingIndicator) {
+        loadingIndicator.remove();
       }
       
-      console.log('✅ App loaded - authentication bypassed');
+      console.log('✅ Page visible');
       
-      // When DOM is ready, show notice
+      // When DOM is ready, initialize
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('✅ DOM ready');
+        console.log('✅ DOM loaded');
         
-        // Make absolutely sure content is visible
-        document.body.style.display = 'block';
-        document.body.style.visibility = 'visible';
-        document.body.style.opacity = '1';
-        
-        // Show a notice to the user
-        setTimeout(() => {
-          const notice = document.createElement('div');
-          notice.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #d1fae5;
-            border: 2px solid #10b981;
-            padding: 16px 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 10000;
-            max-width: 350px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          `;
-          notice.innerHTML = `
-            <div style="color: #065f46; font-weight: 600; margin-bottom: 8px;">✅ App Loaded Successfully</div>
-            <div style="color: #065f46; font-size: 14px; line-height: 1.5;">
-              Authentication has been bypassed. All features are available.
-            </div>
-            <button onclick="this.parentElement.remove()" style="margin-top: 12px; padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
-              Got it ✓
-            </button>
-          `;
-          document.body.appendChild(notice);
-        }, 500);
+        // Check authentication status (from AuthLite)
+        if (window.authLite && window.authLite.isAuthenticated) {
+          console.log('👤 User logged in:', window.authLite.getUserName());
+          
+          // Show welcome message
+          setTimeout(() => {
+            const welcome = document.createElement('div');
+            welcome.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: #d1fae5;
+              border: 2px solid #10b981;
+              padding: 16px 20px;
+              border-radius: 12px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+              z-index: 10000;
+              max-width: 350px;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            `;
+            welcome.innerHTML = `
+              <div style="color: #065f46; font-weight: 600; margin-bottom: 4px;">✅ Welcome Back!</div>
+              <div style="color: #065f46; font-size: 14px;">
+                Signed in as ${window.authLite.getUserName()}
+              </div>
+              <button onclick="this.parentElement.remove()" style="margin-top: 12px; padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                Got it ✓
+              </button>
+            `;
+            document.body.appendChild(welcome);
+            
+            // Auto-dismiss after 3 seconds
+            setTimeout(() => welcome.remove(), 3000);
+          }, 500);
+        } else {
+          console.log('⚠️ No user logged in');
+          // Show login prompt after a delay
+          setTimeout(() => {
+            if (window.authLite) {
+              window.authLite.showLoginPrompt();
+            }
+          }, 2000);
+        }
       });
     </script>
 </body>
