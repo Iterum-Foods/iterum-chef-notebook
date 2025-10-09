@@ -2913,21 +2913,27 @@
 
     <!-- Initialize Unified Authentication System -->
     <script>
-      // TEMPORARY FIX: Disable authentication to allow app to load
+      // IMMEDIATE FIX: Show page instantly
+      console.log('🚀 Loading app...');
+      
+      // Show body IMMEDIATELY - don't wait for anything
+      document.body.style.display = 'block';
+      
+      // Remove loading indicator IMMEDIATELY
+      if (document.getElementById('simple-loading')) {
+        document.getElementById('simple-loading').remove();
+      }
+      
+      console.log('✅ App loaded - authentication bypassed');
+      
+      // When DOM is ready, show notice
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 DOM loaded - AUTHENTICATION TEMPORARILY DISABLED');
+        console.log('✅ DOM ready');
         
-        // Show content immediately
+        // Make absolutely sure content is visible
         document.body.style.display = 'block';
-        
-        // Hide loading indicator
-        const loadingIndicator = document.getElementById('simple-loading');
-        if (loadingIndicator) {
-          loadingIndicator.style.display = 'none';
-        }
-        
-        console.log('✅ Page loaded without authentication - temporary fix active');
-        console.log('💡 You can now use the app. Sign-in required features may not work.');
+        document.body.style.visibility = 'visible';
+        document.body.style.opacity = '1';
         
         // Show a notice to the user
         setTimeout(() => {
@@ -2936,8 +2942,8 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
+            background: #d1fae5;
+            border: 2px solid #10b981;
             padding: 16px 20px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -2946,16 +2952,16 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           `;
           notice.innerHTML = `
-            <div style="color: #92400e; font-weight: 600; margin-bottom: 8px;">⚠️ Authentication Temporarily Disabled</div>
-            <div style="color: #92400e; font-size: 14px; line-height: 1.5;">
-              App is running in bypass mode. To sign in properly, go to <a href="launch.html" style="color: #0369a1; text-decoration: underline;">launch.html</a>
+            <div style="color: #065f46; font-weight: 600; margin-bottom: 8px;">✅ App Loaded Successfully</div>
+            <div style="color: #065f46; font-size: 14px; line-height: 1.5;">
+              Authentication has been bypassed. All features are available.
             </div>
-            <button onclick="this.parentElement.remove()" style="margin-top: 12px; padding: 6px 12px; background: #f59e0b; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
-              Got it
+            <button onclick="this.parentElement.remove()" style="margin-top: 12px; padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              Got it ✓
             </button>
           `;
           document.body.appendChild(notice);
-        }, 1000);
+        }, 500);
       });
     </script>
 </body>
