@@ -3169,32 +3169,57 @@
       }
 
       function updateUserDisplay() {
+        console.log('🔄 Updating user display...');
+        console.log('AuthLite available?', !!window.authLite);
+        console.log('User authenticated?', window.authLite ? window.authLite.isAuthenticated : 'N/A');
+        
         if (window.authLite && window.authLite.isAuthenticated) {
           const user = window.authLite.getCurrentUser();
           const userName = window.authLite.getUserName();
           const userEmail = user.email || 'No email';
           
+          console.log('👤 Updating display for:', userName, userEmail);
+          
           // Get initials for avatar
           const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
           
           // Update all user name displays
-          document.querySelectorAll('#header-user-name, #dropdown-user-name').forEach(el => {
+          const nameElements = document.querySelectorAll('#header-user-name, #dropdown-user-name');
+          console.log('Found', nameElements.length, 'name elements');
+          nameElements.forEach(el => {
             el.textContent = userName;
           });
           
           // Update all email displays
-          document.querySelectorAll('#header-user-email, #dropdown-user-email').forEach(el => {
+          const emailElements = document.querySelectorAll('#header-user-email, #dropdown-user-email');
+          console.log('Found', emailElements.length, 'email elements');
+          emailElements.forEach(el => {
             el.textContent = userEmail;
           });
           
           // Update avatar initials
-          document.querySelectorAll('#user-avatar-text, #dropdown-avatar-text').forEach(el => {
+          const avatarElements = document.querySelectorAll('#user-avatar-text, #dropdown-avatar-text');
+          console.log('Found', avatarElements.length, 'avatar elements');
+          avatarElements.forEach(el => {
             el.textContent = initials;
           });
           
-          console.log('✅ User display updated:', userName);
+          console.log('✅ User display updated successfully:', userName);
         } else {
-          console.log('⚠️ No user to display');
+          console.log('⚠️ No user to display - not authenticated');
+          
+          // Update UI to show "Not signed in" state
+          document.querySelectorAll('#header-user-name, #dropdown-user-name').forEach(el => {
+            el.textContent = 'Guest';
+          });
+          
+          document.querySelectorAll('#header-user-email, #dropdown-user-email').forEach(el => {
+            el.textContent = 'Not signed in';
+          });
+          
+          document.querySelectorAll('#user-avatar-text, #dropdown-avatar-text').forEach(el => {
+            el.textContent = '?';
+          });
         }
       }
 
@@ -3378,12 +3403,16 @@
       document.addEventListener('DOMContentLoaded', function() {
         console.log('✅ DOM loaded');
         
-        // Update user display
-        updateUserDisplay();
-        
-        // Check authentication status (from AuthLite)
-        if (window.authLite && window.authLite.isAuthenticated) {
-          console.log('👤 User logged in:', window.authLite.getUserName());
+        // Wait for AuthLite to initialize (it loads synchronously but give it a moment)
+        setTimeout(() => {
+          console.log('🔍 Checking for user data...');
+          
+          // Update user display
+          updateUserDisplay();
+          
+          // Check authentication status (from AuthLite)
+          if (window.authLite && window.authLite.isAuthenticated) {
+            console.log('👤 User logged in:', window.authLite.getUserName());
           
           // Show welcome message
           setTimeout(() => {
@@ -3417,15 +3446,16 @@
               if (welcome.parentElement) welcome.remove();
             }, 3000);
           }, 500);
-        } else {
-          console.log('⚠️ No user logged in');
-          // Show login prompt after a delay
-          setTimeout(() => {
-            if (window.authLite) {
-              window.authLite.showLoginPrompt();
-            }
-          }, 2000);
-        }
+          } else {
+            console.log('⚠️ No user logged in');
+            // Show login prompt after a delay
+            setTimeout(() => {
+              if (window.authLite) {
+                window.authLite.showLoginPrompt();
+              }
+            }, 2000);
+          }
+        }, 100); // Close the setTimeout for updateUserDisplay
       });
     </script>
 </body>
