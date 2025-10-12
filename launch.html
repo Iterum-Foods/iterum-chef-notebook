@@ -1485,11 +1485,26 @@
                 });
                 
                 console.log('✅ Trial sign-up complete, user data saved');
+                
+                // Verify data was actually saved
+                const verified = verifyUserDataSaved();
+                if (!verified) {
+                    console.error('❌ ERROR: User data not saved properly!');
+                    alert('Error: Failed to save your information. Please try again.');
+                    return;
+                }
+                
                 console.log('Redirecting to main app in 2 seconds...');
 
                 setTimeout(() => {
                     console.log('🚀 Redirecting now...');
-                    window.location.href = 'index.html';
+                    // One final check before redirect
+                    if (localStorage.getItem('session_active') === 'true') {
+                        window.location.href = 'index.html';
+                    } else {
+                        console.error('❌ Session lost before redirect!');
+                        alert('Session error. Please try signing in again.');
+                    }
                 }, 2000);
 
             } catch (error) {
@@ -1555,6 +1570,32 @@
                 console.warn('⚠️ Backend notification failed:', error);
                 // Don't block user - email failure is non-critical
                 // User data is already saved in localStorage
+            }
+        }
+
+        // Verify localStorage save
+        function verifyUserDataSaved() {
+            const sessionActive = localStorage.getItem('session_active');
+            const currentUser = localStorage.getItem('current_user');
+            
+            console.log('🔍 Verifying user data saved...');
+            console.log('  session_active:', sessionActive);
+            console.log('  current_user exists:', !!currentUser);
+            
+            if (sessionActive === 'true' && currentUser) {
+                try {
+                    const user = JSON.parse(currentUser);
+                    console.log('✅ Verification SUCCESS - User data:', user.name, user.email);
+                    return true;
+                } catch (e) {
+                    console.error('❌ Verification FAILED - Invalid JSON:', e);
+                    return false;
+                }
+            } else {
+                console.error('❌ Verification FAILED - Data not saved');
+                console.log('  session_active should be "true", got:', sessionActive);
+                console.log('  current_user should exist, got:', !!currentUser);
+                return false;
             }
         }
 
