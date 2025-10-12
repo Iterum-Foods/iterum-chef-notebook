@@ -1007,7 +1007,7 @@
 
                 setTimeout(() => {
                     console.log('🚀 Redirecting now...');
-                    window.location.href = 'index.html';
+                    window.location.href = 'app_home.html';
                 }, 2000);
 
             } catch (error) {
@@ -1093,7 +1093,7 @@
 
                 setTimeout(() => {
                     console.log('🚀 Redirecting now...');
-                    window.location.href = 'index.html';
+                    window.location.href = 'app_home.html';
                 }, 2000);
 
             } catch (error) {
@@ -1182,7 +1182,7 @@
 
                     setTimeout(() => {
                         console.log('🚀 Redirecting now...');
-                        window.location.href = 'index.html';
+                        window.location.href = 'app_home.html';
                     }, 2000);
                 } else {
                     throw new Error('Google Sign-In was cancelled or failed.');
@@ -1500,7 +1500,7 @@
                     console.log('🚀 Redirecting now...');
                     // One final check before redirect
                     if (localStorage.getItem('session_active') === 'true') {
-                        window.location.href = 'index.html';
+                        window.location.href = 'app_home.html';
                     } else {
                         console.error('❌ Session lost before redirect!');
                         alert('Session error. Please try signing in again.');
