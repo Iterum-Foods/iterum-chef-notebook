@@ -25,15 +25,33 @@ class AuthLite {
             const sessionActive = localStorage.getItem('session_active');
             const currentUserStr = localStorage.getItem('current_user');
             
+            console.log('🔍 Loading user data...');
+            console.log('  session_active:', sessionActive);
+            console.log('  current_user exists:', !!currentUserStr);
+            
             if (sessionActive === 'true' && currentUserStr) {
                 this.currentUser = JSON.parse(currentUserStr);
                 this.isAuthenticated = true;
-                console.log('👤 User:', this.currentUser.name || this.currentUser.email);
+                console.log('👤 User loaded:', this.currentUser.name || this.currentUser.email);
+                console.log('  Full user data:', this.currentUser);
+            } else {
+                console.log('⚠️ No valid session found');
+                console.log('  session_active is:', sessionActive);
+                console.log('  current_user is:', currentUserStr ? 'present' : 'missing');
             }
         } catch (error) {
             console.warn('⚠️ Could not load user data:', error);
             this.isAuthenticated = false;
         }
+    }
+    
+    /**
+     * Refresh user data from localStorage
+     */
+    refreshUserData() {
+        console.log('🔄 Refreshing user data...');
+        this.loadUserData();
+        return this.isAuthenticated;
     }
     
     /**

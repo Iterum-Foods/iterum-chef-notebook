@@ -3171,6 +3171,12 @@
       function updateUserDisplay() {
         console.log('🔄 Updating user display...');
         console.log('AuthLite available?', !!window.authLite);
+        
+        // Refresh user data from localStorage in case it was just saved
+        if (window.authLite) {
+          window.authLite.refreshUserData();
+        }
+        
         console.log('User authenticated?', window.authLite ? window.authLite.isAuthenticated : 'N/A');
         
         if (window.authLite && window.authLite.isAuthenticated) {
