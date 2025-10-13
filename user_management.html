@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Iterum Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .admin-header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .admin-header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .admin-header p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6b7280;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #1f2937;
+        }
+
+        /* Content Section */
+        .content-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .section-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+        /* Users Table */
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table thead {
+            background: #f9fafb;
+        }
+
+        .users-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 13px;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .users-table td {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .users-table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .user-email {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-trial {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-google {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-email {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-expired {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .search-box {
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 24px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6b7280;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .users-table {
+                font-size: 13px;
+            }
+
+            .users-table th,
+            .users-table td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>👥 User Management</h1>
+            <p>Manage all users, credentials, and access control</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('all')">All Users</button>
+            <button class="tab" onclick="switchTab('trial')">Trial Users</button>
+            <button class="tab" onclick="switchTab('google')">Google Users</button>
+            <button class="tab" onclick="switchTab('email')">Email Users</button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value" id="total-users">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🎁</div>
+                <div class="stat-label">Trial Users</div>
+                <div class="stat-value" id="trial-users">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🔵</div>
+                <div class="stat-label">Google Users</div>
+                <div class="stat-value" id="google-users">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📧</div>
+                <div class="stat-label">Email Users</div>
+                <div class="stat-value" id="email-users">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-label">Active Sessions</div>
+                <div class="stat-value" id="active-sessions">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-label">This Week</div>
+                <div class="stat-value" id="this-week">0</div>
+            </div>
+        </div>
+
+        <!-- All Users Section -->
+        <div class="content-section active" id="all-users-section">
+            <div class="section-header">
+                <h2>All Users</h2>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="exportUsers('csv')">📊 Export CSV</button>
+                    <button class="btn btn-secondary" onclick="exportUsers('json')">💾 Export JSON</button>
+                    <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by name or email..." onkeyup="filterUsers()">
+
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all" onclick="filterByType('all')">All</button>
+                <button class="filter-btn" data-filter="trial" onclick="filterByType('trial')">Trial</button>
+                <button class="filter-btn" data-filter="google" onclick="filterByType('google')">Google</button>
+                <button class="filter-btn" data-filter="email" onclick="filterByType('email')">Email</button>
+            </div>
+
+            <table class="users-table" id="users-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Company/Role</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody">
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">👥</div>
+                <h3>No Users Found</h3>
+                <p>Users will appear here once they sign up.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allUsers = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // Load all users
+        function loadUsers() {
+            console.log('📊 Loading all users...');
+            allUsers = [];
+
+            // Load saved users (all types)
+            try {
+                const savedUsersStr = localStorage.getItem('saved_users');
+                if (savedUsersStr) {
+                    const savedUsers = JSON.parse(savedUsersStr);
+                    allUsers = allUsers.concat(savedUsers);
+                    console.log('  Loaded', savedUsers.length, 'saved users');
+                }
+            } catch (e) {
+                console.error('Error loading saved users:', e);
+            }
+
+            // Load trial users
+            try {
+                const trialUsersStr = localStorage.getItem('trial_users');
+                if (trialUsersStr) {
+                    const trialUsers = JSON.parse(trialUsersStr);
+                    // Add trial users that aren't already in saved_users
+                    trialUsers.forEach(tu => {
+                        if (!allUsers.find(u => u.email === tu.email)) {
+                            allUsers.push({
+                                ...tu,
+                                type: 'trial'
+                            });
+                        }
+                    });
+                    console.log('  Loaded', trialUsers.length, 'trial users');
+                }
+            } catch (e) {
+                console.error('Error loading trial users:', e);
+            }
+
+            // Load current user if not in list
+            try {
+                const currentUserStr = localStorage.getItem('current_user');
+                if (currentUserStr) {
+                    const currentUser = JSON.parse(currentUserStr);
+                    if (!allUsers.find(u => u.email === currentUser.email)) {
+                        allUsers.push(currentUser);
+                    }
+                }
+            } catch (e) {}
+
+            console.log('✅ Total users loaded:', allUsers.length);
+            updateStats();
+            displayUsers();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = allUsers.length;
+            const trial = allUsers.filter(u => u.type === 'trial').length;
+            const google = allUsers.filter(u => u.type === 'google').length;
+            const email = allUsers.filter(u => u.type === 'email').length;
+            
+            // Count active sessions
+            const sessionActive = localStorage.getItem('session_active') === 'true' ? 1 : 0;
+            
+            // Count this week
+            const weekAgo = new Date(Date.now() - 7*24*60*60*1000);
+            const thisWeek = allUsers.filter(u => {
+                const created = new Date(u.createdAt || u.signedUpAt || 0);
+                return created > weekAgo;
+            }).length;
+
+            document.getElementById('total-users').textContent = total;
+            document.getElementById('trial-users').textContent = trial;
+            document.getElementById('google-users').textContent = google;
+            document.getElementById('email-users').textContent = email;
+            document.getElementById('active-sessions').textContent = sessionActive;
+            document.getElementById('this-week').textContent = thisWeek;
+        }
+
+        // Display users
+        function displayUsers() {
+            const tbody = document.getElementById('users-tbody');
+            
+            let filteredUsers = allUsers;
+
+            // Apply type filter
+            if (currentFilter !== 'all') {
+                filteredUsers = filteredUsers.filter(u => u.type === currentFilter);
+            }
+
+            // Apply search filter
+            if (searchQuery) {
+                filteredUsers = filteredUsers.filter(u => {
+                    const name = (u.name || '').toLowerCase();
+                    const email = (u.email || '').toLowerCase();
+                    const company = (u.company || '').toLowerCase();
+                    return name.includes(searchQuery) || email.includes(searchQuery) || company.includes(searchQuery);
+                });
+            }
+
+            // Sort by most recent
+            filteredUsers.sort((a, b) => {
+                const dateA = new Date(a.createdAt || a.signedUpAt || 0);
+                const dateB = new Date(b.createdAt || b.signedUpAt || 0);
+                return dateB - dateA;
+            });
+
+            if (filteredUsers.length === 0) {
+                document.getElementById('users-table').style.display = 'none';
+                document.getElementById('empty-state').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('users-table').style.display = 'table';
+            document.getElementById('empty-state').style.display = 'none';
+
+            tbody.innerHTML = filteredUsers.map(user => {
+                const initials = (user.name || user.email || '?').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                const typeBadge = user.type === 'trial' ? 'badge-trial' : user.type === 'google' ? 'badge-google' : 'badge-email';
+                const typeIcon = user.type === 'trial' ? '🎁' : user.type === 'google' ? '🔵' : '📧';
+                
+                // Check trial status
+                let statusBadge = '<span class="badge badge-active">Active</span>';
+                if (user.type === 'trial' && user.trialEndDate) {
+                    const daysLeft = Math.ceil((new Date(user.trialEndDate) - new Date()) / (1000*60*60*24));
+                    if (daysLeft <= 0) {
+                        statusBadge = '<span class="badge badge-expired">Expired</span>';
+                    } else if (daysLeft <= 3) {
+                        statusBadge = `<span class="badge badge-trial">Expiring (${daysLeft}d)</span>`;
+                    }
+                }
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar">${initials}</div>
+                                <div class="user-details">
+                                    <div class="user-name">${user.name || 'No name'}</div>
+                                    <div class="user-email">${user.email || 'No email'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${typeBadge}">${typeIcon} ${user.type || 'local'}</span>
+                        </td>
+                        <td>
+                            <div>${user.company || 'Not provided'}</div>
+                            <div style="font-size: 12px; color: #9ca3af;">${user.role || 'Not specified'}</div>
+                        </td>
+                        <td>${formatDate(user.createdAt || user.signedUpAt)}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px;" onclick="viewUser('${user.email}')">
+                                View
+                            </button>
+                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 13px;" onclick="deleteUser('${user.email}')">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Switch tab
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            currentFilter = tab;
+            displayUsers();
+        }
+
+        // Filter by type
+        function filterByType(type) {
+            currentFilter = type;
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            displayUsers();
+        }
+
+        // Filter users by search
+        function filterUsers() {
+            searchQuery = document.getElementById('search-box').value.toLowerCase();
+            displayUsers();
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0) return 'Today';
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays <= 7) return diffDays + ' days ago';
+            return date.toLocaleDateString();
+        }
+
+        // View user details
+        function viewUser(email) {
+            const user = allUsers.find(u => u.email === email);
+            if (!user) return;
+
+            const details = `
+USER DETAILS:
+
+Name: ${user.name || 'Not set'}
+Email: ${user.email || 'Not set'}
+Type: ${user.type || 'local'}
+Company: ${user.company || 'Not provided'}
+Role: ${user.role || 'Not specified'}
+Source: ${user.source || 'Not specified'}
+
+Created: ${formatDate(user.createdAt || user.signedUpAt)}
+User ID: ${user.id || user.userId || 'Not set'}
+
+${user.type === 'trial' && user.trialEndDate ? `
+Trial Start: ${new Date(user.trialStartDate).toLocaleDateString()}
+Trial End: ${new Date(user.trialEndDate).toLocaleDateString()}
+Days Remaining: ${Math.ceil((new Date(user.trialEndDate) - new Date()) / (1000*60*60*24))}
+` : ''}
+            `.trim();
+
+            alert(details);
+        }
+
+        // Delete user
+        function deleteUser(email) {
+            if (!confirm(`Delete user: ${email}?\n\nThis will remove them from saved_users and trial_users.`)) {
+                return;
+            }
+
+            try {
+                // Remove from saved_users
+                const savedUsersStr = localStorage.getItem('saved_users');
+                if (savedUsersStr) {
+                    let savedUsers = JSON.parse(savedUsersStr);
+                    savedUsers = savedUsers.filter(u => u.email !== email);
+                    localStorage.setItem('saved_users', JSON.stringify(savedUsers));
+                }
+
+                // Remove from trial_users
+                const trialUsersStr = localStorage.getItem('trial_users');
+                if (trialUsersStr) {
+                    let trialUsers = JSON.parse(trialUsersStr);
+                    trialUsers = trialUsers.filter(u => u.email !== email);
+                    localStorage.setItem('trial_users', JSON.stringify(trialUsers));
+                }
+
+                alert('✅ User deleted successfully');
+                refreshData();
+            } catch (e) {
+                alert('❌ Error deleting user: ' + e.message);
+            }
+        }
+
+        // Export users
+        function exportUsers(format) {
+            if (allUsers.length === 0) {
+                alert('No users to export');
+                return;
+            }
+
+            if (format === 'csv') {
+                exportCSV();
+            } else if (format === 'json') {
+                exportJSON();
+            }
+        }
+
+        // Export as CSV
+        function exportCSV() {
+            const headers = ['Name', 'Email', 'Type', 'Company', 'Role', 'Source', 'Created', 'User ID'];
+            const rows = allUsers.map(user => [
+                user.name || '',
+                user.email || '',
+                user.type || 'local',
+                user.company || '',
+                user.role || '',
+                user.source || '',
+                user.createdAt || user.signedUpAt || '',
+                user.id || user.userId || ''
+            ].map(val => `"${val}"`).join(','));
+
+            const csv = [headers.join(','), ...rows].join('\n');
+            downloadFile(csv, 'iterum-users.csv', 'text/csv');
+        }
+
+        // Export as JSON
+        function exportJSON() {
+            const json = JSON.stringify(allUsers, null, 2);
+            downloadFile(json, 'iterum-users.json', 'application/json');
+        }
+
+        // Download file
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadUsers();
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            console.log('👥 User Management Interface Loading...');
+            loadUsers();
+        });
+
+        // Auto-refresh every 30 seconds
+        setInterval(refreshData, 30000);
+    </script>
+</body>
+</html>
+
