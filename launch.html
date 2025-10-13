@@ -969,10 +969,35 @@
             spinner.style.display = 'block';
 
             try {
-                // Create offline profile for demo
+                // Authenticate with Firebase
+                console.log('🔐 Authenticating with Firebase...');
+                
+                // Wait for Firebase Auth to be ready
+                if (!window.firebaseAuth) {
+                    let attempts = 0;
+                    while (!window.firebaseAuth && attempts < 20) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        attempts++;
+                    }
+                }
+                
+                if (!window.firebaseAuth || !window.firebaseAuth.isInitialized) {
+                    throw new Error('Firebase Authentication not available. Please refresh the page.');
+                }
+                
+                // Sign in with Firebase
+                const result = await window.firebaseAuth.signInWithEmail(email, password);
+                
+                if (!result || !result.user) {
+                    throw new Error('Sign-in failed. Please check your credentials.');
+                }
+                
+                console.log('✅ Firebase authentication successful');
+                
+                // Create user profile from Firebase result
                 const user = {
-                    id: 'user_' + Date.now(),
-                    userId: 'user_' + Date.now(),
+                    id: result.user.uid,
+                    userId: result.user.uid,
                     name: email.split('@')[0],
                     email: email,
                     type: 'email',
@@ -1060,12 +1085,37 @@
             spinner.style.display = 'block';
 
             try {
-                // Create profile
+                // Create account with Firebase
+                console.log('🔐 Creating Firebase account...');
+                
+                // Wait for Firebase Auth to be ready
+                if (!window.firebaseAuth) {
+                    let attempts = 0;
+                    while (!window.firebaseAuth && attempts < 20) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        attempts++;
+                    }
+                }
+                
+                if (!window.firebaseAuth || !window.firebaseAuth.isInitialized) {
+                    throw new Error('Firebase Authentication not available. Please refresh the page.');
+                }
+                
+                // Create user with Firebase
+                const result = await window.firebaseAuth.createUserWithEmail(email, password, name);
+                
+                if (!result || !result.user) {
+                    throw new Error('Account creation failed. Please try again.');
+                }
+                
+                console.log('✅ Firebase account created successfully');
+                
+                // Create user profile from Firebase result
                 const user = {
-                    id: 'user_' + Date.now(),
-                    userId: 'user_' + Date.now(),
+                    id: result.user.uid,
+                    userId: result.user.uid,
                     name: name,
-                    email: email,
+                    email: result.user.email,
                     type: 'email',
                     createdAt: new Date().toISOString()
                 };
