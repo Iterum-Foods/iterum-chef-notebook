@@ -4,7 +4,7 @@
  * Lightweight and non-blocking
  */
 
-(function() {
+(async function() {
     'use strict';
     
     console.log('🔐 Auth Guard checking credentials...');
@@ -14,7 +14,8 @@
         'launch.html',
         'index_simple.html',
         'index_minimal.html',
-        'emergency_fix_index.html'
+        'emergency_fix_index.html',
+        'test_firestore_connection.html'
     ];
     
     // Get current page
@@ -32,15 +33,36 @@
     const sessionActive = localStorage.getItem('session_active');
     const currentUser = localStorage.getItem('current_user');
     
-    console.log('🔍 Checking credentials...');
+    console.log('🔍 Auth Guard - Checking credentials...');
     console.log('  Current page:', currentPage);
     console.log('  session_active:', sessionActive);
     console.log('  current_user exists:', !!currentUser);
+    
+    if (currentUser) {
+        console.log('  current_user data:', currentUser.substring(0, 100) + '...');
+    }
     
     // If not authenticated, redirect to login
     if (sessionActive !== 'true' || !currentUser) {
         console.warn('🚫 NO CREDENTIALS - Redirecting to login page');
         console.log('  Attempted to access:', currentPage);
+        console.log('  session_active should be "true", got:', sessionActive);
+        console.log('  current_user should exist, got:', currentUser ? 'exists but empty?' : 'null/undefined');
+        
+        // WAIT before redirecting to see if data is being saved
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Check again
+        const sessionCheck2 = localStorage.getItem('session_active');
+        const userCheck2 = localStorage.getItem('current_user');
+        console.log('  Recheck after 500ms - session_active:', sessionCheck2);
+        console.log('  Recheck after 500ms - current_user exists:', !!userCheck2);
+        
+        if (sessionCheck2 === 'true' && userCheck2) {
+            console.log('✅ Credentials found on recheck - allowing access');
+            // Don't redirect, credentials were just saved
+            return;
+        }
         
         // Store the page they were trying to access
         sessionStorage.setItem('redirect_after_login', window.location.href);
