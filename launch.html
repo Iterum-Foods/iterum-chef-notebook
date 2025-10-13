@@ -884,6 +884,7 @@
     <script src="assets/js/firebase-config.js"></script>
     <script type="module" src="assets/js/firebase-auth.js"></script>
     <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    <script type="module" src="assets/js/firestore-sync.js"></script>
 
     <script>
         // Tab switching
@@ -1494,6 +1495,9 @@
                     return;
                 }
                 
+                // Save to Firestore (cloud backup)
+                saveToFirestore(user);
+                
                 console.log('Redirecting to main app in 2 seconds...');
 
                 setTimeout(() => {
@@ -1570,6 +1574,33 @@
                 console.warn('⚠️ Backend notification failed:', error);
                 // Don't block user - email failure is non-critical
                 // User data is already saved in localStorage
+            }
+        }
+
+        // Save to Firestore (cloud backup)
+        async function saveToFirestore(userData) {
+            try {
+                // Wait for Firestore to be ready
+                let attempts = 0;
+                while (!window.firestoreSync && attempts < 20) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                
+                if (window.firestoreSync && window.firestoreSync.initialized) {
+                    console.log('☁️ Saving to Firestore...');
+                    const success = await window.firestoreSync.saveUser(userData);
+                    if (success) {
+                        console.log('✅ User backed up to Firebase cloud');
+                    } else {
+                        console.warn('⚠️ Firestore save failed, but localStorage save succeeded');
+                    }
+                } else {
+                    console.log('ℹ️ Firestore not available, using localStorage only');
+                }
+            } catch (error) {
+                console.warn('⚠️ Firestore save error (non-critical):', error);
+                // Don't block user - localStorage save is primary
             }
         }
 

@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management - Iterum Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load Firebase -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/firestore-sync.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -403,6 +408,7 @@
             <div class="section-header">
                 <h2>All Users</h2>
                 <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="syncToFirestore()">☁️ Sync to Firebase</button>
                     <button class="btn btn-secondary" onclick="exportUsers('csv')">📊 Export CSV</button>
                     <button class="btn btn-secondary" onclick="exportUsers('json')">💾 Export JSON</button>
                     <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh</button>
@@ -448,17 +454,39 @@
         let searchQuery = '';
 
         // Load all users
-        function loadUsers() {
+        async function loadUsers() {
             console.log('📊 Loading all users...');
             allUsers = [];
 
+            // Try loading from Firestore first
+            if (window.firestoreSync && window.firestoreSync.initialized) {
+                console.log('☁️ Loading users from Firestore...');
+                try {
+                    const firestoreUsers = await window.firestoreSync.getAllUsers();
+                    if (firestoreUsers && firestoreUsers.length > 0) {
+                        allUsers = firestoreUsers;
+                        console.log('✅ Loaded', firestoreUsers.length, 'users from Firestore');
+                        updateStats();
+                        displayUsers();
+                        return;
+                    } else {
+                        console.log('ℹ️ No users in Firestore yet, loading from localStorage...');
+                    }
+                } catch (e) {
+                    console.warn('⚠️ Firestore load failed, falling back to localStorage:', e);
+                }
+            } else {
+                console.log('ℹ️ Firestore not available, loading from localStorage');
+            }
+
+            // Fallback to localStorage
             // Load saved users (all types)
             try {
                 const savedUsersStr = localStorage.getItem('saved_users');
                 if (savedUsersStr) {
                     const savedUsers = JSON.parse(savedUsersStr);
                     allUsers = allUsers.concat(savedUsers);
-                    console.log('  Loaded', savedUsers.length, 'saved users');
+                    console.log('  Loaded', savedUsers.length, 'saved users from localStorage');
                 }
             } catch (e) {
                 console.error('Error loading saved users:', e);
@@ -478,7 +506,7 @@
                             });
                         }
                     });
-                    console.log('  Loaded', trialUsers.length, 'trial users');
+                    console.log('  Loaded', trialUsers.length, 'trial users from localStorage');
                 }
             } catch (e) {
                 console.error('Error loading trial users:', e);
@@ -757,6 +785,39 @@ Days Remaining: ${Math.ceil((new Date(user.trialEndDate) - new Date()) / (1000*6
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
+
+        // Sync to Firestore
+        async function syncToFirestore() {
+            if (!window.firestoreSync || !window.firestoreSync.initialized) {
+                alert('⚠️ Firestore not initialized. Please check Firebase setup.');
+                return;
+            }
+            
+            if (!confirm('Sync all localStorage users to Firebase Firestore?\n\nThis will upload all users to the cloud database.')) {
+                return;
+            }
+            
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '⏳ Syncing...';
+            
+            try {
+                const result = await window.firestoreSync.syncLocalStorageToFirestore();
+                
+                if (result.success) {
+                    alert(`✅ Success!\n\n${result.synced} users synced to Firebase Firestore.\n\nYour data is now backed up in the cloud!`);
+                    // Reload from Firestore
+                    await loadUsers();
+                } else {
+                    alert(`❌ Sync failed: ${result.error || 'Unknown error'}`);
+                }
+            } catch (error) {
+                alert('❌ Error during sync: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '☁️ Sync to Firebase';
+            }
         }
 
         // Refresh data

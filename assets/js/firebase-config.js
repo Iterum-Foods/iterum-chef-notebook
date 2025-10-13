@@ -24,9 +24,13 @@ const firebaseConfig = {
     measurementId: "G-4HFR4GRY9R"
 };
 
+// Initialize Firestore flag
+window.firestoreEnabled = true;
+
 // Make config globally available
 window.firebaseConfig = firebaseConfig;
 console.log('🔥 Firebase config set on window:', firebaseConfig.projectId);
+console.log('🔥 Firestore enabled:', window.firestoreEnabled);
 
 // Also make it available for ES modules
 if (typeof globalThis !== 'undefined') {
