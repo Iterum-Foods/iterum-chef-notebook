@@ -1026,6 +1026,9 @@
                 }
                 localStorage.setItem('saved_users', JSON.stringify(savedUsers));
 
+                // Save to Firestore (cloud backup)
+                saveToFirestore(user);
+                
                 showSuccess('Sign in successful! Redirecting...');
                 
                 console.log('✅ Email sign-in complete, user data saved');
@@ -1137,6 +1140,9 @@
                 savedUsers.push(user);
                 localStorage.setItem('saved_users', JSON.stringify(savedUsers));
 
+                // Save to Firestore (cloud backup)
+                saveToFirestore(user);
+                
                 showSuccess('Account created successfully! Redirecting...');
                 
                 console.log('✅ Email sign-up complete, user data saved');
@@ -1226,6 +1232,9 @@
                     }
                     localStorage.setItem('saved_users', JSON.stringify(savedUsers));
 
+                    // Save to Firestore (cloud backup)
+                    saveToFirestore(user);
+                    
                     showSuccess('Google Sign-In successful! Welcome ' + user.name + '! Redirecting...');
                     
                     console.log('✅ Google sign-in complete, user data saved');
