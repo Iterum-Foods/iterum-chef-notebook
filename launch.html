@@ -986,9 +986,9 @@
                 }
                 
                 // Sign in with Firebase
-                const result = await window.firebaseAuth.signInWithEmail(email, password);
+                const firebaseUser = await window.firebaseAuth.signInWithEmail(email, password);
                 
-                if (!result || !result.user) {
+                if (!firebaseUser) {
                     throw new Error('Sign-in failed. Please check your credentials.');
                 }
                 
@@ -996,10 +996,10 @@
                 
                 // Create user profile from Firebase result
                 const user = {
-                    id: result.user.uid,
-                    userId: result.user.uid,
-                    name: result.user.displayName || email.split('@')[0],
-                    email: result.user.email || email,
+                    id: firebaseUser.uid,
+                    userId: firebaseUser.uid,
+                    name: firebaseUser.displayName || email.split('@')[0],
+                    email: firebaseUser.email || email,
                     type: 'email',
                     createdAt: new Date().toISOString()
                 };
@@ -1127,9 +1127,9 @@
                 }
                 
                 // Create user with Firebase
-                const result = await window.firebaseAuth.createUserWithEmail(email, password, name);
+                const firebaseUser = await window.firebaseAuth.createUserWithEmail(email, password, name);
                 
-                if (!result || !result.user) {
+                if (!firebaseUser) {
                     throw new Error('Account creation failed. Please try again.');
                 }
                 
@@ -1137,10 +1137,10 @@
                 
                 // Create user profile from Firebase result
                 const user = {
-                    id: result.user.uid,
-                    userId: result.user.uid,
+                    id: firebaseUser.uid,
+                    userId: firebaseUser.uid,
                     name: name,
-                    email: result.user.email,
+                    email: firebaseUser.email,
                     type: 'email',
                     createdAt: new Date().toISOString()
                 };

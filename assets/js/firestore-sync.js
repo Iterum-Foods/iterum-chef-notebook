@@ -29,11 +29,23 @@ class FirestoreSync {
         try {
             console.log('🔥 Initializing Firestore...');
             
-            // Get Firebase config
-            const config = window.firebaseConfig;
+            // Wait for Firebase config to be available
+            let config = window.firebaseConfig;
             if (!config) {
-                throw new Error('Firebase config not found');
+                console.log('⏳ Waiting for Firebase config...');
+                let attempts = 0;
+                while (!window.firebaseConfig && attempts < 50) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                config = window.firebaseConfig;
             }
+            
+            if (!config) {
+                throw new Error('Firebase config not found after waiting');
+            }
+            
+            console.log('✅ Firebase config found:', config.projectId);
             
             // Initialize Firebase app (if not already initialized)
             let app;
