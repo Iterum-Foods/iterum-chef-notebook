@@ -957,11 +957,40 @@
             }
         }
 
-        // Load waitlist contacts (simulated - would call backend API)
+        // Load waitlist contacts from Firestore
         async function loadWaitlistContacts() {
-            // In production, this would fetch from your waitlist API
-            // For now, we'll load from localStorage if available
             try {
+                // Load from Firestore 'contacts' collection
+                if (window.firestoreSync && window.firestoreSync.db) {
+                    try {
+                        console.log('📋 Loading waitlist from Firestore...');
+                        const db = window.firestoreSync.db;
+                        
+                        // Query contacts with contactType = 'waitlist'
+                        const snapshot = await db.collection('contacts')
+                            .where('contactType', '==', 'waitlist')
+                            .get();
+                        
+                        snapshot.forEach(doc => {
+                            const data = doc.data();
+                            if (!allContacts.find(c => c.email === data.email)) {
+                                allContacts.push({
+                                    id: doc.id,
+                                    ...data,
+                                    contactType: CONTACT_TYPES.WAITLIST,
+                                    status: data.status || 'pending'
+                                });
+                            }
+                        });
+                        
+                        console.log(`  ✅ Loaded ${snapshot.size} waitlist contacts from Firestore`);
+                        return;
+                    } catch (firestoreError) {
+                        console.log('  ⚠️ Firestore not available:', firestoreError.message);
+                    }
+                }
+                
+                // Fallback to localStorage
                 const waitlist = JSON.parse(localStorage.getItem('waitlist_contacts') || '[]');
                 waitlist.forEach(contact => {
                     if (!allContacts.find(c => c.email === contact.email)) {
@@ -972,7 +1001,7 @@
                         });
                     }
                 });
-                console.log('  Loaded', waitlist.length, 'waitlist contacts');
+                console.log('  Loaded', waitlist.length, 'waitlist contacts from localStorage');
             } catch (e) {
                 console.error('Error loading waitlist:', e);
             }
