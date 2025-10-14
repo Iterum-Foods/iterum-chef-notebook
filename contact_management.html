@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Load Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="assets/js/firebase-config.js"></script>
     <script type="module" src="assets/js/firestore-sync.js"></script>
     
@@ -960,19 +962,43 @@
         // Load waitlist contacts from Firestore
         async function loadWaitlistContacts() {
             try {
-                // Load from Firestore 'contacts' collection
+                console.log('📋 Attempting to load waitlist from Firestore...');
+                
+                // Try multiple ways to access Firestore
+                let db = null;
+                
+                // Method 1: Use firestoreSync if available
                 if (window.firestoreSync && window.firestoreSync.db) {
+                    db = window.firestoreSync.db;
+                    console.log('  Using firestoreSync.db');
+                }
+                // Method 2: Initialize Firebase directly if config available
+                else if (window.firebaseConfig && typeof firebase !== 'undefined') {
                     try {
-                        console.log('📋 Loading waitlist from Firestore...');
-                        const db = window.firestoreSync.db;
-                        
-                        // Query contacts with contactType = 'waitlist'
+                        console.log('  Initializing Firebase directly...');
+                        if (!firebase.apps.length) {
+                            firebase.initializeApp(window.firebaseConfig);
+                        }
+                        db = firebase.firestore();
+                        console.log('  ✅ Firebase initialized directly');
+                    } catch (e) {
+                        console.log('  Could not initialize Firebase:', e.message);
+                    }
+                }
+                
+                // If we have database access, query it
+                if (db) {
+                    try {
+                        console.log('  Querying contacts collection...');
                         const snapshot = await db.collection('contacts')
                             .where('contactType', '==', 'waitlist')
                             .get();
                         
+                        console.log(`  Found ${snapshot.size} waitlist documents`);
+                        
                         snapshot.forEach(doc => {
                             const data = doc.data();
+                            console.log('  Adding contact:', data.email);
                             if (!allContacts.find(c => c.email === data.email)) {
                                 allContacts.push({
                                     id: doc.id,
@@ -986,11 +1012,17 @@
                         console.log(`  ✅ Loaded ${snapshot.size} waitlist contacts from Firestore`);
                         return;
                     } catch (firestoreError) {
-                        console.log('  ⚠️ Firestore not available:', firestoreError.message);
+                        console.error('  ❌ Firestore query error:', firestoreError);
                     }
+                } else {
+                    console.warn('  ⚠️ No Firestore database available');
+                    console.log('  Firestore sync:', !!window.firestoreSync);
+                    console.log('  Firebase config:', !!window.firebaseConfig);
+                    console.log('  Firebase global:', typeof firebase !== 'undefined');
                 }
                 
                 // Fallback to localStorage
+                console.log('  Falling back to localStorage...');
                 const waitlist = JSON.parse(localStorage.getItem('waitlist_contacts') || '[]');
                 waitlist.forEach(contact => {
                     if (!allContacts.find(c => c.email === contact.email)) {
@@ -1003,7 +1035,7 @@
                 });
                 console.log('  Loaded', waitlist.length, 'waitlist contacts from localStorage');
             } catch (e) {
-                console.error('Error loading waitlist:', e);
+                console.error('❌ Error loading waitlist:', e);
             }
         }
 
