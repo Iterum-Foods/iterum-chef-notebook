@@ -998,16 +998,21 @@
                 const user = {
                     id: result.user.uid,
                     userId: result.user.uid,
-                    name: email.split('@')[0],
-                    email: email,
+                    name: result.user.displayName || email.split('@')[0],
+                    email: result.user.email || email,
                     type: 'email',
                     createdAt: new Date().toISOString()
                 };
 
                 // Save to localStorage
+                console.log('💾 Saving to localStorage...');
                 localStorage.setItem('current_user', JSON.stringify(user));
                 localStorage.setItem('session_active', 'true');
                 localStorage.setItem('last_login', new Date().toISOString());
+                
+                // Force a small delay to ensure localStorage write completes
+                await new Promise(resolve => setTimeout(resolve, 100));
+                console.log('✅ localStorage write completed');
 
                 // Save to profiles
                 let savedUsers = [];
@@ -1026,7 +1031,7 @@
                 }
                 localStorage.setItem('saved_users', JSON.stringify(savedUsers));
 
-                // Save to Firestore (cloud backup)
+                // Save to Firestore (cloud backup - async, don't wait)
                 saveToFirestore(user);
                 
                 showSuccess('Sign in successful! Redirecting...');
@@ -1141,9 +1146,14 @@
                 };
 
                 // Save to localStorage
+                console.log('💾 Saving to localStorage...');
                 localStorage.setItem('current_user', JSON.stringify(user));
                 localStorage.setItem('session_active', 'true');
                 localStorage.setItem('last_login', new Date().toISOString());
+                
+                // Force a small delay to ensure localStorage write completes
+                await new Promise(resolve => setTimeout(resolve, 100));
+                console.log('✅ localStorage write completed');
 
                 // Save to profiles
                 let savedUsers = [];
@@ -1157,7 +1167,7 @@
                 savedUsers.push(user);
                 localStorage.setItem('saved_users', JSON.stringify(savedUsers));
 
-                // Save to Firestore (cloud backup)
+                // Save to Firestore (cloud backup - async, don't wait)
                 saveToFirestore(user);
                 
                 showSuccess('Account created successfully! Redirecting...');
@@ -1245,9 +1255,14 @@
                     };
 
                     // Save to localStorage
+                    console.log('💾 Saving to localStorage...');
                     localStorage.setItem('current_user', JSON.stringify(user));
                     localStorage.setItem('session_active', 'true');
                     localStorage.setItem('last_login', new Date().toISOString());
+                    
+                    // Force a small delay to ensure localStorage write completes
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    console.log('✅ localStorage write completed');
 
                     // Save to profiles
                     let savedUsers = [];
@@ -1266,7 +1281,7 @@
                     }
                     localStorage.setItem('saved_users', JSON.stringify(savedUsers));
 
-                    // Save to Firestore (cloud backup)
+                    // Save to Firestore (cloud backup - async, don't wait)
                     saveToFirestore(user);
                     
                     showSuccess('Google Sign-In successful! Welcome ' + user.name + '! Redirecting...');
@@ -1529,11 +1544,16 @@
                 };
 
                 // Save to localStorage
+                console.log('💾 Saving to localStorage...');
                 localStorage.setItem('current_user', JSON.stringify(user));
                 localStorage.setItem('session_active', 'true');
                 localStorage.setItem('last_login', new Date().toISOString());
                 localStorage.setItem('trial_start_date', user.trialStartDate);
                 localStorage.setItem('trial_end_date', user.trialEndDate);
+                
+                // Force a small delay to ensure localStorage write completes
+                await new Promise(resolve => setTimeout(resolve, 100));
+                console.log('✅ localStorage write completed');
 
                 // Save to profiles
                 let savedUsers = [];
