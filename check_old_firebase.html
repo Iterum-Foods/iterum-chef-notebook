@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Old Firebase Project Data</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #00ff00;
+        }
+        .section h2 {
+            color: #ffff00;
+            margin-top: 0;
+        }
+        .result {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 4px solid #00ff00;
+            overflow-x: auto;
+        }
+        .empty {
+            color: #ff6b6b;
+        }
+        .found {
+            color: #51cf66;
+        }
+        .warning {
+            color: #ffd43b;
+        }
+        button {
+            background: #00ff00;
+            color: #1e1e1e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 10px 10px 10px 0;
+        }
+        button:hover {
+            background: #00cc00;
+        }
+        .loading {
+            color: #ffd43b;
+        }
+        pre {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            color: #00ff00;
+        }
+        .stat {
+            display: inline-block;
+            background: #333;
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin: 5px;
+            border: 1px solid #00ff00;
+        }
+        .stat-label {
+            color: #888;
+            font-size: 12px;
+        }
+        .stat-value {
+            color: #00ff00;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Firebase Project Data Checker</h1>
+    <h2 style="text-align: center; color: #ffd43b;">Project: iterum-chef-notebook-26949</h2>
+
+    <div style="text-align: center; margin-bottom: 30px;">
+        <button onclick="checkAll()">🔍 Check All Data</button>
+        <button onclick="checkFirestore()">📊 Check Firestore Only</button>
+        <button onclick="checkAuth()">👥 Check Users Only</button>
+    </div>
+
+    <!-- Summary Stats -->
+    <div id="stats" style="text-align: center; margin-bottom: 30px; display: none;">
+        <div class="stat">
+            <div class="stat-label">Firestore Collections</div>
+            <div class="stat-value" id="collections-count">-</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Total Documents</div>
+            <div class="stat-value" id="documents-count">-</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Auth Users</div>
+            <div class="stat-value" id="users-count">-</div>
+        </div>
+    </div>
+
+    <!-- Firestore Section -->
+    <div class="section">
+        <h2>📊 Firestore Database</h2>
+        <div id="firestore-status" class="loading">Click "Check All Data" to scan...</div>
+        <div id="firestore-result" class="result" style="display: none;"></div>
+    </div>
+
+    <!-- Authentication Section -->
+    <div class="section">
+        <h2>👥 Authentication Users</h2>
+        <div id="auth-status" class="loading">Click "Check All Data" to scan...</div>
+        <div id="auth-result" class="result" style="display: none;"></div>
+    </div>
+
+    <!-- Storage Section -->
+    <div class="section">
+        <h2>📁 Storage Files</h2>
+        <div id="storage-status" class="warning">⚠️ Storage check requires Firebase Admin SDK (manual check recommended)</div>
+        <div id="storage-result" class="result">
+            <p>To check storage files:</p>
+            <ol>
+                <li>Visit: <a href="https://console.firebase.google.com/project/iterum-chef-notebook-26949/storage" target="_blank" style="color: #00ff00;">Firebase Storage Console</a></li>
+                <li>Browse folders and files</li>
+                <li>Download any important files</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Recommendation Section -->
+    <div class="section" id="recommendation" style="display: none;">
+        <h2>💡 Recommendation</h2>
+        <div id="recommendation-text" class="result"></div>
+    </div>
+
+    <!-- Load Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script>
+        // Firebase configuration for OLD project
+        const oldFirebaseConfig = {
+            apiKey: "AIzaSyCxHxKhMvVxWZT1mxQYQqvBGfYWZ_qYqQ8", // You'll need to get this from Firebase Console
+            authDomain: "iterum-chef-notebook-26949.firebaseapp.com",
+            projectId: "iterum-chef-notebook-26949",
+            storageBucket: "iterum-chef-notebook-26949.appspot.com",
+            messagingSenderId: "34478776055",
+            appId: "1:34478776055:web:YOUR_APP_ID" // You'll need to get this from Firebase Console
+        };
+
+        let db = null;
+        let auth = null;
+        let dataResults = {
+            collections: 0,
+            documents: 0,
+            users: 0
+        };
+
+        // Initialize Firebase
+        try {
+            const app = firebase.initializeApp(oldFirebaseConfig);
+            db = firebase.firestore();
+            auth = firebase.auth();
+            console.log('✅ Firebase initialized');
+        } catch (error) {
+            console.error('❌ Firebase initialization failed:', error);
+            document.getElementById('firestore-status').innerHTML = `
+                <span class="empty">❌ Cannot connect to Firebase</span><br>
+                <span class="warning">⚠️ You need to add the correct API key and App ID for this project</span><br><br>
+                <p>To get the config:</p>
+                <ol>
+                    <li>Go to: <a href="https://console.firebase.google.com/project/iterum-chef-notebook-26949/settings/general" target="_blank" style="color: #00ff00;">Project Settings</a></li>
+                    <li>Scroll to "Your apps" section</li>
+                    <li>If no web app exists, click "Add app" and select Web</li>
+                    <li>Copy the firebaseConfig object</li>
+                    <li>Replace the config in this file</li>
+                </ol>
+            `;
+        }
+
+        async function checkAll() {
+            console.log('🔍 Starting full scan...');
+            document.getElementById('stats').style.display = 'block';
+            await checkFirestore();
+            await checkAuth();
+            showRecommendation();
+        }
+
+        async function checkFirestore() {
+            const statusEl = document.getElementById('firestore-status');
+            const resultEl = document.getElementById('firestore-result');
+            
+            statusEl.innerHTML = '<span class="loading">⏳ Scanning Firestore database...</span>';
+            resultEl.style.display = 'none';
+
+            if (!db) {
+                statusEl.innerHTML = '<span class="empty">❌ Firestore not initialized. Check Firebase config above.</span>';
+                return;
+            }
+
+            try {
+                // Common collection names to check
+                const collectionsToCheck = [
+                    'users',
+                    'recipes',
+                    'menus',
+                    'ingredients',
+                    'equipment',
+                    'vendors',
+                    'trial_users',
+                    'saved_users',
+                    'profiles',
+                    'data',
+                    'items'
+                ];
+
+                let foundCollections = [];
+                let totalDocs = 0;
+
+                for (const collectionName of collectionsToCheck) {
+                    try {
+                        const snapshot = await db.collection(collectionName).limit(100).get();
+                        if (!snapshot.empty) {
+                            foundCollections.push({
+                                name: collectionName,
+                                count: snapshot.size,
+                                docs: snapshot.docs.map(doc => ({
+                                    id: doc.id,
+                                    data: doc.data()
+                                }))
+                            });
+                            totalDocs += snapshot.size;
+                        }
+                    } catch (e) {
+                        console.log(`Collection ${collectionName} doesn't exist or no access`);
+                    }
+                }
+
+                dataResults.collections = foundCollections.length;
+                dataResults.documents = totalDocs;
+                
+                document.getElementById('collections-count').textContent = foundCollections.length;
+                document.getElementById('documents-count').textContent = totalDocs;
+
+                if (foundCollections.length === 0) {
+                    statusEl.innerHTML = '<span class="empty">✓ Firestore is EMPTY - No data found</span>';
+                    resultEl.style.display = 'block';
+                    resultEl.innerHTML = '<p class="empty">No collections or documents found in Firestore.</p><p class="found">✅ Safe to archive - no data to lose!</p>';
+                } else {
+                    statusEl.innerHTML = `<span class="found">✓ Found ${foundCollections.length} collections with data!</span>`;
+                    resultEl.style.display = 'block';
+                    
+                    let html = '<h3 class="found">⚠️ DATA FOUND - Review before archiving!</h3>';
+                    foundCollections.forEach(col => {
+                        html += `
+                            <div style="margin: 20px 0; padding: 15px; background: #2a2a2a; border-radius: 6px;">
+                                <h4 style="color: #ffd43b; margin-top: 0;">Collection: ${col.name}</h4>
+                                <p>Documents: ${col.count}</p>
+                                <details>
+                                    <summary style="cursor: pointer; color: #00ff00;">View Sample Data</summary>
+                                    <pre>${JSON.stringify(col.docs.slice(0, 3), null, 2)}</pre>
+                                </details>
+                            </div>
+                        `;
+                    });
+                    resultEl.innerHTML = html;
+                }
+
+            } catch (error) {
+                statusEl.innerHTML = `<span class="empty">❌ Error checking Firestore: ${error.message}</span>`;
+                console.error('Firestore check error:', error);
+            }
+        }
+
+        async function checkAuth() {
+            const statusEl = document.getElementById('auth-status');
+            const resultEl = document.getElementById('auth-result');
+            
+            statusEl.innerHTML = '<span class="loading">⏳ Checking authentication users...</span>';
+            resultEl.style.display = 'none';
+
+            if (!auth) {
+                statusEl.innerHTML = '<span class="empty">❌ Auth not initialized. Check Firebase config above.</span>';
+                return;
+            }
+
+            try {
+                // Note: We can't directly list users from client SDK
+                // We can only check the current user or use Admin SDK
+                statusEl.innerHTML = '<span class="warning">⚠️ Cannot list users from client SDK</span>';
+                resultEl.style.display = 'block';
+                resultEl.innerHTML = `
+                    <p class="warning">User listing requires Firebase Admin SDK or manual check.</p>
+                    <p>To check users:</p>
+                    <ol>
+                        <li>Visit: <a href="https://console.firebase.google.com/project/iterum-chef-notebook-26949/authentication/users" target="_blank" style="color: #00ff00;">Firebase Authentication Console</a></li>
+                        <li>See the user count in the dashboard</li>
+                        <li>If users exist, click "Export Users" to download CSV</li>
+                    </ol>
+                    <p class="found">✅ If you see 0 users, safe to archive!</p>
+                `;
+                
+                document.getElementById('users-count').textContent = '?';
+
+            } catch (error) {
+                statusEl.innerHTML = `<span class="empty">❌ Error checking Auth: ${error.message}</span>`;
+                console.error('Auth check error:', error);
+            }
+        }
+
+        function showRecommendation() {
+            const recSection = document.getElementById('recommendation');
+            const recText = document.getElementById('recommendation-text');
+            
+            recSection.style.display = 'block';
+            
+            if (dataResults.collections === 0 && dataResults.documents === 0) {
+                recText.innerHTML = `
+                    <h3 class="found">✅ Safe to Archive!</h3>
+                    <p class="found">The Firestore database appears to be empty.</p>
+                    <h4 style="color: #ffd43b;">Recommended Actions:</h4>
+                    <ol>
+                        <li>✅ Manually verify no users in Authentication (link above)</li>
+                        <li>✅ Manually verify no files in Storage (link above)</li>
+                        <li>✅ If both are empty, you can safely delete this project</li>
+                        <li>✅ Or just leave it inactive (costs $0)</li>
+                    </ol>
+                    <p style="margin-top: 20px;">
+                        <strong style="color: #00ff00;">Your current project (iterum-culinary-app) has all your active data!</strong>
+                    </p>
+                `;
+            } else {
+                recText.innerHTML = `
+                    <h3 class="warning">⚠️ Data Found - Review Required!</h3>
+                    <p class="warning">Found ${dataResults.collections} collections with ${dataResults.documents} documents.</p>
+                    <h4 style="color: #ffd43b;">Recommended Actions:</h4>
+                    <ol>
+                        <li>📥 Export the Firestore data (see instructions below)</li>
+                        <li>✅ Review the data to see if it's important</li>
+                        <li>🔄 Import to new project if needed</li>
+                        <li>✅ Check Authentication and Storage manually</li>
+                        <li>⏸️ Keep project for 30 days before deleting</li>
+                    </ol>
+                    <h4 style="color: #ffd43b; margin-top: 20px;">How to Export:</h4>
+                    <ol>
+                        <li>Go to: <a href="https://console.firebase.google.com/project/iterum-chef-notebook-26949/firestore" target="_blank" style="color: #00ff00;">Firestore Console</a></li>
+                        <li>Click "Import/Export" at the top</li>
+                        <li>Choose "Export"</li>
+                        <li>Select all collections or specific ones</li>
+                        <li>Export to Cloud Storage bucket</li>
+                        <li>Download the backup</li>
+                    </ol>
+                `;
+            }
+        }
+
+        // Auto-check on load if Firebase is initialized
+        window.addEventListener('load', () => {
+            if (db && auth) {
+                console.log('✅ Firebase ready - you can click "Check All Data" button');
+            } else {
+                console.log('⚠️ Firebase not ready - check configuration');
+            }
+        });
+    </script>
+</body>
+</html>
+
