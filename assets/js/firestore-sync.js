@@ -327,6 +327,10 @@ class FirestoreSync {
 console.log('🔥 Loading Firestore Sync Service...');
 const firestoreSync = new FirestoreSync();
 
+// Make globally available
+window.firestoreSync = firestoreSync;
+console.log('✅ Firestore Sync set on window.firestoreSync');
+
 // Export
 export default firestoreSync;
 export { FirestoreSync };
