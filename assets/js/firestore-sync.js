@@ -22,27 +22,25 @@ class FirestoreSync {
     constructor() {
         this.db = null;
         this.initialized = false;
-        this.init();
+        // Don't call init in constructor - will be called externally
     }
     
     async init() {
+        if (this.initialized) {
+            console.log('✅ Firestore already initialized');
+            return;
+        }
+        
         try {
             console.log('🔥 Initializing Firestore...');
             
-            // Wait for Firebase config to be available
-            let config = window.firebaseConfig;
-            if (!config) {
-                console.log('⏳ Waiting for Firebase config...');
-                let attempts = 0;
-                while (!window.firebaseConfig && attempts < 50) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    attempts++;
-                }
-                config = window.firebaseConfig;
-            }
+            // Get Firebase config (should be loaded by firebase-config.js already)
+            const config = window.firebaseConfig;
             
             if (!config) {
-                throw new Error('Firebase config not found after waiting');
+                console.warn('⚠️ Firebase config not found - Firestore will not be available');
+                console.log('Make sure firebase-config.js is loaded before firestore-sync.js');
+                return; // Don't throw, just return - Firestore optional
             }
             
             console.log('✅ Firebase config found:', config.projectId);
@@ -339,7 +337,15 @@ class FirestoreSync {
 console.log('🔥 Loading Firestore Sync Service...');
 const firestoreSync = new FirestoreSync();
 
-// Make globally available
+// Initialize it (async - don't wait)
+firestoreSync.init().then(() => {
+    console.log('✅ Firestore Sync initialized successfully');
+}).catch(error => {
+    console.warn('⚠️ Firestore Sync initialization failed:', error.message);
+    console.log('App will work without Firestore (localStorage fallback)');
+});
+
+// Make globally available immediately (before init completes)
 window.firestoreSync = firestoreSync;
 console.log('✅ Firestore Sync set on window.firestoreSync');
 

@@ -141,4 +141,7 @@ validateFirebaseConfig();
  *    - Update configuration for different environments (dev/prod)
  */
 
-export { firebaseConfig, authConfig, validateFirebaseConfig };
+// Export for ES modules (if needed)
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = { firebaseConfig, authConfig, validateFirebaseConfig };
+}
