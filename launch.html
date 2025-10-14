@@ -1163,12 +1163,29 @@
                 showSuccess('Account created successfully! Redirecting...');
                 
                 console.log('✅ Email sign-up complete, user data saved');
-                console.log('Redirecting to main app in 2 seconds...');
+                
+                // Verify data one more time before redirect
+                const finalCheck = localStorage.getItem('session_active');
+                const finalUser = localStorage.getItem('current_user');
+                console.log('🔍 Final verification before redirect:');
+                console.log('  session_active:', finalCheck);
+                console.log('  current_user exists:', !!finalUser);
+                
+                if (finalCheck !== 'true' || !finalUser) {
+                    console.error('❌ Data not saved properly! Aborting redirect.');
+                    showError('signup-confirm-error', 'Session error. Please try again.');
+                    btn.disabled = false;
+                    btnText.style.display = 'block';
+                    spinner.style.display = 'none';
+                    return;
+                }
+                
+                console.log('Redirecting to main app in 3 seconds...');
 
                 setTimeout(() => {
                     console.log('🚀 Redirecting now...');
                     window.location.href = 'index.html';
-                }, 2000);
+                }, 3000); // Increased to 3 seconds to match sign-in
 
             } catch (error) {
                 console.error('Sign up error:', error);
@@ -1255,12 +1272,28 @@
                     showSuccess('Google Sign-In successful! Welcome ' + user.name + '! Redirecting...');
                     
                     console.log('✅ Google sign-in complete, user data saved');
-                    console.log('Redirecting to main app in 2 seconds...');
+                    
+                    // Verify data one more time before redirect
+                    const finalCheck = localStorage.getItem('session_active');
+                    const finalUser = localStorage.getItem('current_user');
+                    console.log('🔍 Final verification before redirect:');
+                    console.log('  session_active:', finalCheck);
+                    console.log('  current_user exists:', !!finalUser);
+                    
+                    if (finalCheck !== 'true' || !finalUser) {
+                        console.error('❌ Data not saved properly! Aborting redirect.');
+                        const errorEl = document.getElementById('error-message-global');
+                        errorEl.textContent = '❌ Session error. Please try signing in again.';
+                        errorEl.classList.add('show');
+                        return;
+                    }
+                    
+                    console.log('Redirecting to main app in 3 seconds...');
 
                     setTimeout(() => {
                         console.log('🚀 Redirecting now...');
                         window.location.href = 'index.html';
-                    }, 2000);
+                    }, 3000); // Increased to 3 seconds
                 } else {
                     throw new Error('Google Sign-In was cancelled or failed.');
                 }
@@ -1574,7 +1607,7 @@
                 // Save to Firestore (cloud backup)
                 saveToFirestore(user);
                 
-                console.log('Redirecting to main app in 2 seconds...');
+                console.log('Redirecting to main app in 3 seconds...');
 
                 setTimeout(() => {
                     console.log('🚀 Redirecting now...');
@@ -1585,7 +1618,7 @@
                         console.error('❌ Session lost before redirect!');
                         alert('Session error. Please try signing in again.');
                     }
-                }, 2000);
+                }, 3000); // Increased to 3 seconds for consistency
 
             } catch (error) {
                 console.error('Trial sign-up error:', error);
