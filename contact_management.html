@@ -962,33 +962,54 @@
         // Load waitlist contacts from Firestore
         async function loadWaitlistContacts() {
             try {
-                console.log('📋 Attempting to load waitlist from Firestore...');
+                console.log('📋 Loading waitlist from Firestore...');
                 
-                // Try multiple ways to access Firestore
-                let db = null;
-                
-                // Method 1: Use firestoreSync if available
+                // Use firestoreSync if available (it uses modular SDK)
                 if (window.firestoreSync && window.firestoreSync.db) {
-                    db = window.firestoreSync.db;
-                    console.log('  Using firestoreSync.db');
-                }
-                // Method 2: Initialize Firebase directly if config available
-                else if (window.firebaseConfig && typeof firebase !== 'undefined') {
                     try {
-                        console.log('  Initializing Firebase directly...');
-                        if (!firebase.apps.length) {
-                            firebase.initializeApp(window.firebaseConfig);
-                        }
-                        db = firebase.firestore();
-                        console.log('  ✅ Firebase initialized directly');
-                    } catch (e) {
-                        console.log('  Could not initialize Firebase:', e.message);
+                        console.log('  Using firestoreSync.db (modular SDK)');
+                        const db = window.firestoreSync.db;
+                        
+                        // Import modular Firestore functions
+                        const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+                        
+                        // Query contacts with contactType = 'waitlist' (modular syntax)
+                        console.log('  Querying contacts collection...');
+                        const contactsRef = collection(db, 'contacts');
+                        const q = query(contactsRef, where('contactType', '==', 'waitlist'));
+                        const snapshot = await getDocs(q);
+                        
+                        console.log(`  Found ${snapshot.size} waitlist documents`);
+                        
+                        snapshot.forEach(doc => {
+                            const data = doc.data();
+                            console.log('  Adding contact:', data.email);
+                            if (!allContacts.find(c => c.email === data.email)) {
+                                allContacts.push({
+                                    id: doc.id,
+                                    ...data,
+                                    contactType: CONTACT_TYPES.WAITLIST,
+                                    status: data.status || 'pending'
+                                });
+                            }
+                        });
+                        
+                        console.log(`  ✅ Loaded ${snapshot.size} waitlist contacts from Firestore`);
+                        return;
+                    } catch (firestoreError) {
+                        console.error('  ❌ Firestore query error:', firestoreError);
                     }
                 }
                 
-                // If we have database access, query it
-                if (db) {
+                // Try compat SDK as fallback
+                else if (typeof firebase !== 'undefined' && firebase.firestore) {
                     try {
+                        console.log('  Using Firebase compat SDK...');
+                        if (!firebase.apps.length && window.firebaseConfig) {
+                            firebase.initializeApp(window.firebaseConfig);
+                        }
+                        const db = firebase.firestore();
+                        
                         console.log('  Querying contacts collection...');
                         const snapshot = await db.collection('contacts')
                             .where('contactType', '==', 'waitlist')
@@ -1011,14 +1032,15 @@
                         
                         console.log(`  ✅ Loaded ${snapshot.size} waitlist contacts from Firestore`);
                         return;
-                    } catch (firestoreError) {
-                        console.error('  ❌ Firestore query error:', firestoreError);
+                    } catch (e) {
+                        console.error('  ❌ Compat SDK error:', e);
                     }
-                } else {
+                }
+                
+                else {
                     console.warn('  ⚠️ No Firestore database available');
                     console.log('  Firestore sync:', !!window.firestoreSync);
-                    console.log('  Firebase config:', !!window.firebaseConfig);
-                    console.log('  Firebase global:', typeof firebase !== 'undefined');
+                    console.log('  Firebase compat:', typeof firebase !== 'undefined');
                 }
                 
                 // Fallback to localStorage
