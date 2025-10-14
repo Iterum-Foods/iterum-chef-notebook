@@ -50,17 +50,32 @@
         console.log('  current_user should exist, got:', currentUser ? 'exists but empty?' : 'null/undefined');
         
         // WAIT before redirecting to see if data is being saved
-        await new Promise(resolve => setTimeout(resolve, 500));
+        console.log('⏳ Waiting for potential localStorage save...');
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Increased to 1 second
         
         // Check again
         const sessionCheck2 = localStorage.getItem('session_active');
         const userCheck2 = localStorage.getItem('current_user');
-        console.log('  Recheck after 500ms - session_active:', sessionCheck2);
-        console.log('  Recheck after 500ms - current_user exists:', !!userCheck2);
+        console.log('  Recheck after 1000ms - session_active:', sessionCheck2);
+        console.log('  Recheck after 1000ms - current_user exists:', !!userCheck2);
         
         if (sessionCheck2 === 'true' && userCheck2) {
             console.log('✅ Credentials found on recheck - allowing access');
             // Don't redirect, credentials were just saved
+            return;
+        }
+        
+        // Try one more time after another second
+        console.log('⏳ One more check after additional delay...');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const sessionCheck3 = localStorage.getItem('session_active');
+        const userCheck3 = localStorage.getItem('current_user');
+        console.log('  Final recheck - session_active:', sessionCheck3);
+        console.log('  Final recheck - current_user exists:', !!userCheck3);
+        
+        if (sessionCheck3 === 'true' && userCheck3) {
+            console.log('✅ Credentials found on final recheck - allowing access');
             return;
         }
         

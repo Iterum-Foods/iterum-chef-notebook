@@ -1032,12 +1032,29 @@
                 showSuccess('Sign in successful! Redirecting...');
                 
                 console.log('✅ Email sign-in complete, user data saved');
-                console.log('Redirecting to main app in 2 seconds...');
+                
+                // Verify data one more time before redirect
+                const finalCheck = localStorage.getItem('session_active');
+                const finalUser = localStorage.getItem('current_user');
+                console.log('🔍 Final verification before redirect:');
+                console.log('  session_active:', finalCheck);
+                console.log('  current_user exists:', !!finalUser);
+                
+                if (finalCheck !== 'true' || !finalUser) {
+                    console.error('❌ Data not saved properly! Aborting redirect.');
+                    showError('signin-password-error', 'Session error. Please try again.');
+                    btn.disabled = false;
+                    btnText.style.display = 'block';
+                    spinner.style.display = 'none';
+                    return;
+                }
+                
+                console.log('Redirecting to main app in 3 seconds...');
 
                 setTimeout(() => {
                     console.log('🚀 Redirecting now...');
                     window.location.href = 'index.html';
-                }, 2000);
+                }, 3000); // Increased to 3 seconds
 
             } catch (error) {
                 console.error('Sign in error:', error);
