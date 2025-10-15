@@ -890,5 +890,195 @@
         }, 100);
       });
     </script>
+    
+    <!-- WebstaurantStore Integration -->
+    <script src="assets/js/webstaurant-integration.js"></script>
+    <script>
+      // WebstaurantStore Modal Implementation
+      function openWebstaurantModal() {
+        const modal = document.getElementById('webstaurant-modal');
+        if (modal) {
+          modal.classList.remove('hidden');
+          // Load all items on open
+          performWebstaurantSearch('');
+        }
+      }
+      
+      function closeWebstaurantModal() {
+        const modal = document.getElementById('webstaurant-modal');
+        if (modal) {
+          modal.classList.add('hidden');
+        }
+      }
+      
+      // Perform search
+      async function performWebstaurantSearch(query) {
+        const loading = document.getElementById('webstaurant-loading');
+        const results = document.getElementById('webstaurant-results');
+        const noResults = document.getElementById('webstaurant-no-results');
+        const error = document.getElementById('webstaurant-error');
+        const productsContainer = document.getElementById('webstaurant-products');
+        
+        // Show loading
+        loading.classList.remove('hidden');
+        results.classList.add('hidden');
+        noResults.classList.add('hidden');
+        error.classList.add('hidden');
+        
+        try {
+          // Search using integration
+          const products = await window.webstaurantIntegration.searchEquipment(query);
+          
+          // Hide loading
+          loading.classList.add('hidden');
+          
+          if (products.length === 0) {
+            noResults.classList.remove('hidden');
+            return;
+          }
+          
+          // Show results
+          results.classList.remove('hidden');
+          document.getElementById('webstaurant-result-count').textContent = products.length;
+          
+          // Clear and populate products
+          productsContainer.innerHTML = '';
+          products.forEach(product => {
+            const card = createProductCard(product);
+            productsContainer.appendChild(card);
+          });
+          
+        } catch (err) {
+          console.error('Search error:', err);
+          loading.classList.add('hidden');
+          error.classList.remove('hidden');
+          document.getElementById('webstaurant-error-message').textContent = err.message;
+        }
+      }
+      
+      // Create product card
+      function createProductCard(product) {
+        const card = document.createElement('div');
+        card.className = 'border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow bg-white';
+        
+        card.innerHTML = `
+          <div class="flex flex-col h-full">
+            <div class="flex-1">
+              <h5 class="font-semibold text-gray-800 mb-1">${product.name}</h5>
+              <p class="text-xs text-gray-500 mb-2">${product.category} › ${product.subcategory}</p>
+              <p class="text-sm text-gray-600 mb-2 line-clamp-2">${product.description}</p>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-700">Brand: ${product.brand}</span>
+                <span class="text-lg font-bold text-[#4a7c2c]">$${product.price.toFixed(2)}</span>
+              </div>
+              <div class="text-xs ${product.inStock ? 'text-green-600' : 'text-red-600'}">
+                ${product.inStock ? '✓ In Stock' : '✗ Out of Stock'}
+              </div>
+            </div>
+            <button onclick="importEquipmentFromWebstaurant(${product.id})" 
+                    class="mt-3 w-full px-4 py-2 bg-[#4a7c2c] text-white rounded hover:bg-[#3d6a25] transition-colors text-sm font-semibold">
+              ➕ Add to Equipment
+            </button>
+          </div>
+        `;
+        
+        return card;
+      }
+      
+      // Import equipment from WebstaurantStore
+      function importEquipmentFromWebstaurant(productId) {
+        const catalog = window.webstaurantIntegration.getDefaultCatalog();
+        const product = catalog.find(p => p.id === productId);
+        
+        if (!product) {
+          alert('Product not found');
+          return;
+        }
+        
+        // Get current user
+        const currentUser = window.authLite?.getCurrentUser();
+        const userId = currentUser?.id;
+        
+        // Import to equipment
+        const equipment = window.webstaurantIntegration.importToEquipment(product, userId);
+        
+        if (equipment) {
+          alert(`✅ "${product.name}" added to your equipment!`);
+          closeWebstaurantModal();
+          
+          // Reload equipment list if function exists
+          if (typeof loadEquipment === 'function') {
+            loadEquipment();
+          }
+        } else {
+          alert('❌ Failed to add equipment');
+        }
+      }
+      
+      // Event listeners
+      document.addEventListener('DOMContentLoaded', () => {
+        // Close button
+        const closeBtn = document.getElementById('close-webstaurant-modal');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', closeWebstaurantModal);
+        }
+        
+        // Click outside to close
+        const modal = document.getElementById('webstaurant-modal');
+        if (modal) {
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+              closeWebstaurantModal();
+            }
+          });
+        }
+        
+        // Search button
+        const searchBtn = document.getElementById('webstaurant-search-btn');
+        const searchInput = document.getElementById('webstaurant-search');
+        if (searchBtn && searchInput) {
+          searchBtn.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            performWebstaurantSearch(query);
+          });
+          
+          // Enter key in search
+          searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+              const query = searchInput.value.trim();
+              performWebstaurantSearch(query);
+            }
+          });
+        }
+        
+        // Category buttons
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        categoryBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const category = btn.dataset.category;
+            searchInput.value = category;
+            performWebstaurantSearch(category);
+          });
+        });
+        
+        // Browse button - show all
+        const browseBtn = document.getElementById('webstaurant-browse-btn');
+        if (browseBtn) {
+          browseBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            performWebstaurantSearch('');
+          });
+        }
+        
+        // Retry button
+        const retryBtn = document.getElementById('webstaurant-retry-btn');
+        if (retryBtn) {
+          retryBtn.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            performWebstaurantSearch(query);
+          });
+        }
+      });
+    </script>
   </body>
 </html> 
