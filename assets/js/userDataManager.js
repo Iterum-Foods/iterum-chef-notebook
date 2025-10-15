@@ -402,8 +402,24 @@ class UserDataManager {
     }
 }
 
-// Create global instance
-window.userDataManager = new UserDataManager();
+// Create global instance (delayed to avoid blocking page load)
+console.log('📦 UserDataManager: Scheduling initialization...');
+
+setTimeout(() => {
+    try {
+        window.userDataManager = new UserDataManager();
+        console.log('✅ UserDataManager initialized successfully');
+    } catch (error) {
+        console.error('❌ UserDataManager initialization failed:', error);
+        // Create minimal fallback
+        window.userDataManager = {
+            isUserLoggedIn: () => false,
+            getCurrentUserId: () => null,
+            getCurrentUserName: () => 'Guest',
+            getCurrentUser: () => null
+        };
+    }
+}, 100);
 
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
