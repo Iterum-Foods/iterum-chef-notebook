@@ -82,14 +82,292 @@
         // Store the page they were trying to access
         sessionStorage.setItem('redirect_after_login', window.location.href);
         
-        // Show message and redirect
-        alert('Please sign in to access this page');
-        
-        // Redirect to launch page
-        window.location.href = 'launch.html';
+        // Show popup sign-in modal instead of redirecting
+        console.log('🔐 Showing popup sign-in modal');
+        showSignInModal();
         
         // Prevent page from loading
         throw new Error('Authentication required');
+    }
+    
+    // Function to show sign-in modal
+    function showSignInModal() {
+        // Create modal HTML
+        const modal = document.createElement('div');
+        modal.id = 'auth-guard-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        `;
+        
+        modal.innerHTML = `
+            <style>
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes slideUp {
+                    from { transform: translateY(30px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+                #auth-guard-content {
+                    animation: slideUp 0.4s ease;
+                }
+                .auth-input {
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 15px;
+                    transition: all 0.2s;
+                }
+                .auth-input:focus {
+                    outline: none;
+                    border-color: #4a7c2c;
+                    box-shadow: 0 0 0 3px rgba(74, 124, 44, 0.1);
+                }
+                .auth-btn {
+                    width: 100%;
+                    padding: 14px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .auth-btn-primary {
+                    background: linear-gradient(135deg, #4a7c2c, #6ba83d);
+                    color: white;
+                }
+                .auth-btn-primary:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(74, 124, 44, 0.3);
+                }
+                .auth-btn-secondary {
+                    background: white;
+                    color: #4a7c2c;
+                    border: 2px solid #4a7c2c;
+                }
+                .auth-btn-secondary:hover {
+                    background: #f0f9ff;
+                }
+                .auth-link {
+                    color: #4a7c2c;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: color 0.2s;
+                }
+                .auth-link:hover {
+                    color: #3d6a25;
+                    text-decoration: underline;
+                }
+                .auth-error {
+                    background: #fee2e2;
+                    border: 1px solid #ef4444;
+                    color: #991b1b;
+                    padding: 12px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    margin-top: 12px;
+                    display: none;
+                }
+                .auth-success {
+                    background: #d1fae5;
+                    border: 1px solid #10b981;
+                    color: #065f46;
+                    padding: 12px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    margin-top: 12px;
+                    display: none;
+                }
+            </style>
+            
+            <div id="auth-guard-content" style="
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                max-width: 450px;
+                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            ">
+                <!-- Header -->
+                <div style="
+                    background: linear-gradient(135deg, #4a7c2c, #6ba83d);
+                    color: white;
+                    padding: 32px;
+                    border-radius: 20px 20px 0 0;
+                    text-align: center;
+                ">
+                    <div style="font-size: 48px; margin-bottom: 12px;">🔐</div>
+                    <h2 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700;">Sign In Required</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 15px;">Sign in to continue to your desired page</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 32px;">
+                    <!-- Sign In Form -->
+                    <form id="modal-signin-form">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">
+                                Email Address
+                            </label>
+                            <input type="email" id="modal-email" class="auth-input" 
+                                   placeholder="your@email.com" required>
+                        </div>
+                        
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">
+                                Password
+                            </label>
+                            <input type="password" id="modal-password" class="auth-input" 
+                                   placeholder="Enter your password" required>
+                        </div>
+                        
+                        <button type="submit" class="auth-btn auth-btn-primary" id="modal-signin-btn">
+                            <span id="modal-signin-text">🚀 Sign In & Continue</span>
+                            <span id="modal-signin-spinner" style="display: none;">⏳ Signing in...</span>
+                        </button>
+                        
+                        <div id="modal-error" class="auth-error"></div>
+                        <div id="modal-success" class="auth-success"></div>
+                    </form>
+                    
+                    <!-- Divider -->
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        margin: 24px 0;
+                        color: #9ca3af;
+                        font-size: 14px;
+                    ">
+                        <div style="flex: 1; height: 1px; background: #e5e7eb;"></div>
+                        <div style="padding: 0 12px;">OR</div>
+                        <div style="flex: 1; height: 1px; background: #e5e7eb;"></div>
+                    </div>
+                    
+                    <!-- Alternative Actions -->
+                    <button onclick="window.location.href='launch.html'" class="auth-btn auth-btn-secondary" style="margin-bottom: 16px;">
+                        📝 Create New Account
+                    </button>
+                    
+                    <div style="text-align: center; margin-top: 20px; font-size: 14px; color: #6b7280;">
+                        <a href="launch.html" class="auth-link">Go to full login page</a>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Focus email input
+        setTimeout(() => {
+            document.getElementById('modal-email').focus();
+        }, 300);
+        
+        // Handle sign-in form submission
+        document.getElementById('modal-signin-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('modal-email').value.trim();
+            const password = document.getElementById('modal-password').value;
+            const errorDiv = document.getElementById('modal-error');
+            const successDiv = document.getElementById('modal-success');
+            const btnText = document.getElementById('modal-signin-text');
+            const spinner = document.getElementById('modal-signin-spinner');
+            const btn = document.getElementById('modal-signin-btn');
+            
+            // Clear messages
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            // Show loading
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+            
+            try {
+                // Wait for Firebase Auth to be ready
+                if (!window.firebaseAuth) {
+                    let attempts = 0;
+                    while (!window.firebaseAuth && attempts < 20) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        attempts++;
+                    }
+                }
+                
+                if (!window.firebaseAuth || !window.firebaseAuth.isInitialized) {
+                    throw new Error('Firebase Authentication not available');
+                }
+                
+                // Sign in with Firebase
+                const firebaseUser = await window.firebaseAuth.signInWithEmail(email, password);
+                
+                if (!firebaseUser) {
+                    throw new Error('Sign-in failed');
+                }
+                
+                // Create user profile
+                const user = {
+                    id: firebaseUser.uid,
+                    userId: firebaseUser.uid,
+                    name: firebaseUser.displayName || email.split('@')[0],
+                    email: firebaseUser.email || email,
+                    type: 'email',
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('current_user', JSON.stringify(user));
+                localStorage.setItem('session_active', 'true');
+                localStorage.setItem('last_login', new Date().toISOString());
+                
+                // Small delay to ensure save
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Show success
+                successDiv.textContent = '✅ Sign-in successful! Redirecting...';
+                successDiv.style.display = 'block';
+                
+                // Reload page after short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Modal sign-in error:', error);
+                errorDiv.textContent = '❌ ' + (error.message || 'Sign-in failed. Please check your credentials.');
+                errorDiv.style.display = 'block';
+                btn.disabled = false;
+                btnText.style.display = 'block';
+                spinner.style.display = 'none';
+            }
+        });
+        
+        // Prevent clicking outside to close (user must sign in)
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                // Shake animation
+                const content = document.getElementById('auth-guard-content');
+                content.style.animation = 'none';
+                setTimeout(() => {
+                    content.style.animation = 'slideUp 0.4s ease';
+                }, 10);
+            }
+        });
     }
     
     // User is authenticated
