@@ -128,9 +128,17 @@ class HeaderUserSync {
             }
         }
 
-        // Try to get from global auth system if available
-        if (window.unifiedAuthSystem && window.unifiedAuthSystem.currentUser) {
-            return window.unifiedAuthSystem.currentUser;
+        // Try to get from authLite if available
+        if (window.authLite && typeof window.authLite.getCurrentUser === 'function') {
+            const user = window.authLite.getCurrentUser();
+            if (user) {
+                return user;
+            }
+        }
+
+        // Try to get from global currentUser if available
+        if (window.currentUser) {
+            return window.currentUser;
         }
 
         return null;
