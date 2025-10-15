@@ -260,12 +260,23 @@
                     </div>
                     
                     <!-- Alternative Actions -->
-                    <button onclick="window.location.href='launch.html'" class="auth-btn auth-btn-secondary" style="margin-bottom: 16px;">
-                        📝 Create New Account
+                    <button type="button" onclick="window.location.href='launch.html?tab=signup'" class="auth-btn auth-btn-secondary" style="margin-bottom: 12px;">
+                        ✨ Create New Account
                     </button>
                     
-                    <div style="text-align: center; margin-top: 20px; font-size: 14px; color: #6b7280;">
-                        <a href="launch.html" class="auth-link">Go to full login page</a>
+                    <div style="text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+                        <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">
+                            Don't have an account?
+                        </div>
+                        <a href="launch.html?tab=signup" class="auth-link" style="font-size: 15px;">
+                            Sign up for free →
+                        </a>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 12px; font-size: 13px; color: #9ca3af;">
+                        <a href="launch.html" class="auth-link" style="font-size: 13px; font-weight: normal;">
+                            Go to full login page
+                        </a>
                     </div>
                 </div>
             </div>

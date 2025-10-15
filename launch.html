@@ -1769,6 +1769,21 @@
 
         // Initialize
         console.log('🚀 Iterum Launch Page Loaded');
+        
+        // Check URL parameters for auto-tab switching
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        if (tab === 'signup') {
+            console.log('🔗 Auto-switching to signup tab from URL parameter');
+            setTimeout(() => {
+                switchTab('signup');
+            }, 100);
+        } else if (tab === 'signin') {
+            console.log('🔗 Auto-switching to signin tab from URL parameter');
+            setTimeout(() => {
+                switchTab('signin');
+            }, 100);
+        }
     </script>
 </body>
 </html>
