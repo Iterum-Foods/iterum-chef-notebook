@@ -15,7 +15,8 @@
         'index_simple.html',
         'index_minimal.html',
         'emergency_fix_index.html',
-        'test_firestore_connection.html'
+        'test_firestore_connection.html',
+        'test-user-integration.html'
     ];
     
     // Get current page
@@ -61,7 +62,14 @@
         
         if (sessionCheck2 === 'true' && userCheck2) {
             console.log('✅ Credentials found on recheck - allowing access');
-            // Don't redirect, credentials were just saved
+            // Set window.currentUser before returning
+            try {
+                const user = JSON.parse(userCheck2);
+                window.currentUser = user;
+                console.log('👤 User set on recheck:', user.name || user.email);
+            } catch (e) {
+                console.error('Error parsing user on recheck:', e);
+            }
             return;
         }
         
@@ -76,6 +84,14 @@
         
         if (sessionCheck3 === 'true' && userCheck3) {
             console.log('✅ Credentials found on final recheck - allowing access');
+            // Set window.currentUser before returning
+            try {
+                const user = JSON.parse(userCheck3);
+                window.currentUser = user;
+                console.log('👤 User set on final recheck:', user.name || user.email);
+            } catch (e) {
+                console.error('Error parsing user on final recheck:', e);
+            }
             return;
         }
         
