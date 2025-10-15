@@ -456,12 +456,162 @@
         </div>
     </div>
 
+    <!-- Equipment Import Confirmation Modal -->
+    <div id="equipment-import-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="bg-gradient-to-r from-[#4a7c2c] to-[#6ba83d] p-6 text-white rounded-t-xl">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2">📦 Add Equipment to Inventory</h3>
+                        <p class="text-white/90 text-sm">Customize details before adding to your equipment list</p>
+                    </div>
+                    <button id="close-import-modal" class="text-white/80 hover:text-white text-3xl font-bold leading-none">&times;</button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- Product Preview -->
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 mb-6 border border-gray-200">
+                    <div class="flex items-start gap-4">
+                        <div class="w-20 h-20 bg-white rounded-lg flex items-center justify-center text-4xl shadow-sm">
+                            🍴
+                        </div>
+                        <div class="flex-1">
+                            <h4 id="import-product-name" class="text-xl font-bold text-gray-800 mb-1"></h4>
+                            <p id="import-product-category" class="text-sm text-gray-600 mb-2"></p>
+                            <div class="flex items-center gap-4">
+                                <span id="import-product-brand" class="text-sm font-medium text-gray-700"></span>
+                                <span id="import-product-price" class="text-lg font-bold text-[#4a7c2c]"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="import-product-description" class="mt-3 text-sm text-gray-700 bg-white/50 rounded p-3"></div>
+                </div>
+                
+                <!-- Customization Form -->
+                <form id="equipment-import-form" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Equipment Name *
+                            </label>
+                            <input type="text" id="import-equipment-name" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent"
+                                   required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Brand/Manufacturer
+                            </label>
+                            <input type="text" id="import-equipment-brand" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Location in Kitchen
+                            </label>
+                            <select id="import-equipment-location" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent">
+                                <option value="">Select location...</option>
+                                <option value="Prep Station">Prep Station</option>
+                                <option value="Cook Line">Cook Line</option>
+                                <option value="Baking Area">Baking Area</option>
+                                <option value="Dish Pit">Dish Pit</option>
+                                <option value="Walk-in Cooler">Walk-in Cooler</option>
+                                <option value="Walk-in Freezer">Walk-in Freezer</option>
+                                <option value="Dry Storage">Dry Storage</option>
+                                <option value="Office">Office</option>
+                                <option value="Mobile">Mobile</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Status
+                            </label>
+                            <select id="import-equipment-status" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent">
+                                <option value="Active">✓ Active</option>
+                                <option value="Inactive">○ Inactive</option>
+                                <option value="Maintenance">🔧 Maintenance</option>
+                                <option value="Ordered">📦 Ordered</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Purchase Price
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                <input type="number" id="import-equipment-price" step="0.01"
+                                       class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Purchase Date
+                            </label>
+                            <input type="date" id="import-equipment-purchase-date" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Quantity
+                            </label>
+                            <input type="number" id="import-equipment-quantity" value="1" min="1"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Warranty (months)
+                            </label>
+                            <input type="number" id="import-equipment-warranty" min="0"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Notes / Description
+                        </label>
+                        <textarea id="import-equipment-notes" rows="3"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c2c] focus:border-transparent"
+                                  placeholder="Additional notes, specifications, or usage instructions..."></textarea>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" 
+                                class="flex-1 bg-gradient-to-r from-[#4a7c2c] to-[#6ba83d] hover:from-[#3d6a25] hover:to-[#5a9632] text-white py-3 px-6 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                            <span class="text-xl">✓</span>
+                            <span>Add to Equipment</span>
+                        </button>
+                        <button type="button" id="cancel-import-modal" 
+                                class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2">
+                            <span class="text-xl">×</span>
+                            <span>Cancel</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- WebstaurantStore Integration Modal -->
     <div id="webstaurant-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center p-6 border-b">
-                <h3 class="text-xl font-bold text-gray-800">🛒 WebstaurantStore Equipment Search</h3>
-                <button id="close-webstaurant-modal" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+            <div class="flex justify-between items-center p-6 border-b bg-gradient-to-r from-[#4a7c2c] to-[#6ba83d] text-white rounded-t-lg">
+                <div>
+                    <h3 class="text-2xl font-bold">🛒 WebstaurantStore Equipment Catalog</h3>
+                    <p class="text-white/90 text-sm mt-1">Browse 105+ commercial kitchen equipment items</p>
+                </div>
+                <button id="close-webstaurant-modal" class="text-white/80 hover:text-white text-3xl font-bold leading-none">&times;</button>
             </div>
             
             <div class="p-6">
@@ -985,7 +1135,10 @@
         return card;
       }
       
-      // Import equipment from WebstaurantStore
+      // Store current product for import
+      let currentImportProduct = null;
+      
+      // Open import modal with product details
       function importEquipmentFromWebstaurant(productId) {
         const catalog = window.webstaurantIntegration.getDefaultCatalog();
         const product = catalog.find(p => p.id === productId);
@@ -995,29 +1148,121 @@
           return;
         }
         
+        // Store product
+        currentImportProduct = product;
+        
+        // Populate modal with product details
+        document.getElementById('import-product-name').textContent = product.name;
+        document.getElementById('import-product-category').textContent = `${product.category} › ${product.subcategory}`;
+        document.getElementById('import-product-brand').textContent = `Brand: ${product.brand}`;
+        document.getElementById('import-product-price').textContent = `$${product.price.toFixed(2)}`;
+        document.getElementById('import-product-description').textContent = product.description;
+        
+        // Pre-fill form fields
+        document.getElementById('import-equipment-name').value = product.name;
+        document.getElementById('import-equipment-brand').value = product.brand;
+        document.getElementById('import-equipment-price').value = product.price.toFixed(2);
+        document.getElementById('import-equipment-status').value = 'Active';
+        document.getElementById('import-equipment-quantity').value = 1;
+        document.getElementById('import-equipment-purchase-date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('import-equipment-notes').value = `${product.description}\n\nImported from WebstaurantStore catalog`;
+        
+        // Show import modal
+        document.getElementById('equipment-import-modal').classList.remove('hidden');
+      }
+      
+      // Close import modal
+      function closeImportModal() {
+        document.getElementById('equipment-import-modal').classList.add('hidden');
+        currentImportProduct = null;
+      }
+      
+      // Handle import form submission
+      function handleImportSubmit(e) {
+        e.preventDefault();
+        
+        if (!currentImportProduct) {
+          alert('No product selected');
+          return;
+        }
+        
+        // Get form values
+        const equipment = {
+          id: Date.now(),
+          name: document.getElementById('import-equipment-name').value,
+          category: currentImportProduct.category,
+          subcategory: currentImportProduct.subcategory,
+          brand: document.getElementById('import-equipment-brand').value,
+          location: document.getElementById('import-equipment-location').value,
+          status: document.getElementById('import-equipment-status').value,
+          price: parseFloat(document.getElementById('import-equipment-price').value) || 0,
+          purchaseDate: document.getElementById('import-equipment-purchase-date').value,
+          quantity: parseInt(document.getElementById('import-equipment-quantity').value) || 1,
+          warranty: document.getElementById('import-equipment-warranty').value,
+          notes: document.getElementById('import-equipment-notes').value,
+          description: currentImportProduct.description,
+          createdAt: new Date().toISOString(),
+          source: 'webstaurant',
+          sourceProductId: currentImportProduct.id
+        };
+        
         // Get current user
         const currentUser = window.authLite?.getCurrentUser();
         const userId = currentUser?.id;
         
-        // Import to equipment
-        const equipment = window.webstaurantIntegration.importToEquipment(product, userId);
+        // Save to localStorage
+        const key = userId ? `equipment_${userId}` : 'equipment';
+        const existing = JSON.parse(localStorage.getItem(key) || '[]');
+        existing.push(equipment);
+        localStorage.setItem(key, JSON.stringify(existing));
         
-        if (equipment) {
-          alert(`✅ "${product.name}" added to your equipment!`);
-          closeWebstaurantModal();
-          
-          // Reload equipment list if function exists
-          if (typeof loadEquipment === 'function') {
-            loadEquipment();
-          }
-        } else {
-          alert('❌ Failed to add equipment');
+        // Show success message with details
+        const successMsg = `✅ Equipment Added Successfully!\n\n` +
+                          `${equipment.name}\n` +
+                          `Location: ${equipment.location || 'Not specified'}\n` +
+                          `Status: ${equipment.status}\n` +
+                          `Quantity: ${equipment.quantity}`;
+        
+        alert(successMsg);
+        
+        // Close both modals
+        closeImportModal();
+        closeWebstaurantModal();
+        
+        // Reload equipment list if function exists
+        if (typeof loadEquipment === 'function') {
+          loadEquipment();
         }
       }
       
       // Event listeners
       document.addEventListener('DOMContentLoaded', () => {
-        // Close button
+        // Import modal event listeners
+        const importForm = document.getElementById('equipment-import-form');
+        if (importForm) {
+          importForm.addEventListener('submit', handleImportSubmit);
+        }
+        
+        const closeImportBtn = document.getElementById('close-import-modal');
+        if (closeImportBtn) {
+          closeImportBtn.addEventListener('click', closeImportModal);
+        }
+        
+        const cancelImportBtn = document.getElementById('cancel-import-modal');
+        if (cancelImportBtn) {
+          cancelImportBtn.addEventListener('click', closeImportModal);
+        }
+        
+        const importModal = document.getElementById('equipment-import-modal');
+        if (importModal) {
+          importModal.addEventListener('click', (e) => {
+            if (e.target === importModal) {
+              closeImportModal();
+            }
+          });
+        }
+        
+        // Webstaurant modal event listeners
         const closeBtn = document.getElementById('close-webstaurant-modal');
         if (closeBtn) {
           closeBtn.addEventListener('click', closeWebstaurantModal);
