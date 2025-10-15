@@ -259,10 +259,19 @@ class IngredientLibrary {
     }
     
     getFormData() {
-        const name = document.getElementById('ingredient-name').value.trim();
-        const category = document.getElementById('ingredient-category').value;
-        const unit = document.getElementById('ingredient-unit').value;
-        const description = document.getElementById('ingredient-description').value.trim();
+        const name = document.getElementById('ingredient-name')?.value.trim() || '';
+        const category = document.getElementById('ingredient-category')?.value || '';
+        const unit = document.getElementById('ingredient-unit')?.value || '';
+        const description = document.getElementById('ingredient-description')?.value.trim() || '';
+        
+        // Get vendor information
+        const primaryVendor = document.getElementById('ingredient-primary-vendor')?.value.trim() || '';
+        const alternateVendors = document.getElementById('ingredient-alternate-vendors')?.value.trim() || '';
+        const vendorSKU = document.getElementById('ingredient-vendor-sku')?.value.trim() || '';
+        const unitPrice = parseFloat(document.getElementById('ingredient-unit-price')?.value) || 0;
+        const packSize = document.getElementById('ingredient-pack-size')?.value.trim() || '';
+        const leadTime = document.getElementById('ingredient-lead-time')?.value.trim() || '';
+        const minimumOrder = document.getElementById('ingredient-minimum-order')?.value.trim() || '';
         
         // Get allergens
         const allergenCheckboxes = document.querySelectorAll('#ingredient-form input[type="checkbox"]:checked');
@@ -270,14 +279,25 @@ class IngredientLibrary {
         
         // Get nutritional info
         const nutritionalInfo = {
-            calories: parseFloat(document.getElementById('nutrition-calories').value) || 0,
-            protein: parseFloat(document.getElementById('nutrition-protein').value) || 0,
-            carbs: parseFloat(document.getElementById('nutrition-carbs').value) || 0,
-            fat: parseFloat(document.getElementById('nutrition-fat').value) || 0,
-            fiber: parseFloat(document.getElementById('nutrition-fiber').value) || 0,
-            sugar: parseFloat(document.getElementById('nutrition-sugar').value) || 0,
-            sodium: parseFloat(document.getElementById('nutrition-sodium').value) || 0,
-            iron: parseFloat(document.getElementById('nutrition-iron').value) || 0
+            calories: parseFloat(document.getElementById('nutrition-calories')?.value) || 0,
+            protein: parseFloat(document.getElementById('nutrition-protein')?.value) || 0,
+            carbs: parseFloat(document.getElementById('nutrition-carbs')?.value) || 0,
+            fat: parseFloat(document.getElementById('nutrition-fat')?.value) || 0,
+            fiber: parseFloat(document.getElementById('nutrition-fiber')?.value) || 0,
+            sugar: parseFloat(document.getElementById('nutrition-sugar')?.value) || 0,
+            sodium: parseFloat(document.getElementById('nutrition-sodium')?.value) || 0,
+            iron: parseFloat(document.getElementById('nutrition-iron')?.value) || 0
+        };
+        
+        // Vendor information object
+        const vendorInfo = {
+            primaryVendor: primaryVendor,
+            alternateVendors: alternateVendors ? alternateVendors.split(',').map(v => v.trim()) : [],
+            vendorSKU: vendorSKU,
+            unitPrice: unitPrice,
+            packSize: packSize,
+            leadTime: leadTime,
+            minimumOrder: minimumOrder
         };
         
         return {
@@ -286,7 +306,9 @@ class IngredientLibrary {
             default_unit: unit,
             description,
             allergens,
-            nutritional_info: nutritionalInfo
+            nutritional_info: nutritionalInfo,
+            vendor_info: vendorInfo,
+            primaryVendor: primaryVendor  // For easy access and sorting
         };
     }
     
