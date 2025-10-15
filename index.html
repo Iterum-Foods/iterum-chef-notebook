@@ -664,11 +664,11 @@
             </div>
             
             <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="window.unifiedAuthSystem?.showUserSelection()">
+              <div class="header-user-dropdown-item" onclick="alert('Profile editing coming soon')">
                 <span>👤</span>
                 <span>Edit Profile</span>
               </div>
-              <div class="header-user-dropdown-item" onclick="window.unifiedAuthSystem?.createOfflineProfile()">
+              <div class="header-user-dropdown-item" onclick="window.location.href='launch.html'">
                 <span>➕</span>
                 <span>Create Profile</span>
               </div>
@@ -681,7 +681,7 @@
                 <span>⚙️</span>
                 <span>Settings</span>
               </div>
-              <div class="header-user-dropdown-item danger" onclick="window.unifiedAuthSystem?.clearSession()">
+              <div class="header-user-dropdown-item danger" onclick="window.authLite?.signOut(); window.location.href='launch.html'">
                 <span>🚪</span>
                 <span>Sign Out</span>
               </div>
@@ -732,7 +732,7 @@
 
         <!-- Authentication Button - Show if not authenticated -->
         <div style="margin-bottom: 1rem;">
-          <button class="btn btn-secondary w-full" onclick="window.unifiedAuthSystem?.showAuthentication()" id="auth-button" style="display: block;">
+          <button class="btn btn-secondary w-full" onclick="window.location.href='launch.html'" id="auth-button" style="display: none;">
             <span>🔐</span>
             <span>Sign In / Switch User</span>
           </button>
@@ -1994,22 +1994,17 @@
       // Ensure authentication system is loaded and working
       function initializeUserSystem() {
         console.log('🔍 Initializing authentication system...');
-        console.log('window.unifiedAuthSystem:', window.unifiedAuthSystem);
-        console.log('window.unifiedAuthSystem type:', typeof window.unifiedAuthSystem);
-        console.log('window.unifiedAuthSystem constructor:', window.unifiedAuthSystem?.constructor?.name);
         
-        if (window.unifiedAuthSystem) {
-          console.log('✅ Authentication system loaded successfully');
-          console.log('🔍 Auth system properties:', Object.keys(window.unifiedAuthSystem));
-          console.log('🔍 Current user:', window.unifiedAuthSystem.currentUser);
-          console.log('🔍 Is authenticated:', window.unifiedAuthSystem.isAuthenticated());
+        // Check if auth_lite is available
+        if (window.authLite) {
+          console.log('✅ AuthLite system loaded successfully');
           
-          // Update UI with current user
-          console.log('🔍 Calling updateAuthUI()...');
-          window.unifiedAuthSystem.updateAuthUI(window.unifiedAuthSystem.currentUser);
+          const user = window.authLite.getCurrentUser();
+          console.log('🔍 Current user:', user);
+          console.log('🔍 Is authenticated:', window.authLite.isAuthenticated());
           
-          // Authentication system handles user selection automatically
-          console.log('🔍 Authentication system handles user selection automatically');
+          // Authentication system handles user display automatically
+          console.log('🔍 Authentication handled by auth_lite and header_user_sync');
           
           // Initialize project system
           console.log('🔍 Initializing project system...');
@@ -2085,17 +2080,13 @@
             });
             console.log('✅ Click handler added to user tab');
             
-            // Test the authentication system methods
-            console.log('🔍 Testing authentication system methods...');
-            console.log('showUserSelection exists:', typeof window.unifiedAuthSystem.showUserSelection);
-            console.log('createOfflineProfile exists:', typeof window.unifiedAuthSystem.createOfflineProfile);
-            console.log('updateAuthUI exists:', typeof window.unifiedAuthSystem.updateAuthUI);
-            console.log('isAuthenticated exists:', typeof window.unifiedAuthSystem.isAuthenticated);
+            // Authentication system is ready
+            console.log('✅ User dropdown interaction ready');
           } else {
             console.error('❌ User tab or dropdown not found');
           }
         } else {
-          console.error('❌ Authentication system not loaded, retrying in 100ms...');
+          console.error('❌ AuthLite not loaded, retrying in 100ms...');
           setTimeout(initializeUserSystem, 100);
         }
       }
@@ -2106,11 +2097,11 @@
           // Small delay to ensure all scripts are loaded
           setTimeout(initializeUserSystem, 100);
           
-          // Fallback: Ensure authentication is shown after 3 seconds
+          // Fallback: Check authentication after 3 seconds
           setTimeout(() => {
-            if (!window.unifiedAuthSystem?.currentUser && !window.unifiedAuthSystem?.isAuthenticated()) {
-              console.log('🚨 Fallback: No authentication found, forcing auth display');
-              window.unifiedAuthSystem?.showAuthentication();
+            if (!window.authLite?.isAuthenticated()) {
+              console.log('🚨 Fallback: No authentication found');
+              // auth_guard.js already handles this by redirecting
             }
           }, 3000);
         });
@@ -2118,11 +2109,11 @@
         // Small delay to ensure all scripts are loaded
         setTimeout(initializeUserSystem, 100);
         
-        // Fallback: Ensure authentication is shown after 3 seconds
+        // Fallback: Check authentication after 3 seconds
         setTimeout(() => {
-          if (!window.unifiedAuthSystem?.currentUser && !window.unifiedAuthSystem?.isAuthenticated()) {
-            console.log('🚨 Fallback: No authentication found, forcing auth display');
-            window.unifiedAuthSystem?.showAuthentication();
+          if (!window.authLite?.isAuthenticated()) {
+            console.log('🚨 Fallback: No authentication found');
+            // auth_guard.js already handles redirecting to login
           }
         }, 3000);
       }
@@ -2133,54 +2124,35 @@
       // Debug function for authentication system
       window.debugAuthSystem = function() {
         console.log('🐛 Debug Auth System');
-        console.log('window.unifiedAuthSystem:', window.unifiedAuthSystem);
+        console.log('window.authLite:', window.authLite);
         console.log('window.firebaseAuth:', window.firebaseAuth);
         console.log('window.firebaseAuthUI:', window.firebaseAuthUI);
-        console.log('Current user:', window.unifiedAuthSystem?.currentUser);
-        console.log('Is authenticated:', window.unifiedAuthSystem?.isAuthenticated());
+        console.log('Current user:', window.authLite?.getCurrentUser());
+        console.log('Is authenticated:', window.authLite?.isAuthenticated());
         console.log('Session active:', localStorage.getItem('session_active'));
         console.log('Current user stored:', localStorage.getItem('current_user'));
         
-        // Try to show authentication
-        if (window.unifiedAuthSystem) {
-          window.unifiedAuthSystem.showAuthentication();
+        // Authentication handled by auth_lite
+        if (window.authLite) {
+          console.log('✅ AuthLite loaded and working');
         } else {
-          alert('Authentication system not available. Check console for details.');
+          alert('AuthLite not available. Check console for details.');
         }
       };
       
       // Test function for debugging
       async function testUserSystemOnIndex() {
         console.log('🧪 Testing authentication system on index page...');
-        console.log('window.unifiedAuthSystem:', window.unifiedAuthSystem);
+        console.log('window.authLite:', window.authLite);
         
-        if (window.unifiedAuthSystem) {
-          console.log('✅ Authentication system is available');
-          console.log('🔍 Auth system properties:', Object.keys(window.unifiedAuthSystem));
-          console.log('Current user:', window.unifiedAuthSystem.currentUser);
-          console.log('Is authenticated:', window.unifiedAuthSystem.isAuthenticated());
-          
-          // Test creating an offline profile
-          try {
-            console.log('🔍 Creating test offline profile...');
-            const testProfile = {
-              name: 'Test User ' + Date.now(),
-              email: 'test@example.com',
-              avatar: '👨‍🍳'
-            };
-            
-            window.unifiedAuthSystem.createOfflineProfile(testProfile);
-            
-            console.log('✅ Test profile created successfully');
-            console.log('🔍 Current user after creation:', window.unifiedAuthSystem.currentUser);
-            alert('Test profile created successfully! Check console for details.');
-          } catch (error) {
-            console.error('❌ Error creating test profile:', error);
-            alert('Error creating test profile: ' + error.message);
-          }
+        if (window.authLite) {
+          console.log('✅ AuthLite system is available');
+          console.log('Current user:', window.authLite.getCurrentUser());
+          console.log('Is authenticated:', window.authLite.isAuthenticated());
+          alert('AuthLite loaded successfully! Check console for details.');
         } else {
-          console.log('❌ Authentication system is not available');
-          alert('Authentication system is not available. Check console for details.');
+          console.log('❌ AuthLite is not available');
+          alert('AuthLite is not available. Check console for details.');
         }
       }
 
