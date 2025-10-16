@@ -35,6 +35,12 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=func.now())
     
+    # Firebase authentication fields
+    firebase_uid = Column(String, unique=True, index=True, nullable=True)
+    auth_provider = Column(String, default="local")  # 'local', 'google', 'email', 'trial'
+    photo_url = Column(String, nullable=True)
+    last_login = Column(DateTime, nullable=True)
+    
     # Relationships
     recipes = relationship("Recipe", back_populates="author", foreign_keys="[Recipe.author_id]")
     versions = relationship("RecipeVersion", back_populates="author", foreign_keys="[RecipeVersion.author_id]")

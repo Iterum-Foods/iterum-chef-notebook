@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Builder | Iterum R&D Chef Notebook</title>
     
-    <!-- Authentication Guard - Require Login -->
+    <!-- Auth System (v2.0) -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auth-manager.js"></script>
+    <script src="assets/js/auth-api-helper.js"></script>
+    <script src="assets/js/auth-diagnostics.js"></script>
     <script src="assets/js/auth_guard.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <!-- Tailwind CSS - Built from source -->
     <link rel="stylesheet" href="assets/css/tailwind-output.css">
     <link rel="stylesheet" href="assets/css/iterum-design-system.css">
     <link rel="stylesheet" href="assets/css/premium-ui-system.css">
+    <link rel="stylesheet" href="assets/css/unified-header.css">
+    <link rel="stylesheet" href="assets/css/page-layouts.css">
     <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
     
     <!-- Force page visibility -->
@@ -2614,5 +2621,13 @@
         }, 100);
       });
     </script>
+    
+    <!-- Load Firebase Modules -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    <script type="module" src="assets/js/firestore-sync.js"></script>
+    
+    <!-- Load User Display -->
+    <script src="assets/js/header-user-display.js"></script>
 </body>
 </html> 

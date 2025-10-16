@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iterum R&D Chef Notebook</title>
     
+    <!-- Load Auth System BEFORE Guard -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auth-manager.js"></script>
+    <script src="assets/js/auth-api-helper.js"></script>
+    <script src="assets/js/auth-diagnostics.js"></script>
+    
     <!-- Authentication Guard - Require Login -->
     <script src="assets/js/auth_guard.js"></script>
     
@@ -14,6 +20,8 @@
     <link rel="stylesheet" href="assets/css/tailwind-output.css">
     <link rel="stylesheet" href="assets/css/iterum-design-system.css">
     <link rel="stylesheet" href="assets/css/premium-ui-system.css">
+    <link rel="stylesheet" href="assets/css/unified-header.css">
+    <link rel="stylesheet" href="assets/css/page-layouts.css">
     <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
     
     <style>
@@ -682,7 +690,7 @@
                 <span>⚙️</span>
                 <span>Settings</span>
               </div>
-              <div class="header-user-dropdown-item danger" onclick="window.authLite?.signOut(); window.location.href='launch.html'">
+              <div class="header-user-dropdown-item danger" onclick="handleSignOut()">
                 <span>🚪</span>
                 <span>Sign Out</span>
               </div>
@@ -1948,29 +1956,14 @@
     <script src="assets/js/input-validation.js"></script>
     <script src="assets/js/api-security.js"></script>
     
-    <!-- HOTFIX: Load auth crash fix -->
-    <!-- Load Firebase Configuration FIRST -->
-    <script src="assets/js/firebase-config.js"></script>
-    
-    <!-- Wait a moment for config to be available -->
-    <script>
-        // Ensure config is available before loading modules
-        window.firebaseConfigReady = true;
-        console.log('✅ Firebase config loaded and ready');
-    </script>
-    
-    <!-- Load Firebase Authentication -->
+    <!-- Firebase Configuration already loaded in <head> -->
+    <!-- Load Firebase Authentication Modules -->
     <script type="module" src="assets/js/firebase-auth.js"></script>
     <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    <script type="module" src="assets/js/firestore-sync.js"></script>
     
-    <!-- Load Lightweight Authentication System (Non-Blocking) -->
-    <script src="assets/js/auth_lite.js"></script>
-    
-    <!-- Load Header User Synchronization -->
-    <script src="assets/js/header_user_sync.js"></script>
-    
-    <!-- Load Header Sync Loader (ensures sync on all pages) -->
-    <script src="assets/js/header_sync_loader.js"></script>
+    <!-- Load Header User Display (New Auth System) -->
+    <script src="assets/js/header-user-display.js"></script>
     
     <!-- Load Main Application -->
     <script src="assets/js/main.js"></script>
@@ -1997,18 +1990,18 @@
     <script>
       // Ensure authentication system is loaded and working
       function initializeUserSystem() {
-        console.log('🔍 Initializing authentication system...');
+        console.log('🔍 Initializing user system...');
         
-        // Check if auth_lite is available
-        if (window.authLite) {
-          console.log('✅ AuthLite system loaded successfully');
+        // Check if AuthManager is available
+        if (window.authManager) {
+          console.log('✅ AuthManager system loaded successfully');
           
-          const user = window.authLite.getCurrentUser();
+          const user = window.authManager.currentUser;
           console.log('🔍 Current user:', user);
-          console.log('🔍 Is authenticated:', window.authLite.isAuthenticated());
+          console.log('🔍 Is authenticated:', window.authManager.isAuthenticated);
           
-          // Authentication system handles user display automatically
-          console.log('🔍 Authentication handled by auth_lite and header_user_sync');
+          // Authentication system handles user display automatically via header-user-display.js
+          console.log('🔍 User display handled by header-user-display.js');
           
           // Initialize project system
           console.log('🔍 Initializing project system...');
@@ -2090,7 +2083,7 @@
             console.error('❌ User tab or dropdown not found');
           }
         } else {
-          console.error('❌ AuthLite not loaded, retrying in 100ms...');
+          console.error('❌ AuthManager not loaded, retrying in 100ms...');
           setTimeout(initializeUserSystem, 100);
         }
       }
@@ -2103,7 +2096,7 @@
           
           // Fallback: Check authentication after 3 seconds
           setTimeout(() => {
-            if (!window.authLite?.isAuthenticated()) {
+            if (!window.authManager?.isAuthenticated) {
               console.log('🚨 Fallback: No authentication found');
               // auth_guard.js already handles this by redirecting
             }
@@ -2115,7 +2108,7 @@
         
         // Fallback: Check authentication after 3 seconds
         setTimeout(() => {
-          if (!window.authLite?.isAuthenticated()) {
+          if (!window.authManager?.isAuthenticated) {
             console.log('🚨 Fallback: No authentication found');
             // auth_guard.js already handles redirecting to login
           }
@@ -2128,35 +2121,38 @@
       // Debug function for authentication system
       window.debugAuthSystem = function() {
         console.log('🐛 Debug Auth System');
-        console.log('window.authLite:', window.authLite);
+        console.log('window.authManager:', window.authManager);
         console.log('window.firebaseAuth:', window.firebaseAuth);
         console.log('window.firebaseAuthUI:', window.firebaseAuthUI);
-        console.log('Current user:', window.authLite?.getCurrentUser());
-        console.log('Is authenticated:', window.authLite?.isAuthenticated());
+        console.log('Current user:', window.authManager?.currentUser);
+        console.log('Is authenticated:', window.authManager?.isAuthenticated);
         console.log('Session active:', localStorage.getItem('session_active'));
         console.log('Current user stored:', localStorage.getItem('current_user'));
         
-        // Authentication handled by auth_lite
-        if (window.authLite) {
-          console.log('✅ AuthLite loaded and working');
+        // Use auth diagnostics
+        if (window.authDiagnostics) {
+          console.log('✅ Use authDiagnostics.check() for full status');
+          authDiagnostics.check();
+        } else if (window.authManager) {
+          console.log('✅ AuthManager loaded and working');
         } else {
-          alert('AuthLite not available. Check console for details.');
+          alert('AuthManager not available. Check console for details.');
         }
       };
       
       // Test function for debugging
       async function testUserSystemOnIndex() {
         console.log('🧪 Testing authentication system on index page...');
-        console.log('window.authLite:', window.authLite);
+        console.log('window.authManager:', window.authManager);
         
-        if (window.authLite) {
-          console.log('✅ AuthLite system is available');
-          console.log('Current user:', window.authLite.getCurrentUser());
-          console.log('Is authenticated:', window.authLite.isAuthenticated());
-          alert('AuthLite loaded successfully! Check console for details.');
+        if (window.authManager) {
+          console.log('✅ AuthManager system is available');
+          console.log('Current user:', window.authManager.currentUser);
+          console.log('Is authenticated:', window.authManager.isAuthenticated);
+          alert('AuthManager loaded successfully! Check console for details.\n\nUse authDiagnostics.check() for full status.');
         } else {
-          console.log('❌ AuthLite is not available');
-          alert('AuthLite is not available. Check console for details.');
+          console.log('❌ AuthManager is not available');
+          alert('AuthManager is not available. Check console for details.');
         }
       }
 

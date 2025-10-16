@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from app.database import engine, Base
-from app.routers import recipes, ingredients, versions, uploads, auth, profiles, data, vendors, menu, integrations, workflow, images, waitlist, autosave, recipe_scaling, projects, ai_enhancements, trial
+from app.routers import recipes, ingredients, versions, uploads, auth, profiles, data, vendors, menu, integrations, workflow, images, waitlist, autosave, recipe_scaling, projects, ai_enhancements, trial, firebase_sync
 from typing import List
 import os
 
@@ -42,6 +42,7 @@ app.add_middleware(
 )
 
 # Include routers
+app.include_router(firebase_sync.router, prefix="/api/firebase", tags=["Firebase Sync"])
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(recipes.router, prefix="/api/recipes", tags=["Recipes"])
 app.include_router(ingredients.router, prefix="/api/ingredients", tags=["Ingredients"])

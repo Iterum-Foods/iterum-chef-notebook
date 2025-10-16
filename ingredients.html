@@ -5,35 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Ingredient Database | Iterum R&D Chef Notebook</title>
     
-    <!-- Authentication Guard - Require Login -->
+    <!-- Auth System (v2.0) -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auth-manager.js"></script>
+    <script src="assets/js/auth-api-helper.js"></script>
+    <script src="assets/js/auth-diagnostics.js"></script>
     <script src="assets/js/auth_guard.js"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Shadows+Into+Light:wght@400&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/tailwind-output.css">
     <link rel="stylesheet" href="assets/css/iterum-design-system.css">
     <link rel="stylesheet" href="assets/css/premium-ui-system.css">
+    <link rel="stylesheet" href="assets/css/unified-header.css">
+    <link rel="stylesheet" href="assets/css/page-layouts.css">
     <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
     
-    <!-- Essential Scripts -->
-    <!-- Load Firebase Configuration -->
-    <script src="assets/js/firebase-config.js"></script>
-    
-    <!-- Load Firebase Authentication -->
-    <script type="module" src="assets/js/firebase-auth.js"></script>
-    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
-    
-    <!-- Load Unified Authentication System -->
-    <script src="assets/js/unified_auth_system.js"></script>
-    
-    <!-- Load Page Protection System -->
-    <script src="assets/js/page-protection.js"></script>
-    
-    <!-- Load Header User Synchronization -->
-    <script src="assets/js/header_user_sync.js"></script>
-    
-    <!-- Load Header Sync Loader (ensures sync on all pages) -->
-    <script src="assets/js/header_sync_loader.js"></script>
     
     <!-- Load Enhanced User Management System -->
     <!-- Enhanced User Management now handled by Firebase Auth -->
@@ -731,5 +719,13 @@
         }, 100);
       });
     </script>
+    
+    <!-- Load Firebase Modules -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
+    <script type="module" src="assets/js/firestore-sync.js"></script>
+    
+    <!-- Load User Display -->
+    <script src="assets/js/header-user-display.js"></script>
 </body>
-</html> 
+</html>

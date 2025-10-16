@@ -1,13 +1,13 @@
 /**
- * Authentication Guard
+ * Authentication Guard (v2.0)
  * Protects pages and ensures user is logged in
- * Lightweight and non-blocking
+ * Uses centralized AuthManager for bulletproof authentication
  */
 
 (async function() {
     'use strict';
     
-    console.log('🔐 Auth Guard checking credentials...');
+    console.log('🔐 Auth Guard v2.0 checking credentials...');
     
     // List of pages that don't require authentication
     const publicPages = [
@@ -30,81 +30,64 @@
         return;
     }
     
-    // Check authentication
-    const sessionActive = localStorage.getItem('session_active');
-    const currentUser = localStorage.getItem('current_user');
+    console.log('🔒 Protected page - authentication required:', currentPage);
     
-    console.log('🔍 Auth Guard - Checking credentials...');
-    console.log('  Current page:', currentPage);
-    console.log('  session_active:', sessionActive);
-    console.log('  current_user exists:', !!currentUser);
-    
-    if (currentUser) {
-        console.log('  current_user data:', currentUser.substring(0, 100) + '...');
+    // Wait for AuthManager to be ready
+    let authManager = window.authManager;
+    if (!authManager) {
+        console.log('⏳ Waiting for AuthManager...');
+        let attempts = 0;
+        while (!window.authManager && attempts < 50) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            attempts++;
+        }
+        authManager = window.authManager;
     }
     
-    // If not authenticated, redirect to login
-    if (sessionActive !== 'true' || !currentUser) {
-        console.warn('🚫 NO CREDENTIALS - Redirecting to login page');
+    if (!authManager) {
+        console.error('❌ AuthManager not available - showing fallback sign-in');
+        showSignInModal();
+        throw new Error('AuthManager not available');
+    }
+    
+    console.log('✅ AuthManager available');
+    
+    // Check authentication
+    const { authenticated, user } = await authManager.checkAuth();
+    
+    if (!authenticated) {
+        console.warn('🚫 NOT AUTHENTICATED - Showing sign-in modal');
         console.log('  Attempted to access:', currentPage);
-        console.log('  session_active should be "true", got:', sessionActive);
-        console.log('  current_user should exist, got:', currentUser ? 'exists but empty?' : 'null/undefined');
         
-        // WAIT before redirecting to see if data is being saved
-        console.log('⏳ Waiting for potential localStorage save...');
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Increased to 1 second
-        
-        // Check again
-        const sessionCheck2 = localStorage.getItem('session_active');
-        const userCheck2 = localStorage.getItem('current_user');
-        console.log('  Recheck after 1000ms - session_active:', sessionCheck2);
-        console.log('  Recheck after 1000ms - current_user exists:', !!userCheck2);
-        
-        if (sessionCheck2 === 'true' && userCheck2) {
-            console.log('✅ Credentials found on recheck - allowing access');
-            // Set window.currentUser before returning
-            try {
-                const user = JSON.parse(userCheck2);
-                window.currentUser = user;
-                console.log('👤 User set on recheck:', user.name || user.email);
-            } catch (e) {
-                console.error('Error parsing user on recheck:', e);
-            }
-            return;
-        }
-        
-        // Try one more time after another second
-        console.log('⏳ One more check after additional delay...');
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        const sessionCheck3 = localStorage.getItem('session_active');
-        const userCheck3 = localStorage.getItem('current_user');
-        console.log('  Final recheck - session_active:', sessionCheck3);
-        console.log('  Final recheck - current_user exists:', !!userCheck3);
-        
-        if (sessionCheck3 === 'true' && userCheck3) {
-            console.log('✅ Credentials found on final recheck - allowing access');
-            // Set window.currentUser before returning
-            try {
-                const user = JSON.parse(userCheck3);
-                window.currentUser = user;
-                console.log('👤 User set on final recheck:', user.name || user.email);
-            } catch (e) {
-                console.error('Error parsing user on final recheck:', e);
-            }
-            return;
-        }
-        
-        // Store the page they were trying to access
-        sessionStorage.setItem('redirect_after_login', window.location.href);
-        
-        // Show popup sign-in modal instead of redirecting
-        console.log('🔐 Showing popup sign-in modal');
+        // Show sign-in modal
         showSignInModal();
         
         // Prevent page from loading
         throw new Error('Authentication required');
     }
+    
+    // User is authenticated
+    console.log('✅ Authentication verified');
+    console.log('👤 User:', user.name || user.email);
+    
+    // Check if trial has expired
+    if (user.type === 'trial' && user.trialEndDate) {
+        const trialEnd = new Date(user.trialEndDate);
+        const now = new Date();
+        const daysRemaining = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
+        
+        if (daysRemaining <= 0) {
+            console.warn('⚠️ Trial has expired');
+            showTrialExpiredWarning();
+        } else if (daysRemaining <= 3) {
+            console.warn(`⚠️ Trial expiring in ${daysRemaining} days`);
+            setTimeout(() => {
+                showTrialWarning(daysRemaining);
+            }, 1000);
+        }
+    }
+    
+    console.log('✅ Auth Guard complete - access granted');
     
     // Function to show sign-in modal
     function showSignInModal() {
@@ -166,9 +149,13 @@
                     background: linear-gradient(135deg, #4a7c2c, #6ba83d);
                     color: white;
                 }
-                .auth-btn-primary:hover {
+                .auth-btn-primary:hover:not(:disabled) {
                     transform: translateY(-2px);
                     box-shadow: 0 4px 12px rgba(74, 124, 44, 0.3);
+                }
+                .auth-btn-primary:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
                 }
                 .auth-btn-secondary {
                     background: white;
@@ -302,7 +289,7 @@
         
         // Focus email input
         setTimeout(() => {
-            document.getElementById('modal-email').focus();
+            document.getElementById('modal-email')?.focus();
         }, 300);
         
         // Handle sign-in form submission
@@ -327,43 +314,8 @@
             spinner.style.display = 'block';
             
             try {
-                // Wait for Firebase Auth to be ready
-                if (!window.firebaseAuth) {
-                    let attempts = 0;
-                    while (!window.firebaseAuth && attempts < 20) {
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                        attempts++;
-                    }
-                }
-                
-                if (!window.firebaseAuth || !window.firebaseAuth.isInitialized) {
-                    throw new Error('Firebase Authentication not available');
-                }
-                
-                // Sign in with Firebase
-                const firebaseUser = await window.firebaseAuth.signInWithEmail(email, password);
-                
-                if (!firebaseUser) {
-                    throw new Error('Sign-in failed');
-                }
-                
-                // Create user profile
-                const user = {
-                    id: firebaseUser.uid,
-                    userId: firebaseUser.uid,
-                    name: firebaseUser.displayName || email.split('@')[0],
-                    email: firebaseUser.email || email,
-                    type: 'email',
-                    createdAt: new Date().toISOString()
-                };
-                
-                // Save to localStorage
-                localStorage.setItem('current_user', JSON.stringify(user));
-                localStorage.setItem('session_active', 'true');
-                localStorage.setItem('last_login', new Date().toISOString());
-                
-                // Small delay to ensure save
-                await new Promise(resolve => setTimeout(resolve, 100));
+                // Use AuthManager to sign in
+                const user = await window.authManager.signInWithEmail(email, password);
                 
                 // Show success
                 successDiv.textContent = '✅ Sign-in successful! Redirecting...';
@@ -387,7 +339,6 @@
         // Prevent clicking outside to close (user must sign in)
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                // Shake animation
                 const content = document.getElementById('auth-guard-content');
                 content.style.animation = 'none';
                 setTimeout(() => {
@@ -395,43 +346,6 @@
                 }, 10);
             }
         });
-    }
-    
-    // User is authenticated
-    try {
-        const user = JSON.parse(currentUser);
-        console.log('✅ Credentials verified');
-        console.log('👤 User:', user.name || user.email);
-        
-        // Check if trial has expired
-        if (user.type === 'trial' && user.trialEndDate) {
-            const trialEnd = new Date(user.trialEndDate);
-            const now = new Date();
-            const daysRemaining = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
-            
-            if (daysRemaining <= 0) {
-                console.warn('⚠️ Trial has expired');
-                alert('Your 14-day trial has expired. Please subscribe to continue using the app.');
-                // Still allow access but show warning
-            } else if (daysRemaining <= 3) {
-                console.warn(`⚠️ Trial expiring in ${daysRemaining} days`);
-                // Show subtle warning
-                setTimeout(() => {
-                    showTrialWarning(daysRemaining);
-                }, 1000);
-            }
-        }
-        
-        // Make user data globally available
-        window.currentUser = user;
-        
-    } catch (error) {
-        console.error('❌ Error parsing user data:', error);
-        console.log('Clearing invalid session...');
-        localStorage.removeItem('current_user');
-        localStorage.removeItem('session_active');
-        window.location.href = 'launch.html';
-        throw new Error('Invalid user data');
     }
     
     // Function to show trial warning
@@ -470,6 +384,35 @@
         }, 10000);
     }
     
-    console.log('✅ Auth Guard complete - access granted');
+    // Function to show trial expired warning
+    function showTrialExpiredWarning() {
+        const warning = document.createElement('div');
+        warning.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            max-width: 350px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        `;
+        warning.innerHTML = `
+            <div style="color: #991b1b; font-weight: 600; margin-bottom: 8px;">
+                ⚠️ Trial Has Expired
+            </div>
+            <div style="color: #991b1b; font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
+                Your 14-day trial has ended. Subscribe to continue using Iterum.
+            </div>
+            <button onclick="this.parentElement.remove()" 
+                    style="padding: 6px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                Dismiss
+            </button>
+        `;
+        document.body.appendChild(warning);
+    }
+    
 })();
-
