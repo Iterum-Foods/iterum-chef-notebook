@@ -131,11 +131,22 @@ class AuthManager {
             // Save session
             await this.saveSession(user);
             
+            // Track login event
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackLogin('email', user.userId);
+            }
+            
             this.log('✅ Sign-in complete');
             return user;
             
         } catch (error) {
             this.error('❌ Sign-in failed:', error);
+            
+            // Track failed login
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackError('login_failed', error.message, 'email');
+            }
+            
             throw error;
         }
     }
@@ -163,6 +174,11 @@ class AuthManager {
             try {
                 await firebaseUser.sendEmailVerification();
                 this.log('✅ Verification email sent to:', email);
+                
+                // Track email verification sent
+                if (window.analyticsTracker) {
+                    window.analyticsTracker.trackEmailVerification(true);
+                }
             } catch (verifyError) {
                 this.log('⚠️ Could not send verification email:', verifyError.message);
                 // Don't fail signup if verification email fails
@@ -190,11 +206,22 @@ class AuthManager {
             // Save session
             await this.saveSession(user);
             
+            // Track signup event
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackSignUp('email', name);
+            }
+            
             this.log('✅ Sign-up complete');
             return user;
             
         } catch (error) {
             this.error('❌ Sign-up failed:', error);
+            
+            // Track failed signup
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackError('signup_failed', error.message, 'email');
+            }
+            
             throw error;
         }
     }
@@ -241,11 +268,22 @@ class AuthManager {
             // Save session
             await this.saveSession(user);
             
+            // Track Google login
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackLogin('google', user.userId);
+            }
+            
             this.log('✅ Google sign-in complete');
             return user;
             
         } catch (error) {
             this.error('❌ Google sign-in failed:', error);
+            
+            // Track failed Google login
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackError('login_failed', error.message, 'google');
+            }
+            
             throw error;
         }
     }
@@ -283,6 +321,12 @@ class AuthManager {
             const firebaseAuth = await this.waitForFirebaseAuth();
             await firebaseAuth.sendPasswordResetEmail(email);
             this.log('✅ Password reset email sent');
+            
+            // Track password reset request
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackPasswordReset(email);
+            }
+            
             return true;
             
         } catch (error) {
@@ -640,6 +684,11 @@ class AuthManager {
         this.log('👋 Signing out...');
         
         try {
+            // Track sign out before clearing session
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackSignOut();
+            }
+            
             // Sign out from Firebase if available
             if (window.firebaseAuth && window.firebaseAuth.isInitialized) {
                 await window.firebaseAuth.signOut();

@@ -29,6 +29,7 @@ import {
     onAuthStateChanged,
     updateProfile
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import analyticsTracker from './analytics-tracker.js';
 
 class FirebaseAuthSystem {
     constructor() {
@@ -68,6 +69,9 @@ class FirebaseAuthSystem {
             if (firebaseConfig.measurementId) {
                 this.analytics = getAnalytics(this.app);
                 console.log('📊 Firebase Analytics initialized');
+                
+                // Initialize Analytics Tracker
+                await analyticsTracker.init(this.app);
             }
             
             // Setup providers

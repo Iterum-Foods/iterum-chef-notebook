@@ -1608,7 +1608,11 @@
                 trialErrorMsg.style.color = '#065f46';
                 trialErrorMsg.textContent = '✅ Trial activated! Welcome ' + name + '! You have 14 days of full access. Redirecting...';
 
-                // Log analytics event
+                // Track analytics event
+                if (window.analyticsTracker) {
+                    window.analyticsTracker.trackTrialStart(name, 14);
+                    window.analyticsTracker.trackSignUp('trial', name);
+                }
                 console.log('📊 Trial User Signed Up:', {
                     name: name,
                     email: email,
@@ -1797,6 +1801,13 @@
                 switchTab('signin');
             }, 100);
         }
+        
+        // Track page view when page loads
+        window.addEventListener('load', function() {
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackPageView('launch', 'Iterum Culinary App - Sign In');
+            }
+        });
     </script>
 </body>
 </html>

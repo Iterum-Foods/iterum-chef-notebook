@@ -3210,6 +3210,13 @@
           }
         }, 100); // Close the setTimeout for updateUserDisplay
       });
+      
+      // Track page view analytics
+      window.addEventListener('load', function() {
+        if (window.analyticsTracker) {
+          window.analyticsTracker.trackPageView('dashboard', 'Iterum Culinary App - Dashboard');
+        }
+      });
     </script>
 </body>
 </html>
