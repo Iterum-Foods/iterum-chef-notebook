@@ -538,11 +538,12 @@
     </style>
 </head>
 <body>
-    <!-- Minimal loading indicator with auto-hide -->
-    <div id="simple-loading" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <!-- Professional loading indicator with auto-hide -->
+    <div id="simple-loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%); z-index: 9999; display: flex; align-items: center; justify-content: center;">
       <div style="text-align: center;">
-        <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #4a7c2c; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px;"></div>
-        <p style="color: #1f2937; font-weight: 600;">Loading...</p>
+        <div style="width: 60px; height: 60px; border: 5px solid #e5e7eb; border-top: 5px solid #4a7c2c; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px;"></div>
+        <p style="color: #1f2937; font-weight: 700; font-size: 18px; letter-spacing: 0.5px;">Loading Iterum...</p>
+        <p style="color: #64748b; font-size: 14px; margin-top: 8px;">Preparing your workspace</p>
       </div>
     </div>
     
@@ -720,13 +721,7 @@
           <span>Initializing authentication...</span>
         </div>
 
-        <!-- Debug Button -->
-        <div style="margin-bottom: 1rem;">
-          <button class="btn btn-outline w-full" onclick="debugAuthSystem()" style="font-size: 12px; padding: 8px;">
-            <span>🐛</span>
-            <span>Debug Auth</span>
-          </button>
-        </div>
+        <!-- Debug button removed for production -->
 
         <!-- Mobile Navigation Items -->
         <a href="index.html" class="header-mobile-nav-item" data-page="index">
@@ -776,19 +771,7 @@
             <span>→</span>
           </a>
           
-          <!-- Test User System Buttons -->
-          <div style="margin-top: 20px;">
-            <button onclick="testUserSystemOnIndex()" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 10px 20px; border-radius: 20px; cursor: pointer; margin: 5px;">
-              🧪 Test User System
-            </button>
-            <!-- Switch User button removed - now available as dropdown in header -->
-                           <button onclick="testProjectSystemOnIndex()" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 10px 20px; border-radius: 20px; cursor: pointer; margin: 5px;">
-                 📋 Test Project System
-               </button>
-               <button onclick="testDataTaggingSystemOnIndex()" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 10px 20px; border-radius: 20px; cursor: pointer; margin: 5px;">
-                 🏷️ Test Data Tagging
-               </button>
-          </div>
+          <!-- Professional Dashboard - Test buttons removed for production -->
         </section>
 
         <!-- Quick Stats -->
@@ -3050,7 +3033,7 @@
         event.preventDefault();
         toggleUserMenu();
         
-        const user = window.authLite ? window.authLite.getCurrentUser() : null;
+        const user = window.authManager ? window.authManager.currentUser : null;
         
         if (!user) {
           alert('Please sign in to view trial status');
@@ -3130,8 +3113,8 @@
         if (confirm('Are you sure you want to sign out?')) {
           toggleUserMenu();
           
-          if (window.authLite) {
-            window.authLite.signOut();
+          if (window.authManager) {
+            window.authManager.signOut();
           } else {
             // Manual sign out
             localStorage.removeItem('current_user');
@@ -3156,16 +3139,17 @@
       document.addEventListener('DOMContentLoaded', function() {
         console.log('✅ DOM loaded');
         
-        // Wait for AuthLite to initialize (it loads synchronously but give it a moment)
+        // Wait for AuthManager to initialize
         setTimeout(() => {
           console.log('🔍 Checking for user data...');
           
           // Update user display
           updateUserDisplay();
           
-          // Check authentication status (from AuthLite)
-          if (window.authLite && window.authLite.isAuthenticated) {
-            console.log('👤 User logged in:', window.authLite.getUserName());
+          // Check authentication status (from AuthManager)
+          if (window.authManager && window.authManager.isAuthenticated) {
+            const user = window.authManager.currentUser;
+            console.log('👤 User logged in:', user.name || user.email);
           
           // Show welcome message
           setTimeout(() => {
@@ -3186,7 +3170,7 @@
             welcome.innerHTML = `
               <div style="color: #065f46; font-weight: 600; margin-bottom: 4px;">✅ Welcome Back!</div>
               <div style="color: #065f46; font-size: 14px;">
-                Signed in as ${window.authLite.getUserName()}
+                Signed in as ${user.name || user.email}
               </div>
               <button onclick="this.parentElement.remove()" style="margin-top: 12px; padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
                 Got it ✓
@@ -3200,15 +3184,10 @@
             }, 3000);
           }, 500);
           } else {
-            console.log('⚠️ No user logged in');
-            // Show login prompt after a delay
-            setTimeout(() => {
-              if (window.authLite) {
-                window.authLite.showLoginPrompt();
-              }
-            }, 2000);
+            console.log('⚠️ No user logged in - Auth guard will handle redirect');
+            // Auth guard will handle showing sign-in modal
           }
-        }, 100); // Close the setTimeout for updateUserDisplay
+        }, 100);
       });
       
       // Track page view analytics
