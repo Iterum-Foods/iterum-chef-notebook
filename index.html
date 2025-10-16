@@ -1803,10 +1803,15 @@
             console.error('❌ User tab or dropdown not found');
           }
         } else {
-          console.error('❌ AuthManager not loaded, retrying in 100ms...');
-          setTimeout(initializeUserSystem, 100);
+          // Don't retry - auth system is disabled
+          console.warn('⚠️ AuthManager not loaded - Auth system is disabled for debugging');
+          console.log('✅ Page will continue without authentication');
+          console.log('💡 This is OK - auth is temporarily disabled to fix freeze issue');
         }
       }
+      
+      // Reset init attempts counter
+      let initAttempts = 0;
       
       // Try to initialize with a small delay to ensure all scripts are loaded
       if (document.readyState === 'loading') {
@@ -2902,7 +2907,8 @@
         // This function is kept for backwards compatibility but redirects to new system
         
         if (!window.authManager) {
-          console.warn('⚠️ AuthManager not available yet');
+          console.warn('⚠️ AuthManager not available - Auth system is disabled for debugging');
+          console.log('✅ Page will continue to load without authentication');
           return;
         }
         
@@ -3137,6 +3143,8 @@
       // When DOM is ready, initialize
       document.addEventListener('DOMContentLoaded', function() {
         console.log('✅ DOM loaded');
+        console.log('🚨 NOTE: Auth system is DISABLED for debugging');
+        console.log('💡 Page will load without authentication requirements');
         
         // Wait for AuthManager to initialize
         setTimeout(() => {
