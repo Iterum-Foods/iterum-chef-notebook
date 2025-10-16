@@ -673,20 +673,20 @@
             </div>
             
             <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="alert('Profile editing coming soon')">
+              <div class="header-user-dropdown-item" onclick="showProfileEditModal(); toggleUserDropdown();">
                 <span>👤</span>
                 <span>Edit Profile</span>
               </div>
-              <div class="header-user-dropdown-item" onclick="window.location.href='launch.html'">
-                <span>➕</span>
-                <span>Create Profile</span>
+              <div class="header-user-dropdown-item" onclick="showForgotPasswordModal(); toggleUserDropdown();">
+                <span>🔑</span>
+                <span>Change Password</span>
               </div>
             </div>
             
             <div class="header-user-dropdown-divider"></div>
             
             <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="alert('Settings coming soon!')">
+              <div class="header-user-dropdown-item" onclick="alert('Additional settings coming soon!')">
                 <span>⚙️</span>
                 <span>Settings</span>
               </div>
@@ -1964,6 +1964,12 @@
     
     <!-- Load Header User Display (New Auth System) -->
     <script src="assets/js/header-user-display.js"></script>
+    
+    <!-- Load Profile Editor -->
+    <script src="assets/js/profile-editor.js"></script>
+    
+    <!-- Load Email Verification Banner -->
+    <script src="assets/js/email-verification-banner.js"></script>
     
     <!-- Load Main Application -->
     <script src="assets/js/main.js"></script>

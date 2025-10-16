@@ -159,6 +159,15 @@ class AuthManager {
             
             this.log('✅ Firebase account created successfully');
             
+            // Send email verification
+            try {
+                await firebaseUser.sendEmailVerification();
+                this.log('✅ Verification email sent to:', email);
+            } catch (verifyError) {
+                this.log('⚠️ Could not send verification email:', verifyError.message);
+                // Don't fail signup if verification email fails
+            }
+            
             // Get Firebase ID token
             const idToken = await firebaseUser.getIdToken();
             this.firebaseToken = idToken;
@@ -237,6 +246,206 @@ class AuthManager {
             
         } catch (error) {
             this.error('❌ Google sign-in failed:', error);
+            throw error;
+        }
+    }
+    
+    /**
+     * Send email verification
+     */
+    async sendEmailVerification() {
+        this.log('📧 Sending email verification...');
+        
+        try {
+            const firebaseAuth = await this.waitForFirebaseAuth();
+            
+            if (!firebaseAuth.currentUser) {
+                throw new Error('No user logged in');
+            }
+            
+            await firebaseAuth.currentUser.sendEmailVerification();
+            this.log('✅ Email verification sent');
+            return true;
+            
+        } catch (error) {
+            this.error('❌ Failed to send verification email:', error);
+            throw error;
+        }
+    }
+    
+    /**
+     * Send password reset email
+     */
+    async sendPasswordResetEmail(email) {
+        this.log('🔑 Sending password reset email to:', email);
+        
+        try {
+            const firebaseAuth = await this.waitForFirebaseAuth();
+            await firebaseAuth.sendPasswordResetEmail(email);
+            this.log('✅ Password reset email sent');
+            return true;
+            
+        } catch (error) {
+            this.error('❌ Failed to send password reset email:', error);
+            throw error;
+        }
+    }
+    
+    /**
+     * Update user profile
+     */
+    async updateProfile(updates) {
+        this.log('📝 Updating user profile...');
+        
+        try {
+            const firebaseAuth = await this.waitForFirebaseAuth();
+            
+            if (!firebaseAuth.currentUser) {
+                throw new Error('No user logged in');
+            }
+            
+            // Update Firebase profile
+            if (updates.displayName || updates.photoURL) {
+                await firebaseAuth.currentUser.updateProfile({
+                    displayName: updates.displayName,
+                    photoURL: updates.photoURL
+                });
+                this.log('✅ Firebase profile updated');
+            }
+            
+            // Update local user data
+            if (this.currentUser) {
+                if (updates.displayName) {
+                    this.currentUser.name = updates.displayName;
+                }
+                if (updates.photoURL) {
+                    this.currentUser.photoURL = updates.photoURL;
+                }
+                
+                // Save updated session
+                await this.saveSession(this.currentUser);
+            }
+            
+            // Sync to backend
+            const idToken = await firebaseAuth.currentUser.getIdToken();
+            await this.syncWithBackend(this.currentUser, idToken);
+            
+            this.log('✅ Profile updated successfully');
+            this.notifyListeners('profile_updated', this.currentUser);
+            
+            return this.currentUser;
+            
+        } catch (error) {
+            this.error('❌ Profile update failed:', error);
+            throw error;
+        }
+    }
+    
+    /**
+     * Update email address
+     */
+    async updateEmail(newEmail, password) {
+        this.log('📧 Updating email to:', newEmail);
+        
+        try {
+            const firebaseAuth = await this.waitForFirebaseAuth();
+            
+            if (!firebaseAuth.currentUser) {
+                throw new Error('No user logged in');
+            }
+            
+            // Re-authenticate first (required by Firebase)
+            const currentEmail = firebaseAuth.currentUser.email;
+            await firebaseAuth.signInWithEmail(currentEmail, password);
+            
+            // Update email
+            await firebaseAuth.currentUser.updateEmail(newEmail);
+            
+            // Send verification to new email
+            await firebaseAuth.currentUser.sendEmailVerification();
+            
+            // Update local data
+            if (this.currentUser) {
+                this.currentUser.email = newEmail;
+                await this.saveSession(this.currentUser);
+            }
+            
+            // Sync to backend
+            const idToken = await firebaseAuth.currentUser.getIdToken();
+            await this.syncWithBackend(this.currentUser, idToken);
+            
+            this.log('✅ Email updated successfully');
+            this.notifyListeners('email_updated', newEmail);
+            
+            return true;
+            
+        } catch (error) {
+            this.error('❌ Email update failed:', error);
+            throw error;
+        }
+    }
+    
+    /**
+     * Update password
+     */
+    async updatePassword(currentPassword, newPassword) {
+        this.log('🔑 Updating password...');
+        
+        try {
+            const firebaseAuth = await this.waitForFirebaseAuth();
+            
+            if (!firebaseAuth.currentUser) {
+                throw new Error('No user logged in');
+            }
+            
+            // Re-authenticate first (required by Firebase)
+            const email = firebaseAuth.currentUser.email;
+            await firebaseAuth.signInWithEmail(email, currentPassword);
+            
+            // Update password
+            await firebaseAuth.currentUser.updatePassword(newPassword);
+            
+            this.log('✅ Password updated successfully');
+            this.notifyListeners('password_updated');
+            
+            return true;
+            
+        } catch (error) {
+            this.error('❌ Password update failed:', error);
+            throw error;
+        }
+    }
+    
+    /**
+     * Delete account
+     */
+    async deleteAccount(password) {
+        this.log('🗑️ Deleting account...');
+        
+        try {
+            const firebaseAuth = await this.waitForFirebaseAuth();
+            
+            if (!firebaseAuth.currentUser) {
+                throw new Error('No user logged in');
+            }
+            
+            // Re-authenticate first (required by Firebase)
+            const email = firebaseAuth.currentUser.email;
+            await firebaseAuth.signInWithEmail(email, password);
+            
+            // Delete from Firebase
+            await firebaseAuth.currentUser.delete();
+            
+            // Clear local session
+            this.clearSession();
+            
+            this.log('✅ Account deleted successfully');
+            this.notifyListeners('account_deleted');
+            
+            return true;
+            
+        } catch (error) {
+            this.error('❌ Account deletion failed:', error);
             throw error;
         }
     }

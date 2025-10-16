@@ -244,7 +244,7 @@
             
             console.log('✅ Sign-up successful:', user.email);
             
-            showSuccess('Account created successfully! Redirecting...');
+            showSuccess('Account created! Please check your email for verification link. Redirecting...');
             
             // Redirect after delay
             setTimeout(() => {
@@ -562,6 +562,145 @@
             switchTab('signup');
         }, 500);
     }
+    
+    // Show forgot password modal
+    function showForgotPasswordModal(event) {
+        if (event) event.preventDefault();
+        
+        const modal = document.createElement('div');
+        modal.id = 'forgot-password-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        `;
+        
+        modal.innerHTML = `
+            <div style="background: white; border-radius: 20px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideIn 0.3s ease;">
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 48px; margin-bottom: 12px;">🔑</div>
+                    <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #1f2937;">Reset Password</h2>
+                    <p style="color: #6b7280; font-size: 16px;">Enter your email and we'll send you a reset link</p>
+                </div>
+                
+                <form id="forgot-password-form" onsubmit="handleForgotPasswordSubmit(event)">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 6px; font-size: 14px;">Email Address</label>
+                        <input type="email" id="forgot-email" required 
+                               placeholder="your@email.com"
+                               style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 16px;">
+                        <div id="forgot-email-error" style="color: #ef4444; font-size: 14px; margin-top: 6px; display: none;"></div>
+                    </div>
+                    
+                    <button type="submit" id="forgot-submit-btn" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 12px;">
+                        <span id="forgot-submit-text">📧 Send Reset Link</span>
+                        <div id="forgot-spinner" class="loading-spinner" style="display: none; margin: 0 auto;"></div>
+                    </button>
+                    
+                    <button type="button" onclick="closeForgotPasswordModal()" 
+                            style="width: 100%; padding: 12px; background: white; color: #6b7280; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                        Cancel
+                    </button>
+                </form>
+                
+                <div id="forgot-message" style="margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 14px; display: none;"></div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Focus email input
+        setTimeout(() => {
+            document.getElementById('forgot-email')?.focus();
+        }, 300);
+        
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeForgotPasswordModal();
+            }
+        });
+    }
+    
+    // Close forgot password modal
+    function closeForgotPasswordModal() {
+        const modal = document.getElementById('forgot-password-modal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+    
+    // Handle forgot password submission
+    async function handleForgotPasswordSubmit(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById('forgot-email').value.trim();
+        const submitBtn = document.getElementById('forgot-submit-btn');
+        const submitText = document.getElementById('forgot-submit-text');
+        const spinner = document.getElementById('forgot-spinner');
+        const messageDiv = document.getElementById('forgot-message');
+        
+        if (!email) {
+            messageDiv.style.display = 'block';
+            messageDiv.style.background = '#fee2e2';
+            messageDiv.style.color = '#991b1b';
+            messageDiv.textContent = 'Please enter your email address';
+            return;
+        }
+        
+        // Show loading
+        submitBtn.disabled = true;
+        submitText.style.display = 'none';
+        spinner.style.display = 'block';
+        messageDiv.style.display = 'none';
+        
+        try {
+            await window.authManager.sendPasswordResetEmail(email);
+            
+            // Show success
+            messageDiv.style.display = 'block';
+            messageDiv.style.background = '#d1fae5';
+            messageDiv.style.color = '#065f46';
+            messageDiv.textContent = '✅ Password reset email sent! Check your inbox (and spam folder).';
+            
+            // Close modal after delay
+            setTimeout(() => {
+                closeForgotPasswordModal();
+            }, 3000);
+            
+        } catch (error) {
+            console.error('Password reset error:', error);
+            
+            let errorMessage = 'Failed to send reset email. Please try again.';
+            if (error.message.includes('user-not-found')) {
+                errorMessage = 'No account found with this email address.';
+            } else if (error.message.includes('invalid-email')) {
+                errorMessage = 'Invalid email address.';
+            }
+            
+            messageDiv.style.display = 'block';
+            messageDiv.style.background = '#fee2e2';
+            messageDiv.style.color = '#991b1b';
+            messageDiv.textContent = '❌ ' + errorMessage;
+            
+            submitBtn.disabled = false;
+            submitText.style.display = 'block';
+            spinner.style.display = 'none';
+        }
+    }
+    
+    // Export functions globally
+    window.showForgotPasswordModal = showForgotPasswordModal;
+    window.closeForgotPasswordModal = closeForgotPasswordModal;
+    window.handleForgotPasswordSubmit = handleForgotPasswordSubmit;
     
     console.log('✅ Auth UI script loaded');
     
