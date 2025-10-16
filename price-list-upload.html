@@ -14,6 +14,16 @@
     <script src="assets/js/header-user-display.js"></script>
     <script src="assets/js/profile-editor.js"></script>
     
+    <!-- External Libraries for File Parsing -->
+    <!-- SheetJS for Excel files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- PDF.js for PDF files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -424,12 +434,19 @@
             <div class="upload-zone" id="uploadZone">
                 <div class="upload-icon">📄</div>
                 <div class="upload-title">Drag & Drop or Click to Upload</div>
-                <div class="upload-subtitle">Supports CSV, Excel (.xlsx, .xls), and text files</div>
+                <div class="upload-subtitle">Supports CSV, Excel (.xlsx, .xls), PDF, and text files</div>
                 <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
                     <span>📁</span>
                     <span>Choose File</span>
                 </button>
-                <input type="file" id="fileInput" class="file-input" accept=".csv,.xlsx,.xls,.txt" onchange="handleFileSelect(event)">
+                <input type="file" id="fileInput" class="file-input" accept=".csv,.xlsx,.xls,.pdf,.txt" onchange="handleFileSelect(event)">
+            </div>
+            
+            <div style="margin-top: 20px; text-align: center; color: #64748b; font-size: 0.875rem;">
+                <strong>Supported:</strong> 
+                <span style="background: #dcfce7; padding: 4px 8px; border-radius: 6px; margin: 0 4px;">📊 Excel</span>
+                <span style="background: #fef3c7; padding: 4px 8px; border-radius: 6px; margin: 0 4px;">📄 PDF</span>
+                <span style="background: #dbeafe; padding: 4px 8px; border-radius: 6px; margin: 0 4px;">📋 CSV</span>
             </div>
 
             <div class="format-guide">
@@ -598,26 +615,162 @@
             document.getElementById('loadingState').classList.add('active');
             document.querySelector('.upload-section').style.display = 'none';
 
+            const extension = file.name.split('.').pop().toLowerCase();
+
+            if (extension === 'csv' || extension === 'txt') {
+                // Parse CSV
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    setTimeout(() => parseCSV(e.target.result), 500);
+                };
+                reader.readAsText(file);
+            } 
+            else if (extension === 'xlsx' || extension === 'xls') {
+                // Parse Excel
+                parseExcel(file);
+            }
+            else if (extension === 'pdf') {
+                // Parse PDF
+                parsePDF(file);
+            }
+            else {
+                alert('❌ Unsupported file format. Please use CSV, Excel, or PDF.');
+                resetUpload();
+            }
+        }
+
+        // Parse Excel files
+        function parseExcel(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const content = e.target.result;
-                
-                setTimeout(() => {
-                    if (file.name.endsWith('.csv') || file.name.endsWith('.txt')) {
-                        parseCSV(content);
-                    } else {
-                        // For Excel files, we'd need a library like SheetJS
-                        alert('Excel support coming soon! Please use CSV for now.');
-                        resetUpload();
-                    }
-                }, 1000);
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get first sheet
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    
+                    // Convert to CSV format
+                    const csvContent = XLSX.utils.sheet_to_csv(firstSheet);
+                    
+                    console.log('✅ Excel parsed successfully');
+                    setTimeout(() => parseCSV(csvContent), 500);
+                } catch (error) {
+                    console.error('❌ Error parsing Excel:', error);
+                    alert('Error parsing Excel file: ' + error.message);
+                    resetUpload();
+                }
             };
+            reader.readAsArrayBuffer(file);
+        }
 
-            if (file.name.endsWith('.csv') || file.name.endsWith('.txt')) {
-                reader.readAsText(file);
-            } else {
-                reader.readAsBinaryString(file);
+        // Parse PDF files
+        async function parsePDF(file) {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                
+                let fullText = '';
+                
+                // Extract text from all pages
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += pageText + '\n';
+                }
+                
+                console.log('✅ PDF text extracted');
+                
+                // Try to parse as structured data
+                parsePDFText(fullText);
+                
+            } catch (error) {
+                console.error('❌ Error parsing PDF:', error);
+                alert('Error parsing PDF file: ' + error.message);
+                resetUpload();
             }
+        }
+
+        // Parse extracted PDF text into price list
+        function parsePDFText(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            const data = [];
+            
+            // Try to detect price patterns
+            // Common patterns: "Item Name $12.99" or "Item Name 5lb $12.99"
+            const pricePattern = /\$?\d+\.?\d*/;
+            
+            for (const line of lines) {
+                // Skip obvious header lines
+                if (line.toLowerCase().includes('total') || 
+                    line.toLowerCase().includes('invoice') ||
+                    line.toLowerCase().includes('page') ||
+                    line.length < 5) {
+                    continue;
+                }
+                
+                // Try to extract price
+                const priceMatch = line.match(/\$?(\d+\.\d{2})/);
+                if (!priceMatch) continue;
+                
+                const price = parseFloat(priceMatch[1]);
+                
+                // Remove price from line to get item name
+                let itemName = line.replace(priceMatch[0], '').trim();
+                
+                // Try to extract unit/size (5lb, 1gal, etc.)
+                const unitMatch = itemName.match(/(\d+)\s*(lb|lbs|kg|g|oz|gal|qt|ea|each|ct|count)/i);
+                let unitSize = '';
+                let unit = 'ea';
+                
+                if (unitMatch) {
+                    unitSize = unitMatch[1];
+                    unit = unitMatch[2].toLowerCase().replace('lbs', 'lb');
+                    itemName = itemName.replace(unitMatch[0], '').trim();
+                }
+                
+                // Try to extract SKU/code
+                const skuMatch = itemName.match(/\b([A-Z]{2,4}-?\d{2,6})\b/);
+                let sku = '';
+                if (skuMatch) {
+                    sku = skuMatch[1];
+                    itemName = itemName.replace(skuMatch[0], '').trim();
+                }
+                
+                if (itemName && price > 0) {
+                    const item = {
+                        itemName: itemName,
+                        sku: sku,
+                        unitSize: unitSize,
+                        unit: unit,
+                        price: price,
+                        matched: false,
+                        matchedIngredient: null,
+                        confidence: 0
+                    };
+
+                    // Try to auto-match
+                    const match = findBestMatch(item.itemName);
+                    if (match) {
+                        item.matched = true;
+                        item.matchedIngredient = match.ingredient;
+                        item.confidence = match.confidence;
+                    }
+
+                    data.push(item);
+                }
+            }
+
+            if (data.length === 0) {
+                alert('⚠️ Could not find any price data in the PDF. Please check the format or try a different file.');
+                resetUpload();
+                return;
+            }
+
+            priceListData = data;
+            console.log('✅ Parsed ' + data.length + ' items from PDF');
+            showMatches();
         }
 
         // Parse CSV content
