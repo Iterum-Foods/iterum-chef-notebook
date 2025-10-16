@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iterum R&D Chef Notebook</title>
     
-    <!-- Load Auth System BEFORE Guard -->
+    <!-- Load Auth System (Auth Guard moved to end of body) -->
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/auth-manager.js"></script>
     <script src="assets/js/auth-api-helper.js"></script>
     <script src="assets/js/auth-diagnostics.js"></script>
-    
-    <!-- Authentication Guard - Require Login -->
-    <script src="assets/js/auth_guard.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3197,5 +3194,8 @@
         }
       });
     </script>
+    
+    <!-- Load Auth Guard AFTER page content - Non-blocking -->
+    <script src="assets/js/auth_guard.js"></script>
 </body>
 </html>

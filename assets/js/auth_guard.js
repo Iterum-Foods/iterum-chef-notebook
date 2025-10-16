@@ -2,6 +2,7 @@
  * Authentication Guard (v2.0)
  * Protects pages and ensures user is logged in
  * Uses centralized AuthManager for bulletproof authentication
+ * NON-BLOCKING - Allows page to load while checking auth
  */
 
 (async function() {
@@ -32,12 +33,21 @@
     
     console.log('🔒 Protected page - authentication required:', currentPage);
     
-    // Wait for AuthManager to be ready
+    // CRITICAL: Remove loading screen immediately to let page load
+    setTimeout(() => {
+        const loadingIndicator = document.getElementById('simple-loading');
+        if (loadingIndicator) {
+            loadingIndicator.remove();
+            console.log('✅ Loading screen removed by auth guard');
+        }
+    }, 500);
+    
+    // Wait for AuthManager to be ready (non-blocking)
     let authManager = window.authManager;
     if (!authManager) {
         console.log('⏳ Waiting for AuthManager...');
         let attempts = 0;
-        while (!window.authManager && attempts < 50) {
+        while (!window.authManager && attempts < 30) {
             await new Promise(resolve => setTimeout(resolve, 100));
             attempts++;
         }
@@ -45,38 +55,31 @@
     }
     
     if (!authManager) {
-        console.error('❌ AuthManager not available - showing fallback sign-in');
+        console.error('❌ AuthManager not available after 3 seconds');
+        console.log('⚠️ Allowing page to load anyway - will show sign-in modal');
         
-        // Remove loading indicator first
-        const loadingIndicator = document.getElementById('simple-loading');
-        if (loadingIndicator) {
-            loadingIndicator.remove();
-        }
-        
-        showSignInModal();
-        return; // Don't throw error
+        // Wait a moment for page to fully load
+        setTimeout(() => {
+            showSignInModal();
+        }, 1000);
+        return; // Don't block page load
     }
     
     console.log('✅ AuthManager available');
     
-    // Check authentication
+    // Check authentication (non-blocking)
     const { authenticated, user } = await authManager.checkAuth();
     
     if (!authenticated) {
-        console.warn('🚫 NOT AUTHENTICATED - Showing sign-in modal');
+        console.warn('🚫 NOT AUTHENTICATED - Will show sign-in modal');
         console.log('  Attempted to access:', currentPage);
         
-        // Remove loading indicator first
-        const loadingIndicator = document.getElementById('simple-loading');
-        if (loadingIndicator) {
-            loadingIndicator.remove();
-        }
+        // Wait a moment for page to fully load before showing modal
+        setTimeout(() => {
+            showSignInModal();
+        }, 500);
         
-        // Show sign-in modal
-        showSignInModal();
-        
-        // Don't throw error - just return to prevent further execution
-        return;
+        return; // Don't block page load
     }
     
     // User is authenticated
