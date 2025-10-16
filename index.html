@@ -3121,16 +3121,48 @@
     <script>
       console.log('🚀 Iterum App Loading...');
       
-      // Show page immediately
-      document.body.style.display = 'block';
+      // Global error handler - prevent loading screen from getting stuck
+      window.addEventListener('error', function(e) {
+        console.error('❌ Global error caught:', e.message);
+        // Force show page even if there's an error
+        removeLoadingIndicator();
+      });
       
-      // Remove loading indicator
-      const loadingIndicator = document.getElementById('simple-loading');
-      if (loadingIndicator) {
-        loadingIndicator.remove();
+      // Force remove loading indicator immediately - prevent stuck loading screen
+      function removeLoadingIndicator() {
+        try {
+          const loadingIndicator = document.getElementById('simple-loading');
+          if (loadingIndicator) {
+            loadingIndicator.style.display = 'none';
+            loadingIndicator.remove();
+            console.log('✅ Loading indicator removed');
+          }
+          document.body.style.display = 'block';
+          document.body.style.overflow = 'auto';
+          document.body.style.pointerEvents = 'auto';
+          console.log('✅ Page visible and interactive');
+        } catch (error) {
+          console.error('Error removing loading indicator:', error);
+        }
       }
       
-      console.log('✅ Page visible');
+      // Remove immediately
+      removeLoadingIndicator();
+      
+      // Also remove after delays as failsafe (triple redundancy)
+      setTimeout(removeLoadingIndicator, 100);
+      setTimeout(removeLoadingIndicator, 500);
+      setTimeout(removeLoadingIndicator, 1000);
+      setTimeout(removeLoadingIndicator, 2000); // Extra failsafe
+      
+      // Emergency: If still visible after 3 seconds, force remove
+      setTimeout(() => {
+        const loading = document.getElementById('simple-loading');
+        if (loading && loading.style.display !== 'none') {
+          console.warn('⚠️ EMERGENCY: Force removing stuck loading screen');
+          removeLoadingIndicator();
+        }
+      }, 3000);
       
       // User Menu Functions
       function toggleUserMenu() {
@@ -3144,18 +3176,21 @@
 
       function updateUserDisplay() {
         console.log('🔄 Updating user display...');
-        console.log('AuthLite available?', !!window.authLite);
+        console.log('AuthManager available?', !!window.authManager);
         
-        // Refresh user data from localStorage in case it was just saved
-        if (window.authLite) {
-          window.authLite.refreshUserData();
+        // User display is now handled by header-user-display.js
+        // This function is kept for backwards compatibility but redirects to new system
+        
+        if (!window.authManager) {
+          console.warn('⚠️ AuthManager not available yet');
+          return;
         }
         
-        console.log('User authenticated?', window.authLite ? window.authLite.isAuthenticated : 'N/A');
+        console.log('User authenticated?', window.authManager.isAuthenticated);
         
-        if (window.authLite && window.authLite.isAuthenticated) {
-          const user = window.authLite.getCurrentUser();
-          const userName = window.authLite.getUserName();
+        if (window.authManager && window.authManager.isAuthenticated) {
+          const user = window.authManager.currentUser;
+          const userName = user.name || user.email.split('@')[0];
           const userEmail = user.email || 'No email';
           
           console.log('👤 Updating display for:', userName, userEmail);
@@ -3207,7 +3242,7 @@
         event.preventDefault();
         toggleUserMenu();
         
-        const user = window.authLite ? window.authLite.getCurrentUser() : null;
+        const user = window.authManager ? window.authManager.currentUser : null;
         
         if (!user) {
           alert('Please sign in to access account settings');
