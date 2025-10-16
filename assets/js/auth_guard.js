@@ -46,8 +46,15 @@
     
     if (!authManager) {
         console.error('❌ AuthManager not available - showing fallback sign-in');
+        
+        // Remove loading indicator first
+        const loadingIndicator = document.getElementById('simple-loading');
+        if (loadingIndicator) {
+            loadingIndicator.remove();
+        }
+        
         showSignInModal();
-        throw new Error('AuthManager not available');
+        return; // Don't throw error
     }
     
     console.log('✅ AuthManager available');
@@ -59,11 +66,17 @@
         console.warn('🚫 NOT AUTHENTICATED - Showing sign-in modal');
         console.log('  Attempted to access:', currentPage);
         
+        // Remove loading indicator first
+        const loadingIndicator = document.getElementById('simple-loading');
+        if (loadingIndicator) {
+            loadingIndicator.remove();
+        }
+        
         // Show sign-in modal
         showSignInModal();
         
-        // Prevent page from loading
-        throw new Error('Authentication required');
+        // Don't throw error - just return to prevent further execution
+        return;
     }
     
     // User is authenticated
