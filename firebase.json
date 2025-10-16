@@ -34,8 +34,8 @@
     ],
     "rewrites": [
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "/",
+        "destination": "/launch.html"
       }
     ],
     "headers": [
