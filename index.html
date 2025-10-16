@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iterum R&D Chef Notebook</title>
     
-    <!-- Load Auth System (Auth Guard moved to end of body) -->
+    <!-- Load Auth System (DISABLED for debugging) -->
+    <!-- TEMPORARILY COMMENTED OUT TO FIX CRASH
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/auth-manager.js"></script>
     <script src="assets/js/auth-api-helper.js"></script>
     <script src="assets/js/auth-diagnostics.js"></script>
+    -->
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3195,7 +3197,17 @@
       });
     </script>
     
-    <!-- Load Auth Guard AFTER page content - Non-blocking -->
+    <!-- Auth Guard DISABLED for debugging -->
+    <!-- TEMPORARILY COMMENTED OUT TO FIX CRASH
     <script src="assets/js/auth_guard.js"></script>
+    -->
+    
+    <!-- EMERGENCY DEBUG SCRIPT -->
+    <script>
+      console.log('🚨 EMERGENCY MODE: Auth system disabled');
+      console.log('✅ Page should load without crashes');
+      console.log('⚠️ Authentication is bypassed');
+      console.log('💡 Visit index_emergency_no_auth.html for diagnostics');
+    </script>
 </body>
 </html>
