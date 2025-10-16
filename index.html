@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iterum R&D Chef Notebook</title>
     
-    <!-- Load Auth System (DISABLED for debugging) -->
-    <!-- TEMPORARILY COMMENTED OUT TO FIX CRASH
+    <!-- Load Auth System -->
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/auth-manager.js"></script>
     <script src="assets/js/auth-api-helper.js"></script>
     <script src="assets/js/auth-diagnostics.js"></script>
-    -->
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -609,11 +607,11 @@
           <!-- Compact Project Selector -->
           <div class="header-project-selector-container">
             <div class="project-selector-display" onclick="window.showProjectSelectionDropdown()">
-              <span class="project-selector-icon">📋</span>
-              <span class="project-selector-name" data-project-name>Master Project</span>
-              <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
+                <span class="project-selector-icon">📋</span>
+                <span class="project-selector-name" data-project-name>Master Project</span>
+                <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
             </div>
           </div>
 
@@ -1803,10 +1801,9 @@
             console.error('❌ User tab or dropdown not found');
           }
         } else {
-          // Don't retry - auth system is disabled
-          console.warn('⚠️ AuthManager not loaded - Auth system is disabled for debugging');
-          console.log('✅ Page will continue without authentication');
-          console.log('💡 This is OK - auth is temporarily disabled to fix freeze issue');
+          // Don't create infinite loop - just log and continue
+          console.warn('⚠️ AuthManager not loaded yet after initial check');
+          console.log('✅ Page will continue - auth_guard.js will handle authentication');
         }
       }
       
@@ -2856,10 +2853,10 @@
       // Force remove loading indicator immediately - prevent stuck loading screen
       function removeLoadingIndicator() {
         try {
-          const loadingIndicator = document.getElementById('simple-loading');
-          if (loadingIndicator) {
+      const loadingIndicator = document.getElementById('simple-loading');
+      if (loadingIndicator) {
             loadingIndicator.style.display = 'none';
-            loadingIndicator.remove();
+        loadingIndicator.remove();
             console.log('✅ Loading indicator removed');
           }
           document.body.style.display = 'block';
@@ -2907,8 +2904,7 @@
         // This function is kept for backwards compatibility but redirects to new system
         
         if (!window.authManager) {
-          console.warn('⚠️ AuthManager not available - Auth system is disabled for debugging');
-          console.log('✅ Page will continue to load without authentication');
+          console.warn('⚠️ AuthManager not available yet - may still be loading');
           return;
         }
         
@@ -3143,8 +3139,7 @@
       // When DOM is ready, initialize
       document.addEventListener('DOMContentLoaded', function() {
         console.log('✅ DOM loaded');
-        console.log('🚨 NOTE: Auth system is DISABLED for debugging');
-        console.log('💡 Page will load without authentication requirements');
+        console.log('🔐 Auth system is enabled and loading...');
         
         // Wait for AuthManager to initialize
         setTimeout(() => {
@@ -3205,17 +3200,7 @@
       });
     </script>
     
-    <!-- Auth Guard DISABLED for debugging -->
-    <!-- TEMPORARILY COMMENTED OUT TO FIX CRASH
+    <!-- Load Auth Guard - Non-blocking, placed at end of body -->
     <script src="assets/js/auth_guard.js"></script>
-    -->
-    
-    <!-- EMERGENCY DEBUG SCRIPT -->
-    <script>
-      console.log('🚨 EMERGENCY MODE: Auth system disabled');
-      console.log('✅ Page should load without crashes');
-      console.log('⚠️ Authentication is bypassed');
-      console.log('💡 Visit index_emergency_no_auth.html for diagnostics');
-    </script>
 </body>
 </html>
