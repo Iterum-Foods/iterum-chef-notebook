@@ -10,7 +10,6 @@
     <script src="assets/js/auth-manager.js"></script>
     <script src="assets/js/auth-api-helper.js"></script>
     <script src="assets/js/auth-diagnostics.js"></script>
-    <script src="assets/js/auth_guard.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <!-- Tailwind CSS - Built from source -->
@@ -817,48 +816,9 @@
         }
     </style>
     
-    <!-- Essential Scripts -->
-    <!-- Load Security Utils First -->
-    <script src="assets/js/security-utils.js"></script>
-    <script src="assets/js/csp-config.js"></script>
-    <script src="assets/js/input-validation.js"></script>
-    <script src="assets/js/api-security.js"></script>
-    
-    <!-- Load Firebase Configuration -->
-    <script src="assets/js/firebase-config.js"></script>
-    
-    <!-- Load Firebase Authentication -->
-    <script type="module" src="assets/js/firebase-auth.js"></script>
-    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
-
-    <!-- Load Unified Authentication System -->
-    <script src="assets/js/unified_auth_system.js"></script>
-    
-    <!-- Load Page Protection System -->
-    <script src="assets/js/page-protection.js"></script>
-    
-    <!-- Load Quick Dish Creator -->
-    <script src="assets/js/quick-dish-creator.js"></script>
-    
-    <!-- Load Menu Creation Wizard -->
-    <script src="assets/js/menu-creation-wizard.js"></script>
-    
-    <!-- Load Header User Synchronization -->
-    <script src="assets/js/header_user_sync.js"></script>
-    
-    <!-- Load Header Sync Loader (ensures sync on all pages) -->
-    <script src="assets/js/header_sync_loader.js"></script>
-    
-    <script src="assets/js/startup-loading-config.js"></script>
-    <!-- Enhanced User Management now handled by Firebase Auth -->
-    <script src="assets/js/project-management-system.js"></script>
-    <script src="assets/js/error_handler.js"></script>
-    <!-- PDF.js for PDF processing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <!-- Mammoth.js for Word document processing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <!-- Menu Manager -->
-    <script src="assets/js/menuManager.js"></script>
+    <!-- CLEANED UP - Only essential scripts, deferred to prevent freezing -->
+    <script defer src="assets/js/project-management-system.js"></script>
+    <script defer src="assets/js/menuManager.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Emergency Loading Fix Button -->
@@ -2622,18 +2582,12 @@
       });
     </script>
     
-    <!-- Load Firebase Modules -->
-    <script type="module" src="assets/js/firebase-auth.js"></script>
-    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
-    <script type="module" src="assets/js/firestore-sync.js"></script>
-    
-    <!-- Load User Display -->
-    <script src="assets/js/header-user-display.js"></script>
-    
-    <!-- Load Profile Editor -->
-    <script src="assets/js/profile-editor.js"></script>
-    
-    <!-- Load Email Verification Banner -->
-    <script src="assets/js/email-verification-banner.js"></script>
+    <!-- Load Auth System Scripts - DEFERRED to prevent freezing -->
+    <script type="module" defer src="assets/js/firebase-auth.js"></script>
+    <script type="module" defer src="assets/js/firestore-sync.js"></script>
+    <script defer src="assets/js/header-user-display.js"></script>
+    <script defer src="assets/js/profile-editor.js"></script>
+    <script defer src="assets/js/project-ui-manager.js"></script>
+    <script defer src="assets/js/auth_guard.js"></script>
 </body>
 </html> 
