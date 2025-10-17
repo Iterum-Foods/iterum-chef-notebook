@@ -1,9 +1,7 @@
 name: Deploy Iterum Culinary App
 
+# TEMPORARILY DISABLED - Manual deployment with 'firebase deploy' works perfectly
 on:
-  push:
-    branches: [ main ]
-    tags: [ 'v*' ]
   workflow_dispatch:
     inputs:
       environment:
