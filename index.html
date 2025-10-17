@@ -620,14 +620,14 @@
 
         <!-- Right Side - Compact User Section -->
         <div class="header-user-section">
-          <!-- Compact Project Selector -->
+          <!-- Modern Project Selector with Dropdown -->
           <div class="header-project-selector-container">
-            <div class="project-selector-display" onclick="window.showProjectSelectionDropdown()">
-                <span class="project-selector-icon">📋</span>
-                <span class="project-selector-name" data-project-name>Master Project</span>
-                <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
+            <div class="project-selector-display" onclick="window.projectUIManager?.showProjectDropdown()" title="Click to switch projects or create new">
+              <span class="project-selector-icon">📋</span>
+              <span class="project-selector-name" data-project-name>Master Project</span>
+              <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
             </div>
           </div>
 
@@ -714,7 +714,7 @@
         
         <!-- New Project Button for Mobile -->
         <div style="margin-bottom: 1rem;">
-          <button class="btn btn-primary w-full" onclick="window.projectManager.showProjectModal()">
+          <button class="btn btn-primary w-full" onclick="window.projectUIManager?.showManageModal()">
             <span>📋</span>
             <span>Manage Projects</span>
           </button>
@@ -1693,6 +1693,7 @@
     
     <!-- Non-Critical Scripts - Load ASYNC after page ready -->
     <script defer src="assets/js/project-management-system.js"></script>
+    <script defer src="assets/js/project-ui-manager.js"></script>
     <script defer src="assets/js/userControlledStorage.js"></script>
     <script defer src="assets/js/data-tagging-system.js"></script>
     <script defer src="assets/js/ingredientLibrary.js"></script>
