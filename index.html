@@ -1844,6 +1844,115 @@ Your notebook, your thoughts..." rows="6"></textarea>
     <script defer src="assets/js/data-tagging-system.js"></script>
     <script defer src="assets/js/ingredientLibrary.js"></script>
     
+    <!-- Notebook Features Script -->
+    <script>
+      // Notebook Features
+      function initNotebookFeatures() {
+        console.log('📓 Initializing notebook features...');
+        
+        // Set today's date
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateElement = document.getElementById('notebook-date');
+        if (dateElement) {
+          dateElement.textContent = today.toLocaleDateString('en-US', options);
+        }
+        
+        // Load daily notes
+        loadDailyNotes();
+        
+        // Load recipe ideas as sticky notes
+        loadRecipeIdeasSticky();
+      }
+
+      function saveDailyNotes() {
+        const notesElement = document.getElementById('daily-notes');
+        if (!notesElement) return;
+        
+        const notes = notesElement.value;
+        const today = new Date().toISOString().split('T')[0];
+        
+        const dailyNotes = JSON.parse(localStorage.getItem('daily_notes') || '{}');
+        dailyNotes[today] = notes;
+        
+        localStorage.setItem('daily_notes', JSON.stringify(dailyNotes));
+        
+        // Show success
+        showNotebookToast('📝 Daily notes saved!', 'success');
+      }
+
+      function loadDailyNotes() {
+        const today = new Date().toISOString().split('T')[0];
+        const dailyNotes = JSON.parse(localStorage.getItem('daily_notes') || '{}');
+        const notesElement = document.getElementById('daily-notes');
+        
+        if (notesElement && dailyNotes[today]) {
+          notesElement.value = dailyNotes[today];
+        }
+      }
+
+      function loadRecipeIdeasSticky() {
+        const ideas = JSON.parse(localStorage.getItem('recipe_ideas') || '[]');
+        const container = document.getElementById('ideas-sticky-notes');
+        
+        if (!container) return;
+        
+        if (ideas.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #64748b; font-style: italic; padding: 40px;">No ideas yet. Add your first inspiration!</p>';
+          return;
+        }
+        
+        // Show last 6 ideas as sticky notes
+        const recentIdeas = ideas.slice(-6).reverse();
+        container.innerHTML = recentIdeas.map(idea => `
+          <div class="idea-sticky-note">
+            <div class="idea-text">${idea.title}</div>
+            ${idea.description ? `<div style="font-size: 13px; color: #475569; margin: 8px 0; font-family: Inter, sans-serif;">${idea.description.substring(0, 80)}${idea.description.length > 80 ? '...' : ''}</div>` : ''}
+            <div class="idea-meta">${idea.cuisine || 'Uncategorized'} • ${new Date(idea.createdAt).toLocaleDateString()}</div>
+          </div>
+        `).join('');
+      }
+
+      function showNewIdeaModal() {
+        // Scroll to the detailed form
+        const section = document.querySelector('.ideas-notepad-section');
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+
+      function showNotebookToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          background: ${type === 'success' ? '#22c55e' : '#3b82f6'};
+          color: white;
+          padding: 16px 24px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 10000;
+          font-weight: 600;
+          animation: slideIn 0.3s ease;
+        `;
+        
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          toast.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+
+      // Initialize on load
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNotebookFeatures);
+      } else {
+        initNotebookFeatures();
+      }
+    </script>
+    
     <!-- Initialize User System -->
     <script>
       // Ensure authentication system is loaded and working
