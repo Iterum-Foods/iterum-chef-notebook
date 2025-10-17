@@ -1678,47 +1678,24 @@
       });
     </script>
 
-    <!-- Load Security Utils First -->
-    <script src="assets/js/security-utils.js"></script>
-    <script src="assets/js/csp-config.js"></script>
-    <script src="assets/js/input-validation.js"></script>
-    <script src="assets/js/api-security.js"></script>
+    <!-- Load Critical Scripts Only - DEFER non-critical to prevent hanging -->
     
-    <!-- Firebase Configuration already loaded in <head> -->
-    <!-- Load Firebase Authentication Modules -->
-    <script type="module" src="assets/js/firebase-auth.js"></script>
-    <script type="module" src="assets/js/firebase-auth-ui.js"></script>
-    <script type="module" src="assets/js/firestore-sync.js"></script>
+    <!-- Firebase Auth (Critical - Async Module) -->
+    <script type="module" async src="assets/js/firebase-auth.js"></script>
+    <script type="module" async src="assets/js/firestore-sync.js"></script>
     
-    <!-- Load Header User Display (New Auth System) -->
-    <script src="assets/js/header-user-display.js"></script>
+    <!-- Header User Display (Critical) -->
+    <script defer src="assets/js/header-user-display.js"></script>
     
-    <!-- Load Profile Editor -->
-    <script src="assets/js/profile-editor.js"></script>
+    <!-- Profile & Email (Defer - not needed immediately) -->
+    <script defer src="assets/js/profile-editor.js"></script>
+    <script defer src="assets/js/email-verification-banner.js"></script>
     
-    <!-- Load Email Verification Banner -->
-    <script src="assets/js/email-verification-banner.js"></script>
-    
-    <!-- Load Main Application -->
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/ai-integration.js"></script>
-    
-    <!-- Enhanced User Management now handled by Firebase Auth -->
-    
-    <!-- Load Project Management System -->
-    <script src="assets/js/project-management-system.js"></script>
-    
-    <!-- Load the user-controlled storage system -->
-    <script src="assets/js/userControlledStorage.js"></script>
-    
-    <!-- Data Tagging System -->
-    <script src="assets/js/data-tagging-system.js"></script>
-    
-    <!-- Ingredient Library System -->
-    <script src="assets/js/ingredientLibrary.js"></script>
-    
-    <!-- User Data Manager -->
-    <script src="assets/js/userDataManager.js"></script>
+    <!-- Non-Critical Scripts - Load ASYNC after page ready -->
+    <script defer src="assets/js/project-management-system.js"></script>
+    <script defer src="assets/js/userControlledStorage.js"></script>
+    <script defer src="assets/js/data-tagging-system.js"></script>
+    <script defer src="assets/js/ingredientLibrary.js"></script>
     
     <!-- Initialize User System -->
     <script>
@@ -1816,45 +1793,18 @@
           } else {
             console.error('❌ User tab or dropdown not found');
           }
-        } else {
-          // Don't create infinite loop - just log and continue
-          console.warn('⚠️ AuthManager not loaded yet after initial check');
-          console.log('✅ Page will continue - auth_guard.js will handle authentication');
         }
       }
       
-      // Reset init attempts counter
-      let initAttempts = 0;
-      
-      // Try to initialize with a small delay to ensure all scripts are loaded
+      // LIGHTWEIGHT initialization to prevent hanging
+      console.log('✅ Lightweight init - preventing browser hang');
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          // Small delay to ensure all scripts are loaded
-          setTimeout(initializeUserSystem, 100);
-          
-          // Fallback: Check authentication after 3 seconds
-          setTimeout(() => {
-            if (!window.authManager?.isAuthenticated) {
-              console.log('🚨 Fallback: No authentication found');
-              // auth_guard.js already handles this by redirecting
-            }
-          }, 3000);
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log('✅ Page ready');
         });
-      } else {
-        // Small delay to ensure all scripts are loaded
-        setTimeout(initializeUserSystem, 100);
-        
-        // Fallback: Check authentication after 3 seconds
-        setTimeout(() => {
-          if (!window.authManager?.isAuthenticated) {
-            console.log('🚨 Fallback: No authentication found');
-            // auth_guard.js already handles redirecting to login
-          }
-        }, 3000);
       }
       
-      // Also log when the script loads
-      console.log('🚀 Authentication system initialization script loaded');
+      console.log('🚀 Page scripts loaded - deferred scripts will load async');
       
       // Debug function for authentication system
       window.debugAuthSystem = function() {
@@ -3216,11 +3166,7 @@
       });
     </script>
     
-    <!-- Load Auth Guard and Firebase Auth - Non-blocking, placed at end of body -->
-    <script type="module" src="assets/js/firebase-auth.js"></script>
-    <script type="module" src="assets/js/firestore-sync.js"></script>
-    <script src="assets/js/header-user-display.js"></script>
-    <script src="assets/js/profile-editor.js"></script>
-    <script src="assets/js/auth_guard.js"></script>
+    <!-- Auth Guard - Final check at end -->
+    <script defer src="assets/js/auth_guard.js"></script>
 </body>
 </html>
