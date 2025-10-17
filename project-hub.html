@@ -436,23 +436,175 @@
         }
 
         function createCustomProject() {
-            const name = prompt('Enter project name:');
-            if (!name) return;
+            showCreateProjectModal();
+        }
 
-            const description = prompt('Enter project description (optional):');
+        function showCreateProjectModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-backdrop" onclick="this.parentElement.remove()"></div>
+                <div class="modal-content" style="max-width: 600px; background: white; border-radius: 16px; padding: 32px; position: relative; z-index: 10001;">
+                    <button class="modal-close" onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: #94a3b8;">✕</button>
+                    
+                    <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #1e293b;">📋 Create New Project</h2>
+                    <p style="color: #64748b; margin-bottom: 24px;">Set up a new project to organize your work</p>
+                    
+                    <form id="create-project-form" onsubmit="submitNewProject(event)">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #475569;">Project Name *</label>
+                            <input type="text" id="new-project-name" required
+                                   style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px;"
+                                   placeholder="e.g., Fall Menu 2025, Weekend Brunch Ideas">
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #475569;">Description</label>
+                            <textarea id="new-project-desc" rows="3"
+                                     style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; resize: vertical;"
+                                     placeholder="What's this project about?"></textarea>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #475569;">Project Type</label>
+                            <select id="new-project-type" 
+                                    style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                                <option value="personal">Personal Collection</option>
+                                <option value="restaurant">Restaurant/Business</option>
+                                <option value="catering">Catering Event</option>
+                                <option value="testing">Recipe Testing</option>
+                                <option value="client">Client Project</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 12px; color: #475569;">Color Theme</label>
+                            <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px;">
+                                <div class="color-option" data-color="#667eea" style="width: 40px; height: 40px; border-radius: 8px; background: #667eea; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;" onclick="selectColor('#667eea')"></div>
+                                <div class="color-option" data-color="#22c55e" style="width: 40px; height: 40px; border-radius: 8px; background: #22c55e; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;" onclick="selectColor('#22c55e')"></div>
+                                <div class="color-option" data-color="#f59e0b" style="width: 40px; height: 40px; border-radius: 8px; background: #f59e0b; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;" onclick="selectColor('#f59e0b')"></div>
+                                <div class="color-option" data-color="#ef4444" style="width: 40px; height: 40px; border-radius: 8px; background: #ef4444; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;" onclick="selectColor('#ef4444')"></div>
+                                <div class="color-option" data-color="#8b5cf6" style="width: 40px; height: 40px; border-radius: 8px; background: #8b5cf6; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;" onclick="selectColor('#8b5cf6')"></div>
+                                <div class="color-option" data-color="#ec4899" style="width: 40px; height: 40px; border-radius: 8px; background: #ec4899; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;" onclick="selectColor('#ec4899')"></div>
+                                <div class="color-option" data-color="#06b6d4" style="width: 40px; height: 40px; border-radius: 8px; background: #06b6d4; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;" onclick="selectColor('#06b6d4')"></div>
+                                <div class="color-option" data-color="#84cc16" style="width: 40px; height: 40px; border-radius: 8px; background: #84cc16; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;" onclick="selectColor('#84cc16')"></div>
+                            </div>
+                            <input type="hidden" id="selected-color" value="#667eea">
+                        </div>
+                        
+                        <div style="margin-bottom: 24px; padding: 16px; background: #f0f9ff; border: 2px solid #0ea5e9; border-radius: 8px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <input type="checkbox" id="project-owner-only" checked 
+                                       style="width: 18px; height: 18px; cursor: pointer;">
+                                <label for="project-owner-only" style="font-weight: 600; color: #0c4a6e; cursor: pointer;">
+                                    👤 Private Project (Only I can see this)
+                                </label>
+                            </div>
+                            <p style="font-size: 13px; color: #0369a1; margin-left: 30px;">
+                                This project will only be visible to you. Perfect for personal collections, testing, or private client work.
+                            </p>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px;">
+                            <button type="button" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()" 
+                                    style="flex: 1; padding: 12px; background: #f1f5f9; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    style="flex: 2; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                                ✅ Create Project
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10000; display: flex; align-items: center; justify-content: center;';
+            document.body.appendChild(modal);
+        }
 
-            if (window.projectManager) {
-                const project = window.projectManager.createProject({
-                    name: name,
-                    description: description || '',
-                    type: 'custom',
-                    color: '#3b82f6',
-                    icon: '📁'
-                });
+        let selectedColor = '#667eea';
+        
+        function selectColor(color) {
+            selectedColor = color;
+            document.getElementById('selected-color').value = color;
+            
+            // Update visual selection
+            document.querySelectorAll('.color-option').forEach(el => {
+                el.style.border = el.dataset.color === color ? '3px solid #1e293b' : '3px solid transparent';
+                el.style.transform = el.dataset.color === color ? 'scale(1.1)' : 'scale(1)';
+            });
+        }
 
-                alert(`✅ Project "${name}" created!`);
-                loadProjects();
+        function submitNewProject(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('new-project-name').value.trim();
+            const description = document.getElementById('new-project-desc').value.trim();
+            const type = document.getElementById('new-project-type').value;
+            const color = document.getElementById('selected-color').value;
+            const ownerOnly = document.getElementById('project-owner-only').checked;
+
+            if (!name) {
+                alert('Please enter a project name');
+                return;
             }
+
+            if (!window.projectManager) {
+                alert('Project manager not available');
+                return;
+            }
+
+            // Get current user info
+            const userId = window.authManager?.currentUser?.userId || 'guest';
+            const userName = window.authManager?.currentUser?.displayName || 'Guest User';
+
+            // Create project
+            const project = window.projectManager.createProject({
+                name: name,
+                description: description || `${type.charAt(0).toUpperCase() + type.slice(1)} project`,
+                type: type,
+                color: color,
+                icon: getIconForType(type),
+                isPrivate: ownerOnly,
+                createdBy: userId,
+                createdByName: userName,
+                settings: getSettingsForType(type)
+            });
+
+            // Close modal
+            document.querySelector('.modal-overlay').remove();
+
+            // Show success
+            alert(`✅ Project "${name}" created successfully!\n\n${ownerOnly ? '🔒 This is a private project (only you can see it)' : '👥 This project can be shared with your team'}\n\nOpening project...`);
+
+            // Open the new project
+            openProject(project.id);
+        }
+
+        function getIconForType(type) {
+            const icons = {
+                'personal': '🏠',
+                'restaurant': '🍽️',
+                'catering': '🎂',
+                'testing': '🧪',
+                'client': '👥',
+                'custom': '📁'
+            };
+            return icons[type] || '📁';
+        }
+
+        function getSettingsForType(type) {
+            const settings = {
+                'personal': { enableMealPlanning: true, enableShoppingLists: true },
+                'restaurant': { enableCosting: true, enableMenuBuilder: true, enableTesting: true },
+                'catering': { enableBatchScaling: true, enableTimelines: true, enableShoppingLists: true },
+                'testing': { enableVersioning: true, enableTesting: true, enableNotes: true },
+                'client': { enableSharing: true, enableReporting: true },
+                'custom': {}
+            };
+            return settings[type] || {};
         }
 
         function loadProjects() {
