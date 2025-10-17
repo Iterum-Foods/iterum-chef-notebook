@@ -2289,21 +2289,50 @@
             window.importedItems = items;
         }
 
-        function applyImportResults() {
+        async function applyImportResults() {
             if (!window.importedItems || window.importedItems.length === 0) {
                 alert('No items to apply.');
                 return;
             }
 
-            if (window.menuManager && typeof window.menuManager.applyImportedItems === 'function') {
-                window.menuManager.applyImportedItems(window.importedItems);
-                alert(`Successfully imported ${window.importedItems.length} items into your menu!`);
+            console.log('📥 Applying imported items:', window.importedItems);
+
+            // Use enhanced menu manager
+            if (window.enhancedMenuManager) {
+                try {
+                    // Add each item to the menu with recipe creation
+                    for (const item of window.importedItems) {
+                        await window.enhancedMenuManager.addMenuItem({
+                            name: item.name,
+                            description: item.description || '',
+                            category: item.category || 'Main Courses',
+                            price: item.price || 0,
+                            allergens: item.allergens || [],
+                            dietaryInfo: item.dietaryInfo || []
+                        }, true); // true = create recipe
+                    }
+                    
+                    // Show success message
+                    window.enhancedMenuManager.showToast(
+                        `✅ Successfully imported ${window.importedItems.length} menu items with recipes!`, 
+                        'success'
+                    );
+                    
+                    console.log('✅ All items imported successfully');
+                } catch (error) {
+                    console.error('❌ Error importing items:', error);
+                    alert('Error importing some items. Check console for details.');
+                }
             } else {
-                alert(`Imported ${window.importedItems.length} items. Menu manager not available.`);
+                console.error('❌ Enhanced menu manager not available');
+                alert('Menu manager not ready. Please refresh the page and try again.');
             }
 
             // Close the modal
             closeModal('import-results-modal');
+            
+            // Clear imported items
+            window.importedItems = [];
         }
 
         // Drag & drop support for file import
