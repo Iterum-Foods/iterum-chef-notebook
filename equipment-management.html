@@ -10,15 +10,18 @@
     <script src="assets/js/auth-manager.js"></script>
     <script src="assets/js/auth-api-helper.js"></script>
     <script src="assets/js/auth-diagnostics.js"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS - Built from source -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Unified Styles -->
     <link rel="stylesheet" href="assets/css/tailwind-output.css">
     <link rel="stylesheet" href="assets/css/iterum-design-system.css">
     <link rel="stylesheet" href="assets/css/premium-ui-system.css">
+    <link rel="stylesheet" href="assets/css/unified-header.css">
+    <link rel="stylesheet" href="assets/css/page-layouts.css">
     <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Uniform Centered Header -->
@@ -73,18 +76,24 @@
 
         <!-- Right Side - User Section -->
         <div class="header-user-section">
-          <!-- Project Selector -->
-          <select id="header-project-selector" class="header-project-selector">
-            <option value="">Select Project...</option>
-          </select>
+          <!-- Modern Project Selector -->
+          <div class="header-project-selector-container">
+            <div class="project-selector-display" onclick="window.projectUIManager?.showProjectDropdown()" title="Click to switch projects or create new">
+              <span class="project-selector-icon">📋</span>
+              <span class="project-selector-name" data-project-name>Master Project</span>
+              <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
 
           <!-- User Info Tab -->
-          <div class="header-user-tab" onclick="toggleUserDropdown()">
+          <div class="header-user-tab" onclick="toggleUserDropdown()" id="header-user-tab" style="display: none;">
             <div class="header-user-avatar" id="user-avatar">
               <span id="user-avatar-initial">👤</span>
             </div>
             <div class="header-user-info">
-              <div class="header-user-name" id="current-user">Guest User</div>
+              <div class="header-user-name" id="current-user">Loading...</div>
               <div class="header-user-role">Chef</div>
             </div>
             <svg class="header-user-dropdown-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,28 +109,24 @@
             </div>
             
             <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="userSystem.showUserModal()">
+              <div class="header-user-dropdown-item" onclick="showProfileEditModal(); toggleUserDropdown();">
                 <span>👤</span>
                 <span>Edit Profile</span>
               </div>
-              <div class="header-user-dropdown-item" onclick="userSystem.quickSwitch()">
-                <span>🔄</span>
-                <span>Switch User</span>
-              </div>
-              <div class="header-user-dropdown-item" onclick="userSystem.showUserModal('create')">
-                <span>➕</span>
-                <span>Create New User</span>
+              <div class="header-user-dropdown-item" onclick="showForgotPasswordModal(); toggleUserDropdown();">
+                <span>🔑</span>
+                <span>Change Password</span>
               </div>
             </div>
             
             <div class="header-user-dropdown-divider"></div>
             
             <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="userSystem.showSettings()">
+              <div class="header-user-dropdown-item" onclick="alert('Settings coming soon!')">
                 <span>⚙️</span>
                 <span>Settings</span>
               </div>
-              <div class="header-user-dropdown-item danger" onclick="userSystem.logout()">
+              <div class="header-user-dropdown-item danger" onclick="handleSignOut()">
                 <span>🚪</span>
                 <span>Sign Out</span>
               </div>
@@ -1329,5 +1334,45 @@
         }
       });
     </script>
+    
+    <!-- User Dropdown Handler -->
+    <script>
+      function toggleUserDropdown() {
+        const dropdown = document.getElementById('user-dropdown');
+        if (dropdown) {
+          dropdown.classList.toggle('show');
+        }
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('user-dropdown');
+        const userTab = document.getElementById('header-user-tab');
+        
+        if (dropdown && userTab && 
+            !dropdown.contains(event.target) && 
+            !userTab.contains(event.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+
+      // Handle sign out
+      async function handleSignOut() {
+        if (confirm('Are you sure you want to sign out?')) {
+          if (window.authManager) {
+            await window.authManager.signOut();
+            window.location.href = 'launch.html';
+          }
+        }
+      }
+    </script>
+    
+    <!-- Load Auth System Scripts at End -->
+    <script type="module" defer src="assets/js/firebase-auth.js"></script>
+    <script type="module" defer src="assets/js/firestore-sync.js"></script>
+    <script defer src="assets/js/header-user-display.js"></script>
+    <script defer src="assets/js/profile-editor.js"></script>
+    <script defer src="assets/js/project-ui-manager.js"></script>
+    <script defer src="assets/js/auth_guard.js"></script>
   </body>
 </html> 
