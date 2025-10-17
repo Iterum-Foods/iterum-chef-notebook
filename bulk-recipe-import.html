@@ -535,6 +535,7 @@ https://bonappetit.com/recipe/...
     </div>
 
     <script src="assets/js/smart-menu-parser.js"></script>
+    <script src="assets/js/multi-recipe-detector.js"></script>
     <script>
         let currentMethod = 'text';
         let detectedRecipes = [];
@@ -587,8 +588,9 @@ https://bonappetit.com/recipe/...
         }
 
         function processRecipes(text) {
-            // Detect multiple recipes
-            const recipes = detectMultipleRecipes(text);
+            // Use multi-recipe detector
+            const detector = new MultiRecipeDetector();
+            const recipes = detector.detectRecipes(text);
             
             detectedRecipes = recipes;
             
@@ -609,79 +611,17 @@ https://bonappetit.com/recipe/...
             container.innerHTML = recipes.map((recipe, index) => createRecipeCard(recipe, index)).join('');
         }
 
-        function detectMultipleRecipes(text) {
-            const recipes = [];
-            
-            // Split by common separators
-            const parts = text.split(/\n\s*[-=]{3,}\s*\n|\n{3,}/);
-            
-            for (const part of parts) {
-                if (part.trim().length < 50) continue;
-                
-                const recipe = parseRecipe(part.trim());
-                if (recipe.title) {
-                    recipes.push(recipe);
-                }
-            }
-            
-            return recipes;
-        }
-
-        function parseRecipe(text) {
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-            
-            const recipe = {
-                title: '',
-                ingredients: [],
-                instructions: [],
-                description: '',
-                servings: 4,
-                prepTime: null,
-                cookTime: null,
-                isComplete: false
-            };
-
-            // Extract title (first line)
-            recipe.title = lines[0];
-
-            // Find ingredients section
-            let inIngredients = false;
-            let inInstructions = false;
-
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].toLowerCase();
-                
-                if (line.includes('ingredient')) {
-                    inIngredients = true;
-                    inInstructions = false;
-                    continue;
-                }
-                
-                if (line.includes('instruction') || line.includes('direction') || line.includes('method') || line.includes('steps')) {
-                    inIngredients = false;
-                    inInstructions = true;
-                    continue;
-                }
-
-                if (inIngredients && lines[i].match(/^[-•*\d]/)) {
-                    recipe.ingredients.push(lines[i].replace(/^[-•*\d.)\s]+/, ''));
-                }
-
-                if (inInstructions && lines[i].match(/^[-•*\d]/)) {
-                    recipe.instructions.push(lines[i].replace(/^[-•*\d.)\s]+/, ''));
-                }
-            }
-
-            // Check completeness
-            recipe.isComplete = recipe.title && recipe.ingredients.length > 0 && recipe.instructions.length > 0;
-
-            return recipe;
-        }
+        // Note: detectMultipleRecipes is now handled by MultiRecipeDetector class above
 
         function createRecipeCard(recipe, index) {
+            const detector = new MultiRecipeDetector();
+            const score = detector.scoreRecipe(recipe);
+            
             const status = recipe.isComplete ? 
                 '<span class="recipe-status status-complete">✅ Complete</span>' :
                 '<span class="recipe-status status-warning">⚠️ Needs Review</span>';
+
+            const qualityBadge = score.score >= 80 ? '✨' : score.score >= 60 ? '👍' : '⚠️';
 
             return `
                 <div class="recipe-card" id="recipe-${index}">
@@ -692,11 +632,36 @@ https://bonappetit.com/recipe/...
                     <div class="recipe-meta">
                         <div class="recipe-meta-item">🥘 ${recipe.ingredients.length} ingredients</div>
                         <div class="recipe-meta-item">📝 ${recipe.instructions.length} steps</div>
-                        <div class="recipe-meta-item">👥 ${recipe.servings} servings</div>
+                        <div class="recipe-meta-item">👥 ${recipe.servings || 4} servings</div>
+                        ${recipe.category ? `<div class="recipe-meta-item">📂 ${recipe.category}</div>` : ''}
                     </div>
-                    ${!recipe.isComplete ? '<div class="recipe-description" style="color: #f59e0b;">⚠️ Missing: ' + 
-                        (recipe.ingredients.length === 0 ? 'Ingredients ' : '') +
-                        (recipe.instructions.length === 0 ? 'Instructions' : '') + '</div>' : ''}
+                    ${recipe.description ? `
+                        <div class="recipe-description">${recipe.description}</div>
+                    ` : ''}
+                    ${recipe.prepTime || recipe.cookTime ? `
+                        <div class="recipe-meta" style="margin-top: 8px;">
+                            ${recipe.prepTime ? `<div class="recipe-meta-item">⏱️ Prep: ${recipe.prepTime} min</div>` : ''}
+                            ${recipe.cookTime ? `<div class="recipe-meta-item">🔥 Cook: ${recipe.cookTime} min</div>` : ''}
+                        </div>
+                    ` : ''}
+                    ${recipe.tags && recipe.tags.length > 0 ? `
+                        <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px;">
+                            ${recipe.tags.slice(0, 5).map(tag => `
+                                <span style="font-size: 11px; padding: 4px 8px; background: #e0e7ff; color: #4338ca; border-radius: 4px;">${tag}</span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    ${score.issues.length > 0 ? `
+                        <div class="recipe-description" style="color: #f59e0b; margin-top: 12px;">
+                            ⚠️ Issues: ${score.issues.join(', ')}
+                        </div>
+                    ` : ''}
+                    <div style="margin-top: 12px; padding: 8px; background: #f8fafc; border-radius: 4px; text-align: center;">
+                        <span style="font-size: 12px; color: #64748b;">Quality Score: </span>
+                        <span style="font-size: 16px; font-weight: 700; color: ${score.score >= 80 ? '#22c55e' : score.score >= 60 ? '#f59e0b' : '#ef4444'};">
+                            ${qualityBadge} ${score.score}/100
+                        </span>
+                    </div>
                     <div class="recipe-actions">
                         <button class="btn-accept" onclick="acceptRecipe(${index})">✅ Accept</button>
                         <button class="btn-edit" onclick="editRecipe(${index})">✏️ Edit</button>
@@ -732,13 +697,98 @@ https://bonappetit.com/recipe/...
         }
 
         async function acceptAllRecipes() {
-            if (confirm(`Import ${detectedRecipes.length} recipes to your library?`)) {
-                // TODO: Actually save to library
-                alert(`✅ ${detectedRecipes.length} recipes imported successfully!\n\nThey're now in your recipe library.`);
-                
-                // Reset
-                window.location.href = 'recipe-library.html';
+            const acceptedCount = acceptedRecipes.length || detectedRecipes.filter(r => r.isComplete).length;
+            
+            if (!confirm(`Import ${acceptedCount} recipes to your library?`)) {
+                return;
             }
+
+            // Get recipes to import (either accepted ones or all complete ones)
+            const recipesToImport = acceptedRecipes.length > 0 
+                ? detectedRecipes.filter((r, i) => acceptedRecipes.includes(i))
+                : detectedRecipes.filter(r => r.isComplete);
+
+            console.log('📥 Importing recipes:', recipesToImport);
+
+            // Load existing recipes
+            const existingRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
+            
+            // Add new recipes
+            for (const recipe of recipesToImport) {
+                // Convert to library format
+                const libraryRecipe = {
+                    id: recipe.id,
+                    name: recipe.title,
+                    title: recipe.title,
+                    description: recipe.description || `Imported recipe: ${recipe.title}`,
+                    category: recipe.category || 'Uncategorized',
+                    cuisine: recipe.cuisine || 'Unknown',
+                    difficulty: recipe.difficulty || 'Medium',
+                    servings: recipe.servings || 4,
+                    prepTime: recipe.prepTime || 0,
+                    cookTime: recipe.cookTime || 0,
+                    totalTime: recipe.totalTime || (recipe.prepTime || 0) + (recipe.cookTime || 0),
+                    ingredients: recipe.ingredients.map(ing => ({
+                        name: ing.ingredient || ing.text,
+                        amount: ing.quantity || '',
+                        unit: ing.unit || '',
+                        notes: ing.preparation || ''
+                    })),
+                    instructions: recipe.instructions.map(inst => 
+                        typeof inst === 'string' ? inst : inst.text
+                    ),
+                    tags: recipe.tags || [],
+                    status: 'draft',
+                    source: 'Bulk Import',
+                    createdAt: recipe.createdAt,
+                    updatedAt: recipe.createdAt
+                };
+                
+                existingRecipes.push(libraryRecipe);
+            }
+
+            // Save to localStorage
+            localStorage.setItem('recipes', JSON.stringify(existingRecipes));
+
+            // Try to sync to backend
+            if (window.authApiHelper && window.authManager?.isAuthenticated()) {
+                try {
+                    for (const recipe of recipesToImport) {
+                        await window.authApiHelper.post('/api/recipes', {
+                            title: recipe.title,
+                            description: recipe.description || '',
+                            cuisine_type: recipe.cuisine || 'Unknown',
+                            difficulty_level: recipe.difficulty,
+                            prep_time: recipe.prepTime,
+                            cook_time: recipe.cookTime,
+                            servings: recipe.servings || 4,
+                            tags: recipe.tags,
+                            status: 'draft',
+                            source: 'Bulk Import'
+                        });
+                    }
+                    console.log('✅ Recipes synced to backend');
+                } catch (error) {
+                    console.warn('⚠️ Could not sync to backend:', error);
+                    // Continue anyway - we have local copies
+                }
+            }
+
+            // Show success and redirect
+            alert(`✅ ${recipesToImport.length} recipes imported successfully!\n\nRedirecting to your recipe library...`);
+            
+            // Track analytics
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackCustomEvent('bulk_recipe_import', {
+                    count: recipesToImport.length,
+                    source: 'bulk_import'
+                });
+            }
+            
+            // Redirect
+            setTimeout(() => {
+                window.location.href = 'recipe-library.html';
+            }, 1000);
         }
 
         function reviewIssues() {
