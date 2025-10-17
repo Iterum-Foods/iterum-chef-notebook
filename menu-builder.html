@@ -2035,57 +2035,92 @@
 
         // Text Parsing Functions
         function parseStructuredText(text, options) {
+            // Use smart parser if available
+            if (window.SmartMenuParser) {
+                const parser = new window.SmartMenuParser();
+                return parser.parseMenuText(text, {
+                    ...options,
+                    autoCategorize: options.autoCategorize,
+                    extractPrices: options.extractPrices,
+                    detectDietary: options.detectDescriptions
+                });
+            }
+            
+            // Fallback to simple parsing
+            return fallbackParseStructured(text, options);
+        }
+
+        function parseSimpleText(text, options) {
+            // Use smart parser if available
+            if (window.SmartMenuParser) {
+                const parser = new window.SmartMenuParser();
+                return parser.parseMenuText(text, {
+                    ...options,
+                    autoCategorize: options.autoCategorize || true,
+                    extractPrices: options.extractPrices,
+                    detectDietary: options.detectDescriptions
+                });
+            }
+            
+            // Fallback
+            return fallbackParseSimple(text, options);
+        }
+
+        function parseFreeformText(text, options) {
+            // Use smart parser if available  
+            if (window.SmartMenuParser) {
+                const parser = new window.SmartMenuParser();
+                return parser.parseMenuText(text, {
+                    ...options,
+                    autoCategorize: options.autoCategorize || true,
+                    extractPrices: options.extractPrices,
+                    detectDietary: options.detectDescriptions
+                });
+            }
+            
+            // Fallback
+            return fallbackParseFreeform(text, options);
+        }
+
+        // Fallback parsers (original logic)
+        function fallbackParseStructured(text, options) {
             const lines = text.split('\n').map(line => line.trim()).filter(line => line);
             const items = [];
             let currentCategory = 'Uncategorized';
 
             for (const line of lines) {
                 if (line.endsWith(':') || !line.startsWith('-') && !line.startsWith('•') && !line.startsWith('*')) {
-                    // This looks like a category header
                     currentCategory = line.replace(':', '').trim();
                 } else if (line.startsWith('-') || line.startsWith('•') || line.startsWith('*')) {
-                    // This looks like a menu item
                     const itemText = line.substring(1).trim();
                     const item = parseMenuItem(itemText, currentCategory, options);
-                    if (item) {
-                        items.push(item);
-                    }
+                    if (item) items.push(item);
                 }
             }
-
             return items;
         }
 
-        function parseSimpleText(text, options) {
+        function fallbackParseSimple(text, options) {
             const lines = text.split('\n').map(line => line.trim()).filter(line => line);
             const items = [];
-
             for (const line of lines) {
-                if (line && !line.startsWith('#')) { // Skip comment lines
+                if (line && !line.startsWith('#')) {
                     const item = parseMenuItem(line, 'Uncategorized', options);
-                    if (item) {
-                        items.push(item);
-                    }
+                    if (item) items.push(item);
                 }
             }
-
             return items;
         }
 
-        function parseFreeformText(text, options) {
-            // Split by common separators and try to identify menu items
+        function fallbackParseFreeform(text, options) {
             const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(s => s);
             const items = [];
-
             for (const sentence of sentences) {
-                if (sentence.length > 10) { // Only process meaningful sentences
+                if (sentence.length > 10) {
                     const item = parseMenuItem(sentence, 'Uncategorized', options);
-                    if (item) {
-                        items.push(item);
-                    }
+                    if (item) items.push(item);
                 }
             }
-
             return items;
         }
 
@@ -2810,6 +2845,9 @@
         }
       }
     </script>
+    
+    <!-- Load Smart Menu Parser -->
+    <script defer src="assets/js/smart-menu-parser.js"></script>
     
     <!-- Load Integration Scripts -->
     <script defer src="assets/js/menu-recipe-integration.js"></script>
