@@ -69,6 +69,28 @@ class ProjectManagementSystem {
         try {
             console.log('🚀 Initializing Project Management System...');
             
+            // CRITICAL: Get current user ID from authManager
+            if (window.authManager && window.authManager.currentUser) {
+                this.currentUserId = window.authManager.currentUser.userId;
+                console.log('✅ Set user ID from authManager:', this.currentUserId);
+            } else {
+                // Fallback to localStorage
+                const sessionUser = localStorage.getItem('current_user');
+                if (sessionUser) {
+                    try {
+                        const user = JSON.parse(sessionUser);
+                        this.currentUserId = user.userId || user.id || 'guest';
+                        console.log('✅ Set user ID from localStorage:', this.currentUserId);
+                    } catch (e) {
+                        this.currentUserId = 'guest';
+                        console.warn('⚠️ Could not parse user, using guest');
+                    }
+                } else {
+                    this.currentUserId = 'guest';
+                    console.warn('⚠️ No user found, using guest');
+                }
+            }
+            
             // Initialize with master project only
             this.initializeMasterProject();
             
@@ -1016,11 +1038,31 @@ class ProjectManagementSystem {
     }
 
     /**
-     * Get current user ID (simplified for master project)
+     * Get current user ID
      */
     getCurrentUserId() {
-        // For master project system, we don't need user-specific IDs
-        return 'master';
+        // Try to get from authManager first
+        if (window.authManager && window.authManager.currentUser) {
+            return window.authManager.currentUser.userId;
+        }
+        
+        // Fallback to stored value
+        if (this.currentUserId) {
+            return this.currentUserId;
+        }
+        
+        // Last resort: check localStorage
+        const sessionUser = localStorage.getItem('current_user');
+        if (sessionUser) {
+            try {
+                const user = JSON.parse(sessionUser);
+                return user.userId || user.id || 'guest';
+            } catch (e) {
+                console.error('Error parsing user:', e);
+            }
+        }
+        
+        return 'guest';
     }
 
     /**
