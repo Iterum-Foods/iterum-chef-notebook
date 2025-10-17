@@ -402,10 +402,45 @@ class VendorURLImporter {
             return;
         }
 
-        // Save to localStorage (or send to API)
-        const vendors = JSON.parse(localStorage.getItem('vendors') || '[]');
-        vendors.push(vendor);
-        localStorage.setItem('vendors', JSON.stringify(vendors));
+        // Convert to vendorManager format
+        const vendorForManager = {
+            id: Date.now(),
+            name: vendor.name,
+            company: vendor.name, // Use name as company if not specified
+            email: vendor.email,
+            phone: vendor.phone,
+            mobile: '',
+            fax: '',
+            website: vendor.website,
+            street: vendor.address,
+            city: '',
+            state: '',
+            zip_code: '',
+            specialties: vendor.category ? [vendor.category] : [],
+            notes: `${vendor.description || ''}\n${vendor.notes || ''}`.trim(),
+            is_active: vendor.status === 'active',
+            created_at: vendor.createdAt
+        };
+
+        // Integrate with vendorManager if available
+        if (window.vendorManager) {
+            window.vendorManager.vendors.push(vendorForManager);
+            window.vendorManager.saveVendorsToFile();
+            console.log('✅ Vendor added via URL importer and integrated with vendorManager');
+            
+            // Refresh the display
+            setTimeout(() => {
+                window.vendorManager.updateVendorCount();
+                window.vendorManager.displayVendors();
+                window.vendorManager.updateFilters();
+            }, 100);
+        } else {
+            // Fallback to direct localStorage
+            const vendors = JSON.parse(localStorage.getItem('iterum_vendors') || '[]');
+            vendors.push(vendorForManager);
+            localStorage.setItem('iterum_vendors', JSON.stringify(vendors));
+            console.log('✅ Vendor added directly to localStorage');
+        }
 
         // Track analytics
         if (window.analyticsTracker) {

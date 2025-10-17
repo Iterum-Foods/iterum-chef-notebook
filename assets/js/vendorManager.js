@@ -702,40 +702,80 @@ class VendorManager {
             return;
         }
         
+        // Check if we're editing or adding
+        const modal = document.querySelector('.vendor-modal-overlay[data-modal="vendor"]');
+        const isEdit = modal && modal.dataset.vendorId;
+        const vendorId = isEdit ? parseInt(modal.dataset.vendorId) : null;
+        
         try {
-            // Try to save to backend API
-            const response = await fetch('/api/vendors/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            
-            if (response.ok) {
-                const savedVendor = await response.json();
-                this.vendors.push(savedVendor);
-                console.log('✅ Vendor saved to API:', savedVendor.name);
+            if (isEdit) {
+                // UPDATE existing vendor
+                const response = await fetch(`/api/vendors/${vendorId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    const updatedVendor = await response.json();
+                    const index = this.vendors.findIndex(v => v.id === vendorId);
+                    if (index !== -1) {
+                        this.vendors[index] = updatedVendor;
+                    }
+                    console.log('✅ Vendor updated in API:', updatedVendor.name);
+                } else {
+                    // Fallback to local storage
+                    const index = this.vendors.findIndex(v => v.id === vendorId);
+                    if (index !== -1) {
+                        this.vendors[index] = {
+                            ...this.vendors[index],
+                            ...formData,
+                            updated_at: new Date().toISOString()
+                        };
+                    }
+                    console.log('✅ Vendor updated locally:', formData.name);
+                }
             } else {
-                // Fallback to local storage
-                const newVendor = {
-                    id: Date.now(),
-                    ...formData,
-                    created_at: new Date().toISOString()
-                };
-                this.vendors.push(newVendor);
-                console.log('✅ Vendor saved locally:', newVendor.name);
+                // ADD new vendor
+                const response = await fetch('/api/vendors/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    const savedVendor = await response.json();
+                    this.vendors.push(savedVendor);
+                    console.log('✅ Vendor saved to API:', savedVendor.name);
+                } else {
+                    // Fallback to local storage
+                    const newVendor = {
+                        id: Date.now(),
+                        ...formData,
+                        created_at: new Date().toISOString()
+                    };
+                    this.vendors.push(newVendor);
+                    console.log('✅ Vendor saved locally:', newVendor.name);
+                }
             }
             
             // Save to user file storage
             this.saveVendorsToFile();
             
+            // Close modal first
             this.closeVendorModal();
-            this.updateVendorCount();
-            this.displayVendors();
-            this.updateFilters();
             
-            this.showNotification(`Vendor "${formData.name}" saved successfully!`, 'success');
+            // Then update display with a small delay to ensure modal is closed
+            setTimeout(() => {
+                this.updateVendorCount();
+                this.displayVendors();
+                this.updateFilters();
+                this.showNotification(`Vendor "${formData.name}" saved successfully!`, 'success');
+            }, 100);
             
         } catch (error) {
             console.error('❌ Error saving vendor:', error);
@@ -746,7 +786,14 @@ class VendorManager {
     editVendor(vendorId) {
         const vendor = this.vendors.find(v => v.id === vendorId);
         if (vendor) {
-            this.showVendorModal('edit', vendor);
+            const modal = this.showVendorModal('edit', vendor);
+            // Store vendor ID for editing
+            setTimeout(() => {
+                const modalElement = document.querySelector('.vendor-modal-overlay[data-modal="vendor"]');
+                if (modalElement) {
+                    modalElement.dataset.vendorId = vendorId;
+                }
+            }, 50);
         }
     }
     

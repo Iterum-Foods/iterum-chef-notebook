@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="assets/css/premium-ui-system.css">
     <link rel="stylesheet" href="assets/css/unified-header.css">
     <link rel="stylesheet" href="assets/css/page-layouts.css">
+    <link rel="stylesheet" href="assets/css/menu-builder-enhanced.css">
     <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
     
     <!-- Force page visibility -->
@@ -994,33 +995,100 @@
 
         <!-- Menu Builder Container -->
         <div class="menu-builder-container">
-            <!-- Menu Stepper -->
-            <div class="menu-stepper">
-                <div class="stepper-step active" data-step="1">
-                    <div class="stepper-number">1</div>
-                    <div class="stepper-label">Menu Setup</div>
+            <!-- Menu Statistics Dashboard -->
+            <section class="menu-statistics-section">
+                <div class="iterum-card">
+                    <div class="iterum-card-header">
+                        <h2 class="heading-2">📊 Menu Overview</h2>
+                    </div>
+                    <div class="iterum-card-body">
+                        <div id="menu-statistics">
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">0</div>
+                                    <div class="stat-label">Total Items</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">0/0</div>
+                                    <div class="stat-label">With Recipes</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">0%</div>
+                                    <div class="stat-label">Avg Food Cost</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">0</div>
+                                    <div class="stat-label">Over Target</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stepper-step" data-step="2">
-                    <div class="stepper-number">2</div>
-                    <div class="stepper-label">Categories</div>
-                </div>
-                <div class="stepper-step" data-step="3">
-                    <div class="stepper-number">3</div>
-                    <div class="stepper-label">Items</div>
-                </div>
-                <div class="stepper-step" data-step="4">
-                    <div class="stepper-number">4</div>
-                    <div class="stepper-label">Pricing</div>
-                </div>
-                <div class="stepper-step" data-step="5">
-                    <div class="stepper-number">5</div>
-                    <div class="stepper-label">Review</div>
-                </div>
-            </div>
+            </section>
 
-            <!-- Menu Import Section -->
-            <section class="menu-import-section">
-                <div class="iterum-card iterum-card-elevated">
+            <!-- Quick Actions -->
+            <section class="menu-quick-actions">
+                <div class="iterum-card">
+                    <div class="iterum-card-header">
+                        <h2 class="heading-2">🚀 Quick Actions</h2>
+                    </div>
+                    <div class="iterum-card-body">
+                        <div class="quick-actions-grid">
+                            <button class="btn btn-primary btn-large" onclick="window.enhancedMenuManager.showAddItemModal()">
+                                <span style="font-size: 24px;">➕</span>
+                                <span>Add Menu Item</span>
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="showImportModal()">
+                                <span style="font-size: 24px;">📄</span>
+                                <span>Import from File</span>
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="showTextInputModal()">
+                                <span style="font-size: 24px;">✏️</span>
+                                <span>Paste Menu Text</span>
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="window.enhancedMenuManager.downloadTemplate()">
+                                <span style="font-size: 24px;">📥</span>
+                                <span>Download Template</span>
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="window.enhancedMenuManager.exportMenu()">
+                                <span style="font-size: 24px;">💾</span>
+                                <span>Export Menu</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Menu Items Display -->
+            <section class="menu-items-section">
+                <div class="iterum-card">
+                    <div class="iterum-card-header">
+                        <h2 class="heading-2">🍽️ Menu Items</h2>
+                        <button class="btn btn-primary" onclick="window.enhancedMenuManager.showAddItemModal()">
+                            ➕ Add Item
+                        </button>
+                    </div>
+                    <div class="iterum-card-body">
+                        <div id="menu-items-grid">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🍽️</div>
+                                <h3>No Menu Items Yet</h3>
+                                <p>Add your first menu item to get started</p>
+                                <button class="btn btn-primary" onclick="window.enhancedMenuManager.showAddItemModal()">
+                                    ➕ Add Menu Item
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Legacy Import Section (collapsed by default) -->
+            <details class="menu-import-section" style="margin-top: 24px;">
+                <summary style="cursor: pointer; font-weight: 600; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                    📋 Advanced Import Options
+                </summary>
+                <div class="iterum-card iterum-card-elevated" style="margin-top: 12px;">
                     <div class="iterum-card-header">
                         <h2 class="heading-2">Import & Parse Menu</h2>
                         <p class="body-medium">Upload a menu file or paste text to automatically parse menu items</p>
@@ -1028,26 +1096,14 @@
                     
                     <div class="iterum-card-body">
                         <div class="import-options">
-                            <button class="btn btn-primary" onclick="showImportModal()">
-                                <span>📄</span>
-                                <span>Import from File</span>
-                            </button>
-                            <button class="btn btn-secondary" onclick="showTextInputModal()">
-                                <span>✏️</span>
-                                <span>Paste Text</span>
-                            </button>
                             <button class="btn btn-secondary" onclick="showURLImportModal()">
                                 <span>🌐</span>
                                 <span>Import from URL</span>
                             </button>
-                            <button class="btn btn-secondary" onclick="menuManager.downloadTemplate()">
-                                <span>📥</span>
-                                <span>Download Template</span>
-                            </button>
                         </div>
                     </div>
                 </div>
-            </section>
+            </details>
 
             <!-- Import Modals -->
             <!-- File Import Modal -->
@@ -1207,6 +1263,120 @@
                         <button class="btn btn-secondary" onclick="closeModal('import-results-modal')">Cancel</button>
                         <button class="btn btn-primary" onclick="applyImportResults()">Apply to Menu</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Add Menu Item Modal -->
+            <div id="add-menu-item-modal" class="modal" style="display: none;">
+                <div class="modal-content modal-large">
+                    <div class="modal-header">
+                        <h3>➕ Add Menu Item</h3>
+                        <span class="modal-close" onclick="closeModal('add-menu-item-modal')">&times;</span>
+                    </div>
+                    <form id="add-menu-item-form">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="item-name" class="form-label">Dish Name *</label>
+                                <input type="text" id="item-name" name="name" class="form-input" required placeholder="e.g., Grilled Salmon with Lemon Butter">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="item-description" class="form-label">Description</label>
+                                <textarea id="item-description" name="description" class="form-textarea" rows="3" placeholder="Brief description of the dish..."></textarea>
+                            </div>
+
+                            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div class="form-group">
+                                    <label for="item-category" class="form-label">Category *</label>
+                                    <select id="item-category" name="category" class="form-select" required>
+                                        <option value="Appetizers">Appetizers</option>
+                                        <option value="Salads">Salads</option>
+                                        <option value="Soups">Soups</option>
+                                        <option value="Main Courses" selected>Main Courses</option>
+                                        <option value="Sides">Sides</option>
+                                        <option value="Desserts">Desserts</option>
+                                        <option value="Beverages">Beverages</option>
+                                        <option value="Specials">Specials</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="item-price" class="form-label">Price *</label>
+                                    <input type="number" id="item-price" name="price" class="form-input" step="0.01" min="0" required placeholder="24.99">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="item-allergens" class="form-label">Allergens (comma-separated)</label>
+                                <input type="text" id="item-allergens" name="allergens" class="form-input" placeholder="e.g., Dairy, Nuts, Gluten">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="item-dietary" class="form-label">Dietary Info (comma-separated)</label>
+                                <input type="text" id="item-dietary" name="dietaryInfo" class="form-input" placeholder="e.g., Vegetarian, Gluten-Free, Vegan">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-item" style="padding: 12px; background: #f0fdf4; border: 2px solid #86efac; border-radius: 8px;">
+                                    <input type="checkbox" id="item-create-recipe" name="createRecipe" checked>
+                                    <span style="font-weight: 600; color: #166534;">✅ Automatically create recipe draft for this menu item</span>
+                                </label>
+                                <small class="form-help">This will create a recipe template you can develop later, linked to this menu item for costing.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('add-menu-item-modal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Menu Item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Edit Menu Item Modal -->
+            <div id="edit-menu-item-modal" class="modal" style="display: none;">
+                <div class="modal-content modal-large">
+                    <div class="modal-header">
+                        <h3>✏️ Edit Menu Item</h3>
+                        <span class="modal-close" onclick="closeModal('edit-menu-item-modal')">&times;</span>
+                    </div>
+                    <form id="edit-menu-item-form">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="edit-item-name" class="form-label">Dish Name *</label>
+                                <input type="text" id="edit-item-name" name="name" class="form-input" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-item-description" class="form-label">Description</label>
+                                <textarea id="edit-item-description" name="description" class="form-textarea" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div class="form-group">
+                                    <label for="edit-item-category" class="form-label">Category *</label>
+                                    <select id="edit-item-category" name="category" class="form-select" required>
+                                        <option value="Appetizers">Appetizers</option>
+                                        <option value="Salads">Salads</option>
+                                        <option value="Soups">Soups</option>
+                                        <option value="Main Courses">Main Courses</option>
+                                        <option value="Sides">Sides</option>
+                                        <option value="Desserts">Desserts</option>
+                                        <option value="Beverages">Beverages</option>
+                                        <option value="Specials">Specials</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="edit-item-price" class="form-label">Price *</label>
+                                    <input type="number" id="edit-item-price" name="price" class="form-input" step="0.01" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('edit-menu-item-modal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -2640,6 +2810,10 @@
         }
       }
     </script>
+    
+    <!-- Load Integration Scripts -->
+    <script defer src="assets/js/menu-recipe-integration.js"></script>
+    <script defer src="assets/js/menu-manager-enhanced.js"></script>
     
     <!-- Load Auth System Scripts - DEFERRED to prevent freezing -->
     <script type="module" defer src="assets/js/firebase-auth.js"></script>
