@@ -916,103 +916,89 @@
     <!-- Main Content -->
     <main>
       <div class="container">
-        <!-- Notebook Date Stamp -->
-        <div class="today-date-stamp">
-          <span id="notebook-date"></span>
-        </div>
-
-        <!-- Chef's Daily Notes -->
-        <div class="notebook-page">
-          <h2 class="notebook-header">Chef's Notebook</h2>
-          <p class="notebook-subheader">My Culinary Journey</p>
-
-          <!-- Today's Notes Section -->
-          <div class="chefs-notes">
-            <h3 class="notes-title">Today's Notes</h3>
-            <textarea class="notes-textarea" id="daily-notes" placeholder="Write your thoughts, ideas, observations from today's work...
-
-- What went well in the kitchen today?
-- New flavor combinations to explore?
-- Techniques you want to master?
-- Feedback from diners?
-
-Your notebook, your thoughts..." rows="6"></textarea>
-            <button onclick="saveDailyNotes()" class="btn btn-primary" style="margin-top: 12px; margin-left: 0;">
-              💾 Save Notes
-            </button>
-          </div>
-        </div>
-
-        <!-- Notebook Stats -->
-        <div class="notebook-page">
-          <h2 class="notebook-header">My Collection</h2>
-          <div class="notebook-stats">
-            <div class="stat-card-notebook" data-icon="📚">
-              <div class="stat-number-notebook" id="total-recipes">0</div>
-              <div class="stat-label-notebook">Recipes</div>
+        <!-- Modern Dashboard Header -->
+        <section class="dashboard-welcome">
+          <div class="welcome-content">
+            <div class="welcome-text">
+              <h1 class="welcome-title">
+                <span class="welcome-greeting" id="greeting-text">Good morning</span>, 
+                <span class="welcome-user-name" id="welcome-user-name">Chef</span>!
+              </h1>
+              <p class="welcome-subtitle">Ready to create something amazing today?</p>
             </div>
-            <div class="stat-card-notebook" data-icon="🥬">
-              <div class="stat-number-notebook" id="total-ingredients">--</div>
-              <div class="stat-label-notebook">Ingredients</div>
-            </div>
-            <div class="stat-card-notebook" data-icon="🍽️">
-              <div class="stat-number-notebook" id="total-menus">0</div>
-              <div class="stat-label-notebook">Menu Items</div>
-            </div>
-            <div class="stat-card-notebook" data-icon="📋">
-              <div class="stat-number-notebook" id="active-projects">0</div>
-              <div class="stat-label-notebook">Projects</div>
+            <div class="welcome-actions">
+              <button onclick="window.location.href='bulk-recipe-import.html'" class="btn-hero btn-hero-primary">
+                <span>🚀</span>
+                <span>Bulk Import</span>
+              </button>
+              <button onclick="window.location.href='recipe-developer.html'" class="btn-hero btn-hero-secondary">
+                <span>🧪</span>
+                <span>New Recipe</span>
+              </button>
+              <button onclick="window.location.href='menu-builder.html'" class="btn-hero btn-hero-secondary">
+                <span>🍽️</span>
+                <span>Build Menu</span>
+              </button>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Quick Access - Notebook Style -->
-        <div class="notebook-page">
-          <h2 class="notebook-header">Quick Access</h2>
-          <p class="notebook-subheader">Jump to your most-used tools</p>
-          
-          <div class="quick-actions-notebook">
-            <a href="recipe-developer.html" class="action-button-notebook">
-              <div class="action-icon-notebook">🧪</div>
-              <div class="action-text-notebook">New Recipe</div>
+        <!-- Quick Stats -->
+        <section class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number" id="total-recipes">0</div>
+            <div class="stat-label">Total Recipes</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="total-ingredients">--</div>
+            <div class="stat-label">Ingredients</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="active-projects">0</div>
+            <div class="stat-label">Active Projects</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="total-menus">0</div>
+            <div class="stat-label">Menu Items</div>
+          </div>
+        </section>
+
+        <!-- Quick Actions Grid -->
+        <section style="margin-bottom: 40px;">
+          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: #1e293b;">🚀 Quick Actions</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <a href="recipe-developer.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+              <div class="feature-icon">🧪</div>
+              <h3>New Recipe</h3>
+              <p>Create a recipe from scratch</p>
             </a>
-            <a href="bulk-recipe-import.html" class="action-button-notebook">
-              <div class="action-icon-notebook">🚀</div>
-              <div class="action-text-notebook">Bulk Import</div>
+            <a href="bulk-recipe-import.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+              <div class="feature-icon">🚀</div>
+              <h3>Bulk Import</h3>
+              <p>Import 10+ recipes at once</p>
             </a>
-            <a href="menu-builder.html" class="action-button-notebook">
-              <div class="action-icon-notebook">🍽️</div>
-              <div class="action-text-notebook">Build Menu</div>
+            <a href="menu-builder.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+              <div class="feature-icon">🍽️</div>
+              <h3>Menu Builder</h3>
+              <p>Design and cost menus</p>
             </a>
-            <a href="ingredients.html" class="action-button-notebook">
-              <div class="action-icon-notebook">🥬</div>
-              <div class="action-text-notebook">Ingredients</div>
+            <a href="ingredients.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+              <div class="feature-icon">🥬</div>
+              <h3>Ingredients</h3>
+              <p>Manage ingredient database</p>
             </a>
-            <a href="recipe-library.html" class="action-button-notebook">
-              <div class="action-icon-notebook">📚</div>
-              <div class="action-text-notebook">My Recipes</div>
+            <a href="vendor-management.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+              <div class="feature-icon">🏪</div>
+              <h3>Vendors</h3>
+              <p>Manage suppliers and pricing</p>
             </a>
-            <a href="vendor-management.html" class="action-button-notebook">
-              <div class="action-icon-notebook">🏪</div>
-              <div class="action-text-notebook">Vendors</div>
+            <a href="equipment-management.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+              <div class="feature-icon">🔧</div>
+              <h3>Equipment</h3>
+              <p>Track kitchen equipment</p>
             </a>
           </div>
-        </div>
-
-        <!-- Recipe Ideas - Sticky Notes Board -->
-        <div class="notebook-page">
-          <h2 class="notebook-header">Recipe Ideas Board</h2>
-          <p class="notebook-subheader">Capture inspiration as it strikes</p>
-          
-          <div class="ideas-board" style="margin-left: 80px;">
-            <div id="ideas-sticky-notes">
-              <!-- Sticky notes will appear here -->
-            </div>
-            <button onclick="showNewIdeaModal()" class="btn btn-primary" style="margin-top: 16px;">
-              ➕ Add New Idea
-            </button>
-          </div>
-        </div>
+        </section>
           
           <div class="ideas-notepad-grid">
             <!-- Quick Idea Capture -->
