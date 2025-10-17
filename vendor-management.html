@@ -197,7 +197,7 @@
                     <span>💰</span>
                     <span>Upload Price List</span>
                 </button>
-                <button id="add-vendor-btn" class="btn btn-primary">
+                <button onclick="window.vendorImporter?.showAddVendorModal()" class="btn btn-primary">
                     <span>➕</span>
                     <span>Add Vendor</span>
                 </button>
@@ -507,6 +507,9 @@
             }
         });
     </script>
+    
+    <!-- Load Vendor URL Importer -->
+    <script defer src="assets/js/vendor-url-importer.js"></script>
     
     <!-- Load Auth System at End -->
     <script type="module" defer src="assets/js/firebase-auth.js"></script>
