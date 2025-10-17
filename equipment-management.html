@@ -88,7 +88,7 @@
           </div>
 
           <!-- User Info Tab -->
-          <div class="header-user-tab" onclick="toggleUserDropdown()" id="header-user-tab" style="display: none;">
+          <div class="header-user-tab" onclick="toggleUserDropdown()" id="header-user-tab">
             <div class="header-user-avatar" id="user-avatar">
               <span id="user-avatar-initial">👤</span>
             </div>
@@ -109,11 +109,11 @@
             </div>
             
             <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="showProfileEditModal(); toggleUserDropdown();">
+              <div class="header-user-dropdown-item" onclick="if(window.showProfileEditModal) showProfileEditModal(); toggleUserDropdown();">
                 <span>👤</span>
                 <span>Edit Profile</span>
               </div>
-              <div class="header-user-dropdown-item" onclick="showForgotPasswordModal(); toggleUserDropdown();">
+              <div class="header-user-dropdown-item" onclick="if(window.showForgotPasswordModal) showForgotPasswordModal(); toggleUserDropdown();">
                 <span>🔑</span>
                 <span>Change Password</span>
               </div>
@@ -122,18 +122,14 @@
             <div class="header-user-dropdown-divider"></div>
             
             <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="alert('Settings coming soon!')">
-                <span>⚙️</span>
-                <span>Settings</span>
-              </div>
-              <div class="header-user-dropdown-item danger" onclick="handleSignOut()">
+              <div class="header-user-dropdown-item danger" onclick="if(window.authManager) window.authManager.signOut();">
                 <span>🚪</span>
                 <span>Sign Out</span>
               </div>
             </div>
             
             <div class="header-user-dropdown-footer">
-              <div class="header-user-dropdown-footer-text">Iterum R&D v1.0</div>
+              <div class="header-user-dropdown-footer-text">Iterum R&D v2.0</div>
             </div>
           </div>
 
@@ -1373,6 +1369,10 @@
     <script defer src="assets/js/header-user-display.js"></script>
     <script defer src="assets/js/profile-editor.js"></script>
     <script defer src="assets/js/project-ui-manager.js"></script>
+    
+    <!-- Central Data Loader -->
+    <script src="assets/js/central-data-loader.js"></script>
+    
     <script defer src="assets/js/auth_guard.js"></script>
-  </body>
-</html> 
+</body>
+</html>
