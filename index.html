@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="assets/css/premium-ui-system.css">
     <link rel="stylesheet" href="assets/css/unified-header.css">
     <link rel="stylesheet" href="assets/css/page-layouts.css">
+    <link rel="stylesheet" href="assets/css/dashboard-enhanced.css">
     <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
     
     <style>
@@ -916,96 +917,109 @@
     <!-- Main Content -->
     <main>
       <div class="container">
-        <!-- Modern Dashboard Header -->
-        <section class="dashboard-welcome">
-          <div class="welcome-content">
-            <div class="welcome-text">
-              <h1 class="welcome-title">
-                <span class="welcome-greeting" id="greeting-text">Good morning</span>, 
-                <span class="welcome-user-name" id="welcome-user-name">Chef</span>!
-              </h1>
-              <p class="welcome-subtitle">Ready to create something amazing today?</p>
+        <!-- Enhanced Hero -->
+        <div class="dashboard-hero">
+          <div class="hero-content">
+            <div class="hero-greeting">
+              <span id="greeting-text">Good morning</span>, <span id="welcome-user-name">Chef</span>!
             </div>
-            <div class="welcome-actions">
-              <button onclick="window.location.href='bulk-recipe-import.html'" class="btn-hero btn-hero-primary">
+            <div class="hero-subtitle">Your culinary workspace is ready</div>
+            <div class="hero-actions">
+              <button onclick="window.location.href='bulk-recipe-import.html'" class="hero-btn hero-btn-primary">
                 <span>🚀</span>
                 <span>Bulk Import</span>
               </button>
-              <button onclick="window.location.href='recipe-developer.html'" class="btn-hero btn-hero-secondary">
+              <button onclick="window.location.href='recipe-developer.html'" class="hero-btn hero-btn-secondary">
                 <span>🧪</span>
                 <span>New Recipe</span>
               </button>
-              <button onclick="window.location.href='menu-builder.html'" class="btn-hero btn-hero-secondary">
+              <button onclick="window.location.href='menu-builder.html'" class="hero-btn hero-btn-secondary">
                 <span>🍽️</span>
-                <span>Build Menu</span>
+                <span>Menu Builder</span>
               </button>
+              <button onclick="window.location.href='project-hub.html'" class="hero-btn hero-btn-secondary">
+                <span>📋</span>
+                <span>Projects</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Stats -->
+        <section class="stats-section">
+          <div class="stats-grid-enhanced">
+            <div class="stat-card-enhanced blue" data-icon="📚">
+              <div class="stat-icon-enhanced">📚</div>
+              <div class="stat-value-enhanced" id="total-recipes">0</div>
+              <div class="stat-label-enhanced">Recipes</div>
+              <div class="stat-subtext">In your collection</div>
+            </div>
+            <div class="stat-card-enhanced green" data-icon="🥬">
+              <div class="stat-icon-enhanced">🥬</div>
+              <div class="stat-value-enhanced" id="total-ingredients">--</div>
+              <div class="stat-label-enhanced">Ingredients</div>
+              <div class="stat-subtext">In database</div>
+            </div>
+            <div class="stat-card-enhanced orange" data-icon="🍽️">
+              <div class="stat-icon-enhanced">🍽️</div>
+              <div class="stat-value-enhanced" id="total-menus">0</div>
+              <div class="stat-label-enhanced">Menu Items</div>
+              <div class="stat-subtext">Across all menus</div>
+            </div>
+            <div class="stat-card-enhanced purple" data-icon="📋">
+              <div class="stat-icon-enhanced">📋</div>
+              <div class="stat-value-enhanced" id="active-projects">0</div>
+              <div class="stat-label-enhanced">Projects</div>
+              <div class="stat-subtext">Active workspaces</div>
             </div>
           </div>
         </section>
 
-        <!-- Quick Stats -->
-        <section class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-number" id="total-recipes">0</div>
-            <div class="stat-label">Total Recipes</div>
+        <!-- Quick Actions -->
+        <section class="quick-actions-section">
+          <div class="section-header-enhanced">
+            <h2 class="section-title-enhanced">🚀 Quick Actions</h2>
           </div>
-          <div class="stat-item">
-            <div class="stat-number" id="total-ingredients">--</div>
-            <div class="stat-label">Ingredients</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number" id="active-projects">0</div>
-            <div class="stat-label">Active Projects</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number" id="total-menus">0</div>
-            <div class="stat-label">Menu Items</div>
-          </div>
-        </section>
-
-        <!-- Quick Actions Grid -->
-        <section style="margin-bottom: 40px;">
-          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: #1e293b;">🚀 Quick Actions</h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-            <a href="recipe-developer.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
-              <div class="feature-icon">🧪</div>
-              <h3>New Recipe</h3>
-              <p>Create a recipe from scratch</p>
+          <div class="quick-actions-grid-enhanced">
+            <a href="recipe-developer.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">🧪</div>
+              <div class="action-title-enhanced">New Recipe</div>
+              <div class="action-desc-enhanced">Create from scratch</div>
             </a>
-            <a href="bulk-recipe-import.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
-              <div class="feature-icon">🚀</div>
-              <h3>Bulk Import</h3>
-              <p>Import 10+ recipes at once</p>
+            <a href="bulk-recipe-import.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">🚀</div>
+              <div class="action-title-enhanced">Bulk Import</div>
+              <div class="action-desc-enhanced">Import 10+ at once</div>
             </a>
-            <a href="recipe-photo-studio.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
-              <div class="feature-icon">📸</div>
-              <h3>Photo Studio</h3>
-              <p>Add photos to recipes & steps</p>
+            <a href="recipe-photo-studio.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">📸</div>
+              <div class="action-title-enhanced">Photo Studio</div>
+              <div class="action-desc-enhanced">Add beautiful photos</div>
             </a>
-            <a href="menu-builder.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
-              <div class="feature-icon">🍽️</div>
-              <h3>Menu Builder</h3>
-              <p>Design and cost menus</p>
+            <a href="menu-builder.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">🍽️</div>
+              <div class="action-title-enhanced">Menu Builder</div>
+              <div class="action-desc-enhanced">Design & cost menus</div>
             </a>
-            <a href="ingredients.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
-              <div class="feature-icon">🥬</div>
-              <h3>Ingredients</h3>
-              <p>Manage ingredient database</p>
+            <a href="ingredients.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">🥬</div>
+              <div class="action-title-enhanced">Ingredients</div>
+              <div class="action-desc-enhanced">Manage database</div>
             </a>
-            <a href="vendor-management.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
-              <div class="feature-icon">🏪</div>
-              <h3>Vendors</h3>
-              <p>Manage suppliers and pricing</p>
+            <a href="vendor-management.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">🏪</div>
+              <div class="action-title-enhanced">Vendors</div>
+              <div class="action-desc-enhanced">Suppliers & pricing</div>
             </a>
-            <a href="equipment-management.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
-              <div class="feature-icon">🔧</div>
-              <h3>Equipment</h3>
-              <p>Track kitchen equipment</p>
+            <a href="equipment-management.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">🔧</div>
+              <div class="action-title-enhanced">Equipment</div>
+              <div class="action-desc-enhanced">Track kitchen tools</div>
             </a>
-            <a href="project-hub.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
-              <div class="feature-icon">📋</div>
-              <h3>Project Hub</h3>
-              <p>Visual project management</p>
+            <a href="project-hub.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">📋</div>
+              <div class="action-title-enhanced">Project Hub</div>
+              <div class="action-desc-enhanced">Manage projects</div>
             </a>
           </div>
         </section>
