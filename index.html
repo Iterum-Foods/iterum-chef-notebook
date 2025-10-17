@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iterum R&D Chef Notebook</title>
     
+    <!-- Immediate Auth Check - Redirect if not logged in -->
+    <script>
+        // Check for active session IMMEDIATELY
+        (function() {
+            const sessionActive = localStorage.getItem('session_active');
+            const currentUser = localStorage.getItem('current_user');
+            
+            if (!sessionActive || !currentUser) {
+                console.log('🔒 No active session - redirecting to launch page');
+                window.location.href = 'launch.html';
+            } else {
+                console.log('✅ Session active - loading dashboard');
+            }
+        })();
+    </script>
+    
     <!-- Load Auth System -->
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/auth-manager.js"></script>
@@ -3200,7 +3216,11 @@
       });
     </script>
     
-    <!-- Load Auth Guard - Non-blocking, placed at end of body -->
+    <!-- Load Auth Guard and Firebase Auth - Non-blocking, placed at end of body -->
+    <script type="module" src="assets/js/firebase-auth.js"></script>
+    <script type="module" src="assets/js/firestore-sync.js"></script>
+    <script src="assets/js/header-user-display.js"></script>
+    <script src="assets/js/profile-editor.js"></script>
     <script src="assets/js/auth_guard.js"></script>
 </body>
 </html>
