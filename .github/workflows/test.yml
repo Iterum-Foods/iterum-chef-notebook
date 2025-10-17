@@ -1,14 +1,7 @@
 name: CI/CD Pipeline - Iterum Culinary App
 
+# TEMPORARILY DISABLED - Re-enable when tests are configured
 on:
-  push:
-    branches: [ main, develop ]
-    tags: [ 'v*' ]
-  pull_request:
-    branches: [ main, develop ]
-  schedule:
-    # Run security scans weekly
-    - cron: '0 2 * * 1'
   workflow_dispatch:
     inputs:
       run_security_scan:
