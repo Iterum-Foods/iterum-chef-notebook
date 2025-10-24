@@ -27,15 +27,25 @@
     <script src="assets/js/auth-api-helper.js"></script>
     <script src="assets/js/auth-diagnostics.js"></script>
     
+    <!-- Load Brainstorming & Notes Systems -->
+    <script src="assets/js/recipe-brainstorming.js"></script>
+    <script src="assets/js/napkin-brainstorming.js"></script>
+    <script src="assets/js/robust-notes-system.js"></script>
+    <script src="assets/js/enhanced-notes-interface.js"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Shadows+Into+Light:wght@400&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/tailwind-output.css">
     <link rel="stylesheet" href="assets/css/iterum-design-system.css">
     <link rel="stylesheet" href="assets/css/premium-ui-system.css">
-    <link rel="stylesheet" href="assets/css/unified-header.css">
     <link rel="stylesheet" href="assets/css/page-layouts.css">
     <link rel="stylesheet" href="assets/css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="assets/css/dashboard-contrast.css">
+    <link rel="stylesheet" href="assets/css/nordic-design-system.css">
+    <link rel="stylesheet" href="assets/css/modern-nordic-vintage.css">
+    <link rel="stylesheet" href="assets/css/dark-mode-enhancements.css">
+    <link rel="stylesheet" href="assets/css/dashboard-nordic-vintage.css">
     <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
     
     <style>
@@ -671,14 +681,26 @@
             }
         }
     </style>
+    
+    <!-- User Data Manager & Cloud Sync -->
+    <script src="assets/js/user-data-manager.js" defer></script>
+    <script src="assets/js/cloud-data-sync.js" defer></script>
+    <script src="assets/js/sync-status-indicator.js" defer></script>
+    
+    <!-- Unified Navigation -->
+    <script src="assets/js/unified-nav-header.js" defer></script>
+    <script src="assets/js/unified-project-selector.js" defer></script>
+    <link rel="stylesheet" href="assets/css/iterum-brand-kit.css">
+    <link rel="stylesheet" href="assets/css/header-universal.css">
+    <link rel="stylesheet" href="assets/css/ui-polish.css">
 </head>
-<body>
+<body style="padding-top: 80px;">
     <!-- Professional loading indicator with auto-hide -->
-    <div id="simple-loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+    <div id="simple-loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #3D3426 0%, #2A2420 50%, #1F1D1A 100%); z-index: 9999; display: flex; align-items: center; justify-content: center;">
       <div style="text-align: center;">
-        <div style="width: 60px; height: 60px; border: 5px solid #e5e7eb; border-top: 5px solid #4a7c2c; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px;"></div>
-        <p style="color: #1f2937; font-weight: 700; font-size: 18px; letter-spacing: 0.5px;">Loading Iterum...</p>
-        <p style="color: #64748b; font-size: 14px; margin-top: 8px;">Preparing your workspace</p>
+        <div style="width: 60px; height: 60px; border: 5px solid #5C4D39; border-top: 5px solid #A85D3A; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px;"></div>
+        <p style="color: #F5F2EB; font-weight: 700; font-size: 18px; letter-spacing: 0.5px;">Loading Iterum...</p>
+        <p style="color: #D8D4CC; font-size: 14px; margin-top: 8px;">Preparing your workspace</p>
       </div>
     </div>
     
@@ -707,212 +729,7 @@
     <!-- The unified authentication system will show popup modals upon launch -->
 
     <!-- Reorganized Header for Better Screen Fit -->
-    <header class="iterum-header">
-      <div class="header-container">
-        <!-- Logo Section - Compact -->
-        <a href="index.html" class="header-logo">
-          <div class="header-logo-icon">
-            <span>🍃</span>
-          </div>
-          <div class="header-logo-text">
-            <div class="header-logo-title">Iterum R&D</div>
-            <div class="header-logo-subtitle">Chef Notebook</div>
-          </div>
-        </a>
-
-        <!-- Center Navigation - Compact -->
-        <nav class="header-navigation">
-          <a href="index.html" class="header-nav-item active" data-page="index">
-            <span class="nav-icon">🏠</span>
-            <span class="nav-text">Dashboard</span>
-          </a>
-          <a href="recipe-library.html" class="header-nav-item" data-page="recipe-library">
-            <span class="nav-icon">📚</span>
-            <span class="nav-text">Library</span>
-          </a>
-          <a href="recipe-developer.html" class="header-nav-item" data-page="recipe-developer">
-            <span class="nav-icon">🧪</span>
-            <span class="nav-text">Developer</span>
-          </a>
-          <a href="recipe-upload.html" class="header-nav-item" data-page="recipe-upload">
-            <span class="nav-icon">⚡</span>
-            <span class="nav-text">Upload</span>
-          </a>
-          <a href="bulk-recipe-import.html" class="header-nav-item" data-page="bulk-import">
-            <span class="nav-icon">🚀</span>
-            <span class="nav-text">Bulk Import</span>
-          </a>
-          <a href="menu-builder.html" class="header-nav-item" data-page="menu-builder">
-            <span class="nav-icon">🍽️</span>
-            <span class="nav-text">Menus</span>
-          </a>
-          <a href="ingredients.html" class="header-nav-item" data-page="ingredients">
-            <span class="nav-icon">🥬</span>
-            <span class="nav-text">Ingredients</span>
-          </a>
-          <a href="equipment-management.html" class="header-nav-item" data-page="equipment-management">
-            <span class="nav-icon">🔧</span>
-            <span class="nav-text">Equipment</span>
-          </a>
-          <a href="vendor-management.html" class="header-nav-item" data-page="vendor-management">
-            <span class="nav-icon">🏪</span>
-            <span class="nav-text">Vendors</span>
-          </a>
-        </nav>
-
-        <!-- Right Side - Compact User Section -->
-        <div class="header-user-section">
-          <!-- Modern Project Selector with Dropdown -->
-          <div class="header-project-selector-container">
-            <div class="project-selector-display" onclick="window.projectUIManager?.showProjectDropdown()" title="Click to switch projects or create new">
-              <span class="project-selector-icon">📋</span>
-              <span class="project-selector-name" data-project-name>Master Project</span>
-              <svg class="project-selector-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </div>
-          </div>
-
-
-          <!-- User Info Tab - Only visible after authentication -->
-          <div class="header-user-tab" onclick="toggleUserDropdown()" id="header-user-tab" style="display: none;">
-            <div class="header-user-avatar" id="user-avatar">
-              <span id="user-avatar-initial">👤</span>
-            </div>
-            <div class="header-user-info">
-              <div class="header-user-name" id="current-user">Guest User</div>
-              <div class="header-user-role">Chef</div>
-            </div>
-            <svg class="header-user-dropdown-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </div>
-
-          <!-- User Dropdown Menu -->
-          <div class="header-user-dropdown" id="user-dropdown">
-            <div class="header-user-dropdown-header">
-              <div class="header-user-dropdown-title" id="dropdown-user-name">Guest User</div>
-              <div class="header-user-dropdown-subtitle" id="dropdown-user-role">Chef</div>
-            </div>
-            
-            <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="showProfileEditModal(); toggleUserDropdown();">
-                <span>👤</span>
-                <span>Edit Profile</span>
-              </div>
-              <div class="header-user-dropdown-item" onclick="showForgotPasswordModal(); toggleUserDropdown();">
-                <span>🔑</span>
-                <span>Change Password</span>
-              </div>
-            </div>
-            
-            <div class="header-user-dropdown-divider"></div>
-            
-            <div class="header-user-dropdown-menu">
-              <div class="header-user-dropdown-item" onclick="alert('Additional settings coming soon!')">
-                <span>⚙️</span>
-                <span>Settings</span>
-              </div>
-              <div class="header-user-dropdown-item danger" onclick="handleSignOut()">
-                <span>🚪</span>
-                <span>Sign Out</span>
-              </div>
-            </div>
-            
-            <div class="header-user-dropdown-footer">
-              <div class="header-user-dropdown-footer-text">Iterum R&D v1.0</div>
-            </div>
-          </div>
-
-          <!-- Mobile Navigation Toggle -->
-          <button class="header-mobile-toggle" onclick="toggleMobileNav()">
-            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Mobile Navigation -->
-      <nav id="mobile-nav" class="header-mobile-nav">
-        <!-- Project Selector for Mobile -->
-        <div style="margin-bottom: 1rem;">
-          <select id="mobile-project-selector" class="header-project-selector" style="width: 100%;">
-            <option value="">Select Project...</option>
-          </select>
-          <div class="project-status-display" style="margin-top: 0.5rem; text-align: center;">
-            <span class="project-status-label">Current:</span>
-            <span class="project-status-value" data-project-name>Master Project</span>
-          </div>
-          <div class="project-stats-display" data-project-stats style="margin-top: 0.5rem; text-align: center;">
-            <div class="project-stats">
-              <span class="stat-item">🥕 0 Ingredients</span>
-              <span class="stat-item">📖 0 Recipes</span>
-              <span class="stat-item">🍽️ 0 Menus</span>
-              <span class="stat-item total">📊 0 Total Items</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- New Project Button for Mobile -->
-        <div style="margin-bottom: 1rem;">
-          <button class="btn btn-primary w-full" onclick="window.projectUIManager?.showManageModal()">
-            <span>📋</span>
-            <span>Manage Projects</span>
-          </button>
-        </div>
-
-        <!-- Authentication Button - Show if not authenticated -->
-        <div style="margin-bottom: 1rem;">
-          <button class="btn btn-secondary w-full" onclick="window.location.href='launch.html'" id="auth-button" style="display: none;">
-            <span>🔐</span>
-            <span>Sign In / Switch User</span>
-          </button>
-        </div>
-
-        <!-- Authentication Status -->
-        <div id="auth-status" style="margin-bottom: 1rem; padding: 10px; background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; text-align: center; font-size: 14px;">
-          <span>⏳</span>
-          <span>Initializing authentication...</span>
-        </div>
-
-        <!-- Debug button removed for production -->
-
-        <!-- Mobile Navigation Items -->
-        <a href="index.html" class="header-mobile-nav-item" data-page="index">
-          <span class="nav-icon">🏠</span>
-          <span>Dashboard</span>
-        </a>
-        <a href="recipe-library.html" class="header-mobile-nav-item" data-page="recipe-library">
-          <span class="nav-icon">📚</span>
-          <span>Library</span>
-        </a>
-        <a href="recipe-developer.html" class="header-mobile-nav-item" data-page="recipe-developer">
-          <span class="nav-icon">🧪</span>
-          <span>Developer</span>
-        </a>
-        <a href="recipe-upload.html" class="header-mobile-nav-item" data-page="recipe-upload">
-          <span class="nav-icon">⚡</span>
-          <span>Upload</span>
-        </a>
-        <a href="menu-builder.html" class="header-mobile-nav-item" data-page="menu-builder">
-          <span class="nav-icon">🍽️</span>
-          <span>Menu</span>
-        </a>
-        <a href="ingredients.html" class="header-mobile-nav-item" data-page="ingredients">
-          <span class="nav-icon">🥬</span>
-          <span>Ingredients</span>
-        </a>
-        <a href="equipment-management.html" class="header-mobile-nav-item" data-page="equipment-management">
-          <span class="nav-icon">🔧</span>
-          <span>Equipment</span>
-        </a>
-        <a href="vendor-management.html" class="header-mobile-nav-item" data-page="vendor-management">
-          <span class="nav-icon">🏪</span>
-          <span>Vendors</span>
-        </a>
-      </nav>
-    </header>
+    <!-- Header injected by unified-nav-header.js -->
 
     <!-- Main Content -->
     <main>
@@ -975,31 +792,37 @@
           </div>
         </section>
 
-        <!-- Quick Actions -->
+        <!-- Core Features - Simplified -->
         <section class="quick-actions-section">
           <div class="section-header-enhanced">
             <h2 class="section-title-enhanced">🚀 Quick Actions</h2>
+            <p style="color: #64748b; margin-top: 5px;">Your most-used features</p>
           </div>
           <div class="quick-actions-grid-enhanced">
-            <a href="recipe-developer.html" class="action-card-enhanced">
+            <a href="chef-dashboard.html" class="action-card-enhanced" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;">
+              <div class="action-icon-enhanced">👨‍🍳</div>
+              <div class="action-title-enhanced">Chef's Dashboard</div>
+              <div class="action-desc-enhanced">Quick notes & prep</div>
+            </a>
+            <a href="recipe-developer.html" class="action-card-enhanced" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
               <div class="action-icon-enhanced">🧪</div>
-              <div class="action-title-enhanced">New Recipe</div>
-              <div class="action-desc-enhanced">Create from scratch</div>
+              <div class="action-title-enhanced">Create Recipe</div>
+              <div class="action-desc-enhanced">Develop new dishes</div>
             </a>
-            <a href="bulk-recipe-import.html" class="action-card-enhanced">
-              <div class="action-icon-enhanced">🚀</div>
-              <div class="action-title-enhanced">Bulk Import</div>
-              <div class="action-desc-enhanced">Import 10+ at once</div>
-            </a>
-            <a href="recipe-photo-studio.html" class="action-card-enhanced">
-              <div class="action-icon-enhanced">📸</div>
-              <div class="action-title-enhanced">Photo Studio</div>
-              <div class="action-desc-enhanced">Add beautiful photos</div>
+            <a href="recipe-library.html" class="action-card-enhanced">
+              <div class="action-icon-enhanced">📖</div>
+              <div class="action-title-enhanced">Recipe Library</div>
+              <div class="action-desc-enhanced">Browse & edit recipes</div>
             </a>
             <a href="menu-builder.html" class="action-card-enhanced">
               <div class="action-icon-enhanced">🍽️</div>
               <div class="action-title-enhanced">Menu Builder</div>
-              <div class="action-desc-enhanced">Design & cost menus</div>
+              <div class="action-desc-enhanced">Design menus</div>
+            </a>
+            <a href="kitchen-management.html" class="action-card-enhanced" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white;">
+              <div class="action-icon-enhanced">🔪</div>
+              <div class="action-title-enhanced">Kitchen Mgmt</div>
+              <div class="action-desc-enhanced">Daily operations</div>
             </a>
             <a href="ingredients.html" class="action-card-enhanced">
               <div class="action-icon-enhanced">🥬</div>
@@ -1009,37 +832,7 @@
             <a href="vendor-management.html" class="action-card-enhanced">
               <div class="action-icon-enhanced">🏪</div>
               <div class="action-title-enhanced">Vendors</div>
-              <div class="action-desc-enhanced">Suppliers & pricing</div>
-            </a>
-            <a href="equipment-management.html" class="action-card-enhanced">
-              <div class="action-icon-enhanced">🔧</div>
-              <div class="action-title-enhanced">Equipment</div>
-              <div class="action-desc-enhanced">Track kitchen tools</div>
-            </a>
-            <a href="project-hub.html" class="action-card-enhanced">
-              <div class="action-icon-enhanced">📋</div>
-              <div class="action-title-enhanced">Project Hub</div>
-              <div class="action-desc-enhanced">Manage projects</div>
-            </a>
-            <a href="data-backup-center.html" class="action-card-enhanced" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white;">
-              <div class="action-icon-enhanced">💾</div>
-              <div class="action-title-enhanced">Backup Center</div>
-              <div class="action-desc-enhanced">Protect your data</div>
-            </a>
-            <a href="inventory.html" class="action-card-enhanced" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;">
-              <div class="action-icon-enhanced">📦</div>
-              <div class="action-title-enhanced">Inventory</div>
-              <div class="action-desc-enhanced">Track stock levels</div>
-            </a>
-            <a href="production-planning.html" class="action-card-enhanced" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white;">
-              <div class="action-icon-enhanced">📋</div>
-              <div class="action-title-enhanced">Production</div>
-              <div class="action-desc-enhanced">Plan & scale recipes</div>
-            </a>
-            <a href="vendor-price-comparison.html" class="action-card-enhanced" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
-              <div class="action-icon-enhanced">💰</div>
-              <div class="action-title-enhanced">Price Compare</div>
-              <div class="action-desc-enhanced">Find best deals</div>
+              <div class="action-desc-enhanced">Suppliers</div>
             </a>
           </div>
         </section>
@@ -1162,38 +955,49 @@
           
           <div class="dashboard-card">
             <div class="dashboard-card-header">
-              <div class="dashboard-card-title">Quick Actions</div>
+              <div class="dashboard-card-title">🔪 Kitchen Management</div>
             </div>
             <div class="flex flex-col gap-3">
-              <a href="recipe-upload.html" class="btn btn-primary">
-                <span>⚡</span>
-                <span>Upload New Recipe</span>
+              <a href="kitchen-management.html" class="btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white;">
+                <span>📋</span>
+                <span>Kitchen Dashboard</span>
               </a>
-              <a href="price-list-upload.html" class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                <span>💰</span>
-                <span>Upload Price List</span>
+              <a href="kitchen-management.html?tab=pdf" class="btn btn-secondary">
+                <span>📕</span>
+                <span>Recipe Book PDF</span>
               </a>
-              <a href="ingredients.html" class="btn btn-secondary">
-                <span>🥬</span>
-                <span>Add Ingredient</span>
+              <a href="kitchen-management.html?tab=buildsheet" class="btn btn-secondary">
+                <span>📄</span>
+                <span>Build Sheets</span>
               </a>
-              <a href="menu-builder.html" class="btn btn-secondary">
-                <span>🍽️</span>
-                <span>Create Menu</span>
+              <a href="kitchen-management.html?tab=checklist" class="btn btn-secondary">
+                <span>✅</span>
+                <span>Quality Checklist</span>
               </a>
             </div>
           </div>
           
           <div class="dashboard-card">
             <div class="dashboard-card-header">
-              <div class="dashboard-card-title">Project Management</div>
+              <div class="dashboard-card-title">⚡ Quick Actions</div>
             </div>
             <div class="flex flex-col gap-3">
-              <button onclick="createNewProject()" class="btn btn-primary">➕ Create New Project</button>
-              <button onclick="manageProjects()" class="btn btn-secondary">📋 Manage Projects</button>
-              <div id="project-status" class="text-sm text-gray-600">
-                <p>No active projects</p>
-              </div>
+              <a href="recipe-developer.html" class="btn btn-primary">
+                <span>🧪</span>
+                <span>Create New Recipe</span>
+              </a>
+              <a href="menu-builder.html" class="btn btn-secondary">
+                <span>🍽️</span>
+                <span>Build Menu</span>
+              </a>
+              <a href="inventory.html" class="btn btn-secondary">
+                <span>📦</span>
+                <span>Check Inventory</span>
+              </a>
+              <a href="vendor-management.html" class="btn btn-secondary">
+                <span>🏪</span>
+                <span>Manage Vendors</span>
+              </a>
             </div>
           </div>
         </section>
@@ -1201,13 +1005,100 @@
         <!-- Daily Notes & Calendar Section -->
         <section class="notes-calendar-section">
           <div class="notes-calendar-header">
-            <h2 class="heading-2">📅 Daily Notes & Calendar</h2>
+            <h2 class="heading-2">📝 Enhanced Notes & Brainstorming</h2>
             <div class="notes-actions">
-              <button class="btn btn-primary" onclick="openCalendarView()">📅 Full Calendar</button>
+              <button class="btn btn-primary" onclick="window.enhancedNotesInterface.openInterface()" style="
+                background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+                border: 1px solid #1e40af;
+                color: white;
+                font-weight: 600;
+              ">📝 Enhanced Notes</button>
+              <button class="btn btn-secondary" onclick="window.recipeBrainstorming.openWorkspace()" style="
+                background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+                border: 1px solid #6d28d9;
+                color: white;
+                font-weight: 600;
+              ">🧠 Brainstorm</button>
+              <button class="btn btn-secondary" onclick="window.napkinBrainstorming.openNapkinWorkspace()" style="
+                background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                border: 1px solid #b45309;
+                color: white;
+                font-weight: 600;
+              ">🧻 Napkin Sketch</button>
+              <button class="btn btn-secondary" onclick="openCalendarView()">📅 Full Calendar</button>
               <button class="btn btn-secondary" onclick="exportNotes()">📤 Export Notes</button>
             </div>
           </div>
           
+          <!-- Quick Brainstorming Section -->
+          <div class="quick-brainstorming-section" style="
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #334155;
+          ">
+            <h3 style="color: #e2e8f0; margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">💡 Quick Brainstorming</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+              <button onclick="window.enhancedNotesInterface.openInterface()" class="brainstorm-card" style="
+                background: rgba(59, 130, 246, 0.1);
+                border: 1px solid rgba(59, 130, 246, 0.3);
+                border-radius: 8px;
+                padding: 16px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                color: #60a5fa;
+              " onmouseover="this.style.background='rgba(59, 130, 246, 0.2)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.1)'">
+                <div style="font-size: 24px; margin-bottom: 8px;">📝</div>
+                <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Enhanced Notes</div>
+                <div style="font-size: 11px; opacity: 0.8;">Categories, templates, search</div>
+              </button>
+              <button onclick="window.recipeBrainstorming.openWorkspace()" class="brainstorm-card" style="
+                background: rgba(139, 92, 246, 0.1);
+                border: 1px solid rgba(139, 92, 246, 0.3);
+                border-radius: 8px;
+                padding: 16px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                color: #a855f7;
+              " onmouseover="this.style.background='rgba(139, 92, 246, 0.2)'" onmouseout="this.style.background='rgba(139, 92, 246, 0.1)'">
+                <div style="font-size: 24px; margin-bottom: 8px;">🧠</div>
+                <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Brainstorm Ideas</div>
+                <div style="font-size: 11px; opacity: 0.8;">Templates, sketching, notes</div>
+              </button>
+              <button onclick="window.napkinBrainstorming.openNapkinWorkspace()" class="brainstorm-card" style="
+                background: rgba(245, 158, 11, 0.1);
+                border: 1px solid rgba(245, 158, 11, 0.3);
+                border-radius: 8px;
+                padding: 16px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                color: #f59e0b;
+              " onmouseover="this.style.background='rgba(245, 158, 11, 0.2)'" onmouseout="this.style.background='rgba(245, 158, 11, 0.1)'">
+                <div style="font-size: 24px; margin-bottom: 8px;">🧻</div>
+                <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Napkin Sketch</div>
+                <div style="font-size: 11px; opacity: 0.8;">Just like the pros do it</div>
+              </button>
+              <button onclick="generateQuickIdea()" class="brainstorm-card" style="
+                background: rgba(16, 185, 129, 0.1);
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                border-radius: 8px;
+                padding: 16px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                color: #10b981;
+              " onmouseover="this.style.background='rgba(16, 185, 129, 0.2)'" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)'">
+                <div style="font-size: 24px; margin-bottom: 8px;">🎲</div>
+                <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Random Idea</div>
+                <div style="font-size: 11px; opacity: 0.8;">Generate inspiration</div>
+              </button>
+            </div>
+          </div>
+
           <div class="notes-calendar-grid">
             <!-- Daily Notes Form -->
             <div class="daily-notes-card">
@@ -1394,6 +1285,41 @@
           showUserToggle(event.detail.user);
         }
       });
+
+      // Quick idea generator
+      function generateQuickIdea() {
+        const cuisines = ['Italian', 'French', 'Japanese', 'Mexican', 'Indian', 'Thai', 'Mediterranean', 'American', 'Korean', 'Chinese'];
+        const proteins = ['chicken', 'beef', 'fish', 'tofu', 'lamb', 'pork', 'shrimp', 'duck', 'turkey', 'salmon'];
+        const cookingMethods = ['roasted', 'grilled', 'braised', 'seared', 'steamed', 'fried', 'baked', 'sautéed', 'smoked', 'poached'];
+        const vegetables = ['asparagus', 'broccoli', 'carrots', 'zucchini', 'eggplant', 'mushrooms', 'spinach', 'kale', 'sweet potato', 'cauliflower'];
+        const seasonings = ['garlic', 'ginger', 'lemon', 'herbs', 'spices', 'chili', 'soy sauce', 'balsamic', 'honey', 'olive oil'];
+        
+        const cuisine = cuisines[Math.floor(Math.random() * cuisines.length)];
+        const protein = proteins[Math.floor(Math.random() * proteins.length)];
+        const method = cookingMethods[Math.floor(Math.random() * cookingMethods.length)];
+        const vegetable = vegetables[Math.floor(Math.random() * vegetables.length)];
+        const seasoning = seasonings[Math.floor(Math.random() * seasonings.length)];
+        
+        const idea = `${method} ${protein} with ${vegetable} and ${seasoning} (${cuisine} style)`;
+        
+        // Show notification with the idea
+        if (window.showToast) {
+          window.showToast(`💡 Idea: ${idea}`, 'success');
+        } else {
+          alert(`Generated idea: ${idea}`);
+        }
+        
+        // Optionally create a note with this idea
+        if (window.robustNotesSystem) {
+          window.robustNotesSystem.createNote({
+            title: `Recipe Idea: ${idea}`,
+            content: `# Recipe Concept\n\n**Generated Idea:** ${idea}\n\n## Development Notes\n- **Cuisine Style:** ${cuisine}\n- **Main Protein:** ${protein}\n- **Cooking Method:** ${method}\n- **Vegetable:** ${vegetable}\n- **Seasoning:** ${seasoning}\n\n## Next Steps\n- [ ] Research traditional ${cuisine} techniques\n- [ ] Source quality ${protein}\n- [ ] Plan ingredient ratios\n- [ ] Test cooking method\n- [ ] Develop plating concept\n\n## Flavor Profile\n- **Primary:** \n- **Secondary:** \n- **Accent:** \n\n## Notes\n`,
+            category: 'recipe',
+            tags: ['idea', 'generated', cuisine.toLowerCase(), protein],
+            priority: 'medium'
+          });
+        }
+      }
 
       // Mobile navigation toggle
       function toggleMobileNav() {
@@ -3156,237 +3082,6 @@
         }
       }, 3000);
       
-      // Welcome Modal Function
-      function showWelcomeModal(user) {
-        const modal = document.createElement('div');
-        modal.className = 'welcome-modal-overlay';
-        modal.innerHTML = `
-          <div class="welcome-modal-backdrop" onclick="this.parentElement.remove()"></div>
-          <div class="welcome-modal-content">
-            <div class="welcome-modal-icon">👋</div>
-            <h2 class="welcome-modal-title">Welcome Back!</h2>
-            <p class="welcome-modal-user">${user.name || user.email}</p>
-            <p class="welcome-modal-message">
-              Your workspace is ready. Let's create something amazing today!
-            </p>
-            <div class="welcome-modal-stats">
-              <div class="welcome-stat">
-                <div class="welcome-stat-number" id="modal-recipes">0</div>
-                <div class="welcome-stat-label">Recipes</div>
-              </div>
-              <div class="welcome-stat">
-                <div class="welcome-stat-number" id="modal-menus">0</div>
-                <div class="welcome-stat-label">Menus</div>
-              </div>
-              <div class="welcome-stat">
-                <div class="welcome-stat-number" id="modal-ingredients">0</div>
-                <div class="welcome-stat-label">Ingredients</div>
-              </div>
-            </div>
-            <div class="welcome-modal-actions">
-              <button onclick="this.closest('.welcome-modal-overlay').remove(); window.location.href='recipe-upload.html'" class="btn-welcome btn-welcome-primary">
-                <span>⚡</span>
-                <span>Quick Upload</span>
-              </button>
-              <button onclick="this.closest('.welcome-modal-overlay').remove()" class="btn-welcome btn-welcome-secondary">
-                <span>✓</span>
-                <span>Get Started</span>
-              </button>
-            </div>
-          </div>
-        `;
-        
-        // Add styles
-        if (!document.getElementById('welcome-modal-styles')) {
-          const styles = document.createElement('style');
-          styles.id = 'welcome-modal-styles';
-          styles.textContent = `
-            .welcome-modal-overlay {
-              position: fixed;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              z-index: 10000;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              animation: fadeIn 0.3s ease;
-            }
-            
-            .welcome-modal-backdrop {
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              background: rgba(0,0,0,0.6);
-              backdrop-filter: blur(8px);
-            }
-            
-            .welcome-modal-content {
-              position: relative;
-              background: white;
-              border-radius: 24px;
-              padding: 48px 40px;
-              max-width: 550px;
-              width: 90%;
-              text-align: center;
-              box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-              animation: modalSlideUp 0.4s ease;
-            }
-            
-            @keyframes modalSlideUp {
-              from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-              }
-            }
-            
-            .welcome-modal-icon {
-              font-size: 80px;
-              margin-bottom: 20px;
-            }
-            
-            .welcome-modal-title {
-              font-size: 2rem;
-              font-weight: 900;
-              color: #1e293b;
-              margin-bottom: 12px;
-            }
-            
-            .welcome-modal-user {
-              font-size: 1.25rem;
-              font-weight: 700;
-              color: #4a7c2c;
-              margin-bottom: 16px;
-            }
-            
-            .welcome-modal-message {
-              color: #64748b;
-              font-size: 1.0625rem;
-              margin-bottom: 32px;
-              line-height: 1.6;
-            }
-            
-            .welcome-modal-stats {
-              display: grid;
-              grid-template-columns: repeat(3, 1fr);
-              gap: 20px;
-              margin-bottom: 32px;
-              padding: 24px;
-              background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-              border-radius: 16px;
-            }
-            
-            .welcome-stat {
-              text-align: center;
-            }
-            
-            .welcome-stat-number {
-              font-size: 2rem;
-              font-weight: 900;
-              color: #4a7c2c;
-              margin-bottom: 4px;
-            }
-            
-            .welcome-stat-label {
-              font-size: 0.875rem;
-              color: #64748b;
-              font-weight: 600;
-            }
-            
-            .welcome-modal-actions {
-              display: flex;
-              gap: 12px;
-              justify-content: center;
-            }
-            
-            .btn-welcome {
-              padding: 14px 28px;
-              border-radius: 12px;
-              border: none;
-              font-weight: 700;
-              font-size: 15px;
-              cursor: pointer;
-              transition: all 0.2s ease;
-              display: inline-flex;
-              align-items: center;
-              gap: 8px;
-            }
-            
-            .btn-welcome-primary {
-              background: linear-gradient(135deg, #4a7c2c 0%, #2d5a1a 100%);
-              color: white;
-            }
-            
-            .btn-welcome-primary:hover {
-              transform: translateY(-2px);
-              box-shadow: 0 8px 20px rgba(74,124,44,0.3);
-            }
-            
-            .btn-welcome-secondary {
-              background: #f3f4f6;
-              color: #1e293b;
-            }
-            
-            .btn-welcome-secondary:hover {
-              background: #e5e7eb;
-            }
-            
-            @media (max-width: 640px) {
-              .welcome-modal-content {
-                padding: 32px 24px;
-              }
-              
-              .welcome-modal-title {
-                font-size: 1.5rem;
-              }
-              
-              .welcome-modal-actions {
-                flex-direction: column;
-                width: 100%;
-              }
-              
-              .btn-welcome {
-                width: 100%;
-                justify-content: center;
-              }
-            }
-          `;
-          document.head.appendChild(styles);
-        }
-        
-        document.body.appendChild(modal);
-        
-        // Update greeting based on time
-        const hour = new Date().getHours();
-        const greetingEl = document.getElementById('greeting-text');
-        if (greetingEl) {
-          if (hour < 12) greetingEl.textContent = 'Good morning';
-          else if (hour < 18) greetingEl.textContent = 'Good afternoon';
-          else greetingEl.textContent = 'Good evening';
-        }
-        
-        // Update username in header
-        const welcomeUserName = document.getElementById('welcome-user-name');
-        if (welcomeUserName) {
-          welcomeUserName.textContent = user.name || user.email.split('@')[0];
-        }
-        
-        // Auto-dismiss after 5 seconds
-        setTimeout(() => {
-          if (modal.parentElement) {
-            modal.style.opacity = '0';
-            setTimeout(() => modal.remove(), 300);
-          }
-        }, 5000);
-      }
-      
       // User Menu Functions
       function toggleUserMenu() {
         const menu = document.getElementById('user-dropdown-menu');
@@ -3653,11 +3348,6 @@
           if (window.authManager && window.authManager.isAuthenticated) {
             const user = window.authManager.currentUser;
             console.log('👤 User logged in:', user.name || user.email);
-          
-          // Show welcome modal popup
-          setTimeout(() => {
-            showWelcomeModal(user);
-          }, 800);
           } else {
             console.log('⚠️ No user logged in - Auth guard will handle redirect');
             // Auth guard will handle showing sign-in modal
@@ -3676,11 +3366,22 @@
     <!-- Central Data Loader (loads all data on sign-in) -->
     <script src="assets/js/central-data-loader.js"></script>
     
+    <!-- Timestamp System - Internal clock and date tracking -->
+    <script src="assets/js/timestamp-system.js"></script>
+    
+    <!-- Change Tracker - Document all changes with timestamps -->
+    <script src="assets/js/change-tracker.js"></script>
+    
     <!-- Backup Manager -->
     <script src="assets/js/backup-manager.js" defer></script>
     
     <!-- Auto-Sync Manager -->
     <script src="assets/js/auto-sync-manager.js" defer></script>
+    
+    <!-- UI Polish Systems -->
+    <script src="assets/js/toast-notifications.js"></script>
+    <script src="assets/js/loading-states.js"></script>
+    <script src="assets/js/empty-states.js"></script>
     
     <!-- Auth Guard - Final check at end -->
     <script defer src="assets/js/auth_guard.js"></script>

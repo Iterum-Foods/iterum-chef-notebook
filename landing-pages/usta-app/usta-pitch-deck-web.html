@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USTA - Investor Pitch Deck | $1.5M Seed Round</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --usta-bronze: #CD7F32;
+            --usta-bronze-dark: #8B5A2B;
+            --usta-navy: #2C3E50;
+            --usta-gold: #FFD700;
+            --usta-green: #2ECC71;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0A0A0A;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(205, 127, 50, 0.2);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--usta-bronze);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .slide-counter {
+            color: #6b7280;
+            font-weight: 600;
+        }
+        
+        .nav-controls {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .nav-btn {
+            background: rgba(205, 127, 50, 0.1);
+            border: 2px solid var(--usta-bronze);
+            color: var(--usta-bronze);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: var(--usta-bronze);
+            color: white;
+        }
+        
+        /* Slides */
+        .slide-container {
+            min-height: 100vh;
+            padding: 100px 60px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slide {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-title {
+            font-size: 4rem;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--usta-bronze) 0%, var(--usta-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .slide-subtitle {
+            font-size: 1.5rem;
+            color: #9ca3af;
+            margin-bottom: 48px;
+            font-weight: 600;
+        }
+        
+        .slide-content {
+            font-size: 1.125rem;
+            line-height: 2;
+            color: #d1d5db;
+        }
+        
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin: 48px 0;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin: 48px 0;
+        }
+        
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(205, 127, 50, 0.2);
+            border-radius: 24px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            border-color: var(--usta-bronze);
+            transform: translateY(-4px);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--usta-bronze);
+            margin-bottom: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .card-content {
+            color: #d1d5db;
+            line-height: 1.8;
+        }
+        
+        /* Stats */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin: 48px 0;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 32px;
+            background: rgba(205, 127, 50, 0.1);
+            border-radius: 16px;
+            border: 2px solid rgba(205, 127, 50, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--usta-bronze);
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            color: #9ca3af;
+            font-weight: 600;
+        }
+        
+        /* Lists */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 12px 0;
+            font-size: 1.125rem;
+            color: #d1d5db;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+        
+        li::before {
+            content: '✓';
+            color: var(--usta-green);
+            font-weight: 900;
+            font-size: 1.5rem;
+        }
+        
+        /* Buttons */
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark));
+            color: white;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.25rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 32px;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(205, 127, 50, 0.4);
+        }
+        
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+        }
+        
+        .arrow-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(205, 127, 50, 0.1);
+            border: 2px solid var(--usta-bronze);
+            color: var(--usta-bronze);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .arrow-btn:hover {
+            background: var(--usta-bronze);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        /* Progress Dots */
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 32px 0;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(205, 127, 50, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dot.active {
+            width: 24px;
+            border-radius: 4px;
+            background: var(--usta-bronze);
+        }
+        
+        /* Special: Cover Slide */
+        #slide-0 {
+            text-align: center;
+        }
+        
+        #slide-0 .slide-title {
+            font-size: 6rem;
+            margin-bottom: 16px;
+        }
+        
+        #slide-0 .tagline {
+            font-size: 2rem;
+            color: var(--usta-bronze);
+            font-weight: 700;
+            margin-bottom: 48px;
+        }
+        
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 32px 0;
+        }
+        
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            color: var(--usta-bronze);
+            font-weight: 800;
+        }
+        
+        td {
+            color: #d1d5db;
+        }
+        
+        @media (max-width: 968px) {
+            .slide-title {
+                font-size: 2.5rem;
+            }
+            
+            .grid-2, .grid-3, .stat-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #slide-0 .slide-title {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="nav">
+        <div class="logo">
+            <i class="fas fa-hammer"></i> usta
+        </div>
+        <div class="slide-counter" id="slideCounter">Slide 1 of 14</div>
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="window.print()">
+                <i class="fas fa-print"></i> Print
+            </button>
+            <a href="../../Skills App/usta-demo-app.html" class="nav-btn" style="text-decoration: none;">
+                <i class="fas fa-play"></i> Demo
+            </a>
+        </div>
+    </div>
+    
+    <!-- Slide 1: Cover -->
+    <div class="slide-container">
+        <div class="slide active" id="slide-0">
+            <div style="font-size: 5rem; margin-bottom: 24px;">🔨</div>
+            <h1 class="slide-title">usta</h1>
+            <p class="tagline">Master your craft</p>
+            <h2 class="slide-subtitle" style="font-size: 2rem; background: linear-gradient(135deg, white 0%, #d1d5db 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                The TikTok of Professional Skills
+            </h2>
+            
+            <div style="margin-top: 64px; color: #9ca3af;">
+                <p style="font-size: 1.25rem; margin-bottom: 16px;">Investor Deck</p>
+                <p style="font-size: 1.125rem;">$1.5M Seed Round | October 2025</p>
+            </div>
+            
+            <button class="cta-btn" onclick="nextSlide()">
+                <i class="fas fa-arrow-right"></i>
+                Start Presentation
+            </button>
+        </div>
+    </div>
+    
+    <!-- Slide 2: The Problem -->
+    <div class="slide-container">
+        <div class="slide" id="slide-1">
+            <h1 class="slide-title">😰 The Problem</h1>
+            <p class="slide-subtitle">Skill Building is Broken</p>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="card-title">For Learners</h3>
+                    <div class="card-content">
+                        <ul style="margin-top: 24px;">
+                            <li style="color: #ef4444;">❌ Don't know what to create for portfolio</li>
+                            <li style="color: #ef4444;">❌ No way to prove skills to employers</li>
+                            <li style="color: #ef4444;">❌ LinkedIn is generic, Instagram isn't professional</li>
+                            <li style="color: #ef4444;">❌ Platforms are either social OR professional, not both</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">For Employers</h3>
+                    <div class="card-content">
+                        <ul style="margin-top: 24px;">
+                            <li style="color: #ef4444;">❌ Can't assess real skills from resumes</li>
+                            <li style="color: #ef4444;">❌ $3-5K cost per hire</li>
+                            <li style="color: #ef4444;">❌ 73% first-year turnover</li>
+                            <li style="color: #ef4444;">❌ 45 days average time-to-hire</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-box" style="max-width: 600px; margin: 48px auto;">
+                <p style="font-size: 1.5rem; color: #d1d5db; font-weight: 700;">
+                    <span style="color: var(--usta-bronze); font-size: 2rem; font-weight: 900;">$3.2B</span> spent annually on recruitment & training<br/>
+                    —with no platform that validates real skills
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 3: The Solution -->
+    <div class="slide-container">
+        <div class="slide" id="slide-2">
+            <h1 class="slide-title">⚡ The Solution</h1>
+            <p class="slide-subtitle">Usta: Where Skills Become Visible</p>
+            
+            <div class="card" style="margin-bottom: 48px;">
+                <h3 class="card-title" style="font-size: 2rem; margin-bottom: 32px;">The First Platform Combining:</h3>
+                <div class="grid-2" style="gap: 24px;">
+                    <div>
+                        <p style="font-size: 1.25rem; color: #d1d5db; margin-bottom: 12px;">
+                            📱 <strong>TikTok's Ease</strong><br/>
+                            <span style="font-size: 1rem; color: #9ca3af;">Trend-based skill challenges</span>
+                        </p>
+                        <p style="font-size: 1.25rem; color: #d1d5db; margin-bottom: 12px;">
+                            💼 <strong>LinkedIn's Value</strong><br/>
+                            <span style="font-size: 1rem; color: #9ca3af;">Professional validation</span>
+                        </p>
+                        <p style="font-size: 1.25rem; color: #d1d5db;">
+                            🎓 <strong>Masterclass's Depth</strong><br/>
+                            <span style="font-size: 1rem; color: #9ca3af;">Learn from experts</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p style="font-size: 1.25rem; color: #d1d5db; margin-bottom: 12px;">
+                            🎮 <strong>Duolingo's Engagement</strong><br/>
+                            <span style="font-size: 1rem; color: #9ca3af;">Daily practice, XP, levels</span>
+                        </p>
+                        <p style="font-size: 1.25rem; color: #d1d5db;">
+                            📸 <strong>Instagram's Social</strong><br/>
+                            <span style="font-size: 1rem; color: #9ca3af;">Follow, like, share</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title" style="font-size: 1.75rem; margin-bottom: 24px;">How It Works:</h3>
+                <ol style="list-style: decimal; padding-left: 40px; color: #d1d5db; font-size: 1.125rem; line-height: 2;">
+                    <li>Master Usta creates skill challenge</li>
+                    <li>User follows the guided template</li>
+                    <li>Records their version (no creative pressure!)</li>
+                    <li>Gets validated by professionals</li>
+                    <li>Builds portfolio automatically</li>
+                </ol>
+                
+                <p style="margin-top: 32px; font-size: 1.5rem; color: var(--usta-bronze); font-weight: 800; text-align: center;">
+                    → Professional skill building as easy as TikTok
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 4: Product Demo -->
+    <div class="slide-container">
+        <div class="slide" id="slide-3">
+            <h1 class="slide-title">🎬 Product Demo</h1>
+            <p class="slide-subtitle">The Usta Experience</p>
+            
+            <div class="grid-2" style="gap: 32px;">
+                <div class="card">
+                    <div style="background: linear-gradient(135deg, #4A5568, #2D3748); height: 400px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                        <i class="fas fa-mobile-alt" style="font-size: 6rem; opacity: 0.3;"></i>
+                    </div>
+                    <h3 class="card-title">Feed</h3>
+                    <p class="card-content">Vertical video feed<br/>Swipe through skill demos<br/>TikTok-style navigation</p>
+                </div>
+                
+                <div class="card">
+                    <div style="background: linear-gradient(135deg, #667EEA, #5A67D8); height: 400px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                        <i class="fas fa-trophy" style="font-size: 6rem; opacity: 0.3;"></i>
+                    </div>
+                    <h3 class="card-title">Challenge</h3>
+                    <p class="card-content">#WeldingBasics Challenge<br/>Guided recording template<br/>Step-by-step instructions</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="../../Skills App/usta-demo-app.html" class="cta-btn">
+                    <i class="fas fa-play"></i>
+                    Try Live Demo
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 5: Market Opportunity -->
+    <div class="slide-container">
+        <div class="slide" id="slide-4">
+            <h1 class="slide-title">📊 Market Opportunity</h1>
+            <p class="slide-subtitle">Massive Addressable Market</p>
+            
+            <div class="stat-grid">
+                <div class="stat-box" style="background: rgba(205, 127, 50, 0.2); border-color: var(--usta-bronze);">
+                    <div class="stat-value">50M+</div>
+                    <div class="stat-label">US Professionals</div>
+                </div>
+                <div class="stat-box" style="background: rgba(205, 127, 50, 0.2); border-color: var(--usta-bronze);">
+                    <div class="stat-value">200M+</div>
+                    <div class="stat-label">Global Market</div>
+                </div>
+                <div class="stat-box" style="background: rgba(205, 127, 50, 0.2); border-color: var(--usta-bronze);">
+                    <div class="stat-value">$50B</div>
+                    <div class="stat-label">Market Size</div>
+                </div>
+                <div class="stat-box" style="background: rgba(205, 127, 50, 0.2); border-color: var(--usta-bronze);">
+                    <div class="stat-value">8%</div>
+                    <div class="stat-label">Growth Rate</div>
+                </div>
+            </div>
+            
+            <div class="grid-2" style="margin-top: 48px;">
+                <div class="card">
+                    <h3 class="card-title">5-Year Growth Plan</h3>
+                    <div class="card-content">
+                        <p style="margin-bottom: 12px;"><strong>Year 1:</strong> 50K users</p>
+                        <p style="margin-bottom: 12px;"><strong>Year 2:</strong> 250K users</p>
+                        <p style="margin-bottom: 12px;"><strong>Year 3:</strong> 750K users</p>
+                        <p style="margin-bottom: 12px;"><strong>Year 4:</strong> 1.5M users</p>
+                        <p style="font-size: 1.25rem; color: var(--usta-bronze); font-weight: 800; margin-top: 24px;">
+                            <strong>Year 5:</strong> 2M+ users
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">Market Segments</h3>
+                    <div class="card-content">
+                        <p>• Tech professionals: <strong>8M</strong></p>
+                        <p>• Skilled trades: <strong>15M</strong></p>
+                        <p>• Creative professionals: <strong>12M</strong></p>
+                        <p>• Healthcare: <strong>10M</strong></p>
+                        <p>• Culinary: <strong>2M</strong></p>
+                        <p style="color: var(--usta-bronze); margin-top: 16px;">+ Many more verticals</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 6: Business Model -->
+    <div class="slide-container">
+        <div class="slide" id="slide-5">
+            <h1 class="slide-title">💰 Business Model</h1>
+            <p class="slide-subtitle">Multiple Revenue Streams</p>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title">💼 Job Board (40%)</h3>
+                    <div class="card-content">
+                        <p>$199-499 per job posting</p>
+                        <p style="margin-top: 16px; color: var(--usta-bronze); font-weight: 800; font-size: 1.25rem;">$15M by Year 5</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">⭐ Premium (30%)</h3>
+                    <div class="card-content">
+                        <p>$9.99/month subscription</p>
+                        <p>Advanced analytics, no ads</p>
+                        <p style="margin-top: 16px; color: var(--usta-bronze); font-weight: 800; font-size: 1.25rem;">$12M by Year 5</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">📢 Advertising (15%)</h3>
+                    <div class="card-content">
+                        <p>Sponsored challenges</p>
+                        <p>Native feed ads</p>
+                        <p style="margin-top: 16px; color: var(--usta-bronze); font-weight: 800; font-size: 1.25rem;">$7M by Year 5</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-box" style="max-width: 800px; margin: 48px auto; background: rgba(205, 127, 50, 0.2);">
+                <p style="font-size: 2.5rem; color: var(--usta-bronze); font-weight: 900; margin-bottom: 16px;">
+                    $42M Total Revenue by Year 5
+                </p>
+                <p style="font-size: 1.5rem; color: #d1d5db; font-weight: 700;">
+                    55% EBITDA Margin
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 7: Traction -->
+    <div class="slide-container">
+        <div class="slide" id="slide-6">
+            <h1 class="slide-title">📈 Traction & Validation</h1>
+            <p class="slide-subtitle">Early Validation</p>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="card-title">Pre-Launch Traction</h3>
+                    <ul style="margin-top: 24px;">
+                        <li>MVP in development</li>
+                        <li>Beta Launch: Q1 2026</li>
+                        <li>500+ waitlist signups (2 weeks)</li>
+                        <li>25 Master Ustas committed</li>
+                        <li>50 initial challenges ready</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">Market Validation</h3>
+                    <ul style="margin-top: 24px;">
+                        <li>TikTok: 1B+ users (vertical video works)</li>
+                        <li>LinkedIn: $15B revenue (professional network works)</li>
+                        <li>Masterclass: $800M valuation (expert learning works)</li>
+                        <li>Duolingo: $7B market cap (gamification works)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 48px; background: rgba(46, 204, 113, 0.1); border-color: var(--usta-green);">
+                <p style="font-size: 1.5rem; text-align: center; color: #d1d5db;">
+                    "We combine proven models into one platform"
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 8: Competition -->
+    <div class="slide-container">
+        <div class="slide" id="slide-7">
+            <h1 class="slide-title">⚔️ Competitive Landscape</h1>
+            <p class="slide-subtitle">Only Platform with Full Solution</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>TikTok</th>
+                        <th>Instagram</th>
+                        <th>LinkedIn</th>
+                        <th style="color: var(--usta-gold);">Usta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Video-First</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                        <td>✗</td>
+                        <td style="color: var(--usta-green); font-weight: 900;">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Professional</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td>✓</td>
+                        <td style="color: var(--usta-green); font-weight: 900;">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Skill Proof</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td style="color: var(--usta-green); font-weight: 900;">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Guided Content</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td style="color: var(--usta-green); font-weight: 900;">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Job Matching</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td>✓</td>
+                        <td style="color: var(--usta-green); font-weight: 900;">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="card" style="margin-top: 48px;">
+                <h3 class="card-title">Our Competitive Advantages</h3>
+                <ul style="margin-top: 24px;">
+                    <li>Only guided skill challenge system</li>
+                    <li>TikTok ease + LinkedIn value (no one else has both)</li>
+                    <li>Vertical-specific (deep, not generic)</li>
+                    <li>Network effects (first to scale wins)</li>
+                    <li>Content created by users (low costs)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 9: Go-to-Market -->
+    <div class="slide-container">
+        <div class="slide" id="slide-8">
+            <h1 class="slide-title">🚀 Go-to-Market Strategy</h1>
+            <p class="slide-subtitle">Proven Launch Strategy</p>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title">Phase 1 (Months 1-6)</h3>
+                    <div class="card-content">
+                        <p><strong>Single Vertical</strong></p>
+                        <p>→ Launch with welding/trades</p>
+                        <p>→ 25 Master Ustas</p>
+                        <p>→ 10K users</p>
+                        <p style="color: var(--usta-bronze); margin-top: 16px; font-weight: 700;">Prove unit economics</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">Phase 2 (Months 7-18)</h3>
+                    <div class="card-content">
+                        <p><strong>Adjacent Verticals</strong></p>
+                        <p>→ Expand to tech, design</p>
+                        <p>→ 100 Master Ustas</p>
+                        <p>→ 100K users</p>
+                        <p style="color: var(--usta-bronze); margin-top: 16px; font-weight: 700;">Achieve product-market fit</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">Phase 3 (Months 19-36)</h3>
+                    <div class="card-content">
+                        <p><strong>Scale</strong></p>
+                        <p>→ All professional skills</p>
+                        <p>→ 500+ Master Ustas</p>
+                        <p>→ 1M users</p>
+                        <p style="color: var(--usta-bronze); margin-top: 16px; font-weight: 700;">Network effects kick in</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-grid" style="margin-top: 48px;">
+                <div class="stat-box">
+                    <div class="stat-value">$5</div>
+                    <div class="stat-label">CAC</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">$73</div>
+                    <div class="stat-label">LTV</div>
+                </div>
+                <div class="stat-box" style="background: rgba(46, 204, 113, 0.2); border-color: var(--usta-green);">
+                    <div class="stat-value" style="color: var(--usta-green);">14.6:1</div>
+                    <div class="stat-label">LTV/CAC Ratio</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">3mo</div>
+                    <div class="stat-label">Payback</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 10: Financials -->
+    <div class="slide-container">
+        <div class="slide" id="slide-9">
+            <h1 class="slide-title">💵 Financials</h1>
+            <p class="slide-subtitle">Path to $42M Revenue in 5 Years</p>
+            
+            <table style="margin-bottom: 48px;">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Users</th>
+                        <th>Revenue</th>
+                        <th>EBITDA</th>
+                        <th>Margin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Year 1</td>
+                        <td>50K</td>
+                        <td>$250K</td>
+                        <td>-$600K</td>
+                        <td>-240%</td>
+                    </tr>
+                    <tr>
+                        <td>Year 2</td>
+                        <td>250K</td>
+                        <td>$2M</td>
+                        <td>-$200K</td>
+                        <td>-10%</td>
+                    </tr>
+                    <tr>
+                        <td>Year 3</td>
+                        <td>750K</td>
+                        <td>$9M</td>
+                        <td>$3M</td>
+                        <td>33%</td>
+                    </tr>
+                    <tr>
+                        <td>Year 4</td>
+                        <td>1.5M</td>
+                        <td>$22M</td>
+                        <td>$11M</td>
+                        <td>50%</td>
+                    </tr>
+                    <tr style="background: rgba(205, 127, 50, 0.1);">
+                        <td style="font-weight: 900;">Year 5</td>
+                        <td style="font-weight: 900; color: var(--usta-bronze);">2M+</td>
+                        <td style="font-weight: 900; color: var(--usta-bronze);">$42M</td>
+                        <td style="font-weight: 900; color: var(--usta-green);">$23M</td>
+                        <td style="font-weight: 900; color: var(--usta-green);">55%</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="grid-2">
+                <div class="stat-box">
+                    <div class="stat-value">85%+</div>
+                    <div class="stat-label">Gross Margin</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">15%</div>
+                    <div class="stat-label">Annual Churn</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 11: Team -->
+    <div class="slide-container">
+        <div class="slide" id="slide-10">
+            <h1 class="slide-title">👥 Team</h1>
+            <p class="slide-subtitle">Experienced Team</p>
+            
+            <div class="grid-2" style="margin-bottom: 48px;">
+                <div class="card">
+                    <div style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark)); margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900;">
+                        🔨
+                    </div>
+                    <h3 class="card-title" style="text-align: center;">Founder & CEO</h3>
+                    <div class="card-content" style="text-align: center;">
+                        <p>[Your Name]</p>
+                        <p style="margin-top: 16px; color: #9ca3af;">Previous experience building platforms</p>
+                        <p style="margin-top: 8px; color: #9ca3af;">[Add your background]</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">Why We'll Win</h3>
+                    <ul style="margin-top: 24px;">
+                        <li>Deep understanding of skilled professionals</li>
+                        <li>Proven ability to build and scale platforms</li>
+                        <li>Network in target industries</li>
+                        <li>Technical expertise for complex infrastructure</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title">Advisors & Team Building</h3>
+                <p class="card-content">
+                    Actively building advisory board with experts from:
+                    Creator Economy, EdTech, Social Platforms, Skilled Trades Industries
+                </p>
+                <p class="card-content" style="margin-top: 16px; color: var(--usta-bronze); font-weight: 700;">
+                    Hiring: 2 engineers, 1 designer, 1 growth marketer with seed funding
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 12: The Ask -->
+    <div class="slide-container">
+        <div class="slide" id="slide-11">
+            <h1 class="slide-title">💰 The Ask</h1>
+            <p class="slide-subtitle">Investment Opportunity</p>
+            
+            <div class="stat-grid" style="margin-bottom: 48px;">
+                <div class="stat-box" style="background: rgba(205, 127, 50, 0.2); border-color: var(--usta-bronze);">
+                    <div class="stat-value">$1.5M</div>
+                    <div class="stat-label">Seed Round</div>
+                </div>
+                <div class="stat-box" style="background: rgba(205, 127, 50, 0.2); border-color: var(--usta-bronze);">
+                    <div class="stat-value">$8M</div>
+                    <div class="stat-label">Pre-Money Valuation</div>
+                </div>
+                <div class="stat-box" style="background: rgba(205, 127, 50, 0.2); border-color: var(--usta-bronze);">
+                    <div class="stat-value">15-20%</div>
+                    <div class="stat-label">Equity</div>
+                </div>
+                <div class="stat-box" style="background: rgba(205, 127, 50, 0.2); border-color: var(--usta-bronze);">
+                    <div class="stat-value">18mo</div>
+                    <div class="stat-label">Runway</div>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="card-title">Use of Funds</h3>
+                    <div class="card-content">
+                        <p><strong>Product Development: 35%</strong> ($525K)</p>
+                        <p style="margin-left: 20px; color: #9ca3af;">→ MVP completion, iOS & Android</p>
+                        
+                        <p style="margin-top: 16px;"><strong>User Acquisition: 35%</strong> ($525K)</p>
+                        <p style="margin-left: 20px; color: #9ca3af;">→ Master Ustas, paid marketing</p>
+                        
+                        <p style="margin-top: 16px;"><strong>Team: 25%</strong> ($375K)</p>
+                        <p style="margin-left: 20px; color: #9ca3af;">→ 2 engineers, 1 designer, 1 marketer</p>
+                        
+                        <p style="margin-top: 16px;"><strong>Operations: 5%</strong> ($75K)</p>
+                        <p style="margin-left: 20px; color: #9ca3af;">→ Legal, tools, services</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">18-Month Milestones</h3>
+                    <ul style="margin-top: 24px;">
+                        <li>Launch MVP (Month 3)</li>
+                        <li>10K users (Month 6)</li>
+                        <li>100K users (Month 12)</li>
+                        <li>$500K ARR (Month 15)</li>
+                        <li>Series A ready (Month 18)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 13: Vision -->
+    <div class="slide-container">
+        <div class="slide" id="slide-12">
+            <h1 class="slide-title">🔮 Vision</h1>
+            <p class="slide-subtitle">Where We're Headed</p>
+            
+            <div class="grid-3" style="margin-bottom: 48px;">
+                <div class="card">
+                    <h3 class="card-title">2026: Launch & Prove</h3>
+                    <div class="card-content">
+                        <p>→ Single vertical</p>
+                        <p>→ 100K users</p>
+                        <p>→ Product-market fit</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">2027: Scale & Expand</h3>
+                    <div class="card-content">
+                        <p>→ All skilled professions</p>
+                        <p>→ 1M users</p>
+                        <p>→ International expansion</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">2028+: Platform Dominance</h3>
+                    <div class="card-content">
+                        <p>→ Default skill validation</p>
+                        <p>→ 10M+ users globally</p>
+                        <p>→ Industry standard</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="background: rgba(205, 127, 50, 0.1); border-color: var(--usta-bronze);">
+                <h3 class="card-title" style="font-size: 2rem; text-align: center;">Vision</h3>
+                <p style="font-size: 1.5rem; text-align: center; color: #d1d5db; margin-top: 24px;">
+                    Every skilled professional has an Usta profile
+                </p>
+                <p style="font-size: 1.25rem; text-align: center; color: var(--usta-bronze); margin-top: 16px; font-weight: 700;">
+                    "Where professionals become masters"
+                </p>
+            </div>
+            
+            <div class="card" style="margin-top: 32px;">
+                <h3 class="card-title">Exit Opportunities</h3>
+                <p class="card-content">
+                    • LinkedIn/Microsoft (professional network)<br/>
+                    • Meta (social + video)<br/>
+                    • Indeed/Glassdoor (job matching)<br/>
+                    • Coursera/Udemy (learning)<br/><br/>
+                    <span style="color: var(--usta-bronze); font-size: 1.25rem; font-weight: 900;">
+                        → Comparable: $500M-2B range
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 14: Closing -->
+    <div class="slide-container">
+        <div class="slide" id="slide-13">
+            <div style="text-align: center;">
+                <div style="font-size: 6rem; margin-bottom: 32px;">🔨</div>
+                <h1 class="slide-title" style="font-size: 5rem;">usta</h1>
+                <p class="tagline" style="font-size: 2rem;">Master your craft</p>
+                
+                <div style="margin-top: 64px; font-size: 1.5rem; color: #d1d5db; line-height: 2;">
+                    <p>TikTok of Professional Skills</p>
+                    <p>50M+ Market Opportunity</p>
+                    <p>$42M Revenue by Year 5</p>
+                    <p style="color: var(--usta-bronze); font-size: 2rem; font-weight: 900; margin-top: 32px;">
+                        Raising $1.5M Seed
+                    </p>
+                </div>
+                
+                <div style="margin-top: 64px; padding: 48px; background: rgba(205, 127, 50, 0.1); border-radius: 24px; border: 2px solid var(--usta-bronze);">
+                    <p style="font-size: 2rem; color: var(--usta-bronze); font-weight: 800; margin-bottom: 24px;">
+                        "Follow the trend. Prove the skill. Build your career."
+                    </p>
+                    
+                    <div style="font-size: 1.25rem; color: #d1d5db;">
+                        <p>Let's Talk:</p>
+                        <p style="margin-top: 16px;">[Your Email]</p>
+                        <p>[Your Phone]</p>
+                        <p style="margin-top: 24px; color: var(--usta-bronze); font-weight: 700;">
+                            <a href="../../Skills App/usta-demo-app.html" style="color: var(--usta-bronze);">usta.co/demo</a>
+                        </p>
+                    </div>
+                </div>
+                
+                <button class="cta-btn" onclick="currentSlide = 0; showSlide()">
+                    <i class="fas fa-redo"></i>
+                    Start Over
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="arrow-btn" onclick="prevSlide()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="progress-dots" id="progressDots">
+            <!-- Generated by JS -->
+        </div>
+        <button class="arrow-btn" onclick="nextSlide()">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+    
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 14;
+        
+        // Generate progress dots
+        const dotsContainer = document.getElementById('progressDots');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
+        }
+        
+        function showSlide() {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show current slide
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            
+            // Update counter
+            document.getElementById('slideCounter').textContent = `Slide ${currentSlide + 1} of ${totalSlides}`;
+            
+            // Update progress dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide();
+            }
+        }
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide();
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+        
+        // Initialize
+        showSlide();
+    </script>
+</body>
+</html>
+

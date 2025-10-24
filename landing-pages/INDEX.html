@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterum Foods - Landing Pages Index</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        
+        .header p {
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+        
+        .header .subtitle {
+            font-size: 1rem;
+            color: #9ca3af;
+            margin-top: 10px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #667eea;
+            min-width: 50px;
+        }
+        
+        .section-title {
+            flex: 1;
+        }
+        
+        .section-title h2 {
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+        
+        .section-title p {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+        
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        
+        .card-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .card-features {
+            margin-bottom: 20px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+        
+        .feature-item i {
+            color: #10b981;
+            font-size: 0.9rem;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .badge.primary {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .badge.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border-radius: 16px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        
+        .recommendation {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .recommendation h3 {
+            color: #065f46;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .recommendation p {
+            color: #047857;
+            line-height: 1.7;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e5e7eb;
+            color: #6b7280;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Iterum Foods Landing Pages</h1>
+            <p>Complete Collection of All Landing Pages</p>
+            <p class="subtitle">Organized and ready for deployment to iterumfoods.xyz</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Active Landing Pages</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Major Platforms</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Archived Versions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Ready to Deploy</div>
+            </div>
+        </div>
+        
+        <div class="recommendation">
+            <h3><i class="fas fa-star"></i> Recommended for iterumfoods.xyz</h3>
+            <p><strong>Primary Landing:</strong> Use <code>2-company-showcase/iterumfoods-unified-landing.html</code> as your main homepage. It showcases all 4 platforms comprehensively with professional design, Google Analytics integration, and clear CTAs for each product.</p>
+            <p style="margin-top: 10px;"><strong>App Entry:</strong> Use <code>1-main-platform/main-app-index.html</code> for app.iterumfoods.xyz as the main application portal with authentication.</p>
+        </div>
+        
+        <!-- Section 1: Main Platform -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <div class="section-title">
+                    <h2>Main Culinary R&D Platform</h2>
+                    <p>Core application landing pages with authentication</p>
+                </div>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🍽️</div>
+                    <div class="card-title">Main App Entry</div>
+                    <span class="badge">Production Ready</span>
+                    <div class="card-description">
+                        Full-featured culinary R&D platform with Firebase authentication, recipe development, menu planning, and cost analysis.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Firebase Authentication</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Email & Google Sign-in</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> 14-Day Trial Access</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Nordic Vintage Design</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="1-main-platform/main-app-index.html" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Page
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">🚀</div>
+                    <div class="card-title">Professional Launch Page</div>
+                    <span class="badge">Alternative</span>
+                    <div class="card-description">
+                        Clean, professional launch page with Nordic-inspired design. Perfect for a focused product launch.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Modern Nordic Design</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Feature Showcase</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Responsive Layout</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Call-to-Action</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="1-main-platform/launch.html" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Page
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2: Company Showcase -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <div class="section-title">
+                    <h2>Company Showcase Pages</h2>
+                    <p>Comprehensive landing pages for iterumfoods.xyz homepage</p>
+                </div>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🌟</div>
+                    <div class="card-title">Unified Landing Page</div>
+                    <span class="badge primary">⭐ RECOMMENDED</span>
+                    <div class="card-description">
+                        The complete platform overview showcasing all 4 apps. Professional Tailwind CSS design with Google Analytics integration. Best choice for main company website.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> All 4 Platforms Featured</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Google Analytics Integrated</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Professional Design</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Multiple CTAs</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="2-company-showcase/iterumfoods-unified-landing.html" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Page
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">🌿</div>
+                    <div class="card-title">Nordic Branding Landing</div>
+                    <span class="badge">Alternative Style</span>
+                    <div class="card-description">
+                        Minimalist Nordic design aesthetic focusing on culinary innovation. Clean, professional branding with custom CSS kit.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Nordic Design System</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Custom Branding Kit</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Minimalist Aesthetic</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Professional Layout</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="2-company-showcase/iterum-nordic-landing.html" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Page
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 3: Individual Apps -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <div class="section-title">
+                    <h2>Individual Application Pages</h2>
+                    <p>Dedicated landing pages for each platform</p>
+                </div>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Restaurant Business Planner</div>
+                    <span class="badge">App #1</span>
+                    <div class="card-description">
+                        Complete business planning platform for restaurant entrepreneurs. Includes financial planning, menu development, and market research tools.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Business Plan Generator</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Financial Projections</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Market Analysis</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Modern Dark Theme</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="3-individual-apps/restaurant-business-planner.html" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Page
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">💰</div>
+                    <div class="card-title">Payroll & Staff Management</div>
+                    <span class="badge">App #2</span>
+                    <div class="card-description">
+                        Restaurant payroll and staff management app. Track hours, calculate tips, manage schedules with accounting system integration.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Time Tracking</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Tip Calculation</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Schedule Management</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Payroll Processing</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="3-individual-apps/payroll-app.html" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Page
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Skills Portfolio Network</div>
+                    <span class="badge">App #3</span>
+                    <div class="card-description">
+                        Professional skills showcase platform with Instagram-style interface. Mobile-optimized for culinary professionals.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Video Portfolio</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Community Network</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Skill Validation</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Mobile Optimized</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="3-individual-apps/skills-portfolio-app.html" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Page
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 4: Archive -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <div class="section-title">
+                    <h2>Archived Versions</h2>
+                    <p>Previous iterations and experimental designs</p>
+                </div>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">📦</div>
+                    <div class="card-title">Old Landing Page Versions</div>
+                    <span class="badge warning">Archive</span>
+                    <div class="card-description">
+                        Contains 4 previous landing page versions including early designs and experimental layouts. Kept for reference and inspiration.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature-item"><i class="fas fa-folder"></i> iterumfoods-landing.html</div>
+                        <div class="feature-item"><i class="fas fa-folder"></i> iterumfoods-unified-website.html</div>
+                        <div class="feature-item"><i class="fas fa-folder"></i> LANDING_PAGE_INTEGRATION.html</div>
+                        <div class="feature-item"><i class="fas fa-folder"></i> landing-page.html</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="4-archive-old-versions/" class="btn btn-secondary" target="_blank">
+                            <i class="fas fa-folder-open"></i> Browse Archive
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Iterum Foods Tech Branch</strong></p>
+            <p>All landing pages organized and ready for deployment</p>
+            <p style="margin-top: 10px; color: #9ca3af; font-size: 0.9rem;">
+                📖 For detailed information, see <a href="README.md" style="color: #667eea; text-decoration: none; font-weight: 600;">README.md</a>
+            </p>
+            <p style="margin-top: 10px; color: #9ca3af; font-size: 0.85rem;">
+                Last Updated: October 21, 2025
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+

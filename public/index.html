@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterum R&D Chef Notebook</title>
+    
+    <!-- Immediate Auth Check - Redirect if not logged in -->
+    <script>
+        // Check for active session IMMEDIATELY
+        (function() {
+            try {
+                const sessionActive = localStorage.getItem('session_active');
+                const currentUser = localStorage.getItem('current_user');
+                
+                if (!sessionActive || !currentUser) {
+                    console.log('🔒 No active session - redirecting to launch page');
+                    // Add a small delay to prevent rapid redirects
+                    setTimeout(() => {
+                        window.location.href = 'launch.html';
+                    }, 100);
+                } else {
+                    console.log('✅ Session active - loading dashboard');
+                }
+            } catch (error) {
+                console.log('🔒 Error checking session - redirecting to launch page');
+                setTimeout(() => {
+                    window.location.href = 'launch.html';
+                }, 100);
+            }
+        })();
+    </script>
+    
+    <!-- Load Auth System -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auth-manager.js"></script>
+    <script src="assets/js/auth-api-helper.js"></script>
+    <script src="assets/js/auth-diagnostics.js"></script>
+    
+    <!-- Load Brainstorming & Notes Systems -->
+    <script src="assets/js/recipe-brainstorming.js"></script>
+    <script src="assets/js/napkin-brainstorming.js"></script>
+    <script src="assets/js/robust-notes-system.js"></script>
+    <script src="assets/js/enhanced-notes-interface.js"></script>
+    
+    <!-- Load Core Systems -->
+    <script src="assets/js/unified-nav-header.js" defer></script>
+    <script src="assets/js/unified-project-selector.js" defer></script>
+    <script src="assets/js/cloud-data-sync.js"></script>
+    <script src="assets/js/sync-status-indicator.js"></script>
+    
+    <!-- Load UI Enhancement Systems -->
+    <script src="assets/js/toast-notifications.js"></script>
+    <script src="assets/js/loading-states.js"></script>
+    <script src="assets/js/empty-states.js"></script>
+    
+    <!-- Nordic Vintage Design System -->
+    <link rel="stylesheet" href="assets/css/modern-nordic-vintage.css">
+    <link rel="stylesheet" href="assets/css/dark-mode-enhancements.css">
+    <link rel="stylesheet" href="assets/css/iterum-brand-kit.css">
+    <link rel="stylesheet" href="assets/css/header-universal.css">
+    <link rel="stylesheet" href="assets/css/ui-polish.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #0F0E0C 0%, #1A1512 30%, #2A2420 60%, #1F2A22 100%) !important;
+            padding-top: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0F0E0C 0%, #1A1512 30%, #2A2420 60%, #1F2A22 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: #e2e8f0;">
+        <div style="font-size: 48px; margin-bottom: 20px;">🍳</div>
+        <div style="font-size: 24px; font-weight: 600; margin-bottom: 10px; color: #10b981;">Iterum Culinary App</div>
+        <div style="font-size: 16px; color: #94a3b8; margin-bottom: 30px;">Loading your professional chef notebook...</div>
+        <div style="width: 40px; height: 40px; border: 3px solid rgba(16, 185, 129, 0.3); border-top: 3px solid #10b981; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div id="main-content" style="display: none;">
+        <!-- Dashboard will be loaded here -->
+        <div class="dashboard-container" style="max-width: 1400px; margin: 0 auto; padding: 20px;">
+            <div class="dashboard-header" style="text-align: center; margin-bottom: 40px;">
+                <h1 style="color: #f1f5f9; font-size: 2.5rem; font-weight: 700; margin-bottom: 16px;">Welcome to Iterum</h1>
+                <p style="color: #94a3b8; font-size: 1.1rem;">Your Professional Culinary R&D Platform</p>
+            </div>
+
+            <!-- Enhanced Notes & Brainstorming Section -->
+            <div class="dashboard-section" style="margin-bottom: 40px;">
+                <h2 style="color: #e2e8f0; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">Enhanced Notes & Brainstorming</h2>
+                <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="feature-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 24px; transition: all 0.3s ease;">
+                        <h3 style="color: #10b981; font-size: 1.2rem; margin-bottom: 12px;">📝 Enhanced Notes</h3>
+                        <p style="color: #94a3b8; margin-bottom: 16px;">Professional note-taking with categories, templates, and collaboration features.</p>
+                        <button onclick="openEnhancedNotes()" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Open Notes</button>
+                    </div>
+                    
+                    <div class="feature-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 24px; transition: all 0.3s ease;">
+                        <h3 style="color: #3b82f6; font-size: 1.2rem; margin-bottom: 12px;">💡 Brainstorm Ideas</h3>
+                        <p style="color: #94a3b8; margin-bottom: 16px;">Creative workspace for recipe development and culinary innovation.</p>
+                        <button onclick="openBrainstorming()" style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); color: #3b82f6; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Start Brainstorming</button>
+                    </div>
+                    
+                    <div class="feature-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 24px; transition: all 0.3s ease;">
+                        <h3 style="color: #f59e0b; font-size: 1.2rem; margin-bottom: 12px;">📄 Napkin Sketch</h3>
+                        <p style="color: #94a3b8; margin-bottom: 16px;">Natural drawing interface for quick culinary sketches and ideas.</p>
+                        <button onclick="openNapkinSketch()" style="background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.3); color: #f59e0b; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Start Sketching</button>
+                    </div>
+                    
+                    <div class="feature-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 24px; transition: all 0.3s ease;">
+                        <h3 style="color: #8b5cf6; font-size: 1.2rem; margin-bottom: 12px;">🎲 Random Idea</h3>
+                        <p style="color: #94a3b8; margin-bottom: 16px;">Generate random recipe ideas and culinary inspiration.</p>
+                        <button onclick="generateQuickIdea()" style="background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.3); color: #8b5cf6; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Get Random Idea</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Brainstorming Section -->
+            <div class="dashboard-section" style="margin-bottom: 40px;">
+                <h2 style="color: #e2e8f0; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">Quick Brainstorming</h2>
+                <div class="quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                    <div class="quick-card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 16px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">📝</div>
+                        <div style="color: #e2e8f0; font-weight: 500; margin-bottom: 4px;">Enhanced Notes</div>
+                        <div style="color: #94a3b8; font-size: 14px;">Professional note-taking</div>
+                    </div>
+                    
+                    <div class="quick-card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 16px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">💡</div>
+                        <div style="color: #e2e8f0; font-weight: 500; margin-bottom: 4px;">Brainstorm Ideas</div>
+                        <div style="color: #94a3b8; font-size: 14px;">Creative workspace</div>
+                    </div>
+                    
+                    <div class="quick-card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 16px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">📄</div>
+                        <div style="color: #e2e8f0; font-weight: 500; margin-bottom: 4px;">Napkin Sketch</div>
+                        <div style="color: #94a3b8; font-size: 14px;">Natural drawing</div>
+                    </div>
+                    
+                    <div class="quick-card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 16px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🎲</div>
+                        <div style="color: #e2e8f0; font-weight: 500; margin-bottom: 4px;">Random Idea</div>
+                        <div style="color: #94a3b8; font-size: 14px;">Generate inspiration</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wait for page to load, then hide loading screen and show content
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                const mainContent = document.getElementById('main-content');
+                
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                if (mainContent) mainContent.style.display = 'block';
+            }, 2000); // 2 second delay to show loading screen
+        });
+
+        // Enhanced Notes Function
+        function openEnhancedNotes() {
+            if (window.enhancedNotesInterface) {
+                window.enhancedNotesInterface.openNotesInterface();
+            } else {
+                alert('Enhanced Notes system is loading...');
+            }
+        }
+
+        // Brainstorming Function
+        function openBrainstorming() {
+            if (window.recipeBrainstorming) {
+                window.recipeBrainstorming.openBrainstormingWorkspace();
+            } else {
+                alert('Brainstorming system is loading...');
+            }
+        }
+
+        // Napkin Sketch Function
+        function openNapkinSketch() {
+            if (window.napkinBrainstorming) {
+                window.napkinBrainstorming.openNapkinWorkspace();
+            } else {
+                alert('Napkin sketching system is loading...');
+            }
+        }
+
+        // Random Idea Generator
+        function generateQuickIdea() {
+            const ideas = [
+                "Mediterranean-inspired quinoa bowl with roasted vegetables",
+                "Spicy Thai coconut curry with fresh herbs",
+                "Deconstructed apple pie with cinnamon ice cream",
+                "Smoked salmon tartare with capers and dill",
+                "Chocolate lava cake with raspberry coulis",
+                "Grilled octopus with lemon and oregano",
+                "Truffle risotto with wild mushrooms",
+                "Beef Wellington with red wine reduction",
+                "Lemon meringue tart with candied zest",
+                "Seared scallops with pea puree and pancetta"
+            ];
+            
+            const randomIdea = ideas[Math.floor(Math.random() * ideas.length)];
+            
+            // Show the idea
+            alert(`🎲 Random Recipe Idea:\n\n"${randomIdea}"\n\nWould you like to create a note with this idea?`);
+            
+            // Optionally create a note
+            if (window.robustNotesSystem) {
+                const noteData = {
+                    title: `Random Recipe Idea: ${randomIdea}`,
+                    content: `Generated idea: ${randomIdea}\n\nInspiration: This could be developed into a full recipe with proper techniques and plating.\n\nNext steps:\n- Research traditional methods\n- Develop ingredient list\n- Create step-by-step instructions\n- Test and refine`,
+                    category: 'Recipe Ideas',
+                    tags: ['random-idea', 'inspiration', 'recipe-development']
+                };
+                
+                window.robustNotesSystem.createNote(noteData);
+                alert('✅ Note created with your random idea!');
+            }
+        }
+    </script>
+</body>
+</html>

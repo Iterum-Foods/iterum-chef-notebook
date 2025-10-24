@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Business Planner - Plan, Budget & Launch | Iterum Foods</title>
+    <meta name="description" content="Complete business planning platform for restaurant entrepreneurs. Financial projections, market analysis, and strategic planning tools.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="unified-colors.css">
+    <link rel="stylesheet" href="shared-styles.css">
+    
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
+        
+        .platform-badge {
+            background: rgba(59, 130, 246, 0.15);
+            color: #1d4ed8;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+            color: #3b82f6;
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📊</div>
+                <span class="logo-text">Iterum Foods</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#platforms">All Platforms</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="index.html">← Back to Home</a></li>
+                <li><a href="#" class="nav-cta" onclick="openWaitlistModal(); return false;">Join Waitlist</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <section class="hero" style="margin-top: 80px;">
+        <div class="hero-container">
+            <div class="platform-badge">📊 Restaurant Business Planner</div>
+            <h1>Plan, Budget, and Launch Your Dream Restaurant</h1>
+            <p class="hero-subtitle">
+                Complete business planning suite with financial projections, market analysis, and strategic planning tools built for restaurant entrepreneurs.
+            </p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-primary" onclick="openWaitlistModal(); return false;">
+                    <i class="fas fa-rocket"></i> Get Early Access
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features-section" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">Features</div>
+                <h2>Everything You Need to Launch Successfully</h2>
+                <p>Professional business planning tools designed for restaurant success</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+                    <h3>Business Plan Generator</h3>
+                    <p>Create comprehensive business plans with industry-standard templates. Export to PDF or Word format.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Financial Projections</h3>
+                    <p>Detailed revenue forecasts, expense planning, and profitability analysis. 3-year projections included.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3>Location Analysis</h3>
+                    <p>Evaluate potential locations with foot traffic data, demographics, and competition analysis.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>Market Research</h3>
+                    <p>Understand your target market, analyze competitors, and identify opportunities.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-utensils"></i></div>
+                    <h3>Menu Planning</h3>
+                    <p>Design your initial menu, calculate costs, and optimize pricing strategy.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <h3>Startup Cost Calculator</h3>
+                    <p>Estimate all startup costs including equipment, licenses, renovations, and inventory.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>Ready to Plan Your Restaurant?</h2>
+            <p>Join the waitlist for early access to Restaurant Business Planner</p>
+            <a href="#" class="btn btn-primary btn-large" onclick="openWaitlistModal(); return false;">
+                <i class="fas fa-rocket"></i> Join Waitlist Now
+            </a>
+        </div>
+    </section>
+    
+    <script src="shared-scripts.js"></script>
+    <script>
+        const PLATFORM_CONFIG = {
+            name: 'Business Planner',
+            code: 'business',
+            icon: '📊'
+        };
+    </script>
+</body>
+</html>
+

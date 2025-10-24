@@ -1,0 +1,77 @@
+🎉 DEPLOY USTA - FINAL STEPS
+============================
+
+Your usta-app-a86db project is created! ✅
+Your files are ready in usta-public/ ✅
+
+OPTION 1: Quick Deploy (EASIEST)
+---------------------------------
+Close the current Firebase prompt (Ctrl+C)
+
+Then run:
+> DEPLOY-USTA-NOW.bat
+
+This will deploy everything automatically!
+
+
+OPTION 2: Manual Commands
+--------------------------
+In PowerShell:
+
+1. Reauth (if needed):
+   > firebase login --reauth
+
+2. Deploy:
+   > firebase deploy --only hosting --public usta-public --project usta-app-a86db
+
+
+OPTION 3: Answer Current Prompts
+---------------------------------
+If Firebase init is still open:
+
+1. "Ready to proceed?" → Y
+2. "Use existing project?" → Y
+3. "Select project" → usta-app-a86db
+4. "Public directory" → usta-public
+5. "Single-page app" → Y
+6. "GitHub" → N
+7. "Overwrite" → N
+
+Then run:
+> firebase deploy --only hosting
+
+
+YOUR LIVE URLS (after deploy):
+-------------------------------
+Main Site:  https://usta-app-a86db.web.app/
+Pitch Deck: https://usta-app-a86db.web.app/pitch
+Live Demo:  https://usta-app-a86db.web.app/demo
+Landing:    https://usta-app-a86db.web.app/landing
+
+
+WHAT TO SHARE WITH INVESTORS:
+------------------------------
+Subject: Usta - Live Demo Ready
+
+Hi [Name],
+
+Check out Usta live:
+🔗 https://usta-app-a86db.web.app
+
+• Interactive pitch deck
+• Working product demo
+• Full investor materials
+
+Let me know your thoughts!
+
+
+CUSTOM DOMAIN (OPTIONAL):
+--------------------------
+To get usta.iterumfoods.xyz:
+1. Firebase Console → Hosting
+2. Add custom domain
+3. Follow DNS instructions
+
+
+🚀 You're one command away from being live!
+

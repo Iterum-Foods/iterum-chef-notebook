@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Flexible Plans for Every Chef | Iterum Foods</title>
+    <meta name="description" content="Flexible pricing options: Pay per platform, bundle and save, or get lifetime founder access. Skills Portfolio is always free.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="unified-colors.css">
+    <link rel="stylesheet" href="shared-styles.css">
+    
+    <style>
+        body {
+            background: #fef7e5;
+        }
+        
+        /* Pricing Hero */
+        .pricing-hero {
+            padding: 140px 40px 80px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            text-align: center;
+        }
+        
+        .pricing-hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #5d4037;
+            margin-bottom: 24px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .pricing-hero .handwritten {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            color: #10b981;
+            display: block;
+            margin-bottom: 24px;
+        }
+        
+        .pricing-hero p {
+            font-size: 1.375rem;
+            color: #5d4037;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Individual Platform Pricing */
+        .individual-pricing {
+            padding: 80px 40px;
+            background: white;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            max-width: 1400px;
+            margin: 60px auto 0;
+        }
+        
+        .pricing-card {
+            background: linear-gradient(135deg, white 0%, #fef7e5 100%);
+            border: 3px solid #f4e4c1;
+            border-radius: 16px;
+            padding: 44px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+        
+        .pricing-card.culinary::before { background: linear-gradient(90deg, #10b981, #059669); }
+        .pricing-card.business::before { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+        .pricing-card.payroll::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
+        .pricing-card.skills::before { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
+        .pricing-card.bundle::before { background: linear-gradient(90deg, #ec4899, #db2777); }
+        .pricing-card.founder::before { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+        
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(93, 64, 55, 0.15);
+        }
+        
+        .pricing-card.featured {
+            border-width: 4px;
+            border-color: #10b981;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.founder {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            transform: scale(1.05);
+        }
+        
+        .pricing-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .pricing-badge.free {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .pricing-badge.popular {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .pricing-badge.limited {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+        }
+        
+        .pricing-card h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #5d4037;
+            margin-bottom: 12px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .pricing-subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: #10b981;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-price {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #5d4037;
+            margin-bottom: 4px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .pricing-price.free {
+            color: #10b981;
+        }
+        
+        .pricing-price.founder {
+            color: #f59e0b;
+        }
+        
+        .pricing-period {
+            color: #5d4037;
+            font-size: 1.125rem;
+            margin-bottom: 28px;
+            font-weight: 600;
+        }
+        
+        .savings-badge {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 12px 0;
+            color: #5d4037;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px dashed rgba(93, 64, 55, 0.1);
+        }
+        
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .pricing-features li i {
+            color: #10b981;
+            margin-top: 4px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-pricing {
+            width: 100%;
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #5d4037;
+            border: 2px solid #f4e4c1;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #10b981;
+            color: #10b981;
+        }
+        
+        .btn-founder {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+        }
+        
+        .btn-founder:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
+        }
+        
+        /* Comparison Table */
+        .comparison-section {
+            padding: 80px 40px;
+            background: #fef7e5;
+        }
+        
+        .comparison-table {
+            max-width: 1400px;
+            margin: 60px auto 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 3px solid #f4e4c1;
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid #f4e4c1;
+        }
+        
+        .comparison-table thead {
+            background: linear-gradient(135deg, #5d4037 0%, #3e2723 100%);
+            color: white;
+        }
+        
+        .comparison-table th {
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background: #fef7e5;
+        }
+        
+        .comparison-table .check {
+            color: #10b981;
+            font-size: 1.25rem;
+        }
+        
+        .comparison-table .cross {
+            color: #ef4444;
+            font-size: 1.25rem;
+        }
+        
+        /* Founder's Program */
+        .founders-section {
+            padding: 100px 40px;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .founders-section::before {
+            content: '⭐';
+            position: absolute;
+            font-size: 30rem;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .founders-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border: 4px solid #fbbf24;
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .founders-badge {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .founders-badge-icon {
+            font-size: 5rem;
+            margin-bottom: 16px;
+        }
+        
+        .founders-badge-text {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            color: #f59e0b;
+            margin-bottom: 8px;
+        }
+        
+        .founders-content h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #5d4037;
+            text-align: center;
+            margin-bottom: 24px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .founders-content p {
+            font-size: 1.25rem;
+            color: #5d4037;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+        
+        .founders-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        
+        .founders-benefit {
+            background: #fffbeb;
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .founders-benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        
+        .founders-benefit h4 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #5d4037;
+            margin-bottom: 8px;
+        }
+        
+        .founders-benefit p {
+            font-size: 0.95rem;
+            color: #78350f;
+            margin: 0;
+        }
+        
+        .founders-cta {
+            text-align: center;
+        }
+        
+        .founders-price {
+            font-size: 5rem;
+            font-weight: 900;
+            color: #f59e0b;
+            margin-bottom: 8px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .founders-price-label {
+            font-size: 1.5rem;
+            color: #92400e;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        
+        .founders-savings {
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        
+        .founders-savings p {
+            font-size: 1.125rem;
+            color: #92400e;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .limited-spots {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            padding: 16px 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .limited-spots p {
+            color: #991b1b;
+            font-weight: 700;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">👨‍🍳</div>
+                <div>
+                    <div class="logo-text">Iterum Foods</div>
+                    <div class="logo-subtext">Chef's Digital Notebook</div>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#platforms">Platforms</a></li>
+                <li><a href="index.html#how-it-works">How It Works</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="index.html#testimonials">Reviews</a></li>
+                <li><a href="index.html">← Back to Home</a></li>
+                <li><a href="#" class="nav-cta" onclick="openWaitlistModal('main'); return false;">Join Waitlist</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Pricing Hero -->
+    <section class="pricing-hero" style="margin-top: 80px;">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <h1>Flexible Pricing for Every Kitchen</h1>
+            <span class="handwritten">Choose what works best for you</span>
+            <p>Pay for individual platforms, bundle and save, or join our exclusive Founder's Program. Skills Portfolio is always free!</p>
+        </div>
+    </section>
+    
+    <!-- Individual Platform Pricing -->
+    <section class="individual-pricing">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <div style="font-family: 'Caveat', cursive; font-size: 2rem; color: #10b981; margin-bottom: 16px;">
+                    Individual Platforms
+                </div>
+                <h2 style="font-size: 3rem; font-weight: 900; color: #5d4037; margin-bottom: 16px; font-family: 'Nunito', sans-serif;">
+                    Pay for What You Need
+                </h2>
+                <p style="font-size: 1.25rem; color: #5d4037;">
+                    Choose one platform or mix and match. Add or remove platforms anytime.
+                </p>
+            </div>
+            
+            <div class="pricing-grid">
+                <!-- Culinary R&D -->
+                <div class="pricing-card culinary">
+                    <div class="pricing-icon">🍽️</div>
+                    <h3>Culinary R&D</h3>
+                    <div class="pricing-subtitle">Your Recipe Notebook</div>
+                    <div class="pricing-price">$39</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Unlimited recipes</li>
+                        <li><i class="fas fa-check"></i> Menu builder</li>
+                        <li><i class="fas fa-check"></i> Cost analysis</li>
+                        <li><i class="fas fa-check"></i> Ingredient database</li>
+                        <li><i class="fas fa-check"></i> Recipe versioning</li>
+                        <li><i class="fas fa-check"></i> Nutrition calculator</li>
+                        <li><i class="fas fa-check"></i> Mobile app access</li>
+                    </ul>
+                    <button class="btn-pricing btn-primary" onclick="openWaitlistModal('culinary')">
+                        <i class="fas fa-rocket"></i> Join Waitlist
+                    </button>
+                </div>
+                
+                <!-- Business Planner -->
+                <div class="pricing-card business">
+                    <div class="pricing-icon">📊</div>
+                    <h3>Business Planner</h3>
+                    <div class="pricing-subtitle">From Concept to Launch</div>
+                    <div class="pricing-price">$49</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Business plan generator</li>
+                        <li><i class="fas fa-check"></i> 3-year financial projections</li>
+                        <li><i class="fas fa-check"></i> Market analysis tools</li>
+                        <li><i class="fas fa-check"></i> Location planning</li>
+                        <li><i class="fas fa-check"></i> Startup cost calculator</li>
+                        <li><i class="fas fa-check"></i> Investor-ready reports</li>
+                        <li><i class="fas fa-check"></i> PDF/Word export</li>
+                    </ul>
+                    <button class="btn-pricing btn-primary" onclick="openWaitlistModal('business')">
+                        <i class="fas fa-rocket"></i> Join Waitlist
+                    </button>
+                </div>
+                
+                <!-- Payroll System -->
+                <div class="pricing-card payroll">
+                    <div class="pricing-icon">💰</div>
+                    <h3>Payroll System</h3>
+                    <div class="pricing-subtitle">Staff Management</div>
+                    <div class="pricing-price">$59</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Time clock & scheduling</li>
+                        <li><i class="fas fa-check"></i> Tip calculation & pooling</li>
+                        <li><i class="fas fa-check"></i> Automated payroll</li>
+                        <li><i class="fas fa-check"></i> Employee management</li>
+                        <li><i class="fas fa-check"></i> Labor cost reports</li>
+                        <li><i class="fas fa-check"></i> Tax calculations</li>
+                        <li><i class="fas fa-check"></i> Unlimited employees</li>
+                    </ul>
+                    <button class="btn-pricing btn-primary" onclick="openWaitlistModal('payroll')">
+                        <i class="fas fa-rocket"></i> Join Waitlist
+                    </button>
+                </div>
+                
+                <!-- Skills Portfolio - FREE -->
+                <div class="pricing-card skills">
+                    <div class="pricing-badge free">✨ ALWAYS FREE</div>
+                    <div class="pricing-icon">🎯</div>
+                    <h3>Skills Portfolio</h3>
+                    <div class="pricing-subtitle">Build Your Network</div>
+                    <div class="pricing-price free">$0</div>
+                    <div class="pricing-period">forever</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Professional profile</li>
+                        <li><i class="fas fa-check"></i> Video portfolio</li>
+                        <li><i class="fas fa-check"></i> Network with chefs</li>
+                        <li><i class="fas fa-check"></i> Job opportunities</li>
+                        <li><i class="fas fa-check"></i> Skill endorsements</li>
+                        <li><i class="fas fa-check"></i> Community access</li>
+                        <li><i class="fas fa-check"></i> Free forever (like Instagram)</li>
+                    </ul>
+                    <button class="btn-pricing btn-primary" onclick="openWaitlistModal('skills')">
+                        <i class="fas fa-user-plus"></i> Join Free
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Bundle Pricing -->
+    <section class="individual-pricing" style="background: white;">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <div style="font-family: 'Caveat', cursive; font-size: 2rem; color: #10b981; margin-bottom: 16px;">
+                    Bundle & Save
+                </div>
+                <h2 style="font-size: 3rem; font-weight: 900; color: #5d4037; margin-bottom: 16px; font-family: 'Nunito', sans-serif;">
+                    Get Multiple Platforms
+                </h2>
+                <p style="font-size: 1.25rem; color: #5d4037;">
+                    Save up to 40% when you bundle platforms together
+                </p>
+            </div>
+            
+            <div class="pricing-grid">
+                <!-- Professional Bundle -->
+                <div class="pricing-card bundle featured">
+                    <div class="pricing-badge popular">⭐ MOST POPULAR</div>
+                    <div class="pricing-icon">🎯</div>
+                    <h3>Professional Bundle</h3>
+                    <div class="pricing-subtitle">The Complete Kitchen</div>
+                    <div class="pricing-price">$99</div>
+                    <div class="pricing-period">
+                        per month 
+                        <span class="savings-badge">Save $48/month</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> <strong>All 4 Platforms:</strong> Culinary R&D, Business Planner, Payroll, Skills</li>
+                        <li><i class="fas fa-check"></i> Everything from individual plans</li>
+                        <li><i class="fas fa-check"></i> Cross-platform data sync</li>
+                        <li><i class="fas fa-check"></i> Team collaboration tools</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> Advanced analytics</li>
+                        <li><i class="fas fa-check"></i> API access</li>
+                        <li><i class="fas fa-check"></i> Custom branding</li>
+                    </ul>
+                    <button class="btn-pricing btn-primary" onclick="openWaitlistModal('main')">
+                        <i class="fas fa-rocket"></i> Join Waitlist
+                    </button>
+                    <p style="text-align: center; margin-top: 16px; font-size: 0.875rem; color: #10b981; font-weight: 700;">
+                        Equivalent to $147/month individually - Save 33%!
+                    </p>
+                </div>
+                
+                <!-- Enterprise -->
+                <div class="pricing-card">
+                    <div class="pricing-icon">🏢</div>
+                    <h3>Enterprise</h3>
+                    <div class="pricing-subtitle">For Restaurant Groups</div>
+                    <div class="pricing-price">Custom</div>
+                    <div class="pricing-period">let's talk</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Everything in Professional</li>
+                        <li><i class="fas fa-check"></i> Multi-location support</li>
+                        <li><i class="fas fa-check"></i> Unlimited team members</li>
+                        <li><i class="fas fa-check"></i> Custom integrations</li>
+                        <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                        <li><i class="fas fa-check"></i> White-label options</li>
+                        <li><i class="fas fa-check"></i> On-site training</li>
+                        <li><i class="fas fa-check"></i> SLA guarantee</li>
+                    </ul>
+                    <button class="btn-pricing btn-secondary" onclick="location.href='mailto:enterprise@iterumfoods.xyz?subject=Enterprise Inquiry'">
+                        <i class="fas fa-envelope"></i> Contact Sales
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Founder's Program -->
+    <section class="founders-section" id="founders">
+        <div class="founders-content">
+            <div class="founders-badge">
+                <div class="founders-badge-icon">🏆</div>
+                <div class="founders-badge-text">Exclusive Founder's Program</div>
+            </div>
+            
+            <h2>Lifetime Access - One Time Payment</h2>
+            <p>
+                <strong>Limited to 100 founding members only.</strong> Be part of the Iterum Foods founding community 
+                and lock in lifetime access to all platforms - past, present, and future.
+            </p>
+            
+            <div class="founders-benefits">
+                <div class="founders-benefit">
+                    <div class="founders-benefit-icon">♾️</div>
+                    <h4>Lifetime Access</h4>
+                    <p>All 4 platforms forever. No recurring fees ever.</p>
+                </div>
+                
+                <div class="founders-benefit">
+                    <div class="founders-benefit-icon">🚀</div>
+                    <h4>Future Platforms</h4>
+                    <p>Access to any new platforms we build at no extra cost.</p>
+                </div>
+                
+                <div class="founders-benefit">
+                    <div class="founders-benefit-icon">👑</div>
+                    <h4>Founder Badge</h4>
+                    <p>Special founder status and recognition in our community.</p>
+                </div>
+                
+                <div class="founders-benefit">
+                    <div class="founders-benefit-icon">🎯</div>
+                    <h4>Priority Support</h4>
+                    <p>Direct line to our team. Your feedback shapes the product.</p>
+                </div>
+                
+                <div class="founders-benefit">
+                    <div class="founders-benefit-icon">📊</div>
+                    <h4>Early Access</h4>
+                    <p>First to try new features and beta releases.</p>
+                </div>
+                
+                <div class="founders-benefit">
+                    <div class="founders-benefit-icon">💎</div>
+                    <h4>Community Access</h4>
+                    <p>Private founder's group for networking and collaboration.</p>
+                </div>
+            </div>
+            
+            <div class="limited-spots">
+                <p>⚠️ Limited Time Offer: Only 37 spots remaining out of 100 total</p>
+            </div>
+            
+            <div class="founders-cta">
+                <div class="founders-price">$1,000</div>
+                <div class="founders-price-label">One-time payment. Lifetime access.</div>
+                
+                <div class="founders-savings">
+                    <p>💰 Save $188/year compared to Professional plan ($99/month × 12 = $1,188/year)</p>
+                    <p style="margin-top: 8px;">✨ Pays for itself in less than 11 months. Then free forever.</p>
+                </div>
+                
+                <button class="btn-pricing btn-founder" onclick="openWaitlistModal('founder')" style="max-width: 500px; margin: 0 auto; padding: 20px;">
+                    <i class="fas fa-crown"></i> Join Founder's Program
+                </button>
+                
+                <p style="margin-top: 24px; color: #92400e; font-weight: 600;">
+                    Perfect for: Industry professionals, influential chefs, restaurant owners, culinary educators
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Comparison Table -->
+    <section class="comparison-section">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <div style="font-family: 'Caveat', cursive; font-size: 2rem; color: #10b981; margin-bottom: 16px;">
+                    Full Comparison
+                </div>
+                <h2 style="font-size: 3rem; font-weight: 900; color: #5d4037; margin-bottom: 16px; font-family: 'Nunito', sans-serif;">
+                    Compare All Plans
+                </h2>
+            </div>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Individual<br>($39-59/mo)</th>
+                            <th>Professional<br>($99/mo)</th>
+                            <th>Founder's<br>($1,000 once)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Culinary R&D Platform</strong></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Business Planner Platform</strong></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Payroll System Platform</strong></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Skills Portfolio</strong></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span> FREE</td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span> FREE</td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span> FREE</td>
+                        </tr>
+                        <tr>
+                            <td>Unlimited recipes & menus</td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td>Mobile app access</td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td>Cloud storage & backup</td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td>Email support</td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Team collaboration</strong></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Priority support</strong></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>API access</strong></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Future platforms included</strong></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Founder badge & recognition</strong></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Private founder's community</strong></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span></td>
+                        </tr>
+                        <tr style="background: #f0fdf4;">
+                            <td><strong>Lifetime access (no recurring fees)</strong></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="cross"><i class="fas fa-times-circle"></i></span></td>
+                            <td><span class="check"><i class="fas fa-check-circle"></i></span> <strong>Forever</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section" style="padding: 100px 40px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); text-align: center;">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <h2 style="font-size: 3.5rem; font-weight: 900; color: white; margin-bottom: 24px; font-family: 'Nunito', sans-serif;">
+                Ready to Join?
+            </h2>
+            <div style="font-family: 'Caveat', cursive; font-size: 2.5rem; color: rgba(255,255,255,0.95); margin-bottom: 32px;">
+                Choose your plan and get started today
+            </div>
+            <p style="font-size: 1.375rem; color: rgba(255,255,255,0.95); margin-bottom: 48px;">
+                All plans include a 14-day free trial. No credit card required. Cancel anytime.
+            </p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" style="background: white; color: #059669; padding: 22px 48px; font-size: 1.25rem;" onclick="openWaitlistModal('main')">
+                    <i class="fas fa-rocket"></i> Join Waitlist
+                </button>
+                <a href="mailto:hello@iterumfoods.xyz" class="btn" style="background: transparent; border: 3px solid white; color: white; padding: 22px 48px; font-size: 1.25rem; text-decoration: none;">
+                    <i class="fas fa-question-circle"></i> Have Questions?
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <script src="shared-scripts.js"></script>
+    <script>
+        const PLATFORM_CONFIG = {
+            name: 'Pricing',
+            code: 'main',
+            icon: '💰'
+        };
+        
+        // Enhanced modal for founder's program
+        function openWaitlistModal(platform) {
+            if (platform === 'founder') {
+                openFounderModal();
+            } else {
+                // Use shared script
+                window.location.href = `index.html#waitlist-${platform}`;
+                setTimeout(() => {
+                    const event = new CustomEvent('openWaitlist', { detail: platform });
+                    window.dispatchEvent(event);
+                }, 100);
+            }
+        }
+        
+        function openFounderModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'founder-modal';
+            modal.style.zIndex = '10001';
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px; border: 4px solid #fbbf24;">
+                    <button class="close-modal" onclick="closeFounderModal()">×</button>
+                    <div style="text-align: center; margin-bottom: 36px;">
+                        <div style="font-size: 5rem; margin-bottom: 16px;">🏆</div>
+                        <div style="font-family: 'Caveat', cursive; font-size: 2.5rem; color: #f59e0b; margin-bottom: 12px;">
+                            Founder's Program Application
+                        </div>
+                        <h2 style="font-size: 2rem; font-weight: 900; color: #5d4037; margin-bottom: 12px;">Lifetime Access - $1,000</h2>
+                        <p style="color: #92400e; font-weight: 700;">Limited to 100 founding members</p>
+                    </div>
+                    
+                    <div style="background: #fef3c7; border: 2px solid #fbbf24; border-radius: 12px; padding: 20px; margin-bottom: 32px;">
+                        <p style="color: #92400e; font-weight: 700; margin: 0; text-align: center;">
+                            🎯 One payment. All platforms. Forever.<br>
+                            💎 Future platforms included at no extra cost.
+                        </p>
+                    </div>
+                    
+                    <form id="founder-form" onsubmit="submitFounderApplication(event)">
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-input" id="founder-name" required placeholder="Chef John Doe">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" class="form-input" id="founder-email" required placeholder="chef@restaurant.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-input" id="founder-phone" required placeholder="+1 (555) 123-4567">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Restaurant / Company *</label>
+                            <input type="text" class="form-input" id="founder-company" required placeholder="Your Restaurant or Company">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Your Role / Title *</label>
+                            <input type="text" class="form-input" id="founder-role" required placeholder="Executive Chef, Restaurant Owner, etc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Why are you a good fit for the Founder's Program? *</label>
+                            <textarea class="form-input" id="founder-why" required rows="4" placeholder="Tell us about your culinary background, industry influence, or why you'd like to be a founding member..." style="resize: vertical;"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+                            <i class="fas fa-crown"></i> Apply for Founder's Program
+                        </button>
+                        
+                        <p style="text-align: center; margin-top: 20px; font-size: 0.875rem; color: #6b7280;">
+                            We'll review your application and reach out within 24-48 hours with next steps and payment details.
+                        </p>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeFounderModal() {
+            const modal = document.getElementById('founder-modal');
+            if (modal) {
+                modal.remove();
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function submitFounderApplication(event) {
+            event.preventDefault();
+            
+            const data = {
+                id: `founder_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                name: document.getElementById('founder-name').value,
+                email: document.getElementById('founder-email').value,
+                phone: document.getElementById('founder-phone').value,
+                company: document.getElementById('founder-company').value,
+                role: document.getElementById('founder-role').value,
+                why: document.getElementById('founder-why').value,
+                type: 'founder',
+                amount: 1000,
+                timestamp: new Date().toISOString(),
+                status: 'pending_review'
+            };
+            
+            // Save to founder applications
+            let founders = JSON.parse(localStorage.getItem('iterum_founder_applications') || '[]');
+            founders.push(data);
+            localStorage.setItem('iterum_founder_applications', JSON.stringify(founders));
+            
+            // Save to CRM
+            let crmContacts = JSON.parse(localStorage.getItem('crm_all_contacts') || '[]');
+            crmContacts.push({
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                company: data.company,
+                role: data.role,
+                type: 'founder',
+                contactType: 'lead',
+                platform: 'Founder Program',
+                status: 'pending_review',
+                added: data.timestamp,
+                source: 'founder_program_application',
+                amount: 1000,
+                notes: data.why
+            });
+            localStorage.setItem('crm_all_contacts', JSON.stringify(crmContacts));
+            
+            // Track with GA
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'founder_application', {
+                    event_category: 'Founder Program',
+                    event_label: 'Application Submitted',
+                    value: 1000
+                });
+            }
+            
+            alert(`🏆 Application Submitted!\n\nThank you, ${data.name}!\n\nWe'll review your Founder's Program application and contact you at ${data.email} within 24-48 hours with next steps.\n\nSpots remaining: 37 of 100`);
+            
+            closeFounderModal();
+            
+            console.log('✅ Founder application:', data);
+        }
+    </script>
+</body>
+</html>
+

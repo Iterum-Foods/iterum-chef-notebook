@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usta - Master Your Craft</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="js/usta-api.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --usta-bronze: #CD7F32;
+            --usta-bronze-dark: #8B5A2B;
+            --usta-bronze-light: #E8B77D;
+            --usta-navy: #2C3E50;
+            --usta-navy-dark: #1A252F;
+            --usta-gold: #FFD700;
+            --usta-green: #2ECC71;
+            --usta-blue: #3498DB;
+            --usta-purple: #9B59B6;
+            --usta-red: #E74C3C;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+            background: #000;
+            color: white;
+            overflow: hidden;
+        }
+        
+        /* Mobile Container (iPhone-style) */
+        .phone-container {
+            width: 100%;
+            max-width: 430px;
+            height: 932px;
+            max-height: 100vh;
+            margin: 0 auto;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0;
+        }
+        
+        @media (min-width: 768px) {
+            .phone-container {
+                border-radius: 40px;
+                border: 12px solid #1f2937;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                margin-top: 20px;
+            }
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--usta-bronze);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Video Feed (TikTok Style) */
+        .feed-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .feed-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .video-item {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            max-height: 932px;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+        }
+        
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1A1F2E 0%, #0D1117 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-placeholder::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(205, 127, 50, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-50%) translateY(-50%) rotate(45deg); }
+            100% { transform: translateX(50%) translateY(50%) rotate(45deg); }
+        }
+        
+        .video-content {
+            position: absolute;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+        
+        .challenge-badge {
+            display: inline-block;
+            background: var(--usta-bronze);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .video-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .video-caption {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            border: 2px solid white;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .username {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        
+        .user-level {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        /* Right Action Bar */
+        .action-bar {
+            position: absolute;
+            right: 12px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+        }
+        
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .action-icon.validate {
+            background: rgba(46, 204, 113, 0.3);
+        }
+        
+        .action-icon.share {
+            background: rgba(52, 152, 219, 0.3);
+        }
+        
+        .action-count {
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+        
+        /* Try This Challenge Button */
+        .try-challenge-btn {
+            width: calc(100% - 40px);
+            margin: 0 20px 20px;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark));
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(205, 127, 50, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .try-challenge-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(205, 127, 50, 0.2);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn.active {
+            color: var(--usta-bronze);
+        }
+        
+        .nav-btn i {
+            font-size: 1.5rem;
+        }
+        
+        .nav-btn span {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Screens */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        /* Discover Screen */
+        .discover-screen {
+            background: #0f0f0f;
+            padding: 70px 20px 80px;
+            overflow-y: auto;
+            height: 100%;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .challenge-card {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 16px;
+            border: 2px solid rgba(205, 127, 50, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .challenge-card:active {
+            transform: scale(0.95);
+            border-color: var(--usta-bronze);
+        }
+        
+        .challenge-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .challenge-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+        
+        .challenge-stats {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        /* Profile Screen */
+        .profile-screen {
+            background: #0f0f0f;
+            padding: 70px 0 80px;
+            overflow-y: auto;
+            height: 100%;
+        }
+        
+        .profile-header {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark));
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            border: 4px solid var(--usta-gold);
+        }
+        
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+        
+        .profile-level {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark));
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin: 24px 0;
+            padding: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--usta-bronze);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+        
+        .xp-progress {
+            margin: 24px 20px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 16px;
+        }
+        
+        .xp-bar-container {
+            width: 100%;
+            height: 12px;
+            background: #2d2d2a;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        
+        .xp-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--usta-bronze), var(--usta-gold));
+            transition: width 0.3s;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 20px;
+        }
+        
+        .skill-item {
+            aspect-ratio: 1;
+            background: #1a1a1a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            border: 2px solid rgba(205, 127, 50, 0.2);
+        }
+        
+        /* Modal/Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1a1a1a;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+        
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .recording-guide {
+            margin: 24px 0;
+        }
+        
+        .shot-guide {
+            background: rgba(205, 127, 50, 0.1);
+            border-left: 4px solid var(--usta-bronze);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+        
+        .shot-title {
+            font-weight: 700;
+            color: var(--usta-bronze);
+            margin-bottom: 8px;
+        }
+        
+        .shot-instruction {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .usta-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.125rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        /* Streak Badge */
+        .streak-badge {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: var(--usta-red);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+        }
+        
+        /* XP Toast */
+        .xp-toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark));
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-weight: 700;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 20px rgba(205, 127, 50, 0.4);
+            z-index: 2000;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        
+        .xp-toast.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="logo">
+                <i class="fas fa-hammer"></i> usta
+            </div>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div class="streak-badge" style="position: static; box-shadow: none; font-size: 0.875rem;">
+                    🔥 7 days
+                </div>
+                <i class="fas fa-bell" style="font-size: 1.25rem;"></i>
+            </div>
+        </div>
+        
+        <!-- Feed Screen (TikTok Style) -->
+        <div id="feed-screen" class="screen active">
+            <div class="feed-container">
+                <!-- Video 1: Welding Challenge -->
+                <div class="video-item">
+                    <div class="video-placeholder">
+                        <div style="text-align: center; z-index: 1;">
+                            <i class="fas fa-play-circle" style="font-size: 4rem; opacity: 0.5; margin-bottom: 16px;"></i>
+                            <div style="font-size: 3rem; margin-bottom: 16px;">⚒️</div>
+                            <div style="font-size: 1.25rem; font-weight: 700;">Perfect Weld Bead</div>
+                            <div style="opacity: 0.7; margin-top: 8px;">60-second demonstration</div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-content">
+                        <div class="challenge-badge">
+                            🔥 #WeldingBasics Challenge
+                        </div>
+                        <div class="video-title">Nailed it on first try! 🎯</div>
+                        <div class="video-caption">
+                            Following @masterwelder's guide. Steady hand and perfect speed. #BecomeAnUsta
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar">MJ</div>
+                            <div class="user-details">
+                                <div class="username">@mikejohnson</div>
+                                <div class="user-level">⚙️ Journeyman · 1,247 XP</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-bar">
+                        <button class="action-btn" onclick="likeVideo(1)">
+                            <div class="action-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="action-count">1.2K</div>
+                        </button>
+                        
+                        <button class="action-btn" onclick="validateSkill(1)">
+                            <div class="action-icon validate">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="action-count">47</div>
+                        </button>
+                        
+                        <button class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="action-count">89</div>
+                        </button>
+                        
+                        <button class="action-btn" onclick="shareVideo(1)">
+                            <div class="action-icon share">
+                                <i class="fas fa-share"></i>
+                            </div>
+                            <div class="action-count">34</div>
+                        </button>
+                    </div>
+                    
+                    <button class="try-challenge-btn" onclick="showChallengeModal(1)" style="position: absolute; bottom: 80px; left: 0; right: 0;">
+                        <i class="fas fa-video"></i>
+                        Try This Challenge
+                    </button>
+                </div>
+                
+                <!-- Video 2: React Challenge -->
+                <div class="video-item">
+                    <div class="video-placeholder" style="background: linear-gradient(135deg, #9B59B6, #8E44AD);">
+                        <div style="text-align: center; z-index: 1;">
+                            <i class="fas fa-play-circle" style="font-size: 4rem; opacity: 0.5; margin-bottom: 16px;"></i>
+                            <div style="font-size: 3rem; margin-bottom: 16px;">💻</div>
+                            <div style="font-size: 1.25rem; font-weight: 700;">React Hooks in Action</div>
+                            <div style="opacity: 0.7; margin-top: 8px;">useState & useEffect demo</div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-content">
+                        <div class="challenge-badge" style="background: var(--usta-purple);">
+                            🔥 #ReactHooks Challenge
+                        </div>
+                        <div class="video-title">Clean code, proper hooks! ⚡</div>
+                        <div class="video-caption">
+                            Following @reactmaster's template. Counter app with local storage. #FrontendDev
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar" style="background: linear-gradient(135deg, #9B59B6, #8E44AD);">AC</div>
+                            <div class="user-details">
+                                <div class="username">@alexcodes</div>
+                                <div class="user-level">🔧 Apprentice · 284 XP</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-bar">
+                        <button class="action-btn" onclick="likeVideo(2)">
+                            <div class="action-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="action-count">847</div>
+                        </button>
+                        
+                        <button class="action-btn" onclick="validateSkill(2)">
+                            <div class="action-icon validate">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="action-count">23</div>
+                        </button>
+                        
+                        <button class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="action-count">42</div>
+                        </button>
+                        
+                        <button class="action-btn" onclick="shareVideo(2)">
+                            <div class="action-icon share">
+                                <i class="fas fa-share"></i>
+                            </div>
+                            <div class="action-count">15</div>
+                        </button>
+                    </div>
+                    
+                    <button class="try-challenge-btn" onclick="showChallengeModal(2)" style="position: absolute; bottom: 80px; left: 0; right: 0;">
+                        <i class="fas fa-video"></i>
+                        Try This Challenge
+                    </button>
+                </div>
+                
+                <!-- Video 3: Chef Challenge -->
+                <div class="video-item">
+                    <div class="video-placeholder" style="background: linear-gradient(135deg, #2ECC71, #27AE60);">
+                        <div style="text-align: center; z-index: 1;">
+                            <i class="fas fa-play-circle" style="font-size: 4rem; opacity: 0.5; margin-bottom: 16px;"></i>
+                            <div style="font-size: 3rem; margin-bottom: 16px;">🔪</div>
+                            <div style="font-size: 1.25rem; font-weight: 700;">Perfect Knife Skills</div>
+                            <div style="opacity: 0.7; margin-top: 8px;">Dice an onion in 30 seconds</div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-content">
+                        <div class="challenge-badge" style="background: var(--usta-green);">
+                            🔥 #KnifeSkills Challenge
+                        </div>
+                        <div class="video-title">Clean, fast, perfect! 🔪</div>
+                        <div class="video-caption">
+                            Following @chefgordon's technique. Every cube is identical. #CulinaryUsta
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar" style="background: linear-gradient(135deg, #2ECC71, #27AE60);">SL</div>
+                            <div class="user-details">
+                                <div class="username">@sarahlee</div>
+                                <div class="user-level">🔨 Usta · 2,847 XP</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-bar">
+                        <button class="action-btn" onclick="likeVideo(3)">
+                            <div class="action-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="action-count">3.1K</div>
+                        </button>
+                        
+                        <button class="action-btn" onclick="validateSkill(3)">
+                            <div class="action-icon validate">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="action-count">124</div>
+                        </button>
+                        
+                        <button class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="action-count">156</div>
+                        </button>
+                        
+                        <button class="action-btn" onclick="shareVideo(3)">
+                            <div class="action-icon share">
+                                <i class="fas fa-share"></i>
+                            </div>
+                            <div class="action-count">67</div>
+                        </button>
+                    </div>
+                    
+                    <button class="try-challenge-btn" onclick="showChallengeModal(3)" style="position: absolute; bottom: 80px; left: 0; right: 0;">
+                        <i class="fas fa-video"></i>
+                        Try This Challenge
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Discover Screen -->
+        <div id="discover-screen" class="screen discover-screen">
+            <h2 class="section-title">🔥 Trending Challenges</h2>
+            <div class="challenge-grid">
+                <div class="challenge-card" onclick="showChallengeModal(1)">
+                    <div class="challenge-icon">⚒️</div>
+                    <div class="challenge-name">#WeldingBasics</div>
+                    <div class="challenge-stats">2.8K participants</div>
+                </div>
+                
+                <div class="challenge-card" onclick="showChallengeModal(2)">
+                    <div class="challenge-icon">💻</div>
+                    <div class="challenge-name">#ReactHooks</div>
+                    <div class="challenge-stats">1.2K participants</div>
+                </div>
+                
+                <div class="challenge-card" onclick="showChallengeModal(3)">
+                    <div class="challenge-icon">🔪</div>
+                    <div class="challenge-name">#KnifeSkills</div>
+                    <div class="challenge-stats">3.1K participants</div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-icon">🎨</div>
+                    <div class="challenge-name">#LogoDesign</div>
+                    <div class="challenge-stats">947 participants</div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-icon">⚡</div>
+                    <div class="challenge-name">#CircuitTest</div>
+                    <div class="challenge-stats">642 participants</div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-icon">📸</div>
+                    <div class="challenge-name">#LightingSetup</div>
+                    <div class="challenge-stats">1.5K participants</div>
+                </div>
+            </div>
+            
+            <h2 class="section-title" style="margin-top: 32px;">Categories</h2>
+            <div class="challenge-grid">
+                <div class="challenge-card">
+                    <div class="challenge-icon">💻</div>
+                    <div class="challenge-name">Tech</div>
+                    <div class="challenge-stats">127 challenges</div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-icon">🔨</div>
+                    <div class="challenge-name">Trades</div>
+                    <div class="challenge-stats">89 challenges</div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-icon">👨‍🍳</div>
+                    <div class="challenge-name">Culinary</div>
+                    <div class="challenge-stats">64 challenges</div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-icon">🎨</div>
+                    <div class="challenge-name">Design</div>
+                    <div class="challenge-stats">52 challenges</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Screen -->
+        <div id="profile-screen" class="screen profile-screen">
+            <div class="profile-header">
+                <div class="profile-avatar">MW</div>
+                <div class="profile-name">Mike Wilson</div>
+                <div class="profile-level">🔨 Usta</div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">2,847</div>
+                        <div class="stat-label">XP</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">67</div>
+                        <div class="stat-label">Challenges</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">312</div>
+                        <div class="stat-label">Validated</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="xp-progress">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 700;">Progress to Master Usta</span>
+                    <span style="color: var(--usta-bronze); font-weight: 700;">57%</span>
+                </div>
+                <div class="xp-bar-container">
+                    <div class="xp-bar" style="width: 57%"></div>
+                </div>
+                <div style="font-size: 0.875rem; opacity: 0.7; margin-top: 8px;">
+                    2,153 XP to next level
+                </div>
+            </div>
+            
+            <div style="padding: 20px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 16px;">Validated Skills</h3>
+            </div>
+            
+            <div class="skills-grid">
+                <div class="skill-item" style="background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(139, 90, 43, 0.2)); border-color: var(--usta-bronze);">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">⚒️</div>
+                        <div style="font-size: 0.7rem; margin-top: 4px;">✅ 47</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">🔧</div>
+                        <div style="font-size: 0.7rem; margin-top: 4px;">✅ 23</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">⚡</div>
+                        <div style="font-size: 0.7rem; margin-top: 4px;">✅ 18</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">🔩</div>
+                        <div style="font-size: 0.7rem; margin-top: 4px;">✅ 34</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">🛠️</div>
+                        <div style="font-size: 0.7rem; margin-top: 4px;">✅ 29</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem;">⚙️</div>
+                        <div style="font-size: 0.7rem; margin-top: 4px;">✅ 15</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-btn active" onclick="switchScreen('feed')">
+                <i class="fas fa-home"></i>
+                <span>Feed</span>
+            </button>
+            
+            <button class="nav-btn" onclick="switchScreen('discover')">
+                <i class="fas fa-compass"></i>
+                <span>Discover</span>
+            </button>
+            
+            <button class="nav-btn" onclick="showRecordingModal()">
+                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--usta-bronze), var(--usta-bronze-dark)); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-plus" style="font-size: 1.5rem;"></i>
+                </div>
+            </button>
+            
+            <button class="nav-btn">
+                <i class="fas fa-bell"></i>
+                <span>Activity</span>
+            </button>
+            
+            <button class="nav-btn" onclick="switchScreen('profile')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- XP Toast -->
+    <div class="xp-toast" id="xpToast">
+        <i class="fas fa-star" style="font-size: 1.5rem;"></i>
+        <span>+2 XP - Skill validated!</span>
+    </div>
+    
+    <!-- Challenge Modal -->
+    <div class="overlay" id="challengeModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            
+            <div class="modal-title">
+                <span id="modalChallengeTitle">#WeldingBasics</span>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <span class="challenge-badge" id="modalCategory">Trades</span>
+                    <span class="challenge-badge" style="background: var(--usta-purple);" id="modalDifficulty">⭐⭐ Intermediate</span>
+                    <span class="challenge-badge" style="background: var(--usta-gold); color: var(--usta-navy);" id="modalXP">+50 XP</span>
+                </div>
+                
+                <div style="opacity: 0.9; line-height: 1.6;" id="modalDescription">
+                    Demonstrate a perfect welding bead on flat steel. Show your setup, technique, and final result in 60 seconds.
+                </div>
+            </div>
+            
+            <div style="background: rgba(205, 127, 50, 0.1); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                <div style="font-weight: 700; color: var(--usta-bronze); margin-bottom: 8px;">
+                    👨‍🏫 Created by @masterwelder (Master Usta)
+                </div>
+                <div style="font-size: 0.9rem; opacity: 0.9;">
+                    2,847 participants · 4.8 ⭐ average
+                </div>
+            </div>
+            
+            <div class="recording-guide" id="recordingGuide">
+                <h4 style="font-weight: 800; margin-bottom: 16px;">📹 Recording Guide</h4>
+                
+                <div class="shot-guide">
+                    <div class="shot-title">Shot 1 (10 seconds): Setup</div>
+                    <div class="shot-instruction">
+                        Show your welding equipment, steel piece, and safety gear. Put on helmet and gloves.
+                    </div>
+                </div>
+                
+                <div class="shot-guide">
+                    <div class="shot-title">Shot 2 (40 seconds): Execution</div>
+                    <div class="shot-instruction">
+                        Position camera at 45-degree angle. Start welding with steady hand movement. Show consistent speed.
+                    </div>
+                </div>
+                
+                <div class="shot-guide">
+                    <div class="shot-title">Shot 3 (10 seconds): Result</div>
+                    <div class="shot-instruction">
+                        Show finished bead from close-up. Display both sides. Clean, even bead is the goal.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: rgba(46, 204, 113, 0.15); border-radius: 12px; padding: 16px; margin: 20px 0;">
+                <div style="font-weight: 700; margin-bottom: 8px;">💡 Tips from Master Usta:</div>
+                <ul style="margin-left: 20px; opacity: 0.9; line-height: 1.6;">
+                    <li>Keep torch at 45-degree angle</li>
+                    <li>Move at steady pace (not too fast!)</li>
+                    <li>Watch hand position carefully</li>
+                </ul>
+            </div>
+            
+            <button class="usta-btn" onclick="startRecording()">
+                <i class="fas fa-video"></i>
+                Start Recording
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Load videos when page loads
+        let currentPage = 1;
+        let isLoading = false;
+        
+        async function loadVideoFeed() {
+            if (isLoading) return;
+            isLoading = true;
+            
+            try {
+                // Try to load from backend
+                const result = await ustaAPI.getVideoFeed(currentPage, 10);
+                
+                if (result.success && result.data.videos) {
+                    // Backend working - load real videos
+                    displayVideos(result.data.videos);
+                    currentPage++;
+                } else {
+                    // Backend not available - show demo mode message
+                    console.log('Loading demo mode videos');
+                    showDemoModeNotice();
+                }
+            } catch (error) {
+                console.log('Backend not available, using demo mode');
+                showDemoModeNotice();
+            } finally {
+                isLoading = false;
+            }
+        }
+        
+        function displayVideos(videos) {
+            // Videos are already in the HTML for demo
+            // In production, we'd dynamically create them here
+            console.log('Loaded videos:', videos);
+        }
+        
+        function showDemoModeNotice() {
+            // Show subtle notice that we're in demo mode
+            console.log('📱 Demo Mode: Showing sample videos. Start backend to see real data.');
+        }
+        
+        // Load videos on page load
+        if (ustaAPI.isAuthenticated()) {
+            loadVideoFeed();
+        }
+    </script>
+    <script>
+        // Screen switching
+        function switchScreen(screenName) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            // Remove active from nav
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected screen
+            document.getElementById(screenName + '-screen').classList.add('active');
+            
+            // Activate nav button
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Show challenge modal
+        function showChallengeModal(challengeId) {
+            const challenges = {
+                1: {
+                    title: '#WeldingBasics',
+                    category: 'Trades',
+                    difficulty: '⭐⭐ Intermediate',
+                    xp: '+50 XP',
+                    description: 'Demonstrate a perfect welding bead on flat steel. Show your setup, technique, and final result in 60 seconds.',
+                    creator: '@masterwelder',
+                    participants: '2,847',
+                    rating: '4.8',
+                    shots: [
+                        {title: 'Shot 1 (10 seconds): Setup', instruction: 'Show your welding equipment, steel piece, and safety gear. Put on helmet and gloves.'},
+                        {title: 'Shot 2 (40 seconds): Execution', instruction: 'Position camera at 45-degree angle. Start welding with steady hand movement. Show consistent speed.'},
+                        {title: 'Shot 3 (10 seconds): Result', instruction: 'Show finished bead from close-up. Display both sides. Clean, even bead is the goal.'}
+                    ],
+                    tips: ['Keep torch at 45-degree angle', 'Move at steady pace (not too fast!)', 'Watch hand position carefully']
+                },
+                2: {
+                    title: '#ReactHooks',
+                    category: 'Tech',
+                    difficulty: '⭐⭐⭐ Advanced',
+                    xp: '+60 XP',
+                    description: 'Build a simple counter app using useState and useEffect. Show your code, demonstrate functionality, and explain your approach.',
+                    creator: '@reactmaster',
+                    participants: '1,234',
+                    rating: '4.6',
+                    shots: [
+                        {title: 'Shot 1 (15 seconds): Setup', instruction: 'Show your code editor with the component setup. Display imports and initial state.'},
+                        {title: 'Shot 2 (45 seconds): Code Walkthrough', instruction: 'Explain useState for counter, useEffect for persistence. Show the implementation line by line.'},
+                        {title: 'Shot 3 (15 seconds): Demo', instruction: 'Run the app, click the button, show counter incrementing and persisting in localStorage.'}
+                    ],
+                    tips: ['Use clear variable names', 'Explain the dependency array', 'Show the app working, not just code']
+                },
+                3: {
+                    title: '#KnifeSkills',
+                    category: 'Culinary',
+                    difficulty: '⭐⭐ Intermediate',
+                    xp: '+40 XP',
+                    description: 'Demonstrate perfect knife skills by dicing an onion into uniform cubes in 30 seconds.',
+                    creator: '@chefgordon',
+                    participants: '3,127',
+                    rating: '4.9',
+                    shots: [
+                        {title: 'Shot 1 (5 seconds): Prep', instruction: 'Show your knife, cutting board, and whole onion. Proper grip on knife.'},
+                        {title: 'Shot 2 (40 seconds): Technique', instruction: 'Dice the onion with proper technique. Steady, consistent cuts. Show your hand position.'},
+                        {title: 'Shot 3 (5 seconds): Result', instruction: 'Show the diced onion - all pieces should be uniform size.'}
+                    ],
+                    tips: ['Curl your fingers for safety', 'Rock the knife, don\'t chop', 'Keep pieces uniform size']
+                }
+            };
+            
+            const challenge = challenges[challengeId];
+            if (!challenge) return;
+            
+            // Update modal content
+            document.getElementById('modalChallengeTitle').textContent = challenge.title;
+            document.getElementById('modalCategory').textContent = challenge.category;
+            document.getElementById('modalDifficulty').textContent = challenge.difficulty;
+            document.getElementById('modalXP').textContent = challenge.xp;
+            document.getElementById('modalDescription').textContent = challenge.description;
+            
+            // Update recording guide
+            const guideHTML = challenge.shots.map(shot => `
+                <div class="shot-guide">
+                    <div class="shot-title">${shot.title}</div>
+                    <div class="shot-instruction">${shot.instruction}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('recordingGuide').innerHTML = `
+                <h4 style="font-weight: 800; margin-bottom: 16px;">📹 Recording Guide</h4>
+                ${guideHTML}
+            `;
+            
+            document.getElementById('challengeModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.querySelectorAll('.overlay').forEach(overlay => {
+                overlay.classList.remove('active');
+            });
+        }
+        
+        function startRecording() {
+            alert('📹 Recording started!\n\nIn the full app, this would:\n1. Open camera with overlay guide\n2. Record shot-by-shot with timer\n3. Auto-advance through shots\n4. Preview before posting\n\nThis is a demo - full app coming soon!');
+            closeModal();
+            showXPToast('+50 XP - Challenge completed!');
+        }
+        
+        function showRecordingModal() {
+            alert('📹 Record New Skill\n\nIn the full app, you can:\n\n1. Follow a trending challenge\n2. Record freeform demonstration\n3. Create new challenge (Usta only)\n\nFor demo: Try a trending challenge from Discover tab!');
+        }
+        
+        async function validateSkill(videoId) {
+            // Add visual feedback
+            const button = event.currentTarget;
+            button.style.transform = 'scale(1.2)';
+            button.style.background = 'rgba(46, 204, 113, 0.3)';
+            
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 300);
+            
+            // Call backend API
+            const result = await ustaAPI.validateVideo(videoId);
+            
+            if (result.success) {
+                // Show XP earned
+                const xpEarned = result.data.xp_earned || 2;
+                showXPToast(`+${xpEarned} XP - Skill validated!`);
+                
+                // Update validation count
+                if (result.data && result.data.validation_count) {
+                    const countElement = button.querySelector('.validate-count');
+                    if (countElement) {
+                        countElement.textContent = result.data.validation_count;
+                    }
+                }
+            } else {
+                // Demo mode fallback
+                showXPToast('+2 XP - Skill validated!');
+                console.log('Validate failed (demo mode)');
+            }
+        }
+        
+        async function likeVideo(videoId) {
+            const button = event.currentTarget;
+            const icon = button.querySelector('.action-icon');
+            
+            // Heart animation
+            icon.style.transform = 'scale(1.3)';
+            icon.style.color = '#E74C3C';
+            
+            setTimeout(() => {
+                icon.style.transform = 'scale(1)';
+            }, 300);
+            
+            // Call backend API
+            const result = await ustaAPI.likeVideo(videoId);
+            
+            if (result.success) {
+                console.log('Liked video:', videoId);
+                // Update like count if returned from API
+                if (result.data && result.data.likes_count) {
+                    const countElement = button.querySelector('.action-count');
+                    if (countElement) {
+                        countElement.textContent = result.data.likes_count;
+                    }
+                }
+            } else {
+                console.log('Like failed (demo mode)');
+            }
+        }
+        
+        function shareVideo(videoId) {
+            alert('📤 Share Video\n\nSharing to:\n• Instagram\n• TikTok\n• LinkedIn\n• Copy link\n\nThis helps you build your brand!');
+        }
+        
+        function showXPToast(message) {
+            const toast = document.getElementById('xpToast');
+            toast.querySelector('span').textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Close modal on overlay click
+        document.querySelectorAll('.overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    closeModal();
+                }
+            });
+        });
+        
+        // Demo welcome
+        setTimeout(() => {
+            console.log('🔨 Usta Demo App Loaded');
+            console.log('Swipe up/down on feed to see different skills');
+            console.log('Tap "Try This Challenge" to see recording guide');
+        }, 500);
+    </script>
+</body>
+</html>
+

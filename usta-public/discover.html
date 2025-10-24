@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Craftspeople - Usta</title>
+    
+    <link rel="stylesheet" href="css/usta-clean.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: #000;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .phone-container {
+            width: 100%;
+            max-width: 430px;
+            height: 932px;
+            max-height: 100vh;
+            margin: 0 auto;
+            background: #0A0A0A;
+            position: relative;
+            overflow-y: auto;
+        }
+        
+        @media (min-width: 768px) {
+            .phone-container {
+                border-radius: 40px;
+                border: 8px solid #1f2937;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                margin-top: 20px;
+            }
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            padding: var(--space-4) var(--space-5);
+            border-bottom: 1px solid rgba(205, 127, 50, 0.2);
+            z-index: 100;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .page-title {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: white;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: var(--text-base);
+            transition: all 0.2s;
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--usta-bronze);
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .search-bar::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* Content */
+        .content {
+            padding-bottom: 80px;
+        }
+        
+        .section {
+            margin: var(--space-6) 0;
+        }
+        
+        .section-header {
+            padding: 0 var(--space-5) var(--space-3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: white;
+        }
+        
+        .view-all {
+            font-size: var(--text-sm);
+            color: var(--usta-bronze);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        /* Master Usta Cards */
+        .horizontal-scroll {
+            display: flex;
+            gap: var(--space-4);
+            padding: 0 var(--space-5);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .horizontal-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .master-card {
+            min-width: 200px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: var(--space-5);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .master-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.08);
+            border-color: var(--usta-bronze);
+        }
+        
+        .master-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--usta-gold);
+            margin: 0 auto var(--space-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border: 2px solid var(--usta-gold);
+        }
+        
+        .master-badge {
+            background: var(--usta-gold);
+            color: #000;
+            padding: var(--space-1) var(--space-2);
+            border-radius: 12px;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: var(--space-2);
+        }
+        
+        .master-name {
+            font-size: var(--text-base);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-1);
+        }
+        
+        .master-profession {
+            font-size: var(--text-sm);
+            color: rgba(255,255,255,0.6);
+            margin-bottom: var(--space-3);
+        }
+        
+        .master-stats {
+            font-size: var(--text-sm);
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* Rising Stars */
+        .star-card {
+            min-width: 160px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: var(--space-4);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .star-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.08);
+            border-color: var(--usta-bronze);
+        }
+        
+        .star-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--usta-bronze);
+            margin: 0 auto var(--space-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .star-name {
+            font-size: var(--text-sm);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-1);
+        }
+        
+        .star-profession {
+            font-size: var(--text-xs);
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* Cross Network */
+        .network-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: var(--space-4);
+            margin: 0 var(--space-5) var(--space-3);
+            display: flex;
+            gap: var(--space-4);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .network-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--usta-bronze);
+        }
+        
+        .network-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--usta-bronze);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .network-info {
+            flex: 1;
+        }
+        
+        .network-name {
+            font-size: var(--text-base);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-1);
+        }
+        
+        .network-profession {
+            font-size: var(--text-sm);
+            color: rgba(255,255,255,0.6);
+            margin-bottom: var(--space-2);
+        }
+        
+        .network-highlight {
+            font-size: var(--text-xs);
+            color: var(--usta-bronze);
+            font-weight: 600;
+        }
+        
+        .network-btn {
+            padding: var(--space-2) var(--space-4);
+            background: var(--usta-bronze);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: var(--text-sm);
+            cursor: pointer;
+        }
+        
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(205, 127, 50, 0.2);
+            display: flex;
+            justify-content: space-around;
+            padding: var(--space-2) 0;
+        }
+        
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255,255,255,0.5);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: var(--space-2) var(--space-5);
+            transition: all 0.2s;
+        }
+        
+        .nav-btn.active {
+            color: var(--usta-bronze);
+        }
+        
+        .nav-label {
+            font-size: var(--text-xs);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <h1 class="page-title">🔍 Discover</h1>
+                <a href="index.html" style="color: var(--usta-bronze); text-decoration: none; font-weight: 700;">
+                    <i class="fas fa-briefcase"></i>
+                </a>
+            </div>
+            <input type="text" class="search-bar" placeholder="Search craftspeople, skills, industries...">
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <!-- Master Ustas Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">✨ Master Ustas</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                <div class="horizontal-scroll">
+                    <div class="master-card">
+                        <div class="master-avatar">🔧</div>
+                        <div class="master-badge">Master Usta</div>
+                        <div class="master-name">Mike Wilson</div>
+                        <div class="master-profession">Master Welder</div>
+                        <div class="master-stats">Level 47 · 2.8K followers</div>
+                    </div>
+                    
+                    <div class="master-card">
+                        <div class="master-avatar">👨‍🍳</div>
+                        <div class="master-badge">Master Usta</div>
+                        <div class="master-name">Sarah Chen</div>
+                        <div class="master-profession">Executive Chef</div>
+                        <div class="master-stats">Level 52 · 4.1K followers</div>
+                    </div>
+                    
+                    <div class="master-card">
+                        <div class="master-avatar">⚡</div>
+                        <div class="master-badge">Master Usta</div>
+                        <div class="master-name">James Torres</div>
+                        <div class="master-profession">Master Electrician</div>
+                        <div class="master-stats">Level 44 · 1.9K followers</div>
+                    </div>
+                    
+                    <div class="master-card">
+                        <div class="master-avatar">🔨</div>
+                        <div class="master-badge">Master Usta</div>
+                        <div class="master-name">Maria Garcia</div>
+                        <div class="master-profession">Master Carpenter</div>
+                        <div class="master-stats">Level 49 · 3.2K followers</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rising Stars Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">🚀 Rising Stars</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                <div class="horizontal-scroll">
+                    <div class="star-card">
+                        <div class="star-avatar">🔧</div>
+                        <div class="star-name">Alex Johnson</div>
+                        <div class="star-profession">Plumber</div>
+                    </div>
+                    
+                    <div class="star-card">
+                        <div class="star-avatar">🍴</div>
+                        <div class="star-name">Emma Davis</div>
+                        <div class="star-profession">Pastry Chef</div>
+                    </div>
+                    
+                    <div class="star-card">
+                        <div class="star-avatar">🚗</div>
+                        <div class="star-name">Ryan Lee</div>
+                        <div class="star-profession">Auto Tech</div>
+                    </div>
+                    
+                    <div class="star-card">
+                        <div class="star-avatar">💇</div>
+                        <div class="star-name">Lisa Brown</div>
+                        <div class="star-profession">Stylist</div>
+                    </div>
+                    
+                    <div class="star-card">
+                        <div class="star-avatar">🏗️</div>
+                        <div class="star-name">David Kim</div>
+                        <div class="star-profession">Mason</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cross Network Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">🌐 Cross Network</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                
+                <div class="network-card">
+                    <div class="network-avatar">👷</div>
+                    <div class="network-info">
+                        <div class="network-name">Carlos Martinez</div>
+                        <div class="network-profession">HVAC Technician</div>
+                        <div class="network-highlight">🔥 Trending in Climate Control</div>
+                    </div>
+                    <button class="network-btn">Follow</button>
+                </div>
+                
+                <div class="network-card">
+                    <div class="network-avatar">🎨</div>
+                    <div class="network-info">
+                        <div class="network-name">Jessica Wang</div>
+                        <div class="network-profession">Graphic Designer</div>
+                        <div class="network-highlight">🎯 Expert in Branding</div>
+                    </div>
+                    <button class="network-btn">Follow</button>
+                </div>
+                
+                <div class="network-card">
+                    <div class="network-avatar">🛠️</div>
+                    <div class="network-info">
+                        <div class="network-name">Tom Anderson</div>
+                        <div class="network-profession">Machinist</div>
+                        <div class="network-highlight">⭐ 500+ validations this month</div>
+                    </div>
+                    <button class="network-btn">Follow</button>
+                </div>
+                
+                <div class="network-card">
+                    <div class="network-avatar">📸</div>
+                    <div class="network-info">
+                        <div class="network-name">Nina Patel</div>
+                        <div class="network-profession">Photographer</div>
+                        <div class="network-highlight">📷 Sharing unique techniques</div>
+                    </div>
+                    <button class="network-btn">Follow</button>
+                </div>
+                
+                <div class="network-card">
+                    <div class="network-avatar">🔌</div>
+                    <div class="network-info">
+                        <div class="network-name">Kevin O'Brien</div>
+                        <div class="network-profession">Electrician</div>
+                        <div class="network-highlight">⚡ Active in your area</div>
+                    </div>
+                    <button class="network-btn">Follow</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-btn" onclick="window.location.href='demo.html'">
+                <i class="fas fa-home"></i>
+                <span class="nav-label">Feed</span>
+            </button>
+            <button class="nav-btn active">
+                <i class="fas fa-search"></i>
+                <span class="nav-label">Discover</span>
+            </button>
+            <button class="nav-btn">
+                <i class="fas fa-plus-circle"></i>
+                <span class="nav-label">Create</span>
+            </button>
+            <button class="nav-btn">
+                <i class="fas fa-bell"></i>
+                <span class="nav-label">Inbox</span>
+            </button>
+            <button class="nav-btn" onclick="window.location.href='profile.html'">
+                <i class="fas fa-user"></i>
+                <span class="nav-label">Profile</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

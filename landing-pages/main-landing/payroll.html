@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Payroll System - Staff & Time Management | Iterum Foods</title>
+    <meta name="description" content="Simplified payroll and staff management designed for restaurants. Time tracking, tip calculation, and schedule management.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="unified-colors.css">
+    <link rel="stylesheet" href="shared-styles.css">
+    
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+        
+        .platform-badge {
+            background: rgba(245, 158, 11, 0.15);
+            color: #d97706;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+            color: #f59e0b;
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">💰</div>
+                <span class="logo-text">Iterum Foods</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#platforms">All Platforms</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="index.html">← Back to Home</a></li>
+                <li><a href="#" class="nav-cta" onclick="openWaitlistModal(); return false;">Join Waitlist</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <section class="hero" style="margin-top: 80px;">
+        <div class="hero-container">
+            <div class="platform-badge">💰 Payroll System</div>
+            <h1>Simplified Payroll for Restaurants</h1>
+            <p class="hero-subtitle">
+                Staff management, time tracking, tip calculation, and payroll processing designed specifically for restaurant operations.
+            </p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-primary" onclick="openWaitlistModal(); return false;">
+                    <i class="fas fa-rocket"></i> Get Early Access
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features-section" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">Features</div>
+                <h2>Make Payroll Simple</h2>
+                <p>Everything you need to manage your restaurant staff efficiently</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                    <h3>Time Tracking</h3>
+                    <p>Clock in/out system with automatic overtime calculation. Mobile-friendly for staff convenience.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                    <h3>Tip Management</h3>
+                    <p>Automatic tip calculation and distribution. Support for pooled tips and tip sharing.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <h3>Schedule Management</h3>
+                    <p>Create and manage staff schedules. Handle shift swaps, time-off requests, and availability.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-money-check"></i></div>
+                    <h3>Payroll Processing</h3>
+                    <p>Automated payroll calculations with tax withholding. Export to your accounting software.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-user-check"></i></div>
+                    <h3>Employee Management</h3>
+                    <p>Maintain employee records, emergency contacts, and documents in one secure place.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <h3>Reports & Analytics</h3>
+                    <p>Labor cost reports, overtime tracking, and productivity analysis to optimize staffing.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>Ready to Simplify Your Payroll?</h2>
+            <p>Join the waitlist for early access to Payroll System</p>
+            <a href="#" class="btn btn-primary btn-large" onclick="openWaitlistModal(); return false;">
+                <i class="fas fa-rocket"></i> Join Waitlist Now
+            </a>
+        </div>
+    </section>
+    
+    <script src="shared-scripts.js"></script>
+    <script>
+        const PLATFORM_CONFIG = {
+            name: 'Payroll System',
+            code: 'payroll',
+            icon: '💰'
+        };
+    </script>
+</body>
+</html>
+

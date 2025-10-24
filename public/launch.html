@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterum - Professional Culinary R&D Platform</title>
+    <meta name="description" content="Transform your culinary creativity into reality with Iterum - the professional chef's digital notebook for recipe development, menu planning, and culinary innovation.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Nordic Vintage Design System -->
+    <link rel="stylesheet" href="assets/css/modern-nordic-vintage.css">
+    <link rel="stylesheet" href="assets/css/dark-mode-enhancements.css">
+    <link rel="stylesheet" href="assets/css/iterum-brand-kit.css">
+    <link rel="stylesheet" href="assets/css/header-universal.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #0F0E0C 0%, #1A1512 30%, #2A2420 60%, #1F2A22 100%);
+            color: #e2e8f0;
+            line-height: 1.7;
+            overflow-x: hidden;
+            font-weight: 500;
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, 
+                #0F0E0C 0%, 
+                #1A1512 30%,
+                #2A2420 60%,
+                #1F2A22 100%
+            );
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-left {
+            color: white;
+        }
+
+        .hero-left h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+            color: #f1f5f9;
+            letter-spacing: -1px;
+        }
+
+        .hero-left .tagline {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #10b981;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-left .description {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 32px;
+            color: #cbd5e1;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 12px 16px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-feature-icon {
+            font-size: 24px;
+            color: #10b981;
+        }
+
+        .hero-feature-text {
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .hero-right {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(16, 185, 129, 0.1);
+            backdrop-filter: blur(30px);
+        }
+
+        .auth-container h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            color: #ffffff;
+            text-align: center;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.8);
+            letter-spacing: -0.5px;
+        }
+
+        .auth-container .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 6px;
+            margin-bottom: 40px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #94a3b8;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-tab.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-size: 15px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .form-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 20px;
+            background: transparent;
+            color: #10b981;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 32px 0;
+            position: relative;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .divider span {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            color: #fecaca;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.15);
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            color: #a7f3d0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50%;
+            border-top-color: #10b981;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .hero-left h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-right {
+                padding: 32px 24px;
+            }
+        }
+
+        /* High Contrast Improvements */
+        .hero-left h1 {
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+        }
+
+        .hero-left .tagline {
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero-left .description {
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-label {
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-container h2 {
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-left">
+                <h1>🍳 Iterum</h1>
+                <div class="tagline">Professional Culinary R&D Platform</div>
+                <div class="description">
+                    Transform your culinary creativity into reality with the most advanced digital notebook for professional chefs. 
+                    Develop recipes, plan menus, and innovate with confidence.
+                </div>
+                
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">📝</div>
+                        <div class="hero-feature-text">Enhanced Notes</div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">💡</div>
+                        <div class="hero-feature-text">Brainstorming</div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">📄</div>
+                        <div class="hero-feature-text">Napkin Sketch</div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">🎯</div>
+                        <div class="hero-feature-text">Recipe Development</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-right">
+                <div class="auth-container">
+                    <h2>Welcome Back</h2>
+                    <div class="subtitle">Sign in to your professional culinary workspace</div>
+                    
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" onclick="switchTab('signin')">Sign In</button>
+                        <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+                    </div>
+                    
+                    <div id="signin-form" class="auth-form active">
+                        <form id="signinForm">
+                            <div class="form-group">
+                                <label class="form-label" for="signin-email">Email Address</label>
+                                <input type="email" id="signin-email" class="form-input" placeholder="chef@restaurant.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="signin-password">Password</label>
+                                <input type="password" id="signin-password" class="form-input" placeholder="Enter your password" required>
+                            </div>
+                            <button type="submit" class="btn-primary">
+                                <span id="signin-loading" class="loading" style="display: none;"></span>
+                                <span id="signin-text">Sign In</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div id="signup-form" class="auth-form">
+                        <form id="signupForm">
+                            <div class="form-group">
+                                <label class="form-label" for="signup-name">Full Name</label>
+                                <input type="text" id="signup-name" class="form-input" placeholder="Chef Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="signup-email">Email Address</label>
+                                <input type="email" id="signup-email" class="form-input" placeholder="chef@restaurant.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="signup-password">Password</label>
+                                <input type="password" id="signup-password" class="form-input" placeholder="Create a strong password" required>
+                            </div>
+                            <button type="submit" class="btn-primary">
+                                <span id="signup-loading" class="loading" style="display: none;"></span>
+                                <span id="signup-text">Create Account</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <button class="btn-secondary" onclick="signInWithGoogle()">
+                        Continue with Google
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Auth System -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auth-manager.js"></script>
+    <script src="assets/js/auth-api-helper.js"></script>
+    <script src="assets/js/auth-diagnostics.js"></script>
+
+    <script>
+        // Tab switching
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update forms
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById(tab + '-form').classList.add('active');
+        }
+
+        // Sign in form
+        document.getElementById('signinForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            const loading = document.getElementById('signin-loading');
+            const text = document.getElementById('signin-text');
+            
+            loading.style.display = 'inline-block';
+            text.textContent = 'Signing in...';
+            
+            try {
+                const result = await window.authManager.signIn(email, password);
+                if (result.success) {
+                    showMessage('success', 'Welcome back! Redirecting to your dashboard...');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showMessage('error', result.error || 'Sign in failed. Please try again.');
+                }
+            } catch (error) {
+                showMessage('error', 'An error occurred. Please try again.');
+            } finally {
+                loading.style.display = 'none';
+                text.textContent = 'Sign In';
+            }
+        });
+
+        // Sign up form
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const loading = document.getElementById('signup-loading');
+            const text = document.getElementById('signup-text');
+            
+            loading.style.display = 'inline-block';
+            text.textContent = 'Creating account...';
+            
+            try {
+                const result = await window.authManager.signUp(email, password, name);
+                if (result.success) {
+                    showMessage('success', 'Account created! Please check your email to verify your account.');
+                } else {
+                    showMessage('error', result.error || 'Sign up failed. Please try again.');
+                }
+            } catch (error) {
+                showMessage('error', 'An error occurred. Please try again.');
+            } finally {
+                loading.style.display = 'none';
+                text.textContent = 'Create Account';
+            }
+        });
+
+        // Google sign in
+        async function signInWithGoogle() {
+            try {
+                const result = await window.authManager.signInWithGoogle();
+                if (result.success) {
+                    showMessage('success', 'Welcome! Redirecting to your dashboard...');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showMessage('error', result.error || 'Google sign in failed. Please try again.');
+                }
+            } catch (error) {
+                showMessage('error', 'An error occurred. Please try again.');
+            }
+        }
+
+        // Show messages
+        function showMessage(type, message) {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.error-message, .success-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            // Create new message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+            messageDiv.textContent = message;
+            
+            // Insert before the form
+            const form = document.querySelector('.auth-form.active');
+            form.insertBefore(messageDiv, form.firstChild);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Track page view when page loads
+        window.addEventListener('load', function() {
+            if (window.analyticsTracker) {
+                window.analyticsTracker.trackPageView('launch', 'Iterum Culinary App - Sign In');
+            }
+        });
+        
+        // Error handling for incognito mode and localStorage issues
+        window.addEventListener('error', function(e) {
+            console.log('🚨 Error detected:', e.message);
+            // Don't redirect on every error, just log it
+        });
+        
+        // Check if we're in incognito mode
+        function isIncognito() {
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                return false;
+            } catch (e) {
+                return true;
+            }
+        }
+        
+        // Show a message if in incognito mode
+        if (isIncognito()) {
+            console.log('🔒 Incognito mode detected - some features may be limited');
+        }
+    </script>
+</body>
+</html>

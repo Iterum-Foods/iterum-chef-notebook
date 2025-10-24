@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Usta - Start Your Journey</title>
+    
+    <link rel="stylesheet" href="css/usta-clean.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: var(--gray-50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .onboarding-container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        /* Header */
+        .onboarding-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+        
+        .logo-large {
+            font-size: 4rem;
+            margin-bottom: var(--space-3);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .logo-text {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .tagline {
+            font-size: var(--text-lg);
+            color: var(--gray-600);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            background: white;
+            border-radius: 12px;
+            padding: var(--space-4);
+            margin-bottom: var(--space-6);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray-200);
+            z-index: 0;
+        }
+        
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--usta-bronze);
+            transition: width 0.3s ease;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        
+        .progress-step.active .step-circle {
+            background: var(--usta-bronze);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .progress-step.completed .step-circle {
+            background: var(--usta-green);
+            color: white;
+        }
+        
+        .step-label {
+            font-size: var(--text-xs);
+            color: var(--gray-600);
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .progress-step.active .step-label {
+            color: var(--usta-bronze);
+        }
+        
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: var(--space-8);
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .step-content {
+            display: none;
+        }
+        
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .step-title {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .step-description {
+            font-size: var(--text-base);
+            color: var(--gray-600);
+            margin-bottom: var(--space-6);
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+        
+        /* Craft Selection */
+        .craft-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+        }
+        
+        .craft-option {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: var(--space-4);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .craft-option:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+        
+        .craft-option.selected {
+            background: rgba(205, 127, 50, 0.1);
+            border-color: var(--usta-bronze);
+        }
+        
+        .craft-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-2);
+        }
+        
+        .craft-name {
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: var(--text-base);
+        }
+        
+        /* Interest Tags */
+        .interest-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+        }
+        
+        .interest-tag {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: var(--space-3) var(--space-4);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+        
+        .interest-tag:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+        
+        .interest-tag.selected {
+            background: rgba(205, 127, 50, 0.1);
+            border-color: var(--usta-bronze);
+            color: var(--usta-bronze);
+        }
+        
+        .interest-tag i {
+            font-size: 1.25rem;
+        }
+        
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-6);
+        }
+        
+        .btn-full {
+            flex: 1;
+        }
+        
+        /* Summary */
+        .summary-section {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .summary-label {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            margin-bottom: var(--space-1);
+            font-weight: 600;
+        }
+        
+        .summary-value {
+            font-size: var(--text-base);
+            color: var(--gray-900);
+            font-weight: 700;
+        }
+        
+        .summary-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            margin-top: var(--space-2);
+        }
+        
+        .summary-tag {
+            background: var(--usta-bronze);
+            color: white;
+            padding: var(--space-1) var(--space-3);
+            border-radius: 16px;
+            font-size: var(--text-sm);
+            font-weight: 600;
+        }
+        
+        /* Footer Links */
+        .footer-links {
+            text-align: center;
+            margin-top: var(--space-6);
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+        }
+        
+        .footer-links a {
+            color: var(--usta-bronze);
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .craft-grid,
+            .interest-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-container">
+        <!-- Header -->
+        <div class="onboarding-header">
+                <div class="logo-large">🔨</div>
+            <h1 class="logo-text">Join Usta</h1>
+            <p class="tagline">Master your craft with your community</p>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="progress-line">
+                    <div class="progress-fill" id="progressFill" style="width: 25%;"></div>
+                </div>
+                
+                <div class="progress-step active" id="step1-progress">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Account</span>
+                </div>
+                
+                <div class="progress-step" id="step2-progress">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Your Craft</span>
+                </div>
+                
+                <div class="progress-step" id="step3-progress">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Interests</span>
+                </div>
+                
+                <div class="progress-step" id="step4-progress">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Complete</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Card -->
+        <div class="form-card">
+            <!-- Step 1: Account Info -->
+            <div class="step-content active" id="step1">
+                <h2 class="step-title">Create Your Account</h2>
+                <p class="step-description">Let's get started with the basics</p>
+                
+                <div class="form-group">
+                    <label class="label">Full Name</label>
+                    <input type="text" class="input" id="fullName" placeholder="John Doe">
+            </div>
+            
+                <div class="form-group">
+                    <label class="label">Email Address</label>
+                    <input type="email" class="input" id="email" placeholder="john@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="label">Password</label>
+                    <input type="password" class="input" id="password" placeholder="Create a secure password">
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary btn-full btn-lg" onclick="nextStep(2)">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Choose Craft/Group -->
+            <div class="step-content" id="step2">
+                <h2 class="step-title">What's Your Craft?</h2>
+                <p class="step-description">Currently in Beta: Starting with Culinary Professionals</p>
+                
+                <div style="background: rgba(205, 127, 50, 0.1); border: 2px solid var(--usta-bronze); border-radius: 12px; padding: var(--space-4); margin-bottom: var(--space-6); text-align: center;">
+                    <p style="color: var(--usta-bronze); font-weight: 700; margin: 0;">
+                        🍳 Beta Phase: Launching with Culinary Community First
+                    </p>
+                    <p style="color: var(--gray-600); font-size: var(--text-sm); margin-top: var(--space-2);">
+                        Other crafts coming soon! Join our waitlist to be notified.
+                    </p>
+                </div>
+                
+                <div class="craft-grid">
+                    <div class="craft-option selected" onclick="selectCraft(this, 'Culinary', '👨‍🍳')" style="grid-column: 1 / -1; border-color: var(--usta-bronze); background: rgba(205, 127, 50, 0.05);">
+                        <div class="craft-icon">👨‍🍳</div>
+                        <div class="craft-name">Culinary Professional</div>
+                        <div style="font-size: var(--text-sm); color: var(--gray-600); margin-top: var(--space-2);">
+                            Chefs, Cooks, Bakers, Pastry Chefs
+                        </div>
+                    </div>
+                    
+                    <div class="craft-option" style="opacity: 0.4; cursor: not-allowed;">
+                        <div class="craft-icon">🔧</div>
+                        <div class="craft-name">Welding</div>
+                        <div style="font-size: var(--text-xs); color: var(--gray-500); margin-top: var(--space-1);">Coming Soon</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Electrical', '⚡')">
+                        <div class="craft-icon">⚡</div>
+                        <div class="craft-name">Electrical</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Plumbing', '🔧')">
+                        <div class="craft-icon">🔧</div>
+                        <div class="craft-name">Plumbing</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Carpentry', '🔨')">
+                        <div class="craft-icon">🔨</div>
+                        <div class="craft-name">Carpentry</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Automotive', '🚗')">
+                        <div class="craft-icon">🚗</div>
+                        <div class="craft-name">Automotive</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'HVAC', '🌡️')">
+                        <div class="craft-icon">🌡️</div>
+                        <div class="craft-name">HVAC</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Masonry', '🏗️')">
+                        <div class="craft-icon">🏗️</div>
+                        <div class="craft-name">Masonry</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Hair Styling', '💇')">
+                        <div class="craft-icon">💇</div>
+                        <div class="craft-name">Hair Styling</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Photography', '📸')">
+                        <div class="craft-icon">📸</div>
+                        <div class="craft-name">Photography</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Design', '🎨')">
+                        <div class="craft-icon">🎨</div>
+                        <div class="craft-name">Design</div>
+                    </div>
+                    
+                    <div class="craft-option" onclick="selectCraft(this, 'Other', '✨')">
+                        <div class="craft-icon">✨</div>
+                        <div class="craft-name">Other</div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-ghost btn-full" onclick="prevStep(1)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-full btn-lg" onclick="nextStep(3)" id="step2Continue" disabled>
+                        Continue <i class="fas fa-arrow-right"></i>
+                </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Choose Interests -->
+            <div class="step-content" id="step3">
+                <h2 class="step-title">What Culinary Skills Do You Want to Master?</h2>
+                <p class="step-description">Select techniques and topics that interest you (choose at least 3)</p>
+                
+                <div class="interest-grid">
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Knife Skills')">
+                        <i class="fas fa-cut"></i>
+                        <span>Knife Skills</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Sauce Work')">
+                        <i class="fas fa-mortar-pestle"></i>
+                        <span>Sauce Work</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Proteins & Butchery')">
+                        <i class="fas fa-drumstick-bite"></i>
+                        <span>Proteins & Butchery</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Baking & Pastry')">
+                        <i class="fas fa-bread-slice"></i>
+                        <span>Baking & Pastry</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Plating & Presentation')">
+                        <i class="fas fa-utensils"></i>
+                        <span>Plating & Presentation</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Station Work & Speed')">
+                        <i class="fas fa-fire"></i>
+                        <span>Station Work & Speed</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Mise en Place')">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Mise en Place</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Menu Development')">
+                        <i class="fas fa-book"></i>
+                        <span>Menu Development</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Food Safety')">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Food Safety</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Kitchen Management')">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Kitchen Management</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'Cost Control')">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Cost Control</span>
+                    </div>
+                    
+                    <div class="interest-tag" onclick="toggleInterest(this, 'International Cuisines')">
+                        <i class="fas fa-globe"></i>
+                        <span>International Cuisines</span>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: var(--space-4);">
+                    <span id="interestCount" style="color: var(--gray-600); font-size: var(--text-sm); font-weight: 600;">
+                        0 selected (minimum 3)
+                    </span>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-ghost btn-full" onclick="prevStep(2)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-full btn-lg" onclick="nextStep(4)" id="step3Continue" disabled>
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Summary & Complete -->
+            <div class="step-content" id="step4">
+                <h2 class="step-title">🎉 You're All Set!</h2>
+                <p class="step-description">Review your profile and start your journey</p>
+                
+                <div class="summary-section">
+                    <div class="summary-label">Name</div>
+                    <div class="summary-value" id="summaryName">-</div>
+                </div>
+                
+                <div class="summary-section">
+                    <div class="summary-label">Email</div>
+                    <div class="summary-value" id="summaryEmail">-</div>
+            </div>
+                
+                <div class="summary-section">
+                    <div class="summary-label">Your Craft</div>
+                    <div class="summary-value" id="summaryCraft">-</div>
+                </div>
+                
+                <div class="summary-section">
+                    <div class="summary-label">Learning Interests</div>
+                    <div class="summary-tags" id="summaryInterests"></div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-ghost btn-full" onclick="prevStep(3)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-full btn-lg" onclick="completeSignup()">
+                        <i class="fas fa-check"></i> Start Learning
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Links -->
+        <div class="footer-links">
+            Already have an account? <a href="#">Sign In</a><br/>
+            <a href="landing.html">← Back to Landing</a> | <a href="index.html">Investor Hub</a>
+        </div>
+    </div>
+    
+    <script>
+        // State management
+        let currentStep = 1;
+        let userData = {
+            name: '',
+            email: '',
+            password: '',
+            craft: 'Culinary',           // Default for beta
+            craftIcon: '👨‍🍳',            // Default for beta
+            interests: []
+        };
+        
+        // Auto-enable step 2 continue since Culinary is pre-selected
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('step2Continue').disabled = false;
+        });
+        
+        // Step navigation
+        function nextStep(step) {
+            // Save current step data
+            if (currentStep === 1) {
+                userData.name = document.getElementById('fullName').value;
+                userData.email = document.getElementById('email').value;
+                userData.password = document.getElementById('password').value;
+                
+                if (!userData.name || !userData.email || !userData.password) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+            }
+            
+            // Hide current step
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${currentStep}-progress`).classList.remove('active');
+            document.getElementById(`step${currentStep}-progress`).classList.add('completed');
+            
+            // Show new step
+            currentStep = step;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            document.getElementById(`step${currentStep}-progress`).classList.add('active');
+            
+            // Update progress bar
+            const progress = (currentStep / 4) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // If final step, populate summary
+            if (currentStep === 4) {
+                populateSummary();
+            }
+        }
+        
+        function prevStep(step) {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${currentStep}-progress`).classList.remove('active');
+            
+            currentStep = step;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            document.getElementById(`step${currentStep}-progress`).classList.add('active');
+            document.getElementById(`step${currentStep}-progress`).classList.remove('completed');
+            
+            const progress = (currentStep / 4) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        // Craft selection
+        function selectCraft(element, craft, icon) {
+            // Remove previous selection
+            document.querySelectorAll('.craft-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selection
+            element.classList.add('selected');
+            userData.craft = craft;
+            userData.craftIcon = icon;
+            
+            // Enable continue button
+            document.getElementById('step2Continue').disabled = false;
+        }
+        
+        // Interest selection
+        function toggleInterest(element, interest) {
+            element.classList.toggle('selected');
+            
+            if (element.classList.contains('selected')) {
+                userData.interests.push(interest);
+            } else {
+                userData.interests = userData.interests.filter(i => i !== interest);
+            }
+            
+            // Update count
+            const count = userData.interests.length;
+            document.getElementById('interestCount').textContent = 
+                `${count} selected (minimum 3)`;
+            
+            // Enable/disable continue button
+            document.getElementById('step3Continue').disabled = count < 3;
+        }
+        
+        // Populate summary
+        function populateSummary() {
+            document.getElementById('summaryName').textContent = userData.name;
+            document.getElementById('summaryEmail').textContent = userData.email;
+            document.getElementById('summaryCraft').textContent = 
+                `${userData.craftIcon} ${userData.craft}`;
+            
+            const interestsContainer = document.getElementById('summaryInterests');
+            interestsContainer.innerHTML = '';
+            userData.interests.forEach(interest => {
+                const tag = document.createElement('span');
+                tag.className = 'summary-tag';
+                tag.textContent = interest;
+                interestsContainer.appendChild(tag);
+            });
+        }
+        
+        // Complete signup
+        async function completeSignup() {
+            console.log('Signup data:', userData);
+            
+            try {
+                // Call backend API
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: userData.name.toLowerCase().replace(/\s+/g, '_'),
+                        email: userData.email,
+                        password: userData.password,
+                        first_name: userData.name.split(' ')[0],
+                        last_name: userData.name.split(' ')[1] || '',
+                        craft: userData.craft,
+                        craftIcon: userData.craftIcon,
+                        interests: userData.interests
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Save token to localStorage
+                    localStorage.setItem('usta_token', data.token);
+                    localStorage.setItem('usta_user', JSON.stringify(data.user));
+                    
+                    // Show success message
+                    alert('🎉 Welcome to Usta! Your account has been created.\n\nRedirecting to your personalized feed...');
+                    
+                    // Redirect to demo feed
+                    window.location.href = 'demo.html';
+                } else {
+                    // Show error
+                    alert('Error: ' + (data.error || 'Registration failed'));
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                
+                // If backend not running, show demo mode message
+                alert('🎉 Demo Mode: Account created!\n\nNote: Backend server not running. In production, this would save to database.\n\nRedirecting to demo feed...');
+                
+                // Save to localStorage for demo
+                localStorage.setItem('usta_user', JSON.stringify({
+                    username: userData.name.toLowerCase().replace(/\s+/g, '_'),
+                    email: userData.email,
+                    craft: userData.craft,
+                    craft_icon: userData.craftIcon,
+                    interests: userData.interests,
+                    level: 'novice',
+                    total_xp: 25
+                }));
+                
+                // Still redirect to demo
+                window.location.href = 'demo.html';
+            }
+        }
+    </script>
+</body>
+</html>

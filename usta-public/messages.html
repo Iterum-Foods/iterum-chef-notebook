@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Usta</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --usta-bronze: #CD7F32;
+            --usta-navy: #2C3E50;
+            --usta-green: #2ECC71;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .phone-container {
+            width: 100%;
+            max-width: 430px;
+            height: 932px;
+            max-height: 100vh;
+            margin: 0 auto;
+            background: #0f0f0f;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 768px) {
+            .phone-container {
+                border-radius: 40px;
+                border: 12px solid #1f2937;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                margin-top: 20px;
+            }
+        }
+        
+        .header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Conversation List */
+        .conversation-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .conversation-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .conversation-item:active {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--usta-bronze), #8B5A2B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .conversation-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+        
+        .last-message {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .conversation-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .timestamp {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        
+        .unread-badge {
+            background: var(--usta-bronze);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+        
+        .online-indicator {
+            width: 14px;
+            height: 14px;
+            background: var(--usta-green);
+            border-radius: 50%;
+            border: 3px solid #0f0f0f;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="page-title">💬 Messages</h1>
+            <button onclick="window.location.href='demo.html'" style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; cursor: pointer;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Conversation List -->
+        <div class="conversation-list">
+            <!-- Conversation 1 - Unread -->
+            <div class="conversation-item" onclick="openChat(1)">
+                <div style="position: relative;">
+                    <div class="avatar">MW</div>
+                    <div class="online-indicator"></div>
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-name">Mike Wilson</div>
+                    <div class="last-message" style="color: white; font-weight: 600;">
+                        Great welding technique! Want to collaborate on a project?
+                    </div>
+                </div>
+                <div class="conversation-meta">
+                    <div class="timestamp">2m ago</div>
+                    <div class="unread-badge">2</div>
+                </div>
+            </div>
+            
+            <!-- Conversation 2 - Read -->
+            <div class="conversation-item" onclick="openChat(2)">
+                <div style="position: relative;">
+                    <div class="avatar" style="background: linear-gradient(135deg, #3498DB, #2980B9);">SC</div>
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-name">Sarah Chen</div>
+                    <div class="last-message">
+                        Thanks for validating my React skills!
+                    </div>
+                </div>
+                <div class="conversation-meta">
+                    <div class="timestamp">1h ago</div>
+                </div>
+            </div>
+            
+            <!-- Conversation 3 - Company -->
+            <div class="conversation-item" onclick="openChat(3)">
+                <div style="position: relative;">
+                    <div class="avatar" style="background: linear-gradient(135deg, #2ECC71, #27AE60);">AF</div>
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-name">Advanced Fabrication</div>
+                    <div class="last-message">
+                        We'd like to interview you for the Senior Welder position
+                    </div>
+                </div>
+                <div class="conversation-meta">
+                    <div class="timestamp">3h ago</div>
+                    <div class="unread-badge">1</div>
+                </div>
+            </div>
+            
+            <!-- More conversations... -->
+            <div class="conversation-item" onclick="openChat(4)">
+                <div style="position: relative;">
+                    <div class="avatar" style="background: linear-gradient(135deg, #9B59B6, #8E44AD);">JD</div>
+                    <div class="online-indicator"></div>
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-name">John Doe</div>
+                    <div class="last-message">
+                        Your #KnifeSkills challenge was incredible!
+                    </div>
+                </div>
+                <div class="conversation-meta">
+                    <div class="timestamp">Yesterday</div>
+                </div>
+            </div>
+            
+            <div class="conversation-item" onclick="openChat(5)">
+                <div style="position: relative;">
+                    <div class="avatar" style="background: linear-gradient(135deg, #E67E22, #D35400);">AL</div>
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-name">Alex Lee</div>
+                    <div class="last-message">
+                        Would love to connect! I'm also in Houston.
+                    </div>
+                </div>
+                <div class="conversation-meta">
+                    <div class="timestamp">2 days</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openChat(id) {
+            alert(`💬 Opening conversation\n\nIn full app:\n• Full chat history\n• Send messages\n• Share videos\n• Video calls\n• View their profile`);
+        }
+    </script>
+</body>
+</html>
+

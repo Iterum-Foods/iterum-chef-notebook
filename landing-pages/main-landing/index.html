@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterum Foods - The Chef's Digital Notebook | Restaurant Technology Platform</title>
+    <meta name="description" content="Your professional culinary companion. Recipe development, business planning, and restaurant management tools designed by chefs, for chefs.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Iterum Foods - The Chef's Digital Notebook">
+    <meta property="og:description" content="Transform your culinary creativity into reality">
+    <meta property="og:url" content="https://iterumfoods.xyz">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Unified Color System -->
+    <link href="unified-colors.css" rel="stylesheet">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MC8Q3SZ47K"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-MC8Q3SZ47K');
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --chef-brown: #5d4037;
+            --chef-cream: #fef7e5;
+            --chef-tan: #f4e4c1;
+            --notebook-blue: #1e3a5f;
+            --text-dark: #2d2d2d;
+        }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--chef-cream);
+        }
+        
+        /* Handwritten accents */
+        .handwritten {
+            font-family: 'Caveat', cursive;
+        }
+        
+        /* Navigation - Chef's Notebook Style */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(254, 247, 229, 0.98);
+            backdrop-filter: blur(15px);
+            border-bottom: 3px solid var(--chef-brown);
+            padding: 16px 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.15);
+        }
+        
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--chef-brown) 0%, #3e2723 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(93, 64, 55, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--chef-brown);
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .logo-subtext {
+            font-family: 'Caveat', cursive;
+            font-size: 1rem;
+            color: var(--primary-dark);
+            margin-top: -4px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--chef-brown);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white !important;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .nav-cta::after { display: none; }
+        
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Hero Section - Chef's Workspace */
+        .hero {
+            padding: 160px 40px 120px;
+            background: linear-gradient(135deg, var(--chef-cream) 0%, var(--chef-tan) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 35px,
+                    rgba(93, 64, 55, 0.05) 35px,
+                    rgba(93, 64, 55, 0.05) 36px
+                );
+            opacity: 0.5;
+        }
+        
+        .hero::after {
+            content: '🍽️ 👨‍🍳 📖 🥘 ✨ 🔪 🍴 📝';
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.03;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            letter-spacing: 60px;
+        }
+        
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: white;
+            color: var(--chef-brown);
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.15);
+            border: 2px solid var(--primary);
+            animation: fadeInDown 0.6s ease;
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--chef-brown);
+            animation: fadeInUp 0.8s ease;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .hero h1 .handwritten-accent {
+            font-family: 'Caveat', cursive;
+            color: var(--primary);
+            font-size: 5rem;
+            display: block;
+            margin-top: 12px;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.625rem;
+            color: #5d4037;
+            margin-bottom: 48px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1.2s ease;
+            margin-bottom: 48px;
+        }
+        
+        .btn {
+            padding: 18px 36px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--chef-brown);
+            border: 2px solid var(--chef-brown);
+            box-shadow: 0 2px 10px rgba(93, 64, 55, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--chef-brown);
+            color: white;
+        }
+        
+        .hero-features {
+            margin-top: 60px;
+            display: flex;
+            gap: 48px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1.4s ease;
+        }
+        
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--chef-brown);
+            font-weight: 600;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(93, 64, 55, 0.1);
+        }
+        
+        .hero-feature i {
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+        
+        /* Recipe Card Style Stats */
+        .stats {
+            padding: 100px 40px;
+            background: linear-gradient(135deg, var(--chef-brown) 0%, #3e2723 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats::before {
+            content: '⭐';
+            position: absolute;
+            font-size: 20rem;
+            opacity: 0.03;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 32px 24px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-8px);
+        }
+        
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .stat-label {
+            font-size: 1.125rem;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+        
+        /* Chef's Notes Section */
+        .chef-notes {
+            padding: 80px 40px 60px;
+            background: var(--chef-cream);
+            border-top: 3px dashed var(--chef-brown);
+            border-bottom: 3px dashed var(--chef-brown);
+        }
+        
+        .chef-notes-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .chef-notes-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            color: var(--chef-brown);
+            margin-bottom: 40px;
+        }
+        
+        .chef-badges {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .chef-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chef-badge-icon {
+            font-size: 2.5rem;
+        }
+        
+        .chef-badge-text {
+            font-weight: 700;
+            color: var(--chef-brown);
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        /* How It Works - Recipe Steps Style */
+        .how-it-works {
+            padding: 120px 40px;
+            background: white;
+        }
+        
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+        
+        .section-badge {
+            font-family: 'Caveat', cursive;
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+        
+        .section-header h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--chef-brown);
+            margin-bottom: 20px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .section-header p {
+            font-size: 1.375rem;
+            color: #5d4037;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, white 0%, var(--chef-cream) 100%);
+            border: 3px solid var(--chef-tan);
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.1);
+        }
+        
+        .step-card:hover {
+            transform: translateY(-8px) rotate(-1deg);
+            box-shadow: 0 12px 40px rgba(93, 64, 55, 0.15);
+        }
+        
+        .step-number {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--chef-brown) 0%, #3e2723 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 25px rgba(93, 64, 55, 0.3);
+            border: 4px solid white;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .step-card h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--chef-brown);
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .step-card p {
+            color: #5d4037;
+            line-height: 1.7;
+        }
+        
+        .step-annotation {
+            font-family: 'Caveat', cursive;
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-top: 12px;
+            font-weight: 700;
+        }
+        
+        /* Platforms - Recipe Cards Style */
+        .platforms {
+            padding: 120px 40px;
+            background: linear-gradient(135deg, #fafaf8 0%, #f5f3ed 100%);
+            position: relative;
+        }
+        
+        .platforms::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="10" y="50" font-family="serif" font-size="40" fill="rgba(93,64,55,0.02)">★</text></svg>');
+            background-size: 100px 100px;
+            opacity: 0.3;
+        }
+        
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .platform-card {
+            background: white;
+            border: 3px solid var(--chef-tan);
+            border-radius: 16px;
+            padding: 48px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(93, 64, 55, 0.12);
+        }
+        
+        .platform-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+        
+        .platform-card::after {
+            content: '';
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 60px;
+            height: 60px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="0" y="80" font-size="80" opacity="0.05">✓</text></svg>');
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-12px) rotate(0.5deg);
+            box-shadow: 0 25px 70px rgba(16, 185, 129, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .platform-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--chef-cream) 0%, var(--chef-tan) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            margin-bottom: 28px;
+            transition: all 0.4s ease;
+            border: 3px solid var(--primary);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+        }
+        
+        .platform-card:hover .platform-icon {
+            transform: scale(1.15) rotate(-8deg);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+        }
+        
+        .platform-card h3 {
+            font-size: 2.25rem;
+            font-weight: 900;
+            color: var(--chef-brown);
+            margin-bottom: 16px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .platform-subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .platform-card p {
+            color: #5d4037;
+            margin-bottom: 28px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        
+        .platform-features {
+            list-style: none;
+            margin-bottom: 32px;
+            background: var(--chef-cream);
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .platform-features li {
+            padding: 10px 0;
+            color: #5d4037;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 1rem;
+        }
+        
+        .platform-features li i {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+        
+        .platform-cta {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-small {
+            padding: 14px 26px;
+            font-size: 1rem;
+            border-radius: 8px;
+            flex: 1;
+            text-align: center;
+        }
+        
+        /* Testimonials - Chef's Reviews */
+        .testimonials {
+            padding: 120px 40px;
+            background: var(--chef-cream);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border: 3px solid var(--chef-tan);
+            border-radius: 12px;
+            padding: 40px;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.1);
+        }
+        
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 6rem;
+            color: var(--primary);
+            opacity: 0.1;
+            font-family: Georgia, serif;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-8px) rotate(-0.5deg);
+            box-shadow: 0 20px 60px rgba(93, 64, 55, 0.15);
+            border-color: var(--primary);
+        }
+        
+        .testimonial-rating {
+            color: #fbbf24;
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-text {
+            font-size: 1.125rem;
+            color: var(--chef-brown);
+            line-height: 1.8;
+            margin-bottom: 28px;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--chef-brown) 0%, #3e2723 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 15px rgba(93, 64, 55, 0.3);
+            border: 3px solid white;
+        }
+        
+        .testimonial-info h4 {
+            font-weight: 800;
+            color: var(--chef-brown);
+            margin-bottom: 4px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .testimonial-info p {
+            color: #5d4037;
+            font-size: 0.95rem;
+        }
+        
+        /* Pricing - Menu Style */
+        .pricing {
+            padding: 120px 40px;
+            background: white;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            max-width: 1400px;
+            margin: 60px auto 0;
+        }
+        
+        .pricing-card {
+            background: linear-gradient(135deg, white 0%, var(--chef-cream) 100%);
+            border: 3px solid var(--chef-tan);
+            border-radius: 16px;
+            padding: 44px;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.1);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--primary);
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2);
+            transform: scale(1.05);
+            background: linear-gradient(135deg, white 0%, #f0fdf4 100%);
+        }
+        
+        .pricing-card.featured::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(93, 64, 55, 0.15);
+        }
+        
+        .pricing-badge {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .pricing-card h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--chef-brown);
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .pricing-price {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--chef-brown);
+            margin-bottom: 8px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .pricing-period {
+            color: #5d4037;
+            font-size: 1.125rem;
+            margin-bottom: 32px;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 12px 0;
+            color: #5d4037;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px dashed rgba(93, 64, 55, 0.1);
+        }
+        
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .pricing-features li i {
+            color: var(--primary);
+            margin-top: 4px;
+        }
+        
+        /* FAQ - Notebook Style */
+        .faq {
+            padding: 120px 40px;
+            background: var(--chef-cream);
+        }
+        
+        .faq-list {
+            max-width: 900px;
+            margin: 60px auto 0;
+        }
+        
+        .faq-item {
+            background: white;
+            border: 2px solid var(--chef-tan);
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(93, 64, 55, 0.08);
+        }
+        
+        .faq-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+            transform: translateX(8px);
+        }
+        
+        .faq-question {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--chef-brown);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .faq-icon {
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #5d4037;
+            line-height: 1.8;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            margin-top: 20px;
+        }
+        
+        /* CTA Section - Chef's Call to Action */
+        .cta-section {
+            padding: 120px 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '👨‍🍳';
+            position: absolute;
+            font-size: 25rem;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .cta-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-section h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 24px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .cta-handwritten {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 32px;
+        }
+        
+        .cta-section p {
+            font-size: 1.375rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 48px;
+        }
+        
+        .btn-large {
+            padding: 22px 48px;
+            font-size: 1.25rem;
+        }
+        
+        .btn-white {
+            background: white;
+            color: var(--chef-brown);
+            border: 3px solid white;
+        }
+        
+        .btn-white:hover {
+            background: transparent;
+            color: white;
+        }
+        
+        /* Footer - Chef's Signature */
+        .footer {
+            padding: 80px 40px 40px;
+            background: var(--chef-brown);
+            color: white;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 80px;
+            margin-bottom: 60px;
+        }
+        
+        .footer-brand h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 900;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .footer-tagline {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+        
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 28px;
+            line-height: 1.7;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .social-link {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-4px);
+        }
+        
+        .footer-section h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 14px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 8px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+        }
+        
+        .footer-bottom .handwritten {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        /* Waitlist Modal - Recipe Card Style */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(93, 64, 55, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(8px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border: 4px solid var(--chef-tan);
+            border-radius: 20px;
+            padding: 52px;
+            max-width: 640px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 90px rgba(93, 64, 55, 0.5);
+            animation: slideInBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+        }
+        
+        @keyframes slideInBounce {
+            from { opacity: 0; transform: translateY(100px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        
+        .modal-icon {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            font-size: 2.25rem;
+            font-weight: 900;
+            color: var(--chef-brown);
+            margin-bottom: 12px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .modal-header .handwritten {
+            font-size: 1.75rem;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 12px;
+        }
+        
+        .modal-header p {
+            color: #5d4037;
+            font-size: 1.125rem;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            background: var(--chef-cream);
+            border: 2px solid var(--chef-tan);
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--chef-brown);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-modal:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: rotate(90deg);
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 700;
+            color: var(--chef-brown);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .form-label .handwritten {
+            font-size: 1.125rem;
+            color: var(--primary);
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid var(--chef-tan);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--chef-cream);
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            background: white;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: none;
+            font-weight: 700;
+            border: 3px solid var(--primary);
+            text-align: center;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: successPop 0.4s ease;
+        }
+        
+        @keyframes successPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 3.5rem; }
+            .hero h1 .handwritten-accent { font-size: 4rem; }
+            .footer-container { grid-template-columns: 1fr 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 140px 24px 80px;
+            }
+            
+            .hero h1 {
+                font-size: 2.75rem;
+            }
+            
+            .hero h1 .handwritten-accent {
+                font-size: 3.25rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.25rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 2.5rem;
+            }
+            
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">👨‍🍳</div>
+                <div>
+                    <div class="logo-text">Iterum Foods</div>
+                    <div class="logo-subtext">Chef's Digital Notebook</div>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#platforms">Platforms</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#" class="nav-cta" onclick="openWaitlistModal('main'); return false;">Join Waitlist</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-badge">
+                <i class="fas fa-book-open"></i> Your Professional Culinary Companion
+            </div>
+            <h1>
+                Transform Your Restaurant
+                <span class="handwritten-accent">with the Chef's Digital Notebook</span>
+            </h1>
+            <p class="hero-subtitle">
+                Everything a culinary professional needs: Recipe development, business planning, payroll management, 
+                and professional networking - all in one beautifully integrated ecosystem. 
+                <strong>Trusted by 10,000+ chefs and restaurant owners.</strong>
+            </p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-primary" onclick="openWaitlistModal('main'); return false;">
+                    <i class="fas fa-rocket"></i> Get Early Access
+                </a>
+                <a href="#platforms" class="btn btn-secondary">
+                    <i class="fas fa-book-open"></i> Explore Tools
+                </a>
+            </div>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Free 14-day trial</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>No credit card required</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Built by chefs, for chefs</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-icon">👨‍🍳</div>
+                <div class="stat-number">10,000+</div>
+                <div class="stat-label">Chefs & Restaurants</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">📖</div>
+                <div class="stat-number">50,000+</div>
+                <div class="stat-label">Recipes Created</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">🍽️</div>
+                <div class="stat-number">5,000+</div>
+                <div class="stat-label">Menus Designed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">💰</div>
+                <div class="stat-number">$2M+</div>
+                <div class="stat-label">Costs Analyzed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Chef Satisfaction</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Chef's Trust Badges -->
+    <section class="chef-notes">
+        <div class="chef-notes-container">
+            <div class="chef-notes-title">Trusted by culinary professionals worldwide</div>
+            <div class="chef-badges">
+                <div class="chef-badge">
+                    <div class="chef-badge-icon">🏆</div>
+                    <div class="chef-badge-text">Award Winning</div>
+                </div>
+                <div class="chef-badge">
+                    <div class="chef-badge-icon">🔪</div>
+                    <div class="chef-badge-text">Chef Approved</div>
+                </div>
+                <div class="chef-badge">
+                    <div class="chef-badge-icon">⭐</div>
+                    <div class="chef-badge-text">5-Star Rated</div>
+                </div>
+                <div class="chef-badge">
+                    <div class="chef-badge-icon">🌟</div>
+                    <div class="chef-badge-text">Industry Leader</div>
+                </div>
+                <div class="chef-badge">
+                    <div class="chef-badge-icon">✨</div>
+                    <div class="chef-badge-text">Michelin Trusted</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge handwritten">How It Works</div>
+                <h2>Your Recipe for Success</h2>
+                <p>Get started in minutes with our simple, chef-friendly onboarding</p>
+            </div>
+            
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Choose Your Tools</h3>
+                    <p>Select from our culinary R&D suite, business planning tools, payroll system, or skills portfolio - or get access to the complete kitchen.</p>
+                    <div class="step-annotation">Pick your platform ✨</div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Join the Waitlist</h3>
+                    <p>Sign up for early access. We're onboarding chefs carefully to ensure the best experience. Get your spot in line today.</p>
+                    <div class="step-annotation">Reserve your spot 🎯</div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Start Your Trial</h3>
+                    <p>Receive credentials and start your 14-day free trial. Full access to all features. No credit card needed. Just pure culinary innovation.</p>
+                    <div class="step-annotation">Cook with confidence 🍳</div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Create & Innovate</h3>
+                    <p>Develop recipes, plan menus, manage staff, or build your network. Transform your restaurant with tools that understand your craft.</p>
+                    <div class="step-annotation">Bon appétit! 🚀</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Platforms Section -->
+    <section class="platforms" id="platforms">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge handwritten">Our Kitchen Tools</div>
+                <h2>Four Powerful Tools, One Recipe for Success</h2>
+                <p>Everything in your culinary arsenal, working together seamlessly like a well-organized mise en place</p>
+            </div>
+            
+            <div class="platforms-grid">
+                <!-- Culinary R&D Platform -->
+                <div class="platform-card">
+                    <div class="platform-icon">🍽️</div>
+                    <h3>Culinary R&D</h3>
+                    <div class="platform-subtitle handwritten">Your Digital Recipe Journal</div>
+                    <p>Professional recipe development, menu planning, and cost analysis tools. Your creativity, organized and optimized.</p>
+                    <ul class="platform-features">
+                        <li><i class="fas fa-check-circle"></i> Recipe Development & Testing (with version history)</li>
+                        <li><i class="fas fa-check-circle"></i> Menu Builder & Design (drag-and-drop)</li>
+                        <li><i class="fas fa-check-circle"></i> Food Cost Analysis & Pricing</li>
+                        <li><i class="fas fa-check-circle"></i> Ingredient Database Management</li>
+                        <li><i class="fas fa-check-circle"></i> Nutrition Calculator & Labels</li>
+                    </ul>
+                    <div class="platform-cta">
+                        <a href="culinary-rd.html" class="btn btn-secondary btn-small">
+                            <i class="fas fa-book-open"></i> Learn More
+                        </a>
+                        <a href="#" class="btn btn-primary btn-small" onclick="openWaitlistModal('culinary'); return false;">
+                            <i class="fas fa-rocket"></i> Join Waitlist
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Business Planner -->
+                <div class="platform-card">
+                    <div class="platform-icon">📊</div>
+                    <h3>Business Planner</h3>
+                    <div class="platform-subtitle handwritten">From Concept to Grand Opening</div>
+                    <p>Complete business planning suite for restaurant entrepreneurs. Turn your culinary dream into a thriving business reality.</p>
+                    <ul class="platform-features">
+                        <li><i class="fas fa-check-circle"></i> Business Plan Generator (investor-ready)</li>
+                        <li><i class="fas fa-check-circle"></i> Financial Projections (3-year forecasts)</li>
+                        <li><i class="fas fa-check-circle"></i> Market Analysis & Competitor Research</li>
+                        <li><i class="fas fa-check-circle"></i> Location Planning & Demographics</li>
+                        <li><i class="fas fa-check-circle"></i> Startup Cost Calculator</li>
+                    </ul>
+                    <div class="platform-cta">
+                        <a href="business-planner.html" class="btn btn-secondary btn-small">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </a>
+                        <a href="#" class="btn btn-primary btn-small" onclick="openWaitlistModal('business'); return false;">
+                            <i class="fas fa-rocket"></i> Join Waitlist
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Payroll System -->
+                <div class="platform-card">
+                    <div class="platform-icon">💰</div>
+                    <h3>Payroll System</h3>
+                    <div class="platform-subtitle handwritten">Staff Management Made Simple</div>
+                    <p>Simplified payroll and staff management designed for restaurant kitchens. Handle tips, overtime, and schedules with ease.</p>
+                    <ul class="platform-features">
+                        <li><i class="fas fa-check-circle"></i> Time Clock & Scheduling (mobile-friendly)</li>
+                        <li><i class="fas fa-check-circle"></i> Tip Pooling & Distribution</li>
+                        <li><i class="fas fa-check-circle"></i> Automated Payroll Processing</li>
+                        <li><i class="fas fa-check-circle"></i> Employee Records & Documents</li>
+                        <li><i class="fas fa-check-circle"></i> Labor Cost Reports & Analytics</li>
+                    </ul>
+                    <div class="platform-cta">
+                        <a href="payroll.html" class="btn btn-secondary btn-small">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </a>
+                        <a href="#" class="btn btn-primary btn-small" onclick="openWaitlistModal('payroll'); return false;">
+                            <i class="fas fa-rocket"></i> Join Waitlist
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Skills Portfolio -->
+                <div class="platform-card">
+                    <div class="platform-icon">🎯</div>
+                    <h3>Skills Portfolio</h3>
+                    <div class="platform-subtitle handwritten">Your Culinary Network</div>
+                    <p>Professional networking for culinary talent. Showcase your skills, connect with opportunities, and build your culinary career.</p>
+                    <ul class="platform-features">
+                        <li><i class="fas fa-check-circle"></i> Video Portfolio & Technique Showcase</li>
+                        <li><i class="fas fa-check-circle"></i> Professional Chef Network</li>
+                        <li><i class="fas fa-check-circle"></i> Skill Endorsements & Validation</li>
+                        <li><i class="fas fa-check-circle"></i> Job Matching & Opportunities</li>
+                        <li><i class="fas fa-check-circle"></i> Career Development Tools</li>
+                    </ul>
+                    <div class="platform-cta">
+                        <a href="skills-portfolio.html" class="btn btn-secondary btn-small">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </a>
+                        <a href="#" class="btn btn-primary btn-small" onclick="openWaitlistModal('skills'); return false;">
+                            <i class="fas fa-rocket"></i> Join Waitlist
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge handwritten">What Chefs Are Saying</div>
+                <h2>Loved by Culinary Professionals</h2>
+                <p>Real reviews from real chefs using Iterum Foods every day</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">
+                        "As an executive chef, recipe versioning used to be a nightmare. Iterum's notebook-style interface feels natural, and the cost analysis has saved my restaurant thousands. It's like having a sous chef who never sleeps."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👨‍🍳</div>
+                        <div class="testimonial-info">
+                            <h4>Chef Michael Rodriguez</h4>
+                            <p>Executive Chef, Michelin ⭐⭐ Restaurant</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">
+                        "The Business Planner gave me confidence to finally open my dream restaurant. The financial projections were so detailed, my investors were impressed. It's like having a business consultant in my pocket."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👩‍💼</div>
+                        <div class="testimonial-info">
+                            <h4>Sarah Chen</h4>
+                            <p>Restaurant Owner, Chen's Kitchen (Opened 2024)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">
+                        "Payroll used to take me hours every week. Now it's automated, accurate, and the tip calculator is brilliant. My staff loves the mobile time clock. Best investment I've made for my restaurant."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👨‍💼</div>
+                        <div class="testimonial-info">
+                            <h4>David Martinez</h4>
+                            <p>General Manager, Fusion Bistro (32 employees)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge handwritten">Pricing Menu</div>
+                <h2>Choose Your Perfect Plan</h2>
+                <p>Flexible pricing for kitchens of all sizes - from food trucks to fine dining</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="pricing-price">$49</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> 1 Platform of your choice</li>
+                        <li><i class="fas fa-check"></i> Up to 100 recipes</li>
+                        <li><i class="fas fa-check"></i> Basic analytics dashboard</li>
+                        <li><i class="fas fa-check"></i> Email support</li>
+                        <li><i class="fas fa-check"></i> Mobile app access</li>
+                        <li><i class="fas fa-check"></i> Cloud storage</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;" onclick="openWaitlistModal('main')">
+                        Join Waitlist
+                    </button>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge handwritten">Chef's Choice ⭐</div>
+                    <h3>Professional</h3>
+                    <div class="pricing-price">$99</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> All 4 Platforms included</li>
+                        <li><i class="fas fa-check"></i> Unlimited recipes & menus</li>
+                        <li><i class="fas fa-check"></i> Advanced analytics & insights</li>
+                        <li><i class="fas fa-check"></i> Priority chef support</li>
+                        <li><i class="fas fa-check"></i> Team collaboration tools</li>
+                        <li><i class="fas fa-check"></i> API access & integrations</li>
+                        <li><i class="fas fa-check"></i> Custom branding options</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="openWaitlistModal('main')">
+                        Join Waitlist
+                    </button>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="pricing-price">Custom</div>
+                    <div class="pricing-period">let's talk</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Everything in Professional</li>
+                        <li><i class="fas fa-check"></i> Multi-location support</li>
+                        <li><i class="fas fa-check"></i> Custom integrations</li>
+                        <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                        <li><i class="fas fa-check"></i> White-label options</li>
+                        <li><i class="fas fa-check"></i> On-site training</li>
+                        <li><i class="fas fa-check"></i> SLA guarantee</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;" onclick="location.href='mailto:hello@iterumfoods.xyz'">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge handwritten">Questions from the Kitchen</div>
+                <h2>Chef's Frequently Asked Questions</h2>
+                <p>Everything you need to know about your digital culinary companion</p>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>What makes Iterum Foods different from other restaurant software?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Iterum Foods is built BY chefs, FOR chefs. We understand the culinary workflow because we've lived it. Our notebook-style interface feels natural to culinary professionals, and we integrate recipe development, business planning, payroll, and networking - no other platform offers this complete ecosystem designed specifically for the culinary industry.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>How does the waitlist work for chefs?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Simply join the waitlist by filling out the form. You'll receive a position number and be notified via email when it's your turn. We're onboarding culinary professionals in batches to ensure personalized support and the best possible experience. There's no obligation - joining is completely free.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Is there a free trial for chefs?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely! All plans include a 14-day free trial with full access to all features. No credit card required to start. We want you to experience the full power of your digital culinary notebook before you commit. Cancel anytime during the trial with no charges.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Can I import my existing recipes and menus?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! You can import recipes from PDFs, Word documents, images, or even by pasting URLs from recipe websites. Our AI-powered parser extracts ingredients, instructions, and yields automatically. You can also import menus from existing PDFs or images. Your culinary knowledge, digitized in minutes.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Is my recipe data secure and private?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely. We understand that your recipes are your intellectual property. All data is encrypted, regularly backed up, and stored securely in the cloud. Your recipes, financial data, and employee information are completely private and protected. We'll never share your culinary secrets.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Do you offer support for culinary professionals?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! All plans include email support from our team (many of whom are former chefs). Professional and Enterprise plans get priority support with faster response times. Enterprise customers receive a dedicated account manager and phone support. We speak your language - culinary and technical.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Final CTA -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>Ready to Transform Your Kitchen?</h2>
+            <div class="cta-handwritten handwritten">Join 10,000+ chefs already innovating with Iterum Foods</div>
+            <p>Your digital culinary notebook awaits. Start creating, planning, and succeeding today.</p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-white btn-large" onclick="openWaitlistModal('main'); return false;">
+                    <i class="fas fa-rocket"></i> Get Early Access
+                </a>
+                <a href="mailto:hello@iterumfoods.xyz" class="btn btn-secondary btn-large" style="border-color: white; color: white;">
+                    <i class="fas fa-envelope"></i> Contact Our Team
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>Iterum Foods</h3>
+                <div class="footer-tagline handwritten">Your Chef's Digital Notebook</div>
+                <p>The complete technology platform for modern culinary professionals. From recipe development to restaurant management, we're your kitchen companion.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+                <p style="margin-top: 24px; font-size: 0.875rem;">© 2025 Iterum Foods. All rights reserved.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Platforms</h4>
+                <ul class="footer-links">
+                    <li><a href="culinary-rd.html">🍽️ Culinary R&D</a></li>
+                    <li><a href="business-planner.html">📊 Business Planner</a></li>
+                    <li><a href="payroll.html">💰 Payroll System</a></li>
+                    <li><a href="../skills-app/index.html">🎯 Skills Portfolio (Free)</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="../skills-app/index.html">🎯 Skills Portfolio (Free)</a></li>
+                    <li><a href="investor-pitch.html">🔒 Investor Deck</a></li>
+                    <li><a href="#testimonials">Chef Reviews</a></li>
+                    <li><a href="mailto:hello@iterumfoods.xyz">Contact</a></li>
+                    <li><a href="#careers">Join Our Team</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="#docs">Documentation</a></li>
+                    <li><a href="#blog">Culinary Blog</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="handwritten" style="font-size: 1.5rem;">Made with ❤️ and passion</span>
+            <br>for chefs and restaurants everywhere
+            <br>
+            <a href="mailto:hello@iterumfoods.xyz" style="color: var(--primary); text-decoration: none; font-weight: 600;">hello@iterumfoods.xyz</a>
+        </div>
+    </footer>
+    
+    <!-- Waitlist Modal -->
+    <div class="modal" id="waitlist-modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeWaitlistModal()">×</button>
+            <div class="modal-header">
+                <div class="modal-icon">📖</div>
+                <span class="handwritten" style="font-size: 2rem; color: var(--primary);">Reserve Your Spot</span>
+                <h2 id="modal-title">Join the Waitlist</h2>
+                <p id="modal-subtitle">Get early access to the Chef's Digital Notebook</p>
+            </div>
+            
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle"></i> Success! You're on the waitlist. We'll be in touch soon, Chef!
+            </div>
+            
+            <form id="waitlist-form" onsubmit="submitWaitlist(event)">
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="handwritten">Your Name</span> *
+                    </label>
+                    <input type="text" class="form-input" id="waitlist-name" required placeholder="Chef John Doe">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="handwritten">Email Address</span> *
+                    </label>
+                    <input type="email" class="form-input" id="waitlist-email" required placeholder="chef@restaurant.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="handwritten">Phone Number</span>
+                    </label>
+                    <input type="tel" class="form-input" id="waitlist-phone" placeholder="+1 (555) 123-4567">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="handwritten">Restaurant / Company</span>
+                    </label>
+                    <input type="text" class="form-input" id="waitlist-company" placeholder="Your Restaurant or Kitchen">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="handwritten">Your Role</span>
+                    </label>
+                    <select class="form-select" id="waitlist-role">
+                        <option value="">Select your culinary role...</option>
+                        <option value="Owner">Restaurant Owner</option>
+                        <option value="Executive Chef">Executive Chef</option>
+                        <option value="Sous Chef">Sous Chef</option>
+                        <option value="Pastry Chef">Pastry Chef</option>
+                        <option value="Chef de Cuisine">Chef de Cuisine</option>
+                        <option value="Manager">Restaurant Manager</option>
+                        <option value="Entrepreneur">Aspiring Entrepreneur</option>
+                        <option value="Culinary Student">Culinary Student</option>
+                        <option value="Other">Other Culinary Professional</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="handwritten">Interested In</span>
+                    </label>
+                    <select class="form-select" id="waitlist-interest">
+                        <option value="all">All Platforms (Best Value)</option>
+                        <option value="culinary">🍽️ Culinary R&D</option>
+                        <option value="business">📊 Business Planner</option>
+                        <option value="payroll">💰 Payroll System</option>
+                        <option value="skills">🎯 Skills Portfolio</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-rocket"></i> Join the Waitlist
+                </button>
+                
+                <p style="text-align: center; margin-top: 20px; font-size: 0.875rem; color: #6b7280;">
+                    By joining, you'll get updates on new features and early access to beta releases
+                </p>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 6px 30px rgba(93, 64, 55, 0.2)';
+            } else {
+                navbar.style.boxShadow = '0 4px 20px rgba(93, 64, 55, 0.15)';
+            }
+        });
+        
+        // FAQ toggle
+        function toggleFAQ(element) {
+            const allItems = document.querySelectorAll('.faq-item');
+            allItems.forEach(item => {
+                if (item !== element) {
+                    item.classList.remove('active');
+                }
+            });
+            element.classList.toggle('active');
+        }
+        
+        let currentPlatform = 'main';
+        
+        // Open waitlist modal
+        function openWaitlistModal(platform) {
+            currentPlatform = platform;
+            const modal = document.getElementById('waitlist-modal');
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            const interestSelect = document.getElementById('waitlist-interest');
+            
+            const platforms = {
+                main: {
+                    title: 'Join the Waitlist',
+                    subtitle: "Get early access to the Chef's Digital Notebook",
+                    interest: 'all'
+                },
+                culinary: {
+                    title: 'Join Culinary R&D Waitlist',
+                    subtitle: 'Get early access to recipe development tools',
+                    interest: 'culinary'
+                },
+                business: {
+                    title: 'Join Business Planner Waitlist',
+                    subtitle: 'Get early access to business planning tools',
+                    interest: 'business'
+                },
+                payroll: {
+                    title: 'Join Payroll System Waitlist',
+                    subtitle: 'Get early access to staff management',
+                    interest: 'payroll'
+                },
+                skills: {
+                    title: 'Join Skills Portfolio Waitlist',
+                    subtitle: 'Get early access to professional networking',
+                    interest: 'skills'
+                }
+            };
+            
+            const platformData = platforms[platform] || platforms.main;
+            title.textContent = platformData.title;
+            subtitle.textContent = platformData.subtitle;
+            interestSelect.value = platformData.interest;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close waitlist modal
+        function closeWaitlistModal() {
+            const modal = document.getElementById('waitlist-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('success-message').classList.remove('show');
+            document.getElementById('waitlist-form').reset();
+        }
+        
+        // Submit waitlist
+        function submitWaitlist(event) {
+            event.preventDefault();
+            
+            const data = {
+                id: `waitlist_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                name: document.getElementById('waitlist-name').value,
+                email: document.getElementById('waitlist-email').value,
+                phone: document.getElementById('waitlist-phone').value,
+                company: document.getElementById('waitlist-company').value,
+                role: document.getElementById('waitlist-role').value,
+                interest: document.getElementById('waitlist-interest').value,
+                platform: currentPlatform,
+                timestamp: new Date().toISOString(),
+                source: 'landing_page',
+                status: 'new',
+                priority: 'medium'
+            };
+            
+            // Get position number
+            const mainWaitlist = JSON.parse(localStorage.getItem('iterum_main_waitlist') || '[]');
+            data.position = mainWaitlist.length + 1;
+            
+            // Save to main waitlist
+            mainWaitlist.push(data);
+            localStorage.setItem('iterum_main_waitlist', JSON.stringify(mainWaitlist));
+            
+            // Save to platform-specific waitlist
+            const platformKey = `iterum_waitlist_${data.interest}`;
+            const platformWaitlist = JSON.parse(localStorage.getItem(platformKey) || '[]');
+            platformWaitlist.push(data);
+            localStorage.setItem(platformKey, JSON.stringify(platformWaitlist));
+            
+            // Save to CRM contacts
+            let crmContacts = JSON.parse(localStorage.getItem('crm_all_contacts') || '[]');
+            crmContacts.push({
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                company: data.company,
+                role: data.role,
+                type: 'waitlist',
+                contactType: 'waitlist',
+                platform: data.interest,
+                status: 'pending',
+                added: data.timestamp,
+                source: 'landing_page_waitlist',
+                waitlistPosition: data.position
+            });
+            localStorage.setItem('crm_all_contacts', JSON.stringify(crmContacts));
+            
+            // Track with Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'waitlist_signup', {
+                    event_category: 'Waitlist',
+                    event_label: currentPlatform,
+                    platform: data.interest,
+                    value: 1
+                });
+            }
+            
+            // Show success message
+            document.getElementById('success-message').classList.add('show');
+            document.getElementById('waitlist-form').style.display = 'none';
+            
+            // Show position notification
+            setTimeout(() => {
+                alert(`🎉 Welcome, Chef! You're #${data.position} on the waitlist!\n\nWe'll email you at ${data.email} when your digital notebook is ready.`);
+            }, 500);
+            
+            // Reset after 4 seconds
+            setTimeout(() => {
+                closeWaitlistModal();
+                document.getElementById('waitlist-form').style.display = 'block';
+            }, 4000);
+            
+            console.log('✅ Chef waitlist signup:', data);
+        }
+        
+        // Close modal on background click
+        document.getElementById('waitlist-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'waitlist-modal') {
+                closeWaitlistModal();
+            }
+        });
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeWaitlistModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills Portfolio - Professional Network for ALL Culinary Professionals | Iterum Foods</title>
+    <meta name="description" content="The Instagram for Chefs. Free professional networking for culinary students, home chefs, food bloggers, restaurant professionals, and everyone in the culinary world.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Skills Portfolio - The Instagram for Chefs">
+    <meta property="og:description" content="Free professional network for ALL culinary professionals">
+    <meta property="og:url" content="https://iterumfoods.xyz/skills">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../main-landing/unified-colors.css">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MC8Q3SZ47K"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-MC8Q3SZ47K');
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            padding: 16px 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(139, 92, 246, 0.05);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--skills-purple);
+        }
+        
+        .nav-cta {
+            background: linear-gradient(135deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%);
+            color: white !important;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 140px 40px 100px;
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><circle cx="1" cy="1" r="1" fill="%238b5cf6" opacity="0.1"/></svg>');
+            background-size: 60px 60px;
+        }
+        
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+            font-weight: 700;
+            color: var(--skills-purple);
+            font-size: 0.95rem;
+        }
+        
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%);
+            color: white;
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--skills-purple);
+            border: 2px solid var(--skills-purple);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--skills-purple-light);
+        }
+        
+        .free-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.875rem;
+            display: inline-block;
+            margin-top: 16px;
+        }
+        
+        /* Stats */
+        .stats {
+            padding: 80px 40px;
+            background: white;
+        }
+        
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 48px;
+            text-align: center;
+        }
+        
+        .stat {
+            padding: 32px;
+        }
+        
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--skills-purple);
+            margin-bottom: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stat-label {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        /* Section */
+        .section {
+            padding: 100px 40px;
+        }
+        
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        .section-badge {
+            display: inline-block;
+            background: var(--skills-purple-light);
+            color: var(--skills-purple-dark);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+        
+        .section-header p {
+            font-size: 1.375rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Audience Grid */
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+        
+        .audience-card {
+            background: white;
+            border: 3px solid var(--skills-purple-light);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .audience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%);
+        }
+        
+        .audience-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+            border-color: var(--skills-purple);
+        }
+        
+        .audience-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--skills-purple-light) 0%, #f5f3ff 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 24px;
+        }
+        
+        .audience-card h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .audience-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+        
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+            border-radius: 24px;
+            padding: 48px;
+            border: 2px solid var(--skills-purple-light);
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+        }
+        
+        .feature-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 24px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            color: var(--skills-purple);
+            font-weight: 900;
+            font-size: 1.25rem;
+        }
+        
+        /* Comparison */
+        .comparison {
+            background: var(--gray-100);
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        th {
+            background: linear-gradient(135deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%);
+            color: white;
+            font-weight: 800;
+            font-size: 1.125rem;
+        }
+        
+        td {
+            font-size: 1.05rem;
+        }
+        
+        .highlight-col {
+            background: var(--skills-purple-light);
+            font-weight: 700;
+            color: var(--skills-purple-dark);
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 40px;
+            background: linear-gradient(135deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="white" opacity="0.1"/></svg>');
+            background-size: 80px 80px;
+        }
+        
+        .cta-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 24px;
+        }
+        
+        .cta-section p {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 48px;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 80px 40px 40px;
+            background: var(--gray-900);
+            color: white;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+        
+        .footer-section h4 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: var(--skills-purple-light);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--skills-purple-light);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--gray-100);
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+        
+        .close-modal:hover {
+            background: var(--skills-purple);
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--skills-purple);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .hero-subtitle { font-size: 1.375rem; }
+            .section-header h2 { font-size: 2.5rem; }
+            .cta-section h2 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../main-landing/index.html" class="logo">
+                <div class="logo-icon">🎯</div>
+                <span class="logo-text">Skills Portfolio</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#who">Who It's For</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#why-free">Why Free</a></li>
+                <li><a href="../main-landing/index.html">Other Platforms</a></li>
+                <li><a href="#" class="nav-cta" onclick="openWaitlistModal(); return false;">Join Free →</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-badge">
+                <i class="fas fa-heart"></i>
+                The Instagram for Chefs
+            </div>
+            <h1>Your Culinary Story,<br>Shared With The World</h1>
+            <div class="hero-subtitle">Professional Networking for EVERY Culinary Professional</div>
+            <p class="hero-description">
+                From culinary students to Michelin chefs, home cooks to food bloggers, restaurant pros to caterers—
+                showcase your skills, connect with peers, and discover opportunities in the culinary world.
+            </p>
+            <div class="hero-cta">
+                <button class="btn btn-primary" onclick="openWaitlistModal()">
+                    <i class="fas fa-rocket"></i>
+                    Join the Waitlist
+                </button>
+                <a href="#features" class="btn btn-secondary">
+                    <i class="fas fa-play-circle"></i>
+                    See How It Works
+                </a>
+            </div>
+            <div class="free-badge">
+                ✨ 100% FREE FOREVER · Like Instagram, But for Chefs
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat">
+                <div class="stat-number">2M+</div>
+                <div class="stat-label">Culinary Professionals</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Free Forever</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Career Opportunities</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Restaurant Required</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who It's For -->
+    <section class="section" id="who" style="background: var(--gray-100);">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">🌍 For Everyone in Culinary</span>
+                <h2>Not Just Restaurants</h2>
+                <p>Skills Portfolio is for EVERY person passionate about food, cooking, and the culinary arts</p>
+            </div>
+            
+            <div class="audience-grid">
+                <div class="audience-card">
+                    <div class="audience-icon">🎓</div>
+                    <h3>Culinary Students</h3>
+                    <p>Build your portfolio as you learn. Document your journey from school to professional kitchen. Show recruiters what you're capable of.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">👨‍🍳</div>
+                    <h3>Restaurant Professionals</h3>
+                    <p>Chefs, line cooks, sous chefs, pastry chefs—showcase your experience, skills, and signature dishes to advance your career.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">🏠</div>
+                    <h3>Home Chefs & Cooks</h3>
+                    <p>Passionate home cook? Share your creations, connect with others, and turn your hobby into opportunities.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">📸</div>
+                    <h3>Food Bloggers</h3>
+                    <p>Content creators, recipe developers, and food photographers—showcase your work and grow your culinary brand.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">🍰</div>
+                    <h3>Bakers & Pastry Chefs</h3>
+                    <p>Wedding cakes, artisan bread, chocolatiers—display your sweet and savory creations to potential clients and employers.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">🎪</div>
+                    <h3>Caterers & Private Chefs</h3>
+                    <p>Run your own business? Use your portfolio as a visual resume to attract new clients and showcase past events.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">🍕</div>
+                    <h3>Food Truck Operators</h3>
+                    <p>Street food entrepreneurs and food truck owners—share your menu, events, and connect with your community.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">🌶️</div>
+                    <h3>Specialty Food Makers</h3>
+                    <p>Hot sauce makers, jam producers, artisan food crafters—showcase your products and connect with buyers.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">📺</div>
+                    <h3>Culinary Media</h3>
+                    <p>Food writers, TV personalities, cookbook authors—centralize your culinary work and expand your reach.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">🍷</div>
+                    <h3>Sommeliers & Bartenders</h3>
+                    <p>Wine experts, mixologists, beverage directors—showcase your knowledge, certifications, and signature creations.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">🎯</div>
+                    <h3>Career Changers</h3>
+                    <p>Transitioning into culinary? Build your portfolio now. Show your passion and skills, even without restaurant experience.</p>
+                </div>
+                
+                <div class="audience-card">
+                    <div class="audience-icon">🌟</div>
+                    <h3>Food Enthusiasts</h3>
+                    <p>Simply love food? Join our community. Share recipes, techniques, and connect with fellow food lovers worldwide.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">✨ Powerful Features</span>
+                <h2>Everything You Need to Showcase Your Culinary Skills</h2>
+                <p>Professional-grade portfolio tools, completely free</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Video Portfolio</h3>
+                    <p>Upload cooking videos, technique demonstrations, and plating presentations. Show, don't just tell.</p>
+                    <ul class="feature-list">
+                        <li>Upload unlimited videos</li>
+                        <li>HD quality streaming</li>
+                        <li>Easy mobile capture</li>
+                        <li>Share to social media</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Professional Network</h3>
+                    <p>Connect with chefs, recruiters, and food industry professionals from around the world.</p>
+                    <ul class="feature-list">
+                        <li>Follow other professionals</li>
+                        <li>Direct messaging</li>
+                        <li>Industry groups</li>
+                        <li>Event networking</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3>Skill Validation</h3>
+                    <p>Get endorsed by peers and mentors. Build credibility with verified skills and certifications.</p>
+                    <ul class="feature-list">
+                        <li>Peer endorsements</li>
+                        <li>Certification badges</li>
+                        <li>Skill ratings</li>
+                        <li>Achievement tracking</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <h3>Job Matching</h3>
+                    <p>Restaurants and employers can discover you. Get matched with opportunities based on your skills.</p>
+                    <ul class="feature-list">
+                        <li>Smart job matching</li>
+                        <li>Direct recruiter access</li>
+                        <li>Application tracking</li>
+                        <li>Salary insights</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Showcase Achievements</h3>
+                    <p>Competition wins, awards, publications, certifications—display everything that makes you stand out.</p>
+                    <ul class="feature-list">
+                        <li>Awards & accolades</li>
+                        <li>Media features</li>
+                        <li>Certifications</li>
+                        <li>Reviews & testimonials</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Portfolio Analytics</h3>
+                    <p>See who's viewing your profile, which content performs best, and track your professional growth.</p>
+                    <ul class="feature-list">
+                        <li>Profile views</li>
+                        <li>Engagement metrics</li>
+                        <li>Recruiter interest</li>
+                        <li>Growth insights</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Free -->
+    <section class="section" id="why-free" style="background: var(--gray-100);">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">💚 Why It's Free</span>
+                <h2>The Instagram Model for Culinary</h2>
+                <p>Great products should be accessible to everyone</p>
+            </div>
+            
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div style="background: white; border-radius: 24px; padding: 48px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); margin-bottom: 40px;">
+                    <h3 style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px; text-align: center;">
+                        🎯 Our Philosophy
+                    </h3>
+                    <p style="font-size: 1.25rem; color: var(--text-muted); line-height: 1.8; text-align: center; margin-bottom: 32px;">
+                        Just like Instagram revolutionized photo sharing by making it free and accessible to everyone, 
+                        Skills Portfolio democratizes professional culinary networking. Every chef, home cook, and food 
+                        enthusiast deserves a platform to showcase their talent—regardless of where they work or their budget.
+                    </p>
+                    
+                    <div style="background: var(--skills-purple-light); border-radius: 16px; padding: 32px; margin-top: 32px;">
+                        <h4 style="font-size: 1.5rem; font-weight: 800; color: var(--skills-purple-dark); margin-bottom: 20px;">
+                            How We Sustain It (Future Plans):
+                        </h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 12px 0; display: flex; align-items: start; gap: 12px;">
+                                <span style="color: var(--skills-purple); font-size: 1.5rem;">💼</span>
+                                <div>
+                                    <strong>Premium Job Board:</strong> Restaurants pay to post jobs and reach qualified candidates
+                                </div>
+                            </li>
+                            <li style="padding: 12px 0; display: flex; align-items: start; gap: 12px;">
+                                <span style="color: var(--skills-purple); font-size: 1.5rem;">📢</span>
+                                <div>
+                                    <strong>Sponsored Content:</strong> Food brands can promote products to relevant professionals
+                                </div>
+                            </li>
+                            <li style="padding: 12px 0; display: flex; align-items: start; gap: 12px;">
+                                <span style="color: var(--skills-purple); font-size: 1.5rem;">⭐</span>
+                                <div>
+                                    <strong>Premium Features:</strong> Optional upgrades for power users (analytics, priority support)
+                                </div>
+                            </li>
+                            <li style="padding: 12px 0; display: flex; align-items: start; gap: 12px;">
+                                <span style="color: var(--skills-purple); font-size: 1.5rem;">🎓</span>
+                                <div>
+                                    <strong>Training Partnerships:</strong> Culinary schools and training programs
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-green) 0%, #059669 100%); border-radius: 24px; padding: 48px; text-align: center; color: white;">
+                    <h3 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 16px;">
+                        Your Portfolio = Always Free
+                    </h3>
+                    <p style="font-size: 1.375rem; opacity: 0.95; line-height: 1.7;">
+                        No credit card required. No hidden fees. No premium tiers to unlock basic features.<br>
+                        <strong>Skills Portfolio is free for all culinary professionals, forever.</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Opportunity -->
+    <section class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">📈 Massive Opportunity</span>
+                <h2>The Numbers Behind the Vision</h2>
+                <p>A $8B market serving 2M+ US culinary professionals</p>
+            </div>
+            
+            <div class="stats-container" style="margin-bottom: 64px;">
+                <div class="stat">
+                    <div class="stat-number">2.1M+</div>
+                    <div class="stat-label">US Culinary Professionals</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">15M</div>
+                    <div class="stat-label">Global Market Potential</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">$8B</div>
+                    <div class="stat-label">Market Opportunity</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">73%</div>
+                    <div class="stat-label">Industry Turnover Rate</div>
+                </div>
+            </div>
+            
+            <div class="features-grid" style="max-width: 1100px; margin: 0 auto;">
+                <div style="background: white; border-radius: 24px; padding: 40px; box-shadow: 0 8px 40px rgba(0,0,0,0.08);">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">🎯</div>
+                    <h3 style="font-size: 1.75rem; font-weight: 800; color: var(--text-primary); margin-bottom: 16px;">Target Users</h3>
+                    <div style="color: var(--text-muted); line-height: 1.8;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 1.05rem;">
+                            <div>• Restaurant workers: <strong>1.3M</strong></div>
+                            <div>• Culinary students: <strong>180K/year</strong></div>
+                            <div>• Home chefs: <strong>400K+</strong></div>
+                            <div>• Food service: <strong>220K</strong></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--skills-purple-light) 0%, #f5f3ff 100%); border-radius: 24px; padding: 40px; border: 2px solid var(--skills-purple);">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">📊</div>
+                    <h3 style="font-size: 1.75rem; font-weight: 800; color: var(--skills-purple-dark); margin-bottom: 16px;">5-Year Projection</h3>
+                    <div style="color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+                        <div><strong>Year 1:</strong> 50K users</div>
+                        <div><strong>Year 2:</strong> 250K users</div>
+                        <div><strong>Year 3:</strong> 750K users</div>
+                        <div><strong>Year 5:</strong> 2M+ users</div>
+                        <div style="margin-top: 16px; padding: 16px; background: white; border-radius: 12px; text-align: center;">
+                            <strong style="color: var(--skills-purple); font-size: 1.25rem;">Network effects accelerate growth exponentially</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- For Employers -->
+    <section class="section" style="background: var(--gray-100);">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">💼 Two-Sided Marketplace</span>
+                <h2>Skills Portfolio for Employers</h2>
+                <p>Connect with qualified candidates faster and more efficiently</p>
+            </div>
+            
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <div style="background: white; border-radius: 24px; padding: 48px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); margin-bottom: 48px;">
+                    <h3 style="font-size: 2.5rem; font-weight: 900; color: var(--text-primary); margin-bottom: 32px; text-align: center;">
+                        Hiring Challenges We Solve
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">💰</div>
+                            <div style="font-size: 2.5rem; font-weight: 900; color: var(--skills-purple); margin-bottom: 8px;">$3-5K</div>
+                            <div style="color: var(--text-muted); font-weight: 600;">Cost per chef hire</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">⏱️</div>
+                            <div style="font-size: 2.5rem; font-weight: 900; color: var(--skills-purple); margin-bottom: 8px;">45 days</div>
+                            <div style="color: var(--text-muted); font-weight: 600;">Average time to hire</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">📉</div>
+                            <div style="font-size: 2.5rem; font-weight: 900; color: var(--skills-purple); margin-bottom: 8px;">73%</div>
+                            <div style="color: var(--text-muted); font-weight: 600;">First-year turnover</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card" style="background: white;">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Premium Job Postings</h3>
+                        <p>Reach qualified candidates actively looking for opportunities. Video portfolios show actual skills—no guessing.</p>
+                        <div style="margin-top: 20px; padding: 16px; background: var(--skills-purple-light); border-radius: 12px;">
+                            <strong>Starting at $199/post</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card" style="background: white;">
+                        <div class="feature-icon">📊</div>
+                        <h3>Recruitment Analytics</h3>
+                        <p>Track views, applications, and engagement. See which candidates match your requirements best.</p>
+                        <div style="margin-top: 20px; padding: 16px; background: var(--skills-purple-light); border-radius: 12px;">
+                            <strong>Data-driven hiring</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card" style="background: white;">
+                        <div class="feature-icon">⭐</div>
+                        <h3>Verified Skills</h3>
+                        <p>See peer-validated skills and professional endorsements. Hire with confidence knowing abilities are real.</p>
+                        <div style="margin-top: 20px; padding: 16px; background: var(--skills-purple-light); border-radius: 12px;">
+                            <strong>Reduce mis-hires by 60%</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 48px; padding: 40px; background: linear-gradient(135deg, var(--skills-purple) 0%, var(--skills-purple-dark) 100%); border-radius: 24px; color: white;">
+                    <h3 style="font-size: 2rem; font-weight: 900; margin-bottom: 16px;">Interested in Hiring?</h3>
+                    <p style="font-size: 1.25rem; margin-bottom: 24px; opacity: 0.95;">Join our employer waitlist for early access to the job board</p>
+                    <button class="btn" style="background: white; color: var(--skills-purple); font-size: 1.125rem; padding: 18px 40px;" onclick="openEmployerModal()">
+                        <i class="fas fa-briefcase"></i>
+                        Join Employer Waitlist
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="section comparison">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">📊 See the Difference</span>
+                <h2>Skills vs. Other Platforms</h2>
+                <p>Why thousands are joining the culinary social network</p>
+            </div>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>LinkedIn</th>
+                            <th>Instagram</th>
+                            <th class="highlight-col">Skills Portfolio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Culinary-Focused</strong></td>
+                            <td>❌ Generic</td>
+                            <td>❌ Not Professional</td>
+                            <td class="highlight-col">✅ 100% Culinary</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Video Portfolio</strong></td>
+                            <td>❌ Limited</td>
+                            <td>✅ Stories Only</td>
+                            <td class="highlight-col">✅ Full HD Portfolio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Skill Validation</strong></td>
+                            <td>✅ Generic Endorsements</td>
+                            <td>❌ No</td>
+                            <td class="highlight-col">✅ Chef-Specific</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Job Matching</strong></td>
+                            <td>✅ Generic</td>
+                            <td>❌ No</td>
+                            <td class="highlight-col">✅ Culinary-Specific</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Connect with Peers</strong></td>
+                            <td>✅ Yes</td>
+                            <td>✅ Yes</td>
+                            <td class="highlight-col">✅ Culinary Network</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Showcase Dishes</strong></td>
+                            <td>❌ Not Designed For It</td>
+                            <td>✅ Photos Only</td>
+                            <td class="highlight-col">✅ Video + Photos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Industry Groups</strong></td>
+                            <td>✅ Generic</td>
+                            <td>❌ Limited</td>
+                            <td class="highlight-col">✅ Chef Communities</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cost</strong></td>
+                            <td>💰 Free + Premium</td>
+                            <td>✅ Free</td>
+                            <td class="highlight-col">✅ Free Forever</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>Join the Movement</h2>
+            <p>
+                Be part of the world's first free professional network built specifically for<br>
+                culinary professionals. No restaurant required. No experience minimums. Just passion.
+            </p>
+            <button class="btn" style="background: white; color: var(--skills-purple); font-size: 1.25rem; padding: 20px 48px;" onclick="openWaitlistModal()">
+                <i class="fas fa-rocket"></i>
+                Join the Waitlist - It's Free!
+            </button>
+            <div style="margin-top: 32px; font-size: 1.125rem; opacity: 0.9;">
+                ✨ No credit card · No commitments · Always free
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>Skills Portfolio</h4>
+                    <p style="color: rgba(255,255,255,0.7); line-height: 1.7;">
+                        The Instagram for chefs. Professional networking for ALL culinary professionals, 100% free forever.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Platforms</h4>
+                    <ul class="footer-links">
+                        <li><a href="../main-landing/culinary-rd.html">🍽️ Culinary R&D</a></li>
+                        <li><a href="../main-landing/business-planner.html">📊 Business Planner</a></li>
+                        <li><a href="../main-landing/payroll.html">💰 Payroll System</a></li>
+                        <li><a href="index.html">🎯 Skills Portfolio (Free)</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="../main-landing/index.html">About Iterum Foods</a></li>
+                        <li><a href="../main-landing/pricing.html">Pricing</a></li>
+                        <li><a href="#careers">Careers</a></li>
+                        <li><a href="#press">Press Kit</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:hello@iterumfoods.xyz">Contact Us</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#community">Community</a></li>
+                        <li><a href="#support">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Iterum Foods. All rights reserved.</p>
+                <p style="margin-top: 8px;">Skills Portfolio: Professional networking for culinary professionals. 100% free, forever.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Waitlist Modal -->
+    <div class="modal" id="waitlistModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeWaitlistModal()">×</button>
+            <div style="text-align: center; margin-bottom: 32px;">
+                <div style="font-size: 4rem; margin-bottom: 16px;">🎯</div>
+                <h2 style="font-size: 2rem; font-weight: 900; color: var(--text-primary); margin-bottom: 12px;">
+                    Join Skills Portfolio
+                </h2>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">
+                    100% free. For ALL culinary professionals.
+                </p>
+            </div>
+            
+            <form id="waitlistForm" onsubmit="submitWaitlist(event)">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" class="form-input" required placeholder="Your name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" class="form-input" required placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">I am a... *</label>
+                    <select class="form-input" required>
+                        <option value="">Select your role</option>
+                        <option value="student">Culinary Student</option>
+                        <option value="restaurant_chef">Restaurant Chef/Cook</option>
+                        <option value="home_chef">Home Chef/Cook</option>
+                        <option value="blogger">Food Blogger/Content Creator</option>
+                        <option value="baker">Baker/Pastry Chef</option>
+                        <option value="caterer">Caterer/Private Chef</option>
+                        <option value="food_truck">Food Truck Operator</option>
+                        <option value="specialty">Specialty Food Maker</option>
+                        <option value="media">Culinary Media/Writer</option>
+                        <option value="sommelier">Sommelier/Bartender</option>
+                        <option value="other">Food Enthusiast/Other</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-rocket"></i>
+                    Join Free Waitlist
+                </button>
+                
+                <p style="text-align: center; margin-top: 20px; font-size: 0.875rem; color: var(--text-muted);">
+                    We'll notify you when Skills Portfolio launches. No spam, we promise!
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script src="../main-landing/shared-scripts.js"></script>
+    <script>
+        function openWaitlistModal() {
+            document.getElementById('waitlistModal').classList.add('active');
+            gtag('event', 'open_waitlist_modal', {
+                'platform': 'skills_portfolio',
+                'location': window.location.pathname
+            });
+        }
+        
+        function closeWaitlistModal() {
+            document.getElementById('waitlistModal').classList.remove('active');
+        }
+        
+        function openEmployerModal() {
+            // For now, redirect to contact or show the same waitlist modal with employer context
+            alert('🎯 Employer Waitlist\n\nThank you for your interest in hiring through Skills Portfolio!\n\nOur job board is coming soon. Please email us at:\nhello@iterumfoods.xyz\n\nInclude:\n• Company name\n• Number of positions\n• Location\n\nWe\'ll add you to our employer early access list.');
+            
+            gtag('event', 'employer_interest', {
+                'platform': 'skills_portfolio',
+                'location': window.location.pathname
+            });
+        }
+        
+        function submitWaitlist(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Save to localStorage
+            const waitlistEntry = {
+                name: formData.get('name') || form.querySelector('input[type="text"]').value,
+                email: formData.get('email') || form.querySelector('input[type="email"]').value,
+                role: formData.get('role') || form.querySelector('select').value,
+                platform: 'skills_portfolio',
+                timestamp: new Date().toISOString(),
+                source: 'skills_app_landing'
+            };
+            
+            let waitlist = JSON.parse(localStorage.getItem('iterum_waitlist_skills') || '[]');
+            waitlist.push(waitlistEntry);
+            localStorage.setItem('iterum_waitlist_skills', JSON.stringify(waitlist));
+            
+            // Also save to main waitlist
+            let mainWaitlist = JSON.parse(localStorage.getItem('iterum_main_waitlist') || '[]');
+            mainWaitlist.push(waitlistEntry);
+            localStorage.setItem('iterum_main_waitlist', JSON.stringify(mainWaitlist));
+            
+            // Track with Google Analytics
+            gtag('event', 'waitlist_signup', {
+                'platform': 'skills_portfolio',
+                'role': waitlistEntry.role
+            });
+            
+            alert('🎉 You\'re on the list! We\'ll email you when Skills Portfolio launches. Welcome to the community!');
+            closeWaitlistModal();
+            form.reset();
+        }
+        
+        // Close modal on outside click
+        document.getElementById('waitlistModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeWaitlistModal();
+            }
+        });
+    </script>
+</body>
+</html>
+

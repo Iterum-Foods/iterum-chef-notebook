@@ -1,0 +1,209 @@
+/* ═══════════════════════════════════════════════════════════════
+   ITERUM FOODS - UNIFIED COLOR SYSTEM
+   Chef's Digital Notebook Theme
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+    /* ═══ PRIMARY BRAND COLORS ═══ */
+    --chef-cream: #fef7e5;              /* Warm notebook paper */
+    --chef-cream-dark: #f4ead5;         /* Aged paper */
+    --chef-cream-light: #fffbf0;        /* Fresh page */
+    
+    --chef-brown: #5d4037;              /* Professional kitchen */
+    --chef-brown-dark: #3e2723;         /* Deep wood */
+    --chef-brown-light: #8d6e63;        /* Light wood */
+    
+    --recipe-tan: #f4e4c1;              /* Recipe card border */
+    --recipe-tan-dark: #e4d4b1;         /* Worn card edge */
+    
+    /* ═══ ACTION COLORS ═══ */
+    --primary-green: #10b981;           /* Fresh, growth */
+    --primary-green-dark: #059669;      /* Deep forest */
+    --primary-green-light: #d1fae5;     /* Mint accent */
+    --primary-green-glow: rgba(16, 185, 129, 0.15);
+    
+    /* ═══ PLATFORM ACCENT COLORS ═══ */
+    --culinary-green: #10b981;          /* 🍽️ Culinary R&D */
+    --culinary-green-dark: #059669;
+    --culinary-green-light: #d1fae5;
+    
+    --business-blue: #3b82f6;           /* 📊 Business Planner */
+    --business-blue-dark: #2563eb;
+    --business-blue-light: #dbeafe;
+    
+    --payroll-orange: #f59e0b;          /* 💰 Payroll System */
+    --payroll-orange-dark: #d97706;
+    --payroll-orange-light: #fef3c7;
+    
+    --skills-purple: #8b5cf6;           /* 🎯 Skills Portfolio */
+    --skills-purple-dark: #7c3aed;
+    --skills-purple-light: #ede9fe;
+    
+    --bundle-pink: #ec4899;             /* 💎 Bundle Plan */
+    --bundle-pink-dark: #db2777;
+    
+    --founder-gold: #fbbf24;            /* 🏆 Founder's Program */
+    --founder-gold-dark: #f59e0b;
+    --founder-gold-light: #fef3c7;
+    
+    /* ═══ NEUTRAL COLORS ═══ */
+    --dark-navy: #1f2937;               /* Text, headers */
+    --dark-navy-deep: #111827;          /* Ultra dark backgrounds */
+    --dark-navy-light: #374151;         /* Secondary text */
+    
+    --gray-100: #f9fafb;                /* Light backgrounds */
+    --gray-200: #e5e7eb;                /* Borders */
+    --gray-300: #d1d5db;                /* Disabled */
+    --gray-400: #9ca3af;                /* Placeholder */
+    --gray-500: #6b7280;                /* Secondary text */
+    --gray-600: #4b5563;                /* Body text */
+    --gray-700: #374151;                /* Dark text */
+    --gray-800: #1f2937;                /* Headers */
+    --gray-900: #111827;                /* Ultra dark */
+    
+    --pure-white: #ffffff;
+    --pure-black: #000000;
+    
+    /* ═══ SEMANTIC COLORS ═══ */
+    --success-green: #10b981;
+    --success-bg: #d1fae5;
+    --success-text: #065f46;
+    
+    --warning-yellow: #fbbf24;
+    --warning-bg: #fef3c7;
+    --warning-text: #92400e;
+    
+    --error-red: #ef4444;
+    --error-bg: #fee2e2;
+    --error-text: #991b1b;
+    
+    --info-blue: #3b82f6;
+    --info-bg: #dbeafe;
+    --info-text: #1e3a8a;
+    
+    /* ═══ TEXT COLORS ═══ */
+    --text-primary: #1f2937;            /* Main text */
+    --text-secondary: #5d4037;          /* Chef brown text */
+    --text-muted: #6b7280;              /* Supporting text */
+    --text-light: #9ca3af;              /* Very light text */
+    --text-white: #ffffff;              /* On dark backgrounds */
+    
+    /* ═══ BACKGROUND GRADIENTS ═══ */
+    --gradient-hero: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    --gradient-chef: linear-gradient(135deg, #fef7e5 0%, #f4ead5 100%);
+    --gradient-dark: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    --gradient-green: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    --gradient-warm: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    
+    /* ═══ SHADOWS ═══ */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
+    --shadow-green: 0 4px 20px rgba(16, 185, 129, 0.3);
+    --shadow-green-hover: 0 8px 30px rgba(16, 185, 129, 0.4);
+    
+    /* ═══ BORDERS ═══ */
+    --border-light: 1px solid #e5e7eb;
+    --border-medium: 2px solid #e5e7eb;
+    --border-tan: 2px solid #f4e4c1;
+    --border-green: 2px solid #10b981;
+    --border-gold: 2px solid #fbbf24;
+    
+    /* ═══ SPACING ═══ */
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+    
+    /* ═══ BORDER RADIUS ═══ */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+    
+    /* ═══ TYPOGRAPHY ═══ */
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    --font-heading: 'Nunito', sans-serif;
+    --font-handwritten: 'Caveat', cursive;
+    
+    --font-size-xs: 0.75rem;       /* 12px */
+    --font-size-sm: 0.875rem;      /* 14px */
+    --font-size-base: 1rem;        /* 16px */
+    --font-size-lg: 1.125rem;      /* 18px */
+    --font-size-xl: 1.25rem;       /* 20px */
+    --font-size-2xl: 1.5rem;       /* 24px */
+    --font-size-3xl: 2rem;         /* 32px */
+    --font-size-4xl: 2.5rem;       /* 40px */
+    --font-size-5xl: 3rem;         /* 48px */
+    --font-size-6xl: 4rem;         /* 64px */
+    --font-size-7xl: 5rem;         /* 80px */
+    --font-size-8xl: 6rem;         /* 96px */
+    --font-size-9xl: 8rem;         /* 128px */
+    
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --font-weight-black: 900;
+    
+    /* ═══ TRANSITIONS ═══ */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* ═══ Z-INDEX ═══ */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE SUPPORT (Optional)
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Override colors for dark mode if needed */
+        --text-primary: #f9fafb;
+        --text-secondary: #d1d5db;
+        --bg-white: #1f2937;
+        /* Add more dark mode overrides as needed */
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   USAGE EXAMPLES
+   ═══════════════════════════════════════════════════════════════
+   
+   Background:
+   background: var(--chef-cream);
+   background: var(--gradient-hero);
+   
+   Text:
+   color: var(--text-primary);
+   color: var(--chef-brown);
+   
+   Buttons:
+   background: var(--gradient-green);
+   box-shadow: var(--shadow-green);
+   
+   Platform-specific:
+   border-top: 4px solid var(--culinary-green);
+   border-top: 4px solid var(--business-blue);
+   border-top: 4px solid var(--payroll-orange);
+   border-top: 4px solid var(--skills-purple);
+   
+   ═══════════════════════════════════════════════════════════════ */
+

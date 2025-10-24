@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Usta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --usta-bronze: #CD7F32;
+            --usta-bronze-dark: #8B5A2B;
+            --usta-navy: #2C3E50;
+            --usta-gold: #FFD700;
+            --usta-green: #2ECC71;
+            --usta-red: #E74C3C;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f0f;
+            color: white;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            margin-bottom: 32px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 16px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid #2d2d2a;
+            margin-bottom: 24px;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-weight: 700;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .tab.active {
+            color: var(--usta-bronze);
+            border-bottom-color: var(--usta-bronze);
+        }
+        
+        .notif-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .notif-item {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: start;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .notif-item:hover {
+            border-color: var(--usta-bronze);
+            background: rgba(205, 127, 50, 0.05);
+        }
+        
+        .notif-item.unread {
+            background: rgba(205, 127, 50, 0.1);
+            border-color: rgba(205, 127, 50, 0.3);
+        }
+        
+        .notif-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        
+        .notif-icon.validation {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--usta-green);
+        }
+        
+        .notif-icon.follow {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498DB;
+        }
+        
+        .notif-icon.levelup {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--usta-gold);
+        }
+        
+        .notif-icon.challenge {
+            background: rgba(155, 89, 182, 0.2);
+            color: #9B59B6;
+        }
+        
+        .notif-icon.xp {
+            background: rgba(205, 127, 50, 0.2);
+            color: var(--usta-bronze);
+        }
+        
+        .notif-content {
+            flex: 1;
+        }
+        
+        .notif-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+        
+        .notif-message {
+            opacity: 0.8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .notif-time {
+            font-size: 0.85rem;
+            opacity: 0.6;
+            margin-top: 8px;
+        }
+        
+        .unread-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--usta-bronze);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 6px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            opacity: 0.6;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h1 class="title">🔔 Notifications</h1>
+                <div style="display: flex; gap: 16px;">
+                    <a href="index.html" style="color: var(--usta-navy); font-weight: 700; text-decoration: none;">
+                        <i class="fas fa-briefcase"></i> Investor Hub
+                    </a>
+                    <a href="demo.html" style="color: var(--usta-bronze); font-weight: 700; text-decoration: none;">
+                        <i class="fas fa-arrow-left"></i> Back to Feed
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="filterNotifs('all')">All</button>
+            <button class="tab" onclick="filterNotifs('validations')">Validations</button>
+            <button class="tab" onclick="filterNotifs('social')">Social</button>
+            <button class="tab" onclick="filterNotifs('system')">System</button>
+        </div>
+        
+        <div class="notif-list" id="notifList">
+            <!-- Unread Validation -->
+            <div class="notif-item unread" data-type="validations">
+                <div class="notif-icon validation">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">Skill Validated! 🎉</div>
+                    <div class="notif-message">
+                        <strong>@chefgordon</strong> (Master Usta) validated your #KnifeSkills submission
+                    </div>
+                    <div class="notif-time">2 minutes ago</div>
+                </div>
+                <div class="unread-dot"></div>
+            </div>
+            
+            <!-- Level Up -->
+            <div class="notif-item unread" data-type="system">
+                <div class="notif-icon levelup">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">Level Up! You're now a Journeyman! ⚙️</div>
+                    <div class="notif-message">
+                        Congratulations! You've reached 847 XP and unlocked Journeyman status. You can now post freeform videos!
+                    </div>
+                    <div class="notif-time">1 hour ago</div>
+                </div>
+                <div class="unread-dot"></div>
+            </div>
+            
+            <!-- New Follower -->
+            <div class="notif-item" data-type="social">
+                <div class="notif-icon follow">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">New Follower</div>
+                    <div class="notif-message">
+                        <strong>@sarahdesigns</strong> started following you
+                    </div>
+                    <div class="notif-time">3 hours ago</div>
+                </div>
+            </div>
+            
+            <!-- New Challenge -->
+            <div class="notif-item" data-type="validations">
+                <div class="notif-icon challenge">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">New Challenge from Master Usta you follow</div>
+                    <div class="notif-message">
+                        <strong>@masterwelder</strong> posted a new challenge: #PrecisionCutting
+                    </div>
+                    <div class="notif-time">5 hours ago</div>
+                </div>
+            </div>
+            
+            <!-- XP Earned -->
+            <div class="notif-item" data-type="system">
+                <div class="notif-icon xp">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">+50 XP Earned!</div>
+                    <div class="notif-message">
+                        You completed #WeldingBasics challenge and earned 50 XP!
+                    </div>
+                    <div class="notif-time">8 hours ago</div>
+                </div>
+            </div>
+            
+            <!-- Streak Reminder -->
+            <div class="notif-item" data-type="system">
+                <div class="notif-icon" style="background: rgba(231, 76, 60, 0.2); color: var(--usta-red);">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">Don't lose your 7-day streak! 🔥</div>
+                    <div class="notif-message">
+                        Complete a challenge or validate a skill today to maintain your streak
+                    </div>
+                    <div class="notif-time">Yesterday</div>
+                </div>
+            </div>
+            
+            <!-- Multiple Validations -->
+            <div class="notif-item" data-type="validations">
+                <div class="notif-icon validation">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">Your video is going viral! 🚀</div>
+                    <div class="notif-message">
+                        Your #ReactHooks submission just received its 25th validation!
+                    </div>
+                    <div class="notif-time">2 days ago</div>
+                </div>
+            </div>
+            
+            <!-- Job Match -->
+            <div class="notif-item" data-type="system">
+                <div class="notif-icon" style="background: rgba(52, 152, 219, 0.2); color: #3498DB;">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">Perfect Job Match - 95%!</div>
+                    <div class="notif-message">
+                        <strong>Senior Welder</strong> at Advanced Fabrication Inc. matches your validated skills
+                    </div>
+                    <div class="notif-time">3 days ago</div>
+                </div>
+            </div>
+            
+            <!-- Achievement Unlocked -->
+            <div class="notif-item" data-type="system">
+                <div class="notif-icon levelup">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-title">Achievement Unlocked: 50 Challenges! 🏆</div>
+                    <div class="notif-message">
+                        You've completed 50 challenges! Earned "Gold Challenge Master" badge.
+                    </div>
+                    <div class="notif-time">1 week ago</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 32px;">
+            <button style="background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.2); padding: 12px 32px; border-radius: 12px; font-weight: 700; cursor: pointer;">
+                Mark All as Read
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        function filterNotifs(type) {
+            const notifs = document.querySelectorAll('.notif-item');
+            const tabs = document.querySelectorAll('.tab');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Filter notifications
+            if (type === 'all') {
+                notifs.forEach(n => n.style.display = 'flex');
+            } else {
+                notifs.forEach(n => {
+                    const notifType = n.getAttribute('data-type');
+                    n.style.display = notifType === type ? 'flex' : 'none';
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+

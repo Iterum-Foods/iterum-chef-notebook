@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usta - Investor Hub | Seed Round</title>
+    <link rel="stylesheet" href="css/usta-clean.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: white;
+        }
+        
+        /* Hero Section - Clean */
+        .hero {
+            text-align: center;
+            padding: var(--space-20) var(--space-6);
+            background: linear-gradient(180deg, var(--gray-50) 0%, white 100%);
+        }
+        
+        .hero-logo {
+            font-size: 4rem;
+            margin-bottom: var(--space-4);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .hero-title {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-4);
+        }
+        
+        .hero-tagline {
+            font-size: var(--text-xl);
+            color: var(--usta-bronze);
+            font-weight: 600;
+            margin-bottom: var(--space-3);
+        }
+        
+        .hero-description {
+            font-size: var(--text-lg);
+            color: var(--gray-600);
+            max-width: 700px;
+            margin: 0 auto var(--space-6);
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: white;
+            border: 1px solid var(--usta-bronze);
+            color: var(--usta-bronze);
+            padding: var(--space-3) var(--space-6);
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: var(--text-sm);
+        }
+        
+        /* Stats Section - Clean */
+        .stats-section {
+            padding: var(--space-16) var(--space-6);
+            background: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-6);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: var(--space-6);
+            background: var(--gray-50);
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .stat-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--usta-bronze);
+            margin-bottom: var(--space-2);
+        }
+        
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+        
+        /* Materials Section - Clean */
+        .materials-section {
+            padding: var(--space-16) var(--space-6);
+            background: var(--gray-50);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-12);
+        }
+        
+        .section-title {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-3);
+        }
+        
+        .section-subtitle {
+            font-size: var(--text-lg);
+            color: var(--gray-600);
+        }
+        
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-6);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .material-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: var(--space-6);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .material-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(205, 127, 50, 0.1);
+            border-color: var(--usta-bronze);
+        }
+        
+        .material-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        .material-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-3);
+        }
+        
+        .material-description {
+            font-size: var(--text-base);
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: var(--space-4);
+        }
+        
+        .material-link {
+            color: var(--usta-bronze);
+            font-weight: 600;
+            font-size: var(--text-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        /* CTA Section - Clean */
+        .cta-section {
+            padding: var(--space-16) var(--space-6);
+            background: white;
+        }
+        
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: var(--space-12);
+            background: var(--gray-50);
+            border-radius: 24px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .cta-title {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-4);
+        }
+        
+        .cta-text {
+            font-size: var(--text-lg);
+            color: var(--gray-600);
+            margin-bottom: var(--space-6);
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Footer - Clean */
+        .footer {
+            padding: var(--space-12) var(--space-6);
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .footer-brand {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--usta-bronze);
+            margin-bottom: var(--space-2);
+        }
+        
+        .footer-tagline {
+            font-size: var(--text-base);
+            color: var(--gray-600);
+            margin-bottom: var(--space-6);
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: var(--space-6);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-6);
+        }
+        
+        .footer-link {
+            color: var(--gray-700);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            color: var(--usta-bronze);
+        }
+        
+        .footer-copyright {
+            font-size: var(--text-sm);
+            color: var(--gray-500);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: var(--text-3xl);
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-4);
+            }
+            
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-logo">🔨</div>
+        <h1 class="hero-title">usta</h1>
+        <p class="hero-tagline">Where Craftspeople Master Their Skills Together</p>
+        <p class="hero-description">Learn from masters. Practice daily. Show your work. Grow together.</p>
+        <div class="hero-badge">💰 Raising $1.5M Seed Round | $8M Pre-Money</div>
+    </div>
+    
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">$50B</div>
+                <div class="stat-label">Market Opportunity</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">50M+</div>
+                <div class="stat-label">US Professionals</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$42M</div>
+                <div class="stat-label">Year 5 Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">14.6:1</div>
+                <div class="stat-label">LTV/CAC Ratio</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Investor Materials Section -->
+    <div class="materials-section">
+        <div class="section-header">
+            <h2 class="section-title">Investor Materials</h2>
+            <p class="section-subtitle">Everything you need to evaluate the opportunity</p>
+        </div>
+        
+        <div class="materials-grid">
+            <a href="pitch.html" class="material-card">
+                <div class="material-icon">📊</div>
+                <h3 class="material-title">Pitch Deck</h3>
+                <p class="material-description">
+                    14-slide interactive investor presentation with market opportunity, business model, and financials.
+                </p>
+                <div class="material-link">
+                    View Deck <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            
+            <a href="demo.html" class="material-card">
+                <div class="material-icon">🎬</div>
+                <h3 class="material-title">Live Demo</h3>
+                <p class="material-description">
+                    Interactive product demo showcasing the TikTok-style feed, guided challenges, and skill validation.
+                </p>
+                <div class="material-link">
+                    Try Demo <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            
+            <a href="USTA-EXECUTIVE-SUMMARY.md" target="_blank" class="material-card">
+                <div class="material-icon">📄</div>
+                <h3 class="material-title">Executive Summary</h3>
+                <p class="material-description">
+                    One-page overview of Usta: problem, solution, market, business model, and the ask.
+                </p>
+                <div class="material-link">
+                    Read Summary <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            
+            <a href="business-plan.html" class="material-card">
+                <div class="material-icon">📈</div>
+                <h3 class="material-title">Business Plan</h3>
+                <p class="material-description">
+                    Comprehensive plan with market analysis, competitive landscape, and 5-year projections.
+                </p>
+                <div class="material-link">
+                    View Business Plan <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            
+            <a href="USTA-FINANCIAL-MODEL-GUIDE.md" target="_blank" class="material-card">
+                <div class="material-icon">💵</div>
+                <h3 class="material-title">Financial Model</h3>
+                <p class="material-description">
+                    Detailed projections, unit economics, revenue model, and path to profitability.
+                </p>
+                <div class="material-link">
+                    View Financials <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            
+            <a href="USTA-TECH-ARCHITECTURE.md" target="_blank" class="material-card">
+                <div class="material-icon">⚙️</div>
+                <h3 class="material-title">Tech Architecture</h3>
+                <p class="material-description">
+                    Technical overview, system design, scalability plan, and development roadmap.
+                </p>
+                <div class="material-link">
+                    View Tech Docs <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <div class="cta-container">
+            <h2 class="cta-title">Ready to Learn More?</h2>
+            <p class="cta-text">
+                We're building a community where 50M+ craftspeople learn from master artisans, 
+                practice skills daily, and grow together through guided challenges and peer support.
+            </p>
+            <div class="cta-buttons">
+                <a href="mailto:your@email.com" class="btn btn-primary btn-lg">
+                    <i class="fas fa-envelope"></i>
+                    Schedule Meeting
+                </a>
+                <a href="pitch.html" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-play"></i>
+                    Start Pitch Deck
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">🔨</div>
+            <div class="footer-brand">usta</div>
+            <p class="footer-tagline">Master your craft. Build your career.</p>
+            
+            <div class="footer-links">
+                <a href="landing.html" class="footer-link">Public Landing Page</a>
+                <a href="demo.html" class="footer-link">Product Demo</a>
+                <a href="signup.html" class="footer-link">User Onboarding</a>
+                <a href="profile.html" class="footer-link">Profile Example</a>
+                <a href="https://iterumfoods.xyz" class="footer-link">Iterum Foods Home</a>
+            </div>
+            
+            <div class="footer-copyright">
+                © 2025 Usta. All rights reserved.<br/>
+                Raising $1.5M Seed Round | October 2025
+            </div>
+        </div>
+    </div>
+</body>
+</html>

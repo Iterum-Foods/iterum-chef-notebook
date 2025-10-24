@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor Pitch - Iterum Foods | Restaurant Technology Platform</title>
+    <meta name="description" content="Investment opportunity: The complete restaurant technology platform. $15M ARR target in 3 years.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="unified-colors.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Modern Container */
+        .pitch-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        /* Navigation */
+        .pitch-nav {
+            position: fixed;
+            top: 32px;
+            left: 32px;
+            z-index: 1000;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #1f2937;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .back-btn:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Slide System - Full Screen */
+        .slide {
+            min-height: 100vh;
+            padding: 80px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        /* Cover Slide */
+        .cover-slide {
+            background: linear-gradient(135deg, #1a1410 0%, #2d1b0e 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cover-slide::before {
+            content: '👨‍🍳';
+            position: absolute;
+            font-size: 40rem;
+            opacity: 0.03;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .cover-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .cover-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 40px;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .cover-title {
+            font-size: 8rem;
+            font-weight: 900;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, #fff 0%, #d4a574 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+        
+        .cover-subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 3.5rem;
+            color: #d4a574;
+            margin-bottom: 60px;
+        }
+        
+        .cover-stats {
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 80px;
+        }
+        
+        .cover-stat {
+            text-align: center;
+        }
+        
+        .cover-stat-number {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+        
+        .cover-stat-label {
+            font-size: 1.25rem;
+            opacity: 0.8;
+        }
+        
+        .confidential-badge {
+            margin-top: 80px;
+            font-size: 1.125rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        
+        /* Content Slides */
+        .content-slide {
+            background: linear-gradient(135deg, #fef7e5 0%, #f4ead5 100%);
+            color: #1f2937;
+        }
+        
+        .slide-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .slide-header {
+            margin-bottom: 60px;
+        }
+        
+        .slide-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #94a3b8;
+            margin-bottom: 16px;
+        }
+        
+        .slide-badge {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            color: #10b981;
+            margin-bottom: 16px;
+        }
+        
+        .slide-title {
+            font-size: 5rem;
+            font-weight: 900;
+            color: #1f2937;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .slide-subtitle {
+            font-size: 1.75rem;
+            color: #5d4037;
+            font-weight: 500;
+        }
+        
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+        }
+        
+        /* Modern Cards */
+        .modern-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 40px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .modern-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-color: #10b981;
+        }
+        
+        .modern-card.green { border-top: 5px solid #10b981; }
+        .modern-card.blue { border-top: 5px solid #3b82f6; }
+        .modern-card.orange { border-top: 5px solid #f59e0b; }
+        .modern-card.purple { border-top: 5px solid #8b5cf6; }
+        .modern-card.pink { border-top: 5px solid #ec4899; }
+        .modern-card.gold { border-top: 5px solid #fbbf24; }
+        
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 24px;
+        }
+        
+        .card-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        
+        .card-content {
+            color: #5d4037;
+            font-size: 1.125rem;
+            line-height: 1.8;
+        }
+        
+        .card-content ul {
+            list-style: none;
+            margin-top: 16px;
+        }
+        
+        .card-content li {
+            padding: 10px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .card-content li i {
+            color: #10b981;
+            margin-top: 4px;
+        }
+        
+        /* Big Numbers */
+        .big-stat {
+            text-align: center;
+            margin: 60px 0;
+        }
+        
+        .big-stat-number {
+            font-size: 8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+        
+        .big-stat-label {
+            font-size: 2rem;
+            color: #5d4037;
+            font-weight: 700;
+        }
+        
+        /* Highlight Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 6px solid #10b981;
+            padding: 32px 40px;
+            border-radius: 12px;
+            margin: 40px 0;
+        }
+        
+        .highlight-box p {
+            font-size: 1.5rem;
+            color: #065f46;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.8;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 6px solid #ef4444;
+            padding: 32px 40px;
+            border-radius: 12px;
+            margin: 40px 0;
+        }
+        
+        .warning-box p {
+            font-size: 1.5rem;
+            color: #991b1b;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .gold-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 4px solid #fbbf24;
+            padding: 48px;
+            border-radius: 20px;
+            margin: 40px 0;
+            box-shadow: 0 12px 40px rgba(251, 191, 36, 0.3);
+        }
+        
+        /* Modern Table */
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .modern-table thead {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+        }
+        
+        .modern-table th {
+            padding: 24px;
+            text-align: left;
+            font-weight: 800;
+            font-size: 1.125rem;
+        }
+        
+        .modern-table td {
+            padding: 24px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 1.125rem;
+        }
+        
+        .modern-table tbody tr:hover {
+            background: #f9fafb;
+        }
+        
+        .modern-table .highlight-row {
+            background: #f0fdf4;
+            font-weight: 700;
+        }
+        
+        /* Stat Cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            margin: 60px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid #10b981;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-card-number {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+        
+        .stat-card-label {
+            font-size: 1.25rem;
+            color: #5d4037;
+            font-weight: 600;
+        }
+        
+        /* CTA Button */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 24px 48px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 800;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 50px rgba(16, 185, 129, 0.5);
+        }
+        
+        .cta-button.outline {
+            background: transparent;
+            border: 3px solid white;
+            color: white;
+        }
+        
+        .cta-button.outline:hover {
+            background: white;
+            color: #10b981;
+        }
+        
+        .cta-button.gold {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        }
+        
+        /* Dark Slide */
+        .dark-slide {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+        }
+        
+        .dark-slide .slide-title {
+            color: white;
+        }
+        
+        .dark-slide .card-title {
+            color: white;
+        }
+        
+        /* Accent touches (subtle notebook feel) */
+        .handwritten-accent {
+            font-family: 'Caveat', cursive;
+            color: #10b981;
+        }
+        
+        .paper-texture {
+            background: #fef7e5;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 60px 40px;
+            }
+            
+            .slide-title {
+                font-size: 4rem;
+            }
+            
+            .cover-title {
+                font-size: 6rem;
+            }
+            
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 3rem;
+            }
+            
+            .cover-title {
+                font-size: 4rem;
+            }
+            
+            .big-stat-number {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pitch-nav">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+    
+    <div class="pitch-container">
+        <!-- Slide 1: Cover -->
+        <section class="slide cover-slide">
+            <div class="cover-content">
+                <div class="cover-badge">
+                    <i class="fas fa-lock"></i> CONFIDENTIAL INVESTOR DECK
+                </div>
+                
+                <div style="font-size: 7rem; margin-bottom: 32px;">👨‍🍳</div>
+                
+                <h1 class="cover-title">ITERUM FOODS</h1>
+                
+                <p class="cover-subtitle">The Chef's Digital Notebook</p>
+                
+                <p style="font-size: 2rem; opacity: 0.9; margin-bottom: 80px; max-width: 900px; margin-left: auto; margin-right: auto;">
+                    The complete restaurant technology platform. 4 integrated tools. 
+                    <strong>$15M ARR target in 3 years.</strong>
+                </p>
+                
+                <div class="cover-stats">
+                    <div class="cover-stat">
+                        <div class="cover-stat-number">4</div>
+                        <div class="cover-stat-label">Platforms</div>
+                    </div>
+                    <div class="cover-stat">
+                        <div class="cover-stat-number">10K+</div>
+                        <div class="cover-stat-label">Users</div>
+                    </div>
+                    <div class="cover-stat">
+                        <div class="cover-stat-number">$50K</div>
+                        <div class="cover-stat-label">MRR</div>
+                    </div>
+                    <div class="cover-stat">
+                        <div class="cover-stat-number">98%</div>
+                        <div class="cover-stat-label">Satisfaction</div>
+                    </div>
+                </div>
+                
+                <p class="confidential-badge">October 2025 | Seeking $500K Seed Round</p>
+            </div>
+        </section>
+        
+        <!-- Slide 2: Problem -->
+        <section class="slide content-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number">01</div>
+                    <p class="slide-badge handwritten-accent">The Problem</p>
+                    <h2 class="slide-title">Restaurants Are Drowning in Disconnected Tools</h2>
+                    <p class="slide-subtitle">The average restaurant uses 8+ separate software tools. This is expensive, inefficient, and painful.</p>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="modern-card">
+                        <div class="card-icon">😤</div>
+                        <h3 class="card-title">Pain Points</h3>
+                        <div class="card-content">
+                            <ul>
+                                <li><i class="fas fa-times-circle" style="color: #ef4444;"></i> <strong>Recipe chaos:</strong> Scattered across Word docs, notebooks, napkins</li>
+                                <li><i class="fas fa-times-circle" style="color: #ef4444;"></i> <strong>Zero integration:</strong> Recipe costs don't sync with pricing</li>
+                                <li><i class="fas fa-times-circle" style="color: #ef4444;"></i> <strong>Payroll nightmare:</strong> Hours of manual calculations weekly</li>
+                                <li><i class="fas fa-times-circle" style="color: #ef4444;"></i> <strong>Expensive planning:</strong> Business consultants cost $15K+</li>
+                                <li><i class="fas fa-times-circle" style="color: #ef4444;"></i> <strong>No chef network:</strong> LinkedIn doesn't understand culinary</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card green">
+                        <div class="card-icon">💰</div>
+                        <h3 class="card-title">Market Impact</h3>
+                        <div class="card-content">
+                            <ul>
+                                <li><i class="fas fa-chart-line"></i> <strong>$15B+</strong> restaurant tech market (15% YoY growth)</li>
+                                <li><i class="fas fa-chart-line"></i> <strong>1M+</strong> restaurants in US alone</li>
+                                <li><i class="fas fa-chart-line"></i> <strong>$500/month</strong> average software spend per restaurant</li>
+                                <li><i class="fas fa-chart-line"></i> <strong>60%</strong> of new restaurants fail (poor planning)</li>
+                                <li><i class="fas fa-chart-line"></i> <strong>2M+</strong> culinary professionals need networking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 3: Solution -->
+        <section class="slide dark-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number" style="color: #94a3b8;">02</div>
+                    <p class="slide-badge handwritten-accent">Our Solution</p>
+                    <h2 class="slide-title">One Integrated Ecosystem</h2>
+                    <p class="slide-subtitle" style="color: #cbd5e1;">4 powerful platforms working together seamlessly</p>
+                </div>
+                
+                <div class="grid-4">
+                    <div class="modern-card green">
+                        <div class="card-icon">🍽️</div>
+                        <h3 class="card-title">Culinary R&D</h3>
+                        <div class="card-content">
+                            <p style="font-size: 2rem; font-weight: 800; color: #10b981; margin: 16px 0;">$39/mo</p>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Recipe development</li>
+                                <li><i class="fas fa-check"></i> Menu planning</li>
+                                <li><i class="fas fa-check"></i> Cost analysis</li>
+                                <li><i class="fas fa-check"></i> Version control</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card blue">
+                        <div class="card-icon">📊</div>
+                        <h3 class="card-title">Business Planner</h3>
+                        <div class="card-content">
+                            <p style="font-size: 2rem; font-weight: 800; color: #3b82f6; margin: 16px 0;">$49/mo</p>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Business plans</li>
+                                <li><i class="fas fa-check"></i> Financial projections</li>
+                                <li><i class="fas fa-check"></i> Market analysis</li>
+                                <li><i class="fas fa-check"></i> Investor reports</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card orange">
+                        <div class="card-icon">💰</div>
+                        <h3 class="card-title">Payroll System</h3>
+                        <div class="card-content">
+                            <p style="font-size: 2rem; font-weight: 800; color: #f59e0b; margin: 16px 0;">$59/mo</p>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Time tracking</li>
+                                <li><i class="fas fa-check"></i> Tip calculation</li>
+                                <li><i class="fas fa-check"></i> Payroll processing</li>
+                                <li><i class="fas fa-check"></i> Labor analytics</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card purple">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="card-title">Skills Portfolio</h3>
+                        <div class="card-content">
+                            <p style="font-size: 2rem; font-weight: 800; color: #8b5cf6; margin: 16px 0;">FREE</p>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Video portfolio</li>
+                                <li><i class="fas fa-check"></i> Networking</li>
+                                <li><i class="fas fa-check"></i> Job matching</li>
+                                <li><i class="fas fa-check"></i> Like Instagram</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="big-stat">
+                    <div class="big-stat-number" style="background: linear-gradient(135deg, #fff 0%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        $99/mo
+                    </div>
+                    <div class="big-stat-label" style="color: white;">
+                        Bundle all 4 platforms → Save $48/month → 40% cheaper than competitors
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 3.5: Skills Portfolio Deep Dive -->
+        <section class="slide" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number">03.5</div>
+                    <p class="slide-badge handwritten-accent">Growth Engine</p>
+                    <h2 class="slide-title" style="color: #7c3aed;">Skills Portfolio: The Instagram for Chefs</h2>
+                    <p class="slide-subtitle" style="color: #5b21b6;">Free for users. Monetized through jobs, ads, and premium features. 2M+ addressable market.</p>
+                </div>
+                
+                <div class="grid-2" style="gap: 32px; margin-bottom: 40px;">
+                    <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);">
+                        <h3 style="font-size: 1.75rem; font-weight: 900; color: #7c3aed; margin-bottom: 24px; border-bottom: 4px solid #8b5cf6; padding-bottom: 12px;">
+                            📱 For Users (FREE)
+                        </h3>
+                        <div style="display: grid; gap: 16px;">
+                            <div style="display: flex; align-items: start; gap: 12px;">
+                                <span style="font-size: 1.5rem;">🎥</span>
+                                <div>
+                                    <strong>Video Portfolio</strong><br>
+                                    <span style="color: #6b7280; font-size: 0.95rem;">Showcase cooking skills</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 12px;">
+                                <span style="font-size: 1.5rem;">👥</span>
+                                <div>
+                                    <strong>Professional Network</strong><br>
+                                    <span style="color: #6b7280; font-size: 0.95rem;">Connect with peers</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 12px;">
+                                <span style="font-size: 1.5rem;">✅</span>
+                                <div>
+                                    <strong>Skill Validation</strong><br>
+                                    <span style="color: #6b7280; font-size: 0.95rem;">Peer endorsements</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 12px;">
+                                <span style="font-size: 1.5rem;">💼</span>
+                                <div>
+                                    <strong>Job Matching</strong><br>
+                                    <span style="color: #6b7280; font-size: 0.95rem;">Discover opportunities</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);">
+                        <h3 style="font-size: 1.75rem; font-weight: 900; color: #10b981; margin-bottom: 24px; border-bottom: 4px solid #10b981; padding-bottom: 12px;">
+                            💰 Revenue Streams
+                        </h3>
+                        <div style="display: grid; gap: 16px;">
+                            <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 16px;">
+                                <strong style="color: #059669;">Job Board (65%)</strong><br>
+                                <span style="color: #064e3b; font-size: 0.95rem;">$199-499 per post</span><br>
+                                <span style="font-weight: 600; color: #10b981;">→ $10M/year by Year 5</span>
+                            </div>
+                            <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px;">
+                                <strong style="color: #1d4ed8;">Premium Features (20%)</strong><br>
+                                <span style="color: #1e3a8a; font-size: 0.95rem;">$9.99-19.99/month</span><br>
+                                <span style="font-weight: 600; color: #3b82f6;">→ $12M/year by Year 5</span>
+                            </div>
+                            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px;">
+                                <strong style="color: #d97706;">Advertising (10%)</strong><br>
+                                <span style="color: #92400e; font-size: 0.95rem;">Sponsored content</span><br>
+                                <span style="font-weight: 600; color: #f59e0b;">→ $5M/year by Year 5</span>
+                            </div>
+                            <div style="background: #f5f3ff; border-left: 4px solid #8b5cf6; padding: 16px;">
+                                <strong style="color: #7c3aed;">Training (5%)</strong><br>
+                                <span style="color: #5b21b6; font-size: 0.95rem;">Courses & certs</span><br>
+                                <span style="font-weight: 600; color: #8b5cf6;">→ $2M/year by Year 5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-radius: 20px; padding: 32px; box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);">
+                    <div class="stat-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; text-align: center;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 900; color: #8b5cf6; margin-bottom: 8px;">2.1M+</div>
+                            <div style="font-size: 0.95rem; color: #6b7280; font-weight: 600;">US Market</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 900; color: #8b5cf6; margin-bottom: 8px;">$8B</div>
+                            <div style="font-size: 0.95rem; color: #6b7280; font-weight: 600;">Opportunity</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 900; color: #10b981; margin-bottom: 8px;">$29M</div>
+                            <div style="font-size: 0.95rem; color: #6b7280; font-weight: 600;">Year 5 Revenue</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 900; color: #10b981; margin-bottom: 8px;">14:1</div>
+                            <div style="font-size: 0.95rem; color: #6b7280; font-weight: 600;">LTV/CAC Ratio</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 900; color: #10b981; margin-bottom: 8px;">55%</div>
+                            <div style="font-size: 0.95rem; color: #6b7280; font-weight: 600;">EBITDA Margin</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-radius: 20px; padding: 32px; margin-top: 32px; color: white; text-align: center;">
+                    <h3 style="font-size: 1.75rem; font-weight: 900; margin-bottom: 12px;">Why This Works</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 24px;">
+                        <div>
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🌊</div>
+                            <strong>Network Effects</strong><br>
+                            <span style="opacity: 0.9; font-size: 0.95rem;">More users = more value</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🎯</div>
+                            <strong>Two-Sided Market</strong><br>
+                            <span style="opacity: 0.9; font-size: 0.95rem;">Users + employers win</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; margin-bottom: 8px;">💎</div>
+                            <strong>Viral Growth</strong><br>
+                            <span style="opacity: 0.9; font-size: 0.95rem;">1.3x coefficient</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 4: Market Opportunity -->
+        <section class="slide content-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number">04</div>
+                    <p class="slide-badge handwritten-accent">Market Opportunity</p>
+                    <h2 class="slide-title">Massive Addressable Market</h2>
+                    <p class="slide-subtitle">Multi-billion dollar opportunity in a fragmented, growing market</p>
+                </div>
+                
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-number" style="color: #10b981;">$15B</div>
+                        <div class="stat-card-label">Restaurant Tech Market</div>
+                        <p style="margin-top: 12px; color: #6b7280; font-size: 1rem;">Growing 15% annually</p>
+                    </div>
+                    
+                    <div class="stat-card" style="border-top-color: #3b82f6;">
+                        <div class="stat-card-number" style="color: #3b82f6;">1M+</div>
+                        <div class="stat-card-label">US Restaurants</div>
+                        <p style="margin-top: 12px; color: #6b7280; font-size: 1rem;">Primary target</p>
+                    </div>
+                    
+                    <div class="stat-card" style="border-top-color: #f59e0b;">
+                        <div class="stat-card-number" style="color: #f59e0b;">2M+</div>
+                        <div class="stat-card-label">Culinary Professionals</div>
+                        <p style="margin-top: 12px; color: #6b7280; font-size: 1rem;">For Skills Portfolio</p>
+                    </div>
+                    
+                    <div class="stat-card" style="border-top-color: #8b5cf6;">
+                        <div class="stat-card-number" style="color: #8b5cf6;">15%</div>
+                        <div class="stat-card-label">Annual Growth Rate</div>
+                        <p style="margin-top: 12px; color: #6b7280; font-size: 1rem;">Accelerating post-pandemic</p>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <p>
+                        <strong>TAM:</strong> $15B | <strong>SAM:</strong> $2.5B | <strong>SOM:</strong> $150M (5-year target)
+                    </p>
+                </div>
+                
+                <div class="grid-2" style="margin-top: 40px;">
+                    <div class="modern-card">
+                        <h3 class="card-title">Why Now?</h3>
+                        <div class="card-content">
+                            <ul>
+                                <li><i class="fas fa-bolt"></i> Post-pandemic digital transformation</li>
+                                <li><i class="fas fa-bolt"></i> Labor shortage driving need for efficiency</li>
+                                <li><i class="fas fa-bolt"></i> Rising costs requiring precision</li>
+                                <li><i class="fas fa-bolt"></i> Gen Z chefs demand modern tools</li>
+                                <li><i class="fas fa-bolt"></i> Ghost kitchen explosion (50K+ in US)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card green">
+                        <h3 class="card-title">Competitive Advantages</h3>
+                        <div class="card-content">
+                            <ul>
+                                <li><i class="fas fa-trophy"></i> <strong>Only</strong> integrated 4-platform solution</li>
+                                <li><i class="fas fa-trophy"></i> Built BY chefs FOR chefs</li>
+                                <li><i class="fas fa-trophy"></i> 40% cheaper than competitors combined</li>
+                                <li><i class="fas fa-trophy"></i> Free Skills Portfolio = network effects</li>
+                                <li><i class="fas fa-trophy"></i> Unique chef-friendly UX</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 5: Traction -->
+        <section class="slide dark-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number" style="color: #94a3b8;">04</div>
+                    <p class="slide-badge handwritten-accent">Current Traction</p>
+                    <h2 class="slide-title">Proven Product-Market Fit</h2>
+                    <p class="slide-subtitle" style="color: #cbd5e1;">Real customers, real revenue, explosive growth</p>
+                </div>
+                
+                <div class="grid-4">
+                    <div class="modern-card green">
+                        <div class="card-icon">👥</div>
+                        <div class="stat-card-number" style="color: #10b981;">10K+</div>
+                        <div class="stat-card-label">Total Users</div>
+                    </div>
+                    
+                    <div class="modern-card blue">
+                        <div class="card-icon">📊</div>
+                        <div class="stat-card-number" style="color: #3b82f6;">$50K</div>
+                        <div class="stat-card-label">Monthly Recurring Revenue</div>
+                    </div>
+                    
+                    <div class="modern-card orange">
+                        <div class="card-icon">📈</div>
+                        <div class="stat-card-number" style="color: #f59e0b;">25%</div>
+                        <div class="stat-card-label">MoM Growth</div>
+                    </div>
+                    
+                    <div class="modern-card purple">
+                        <div class="card-icon">⭐</div>
+                        <div class="stat-card-number" style="color: #8b5cf6;">98%</div>
+                        <div class="stat-card-label">Satisfaction Rate</div>
+                    </div>
+                </div>
+                
+                <div class="grid-2" style="margin-top: 60px;">
+                    <div class="modern-card">
+                        <h3 class="card-title">Growth Metrics</h3>
+                        <div class="card-content">
+                            <ul style="font-size: 1.25rem;">
+                                <li><i class="fas fa-rocket"></i> <strong>25% MoM</strong> user growth</li>
+                                <li><i class="fas fa-rocket"></i> <strong>12% churn</strong> (vs 20% industry avg)</li>
+                                <li><i class="fas fa-rocket"></i> <strong>85%</strong> retention after 6 months</li>
+                                <li><i class="fas fa-rocket"></i> <strong>15%</strong> organic growth (word of mouth)</li>
+                                <li><i class="fas fa-rocket"></i> <strong>$120</strong> average revenue per user (ARPU)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card green">
+                        <h3 class="card-title">Unit Economics</h3>
+                        <div class="card-content">
+                            <ul style="font-size: 1.25rem;">
+                                <li><i class="fas fa-dollar-sign"></i> <strong>$45</strong> Customer Acquisition Cost (CAC)</li>
+                                <li><i class="fas fa-dollar-sign"></i> <strong>$540</strong> Lifetime Value (LTV)</li>
+                                <li><i class="fas fa-dollar-sign"></i> <strong>4.5:1</strong> LTV/CAC ratio (excellent)</li>
+                                <li><i class="fas fa-dollar-sign"></i> <strong>6 months</strong> payback period</li>
+                                <li><i class="fas fa-dollar-sign"></i> <strong>85%</strong> gross margins</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 6: Revenue Model -->
+        <section class="slide content-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number">05</div>
+                    <p class="slide-badge handwritten-accent">Revenue Model</p>
+                    <h2 class="slide-title">Multiple Revenue Streams</h2>
+                    <p class="slide-subtitle">Flexible pricing with strong unit economics</p>
+                </div>
+                
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Plan</th>
+                            <th>Monthly Price</th>
+                            <th>Target Customer</th>
+                            <th>Annual Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Culinary R&D</strong></td>
+                            <td>$39</td>
+                            <td>Chefs, Recipe Developers</td>
+                            <td>$468/year</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Business Planner</strong></td>
+                            <td>$49</td>
+                            <td>Entrepreneurs, New Restaurants</td>
+                            <td>$588/year</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Payroll System</strong></td>
+                            <td>$59</td>
+                            <td>Restaurant Managers</td>
+                            <td>$708/year</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Professional Bundle</strong></td>
+                            <td><strong>$99</strong></td>
+                            <td>Full-service restaurants</td>
+                            <td><strong>$1,188/year</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Enterprise</strong></td>
+                            <td>$300-1,000</td>
+                            <td>Restaurant groups, chains</td>
+                            <td>$3,600-12,000/year</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Founder's Program</strong></td>
+                            <td><strong>$1,000 (one-time)</strong></td>
+                            <td>100 industry leaders only</td>
+                            <td><strong>$100K total</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Skills Portfolio</strong></td>
+                            <td>FREE</td>
+                            <td>All culinary professionals</td>
+                            <td>Network effect + future monetization</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- Slide 7: Founder's Program -->
+        <section class="slide" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number">06</div>
+                    <p class="slide-badge handwritten-accent" style="color: #f59e0b;">⭐ Special Opportunity</p>
+                    <h2 class="slide-title">Founder's Program</h2>
+                    <p class="slide-subtitle" style="color: #92400e;">Exclusive lifetime access for 100 select industry professionals</p>
+                </div>
+                
+                <div class="gold-box">
+                    <div style="text-align: center;">
+                        <div style="font-size: 9rem; font-weight: 900; color: #f59e0b; margin-bottom: 16px; line-height: 1;">
+                            $1,000
+                        </div>
+                        <div style="font-size: 2.5rem; color: #92400e; font-weight: 800; margin-bottom: 32px;">
+                            One Payment. Lifetime Access. Forever.
+                        </div>
+                        <div style="background: white; border: 3px solid #fbbf24; border-radius: 12px; padding: 24px; margin: 32px 0;">
+                            <p style="font-size: 1.5rem; color: #92400e; font-weight: 700; margin: 0;">
+                                💎 Limited to 100 founding members<br>
+                                📊 $100K immediate capital raised<br>
+                                👑 Lifetime access to all current + future platforms<br>
+                                ⚡ ROI in 10 months vs Professional plan
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid-3" style="margin-top: 40px;">
+                    <div class="modern-card gold">
+                        <h3 class="card-title">What Founders Get</h3>
+                        <div class="card-content">
+                            <ul>
+                                <li><i class="fas fa-infinity"></i> All 4 platforms forever</li>
+                                <li><i class="fas fa-star"></i> Future platforms included</li>
+                                <li><i class="fas fa-crown"></i> Founder badge & status</li>
+                                <li><i class="fas fa-users"></i> VIP community access</li>
+                                <li><i class="fas fa-headset"></i> Priority support</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card">
+                        <h3 class="card-title">Target Founders</h3>
+                        <div class="card-content">
+                            <ul>
+                                <li><i class="fas fa-star"></i> Michelin-starred chefs</li>
+                                <li><i class="fas fa-building"></i> Restaurant owners</li>
+                                <li><i class="fas fa-graduation-cap"></i> Culinary educators</li>
+                                <li><i class="fas fa-microphone"></i> Industry influencers</li>
+                                <li><i class="fas fa-lightbulb"></i> Food entrepreneurs</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card green">
+                        <h3 class="card-title">Value to Us</h3>
+                        <div class="card-content">
+                            <ul>
+                                <li><i class="fas fa-piggy-bank"></i> $100K capital raised</li>
+                                <li><i class="fas fa-bullhorn"></i> 100 brand ambassadors</li>
+                                <li><i class="fas fa-network-wired"></i> Network effects</li>
+                                <li><i class="fas fa-certificate"></i> Credibility boost</li>
+                                <li><i class="fas fa-comments"></i> Community foundation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <p style="text-align: center;">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>URGENT:</strong> Only 37 spots remaining of 100 total
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 8: Financial Projections -->
+        <section class="slide dark-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number" style="color: #94a3b8;">07</div>
+                    <p class="slide-badge handwritten-accent">Financial Projections</p>
+                    <h2 class="slide-title">Path to $15M ARR</h2>
+                    <p class="slide-subtitle" style="color: #cbd5e1;">Conservative projections based on current traction</p>
+                </div>
+                
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Year 1</th>
+                            <th>Year 2</th>
+                            <th>Year 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Paying Customers</strong></td>
+                            <td>1,000</td>
+                            <td>5,000</td>
+                            <td>15,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Founder Members</strong></td>
+                            <td>100</td>
+                            <td>100</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Free Users (Skills)</strong></td>
+                            <td>10,000</td>
+                            <td>50,000</td>
+                            <td>150,000</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Monthly Recurring Revenue</strong></td>
+                            <td><strong>$85K</strong></td>
+                            <td><strong>$425K</strong></td>
+                            <td><strong>$1.25M</strong></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Annual Recurring Revenue</strong></td>
+                            <td><strong>$1.02M</strong></td>
+                            <td><strong>$5.1M</strong></td>
+                            <td><strong>$15M</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operating Expenses</strong></td>
+                            <td>$600K</td>
+                            <td>$2.5M</td>
+                            <td>$7M</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>EBITDA</strong></td>
+                            <td><strong>$420K</strong></td>
+                            <td><strong>$2.6M</strong></td>
+                            <td><strong>$8M</strong></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Profit Margin</strong></td>
+                            <td><strong>41%</strong></td>
+                            <td><strong>51%</strong></td>
+                            <td><strong>53%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="background: rgba(16, 185, 129, 0.15); border-left: 6px solid #10b981; padding: 32px 40px; border-radius: 12px; margin-top: 60px;">
+                    <p style="font-size: 2rem; color: #10b981; font-weight: 800;">
+                        🎯 Profitable by Month 18 | 📈 85% Gross Margins | 💎 Strong Unit Economics
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 9: Competition -->
+        <section class="slide content-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number">08</div>
+                    <p class="slide-badge handwritten-accent">Competitive Analysis</p>
+                    <h2 class="slide-title">We're the Only Integrated Solution</h2>
+                    <p class="slide-subtitle">Everyone else is fragmented. We're unified.</p>
+                </div>
+                
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Capability</th>
+                            <th>Competitors (Combined)</th>
+                            <th style="background: linear-gradient(135deg, #10b981, #059669);">Iterum Foods</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Recipe Management</strong></td>
+                            <td>ChefTab, Paprika ($30/mo)</td>
+                            <td class="highlight-row">✅ Included</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Business Planning</strong></td>
+                            <td>Consultants ($15K one-time)</td>
+                            <td class="highlight-row">✅ Included</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Payroll</strong></td>
+                            <td>Gusto, ADP ($100/mo)</td>
+                            <td class="highlight-row">✅ Included</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Professional Network</strong></td>
+                            <td>LinkedIn (generic)</td>
+                            <td class="highlight-row">✅ FREE (culinary-specific)</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Integration</strong></td>
+                            <td>❌ None - separate tools</td>
+                            <td><strong>✅ Full cross-platform integration</strong></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Total Monthly Cost</strong></td>
+                            <td><strong>$200-300/month</strong></td>
+                            <td><strong>$99/month (67% savings)</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- Slide 10: The Ask -->
+        <section class="slide dark-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number" style="color: #94a3b8;">09</div>
+                    <p class="slide-badge handwritten-accent">Investment Opportunity</p>
+                    <h2 class="slide-title">Join Us in Building the Future</h2>
+                </div>
+                
+                <div class="big-stat">
+                    <div class="big-stat-number" style="background: linear-gradient(135deg, #fff 0%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        $500K
+                    </div>
+                    <div class="big-stat-label" style="color: white; font-size: 2.5rem;">
+                        Seed Round to Accelerate Growth
+                    </div>
+                </div>
+                
+                <div class="grid-2" style="margin-top: 60px;">
+                    <div class="modern-card">
+                        <h3 class="card-title">Use of Funds</h3>
+                        <div class="card-content">
+                            <ul style="font-size: 1.25rem;">
+                                <li><i class="fas fa-code"></i> <strong>40% Product ($200K)</strong><br>2 engineers, 1 designer, mobile apps, AI features</li>
+                                <li><i class="fas fa-megaphone"></i> <strong>35% Sales/Marketing ($175K)</strong><br>2 sales reps, $75K ad spend, trade shows</li>
+                                <li><i class="fas fa-cog"></i> <strong>15% Operations ($75K)</strong><br>Infrastructure, support, legal</li>
+                                <li><i class="fas fa-piggy-bank"></i> <strong>10% Working Capital ($50K)</strong><br>Cash reserves, buffer</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card green">
+                        <h3 class="card-title">Investment Terms</h3>
+                        <div class="card-content">
+                            <ul style="font-size: 1.25rem;">
+                                <li><i class="fas fa-hand-holding-usd"></i> <strong>Amount:</strong> $500,000</li>
+                                <li><i class="fas fa-chart-pie"></i> <strong>Equity:</strong> 15-20% (negotiable)</li>
+                                <li><i class="fas fa-flag-checkered"></i> <strong>Valuation:</strong> $2.5-3M pre-money</li>
+                                <li><i class="fas fa-rocket"></i> <strong>Type:</strong> Convertible note or SAFE</li>
+                                <li><i class="fas fa-calendar"></i> <strong>Close:</strong> Q1 2025</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(16, 185, 129, 0.15); border: 3px solid #10b981; border-radius: 16px; padding: 40px; margin-top: 60px; text-align: center;">
+                    <p style="font-size: 2rem; color: white; font-weight: 800;">
+                        💰 Potential Return: 10-30x in 5 years<br>
+                        📊 Comparable exits: Toast ($20B), ChowNow ($500M), 7shifts ($200M)
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 11: Vision & Roadmap -->
+        <section class="slide content-slide">
+            <div class="slide-container">
+                <div class="slide-header">
+                    <div class="slide-number">10</div>
+                    <p class="slide-badge handwritten-accent">Vision & Roadmap</p>
+                    <h2 class="slide-title">Where We're Headed</h2>
+                    <p class="slide-subtitle">The future of restaurant technology</p>
+                </div>
+                
+                <div style="text-align: center; margin: 60px 0;">
+                    <p style="font-size: 3.5rem; font-weight: 800; color: #1f2937; line-height: 1.4;">
+                        "Every chef's trusted companion<br>
+                        <span style="color: #10b981;">from culinary school to Michelin stars</span>"
+                    </p>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="modern-card">
+                        <h3 class="card-title">12-Month Milestones</h3>
+                        <div class="card-content">
+                            <ul style="font-size: 1.25rem;">
+                                <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Hire core team (4 people)</li>
+                                <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Launch v2.0 + mobile apps</li>
+                                <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Close Founder's Program (100 members)</li>
+                                <li><i class="fas fa-check-circle" style="color: #10b981;"></i> 10,000 paying customers</li>
+                                <li><i class="fas fa-check-circle" style="color: #10b981;"></i> $500K MRR</li>
+                                <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Series A ready</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modern-card blue">
+                        <h3 class="card-title">5-Year Vision</h3>
+                        <div class="card-content">
+                            <ul style="font-size: 1.25rem;">
+                                <li><i class="fas fa-globe"></i> 100K+ professional chefs using daily</li>
+                                <li><i class="fas fa-map"></i> Expand globally (Europe, Asia, LATAM)</li>
+                                <li><i class="fas fa-handshake"></i> Partner with culinary schools</li>
+                                <li><i class="fas fa-shopping-cart"></i> Integrate with food suppliers</li>
+                                <li><i class="fas fa-award"></i> Industry standard platform</li>
+                                <li><i class="fas fa-trophy"></i> Strategic exit or IPO</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Final CTA Slide -->
+        <section class="slide" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-align: center;">
+            <div class="slide-container">
+                <div style="font-size: 8rem; margin-bottom: 48px;">🚀</div>
+                
+                <h2 style="font-size: 6rem; font-weight: 900; color: white; margin-bottom: 32px;">
+                    Let's Build This Together
+                </h2>
+                
+                <p class="handwritten-accent" style="font-size: 3rem; margin-bottom: 48px; color: rgba(255, 255, 255, 0.95);">
+                    Join us in transforming restaurant technology
+                </p>
+                
+                <div style="margin: 80px 0;">
+                    <a href="mailto:investors@iterumfoods.xyz?subject=Investment Opportunity" class="cta-button outline">
+                        <i class="fas fa-envelope"></i> Schedule Investment Call
+                    </a>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 48px; max-width: 800px; margin: 0 auto;">
+                    <p style="font-size: 1.75rem; margin-bottom: 24px; font-weight: 700;">
+                        📧 investors@iterumfoods.xyz<br>
+                        📞 (617) 913-5927
+                    </p>
+                    <p style="font-size: 1.25rem; opacity: 0.9;">
+                        Ready to invest? Questions about the Founder's Program?<br>
+                        Let's schedule a call and discuss the opportunity.
+                    </p>
+                </div>
+                
+                <p style="margin-top: 60px; font-size: 1.25rem; opacity: 0.8;">
+                    The best opportunities are shared with the right partners. 🤝
+                </p>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // Smooth scroll between sections
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        
+        // Track investor page view
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                event_category: 'Investor Pitch',
+                event_label: 'Modern Pitch Viewed'
+            });
+        }
+        
+        // Track scroll depth
+        let maxScroll = 0;
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            if (scrollPercent > maxScroll) {
+                maxScroll = Math.floor(scrollPercent / 25) * 25;
+                if (typeof gtag !== 'undefined' && maxScroll > 0) {
+                    gtag('event', 'scroll_depth', {
+                        event_category: 'Investor Pitch',
+                        value: maxScroll
+                    });
+                }
+            }
+        });
+        
+        // Track time on page
+        const startTime = Date.now();
+        window.addEventListener('beforeunload', () => {
+            const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'time_on_page', {
+                    event_category: 'Investor Pitch',
+                    value: timeSpent
+                });
+            }
+        });
+        
+        console.log('📊 Modern Investor Pitch Loaded');
+        console.log('🔒 Confidential Document');
+    </script>
+</body>
+</html>

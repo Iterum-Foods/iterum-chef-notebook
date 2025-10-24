@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mike Wilson - Master Welder | Usta Professional Profile</title>
+    
+    <link rel="stylesheet" href="css/usta-clean.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="js/usta-api.js"></script>
+    
+    <style>
+        body {
+            background: var(--gray-100);
+        }
+        
+        /* Navigation */
+        .nav {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        /* Profile Header */
+        .profile-header {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: var(--space-6);
+        }
+        
+        .profile-banner {
+            height: 200px;
+            background: linear-gradient(135deg, var(--usta-navy) 0%, var(--gray-900) 100%);
+        }
+        
+        .profile-info {
+            padding: var(--space-8) var(--space-6);
+            position: relative;
+        }
+        
+        .profile-avatar-large {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: var(--usta-gold);
+            border: 4px solid white;
+            position: absolute;
+            top: -80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--usta-navy);
+        }
+        
+        .profile-content {
+            margin-left: 180px;
+        }
+        
+        .profile-name {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .profile-title {
+            font-size: var(--text-xl);
+            color: var(--gray-600);
+            margin-bottom: var(--space-4);
+        }
+        
+        .profile-meta {
+            display: flex;
+            gap: var(--space-6);
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-4);
+        }
+        
+        .profile-meta i {
+            color: var(--usta-bronze);
+        }
+        
+        .profile-stats {
+            display: flex;
+            gap: var(--space-8);
+            margin-top: var(--space-6);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--usta-bronze);
+        }
+        
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+        }
+        
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        
+        /* Experience Item */
+        .experience-item {
+            display: flex;
+            gap: var(--space-4);
+            padding-bottom: var(--space-6);
+            margin-bottom: var(--space-6);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .experience-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .experience-logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 8px;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .experience-content {
+            flex: 1;
+        }
+        
+        .experience-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .experience-company {
+            font-size: var(--text-base);
+            color: var(--gray-700);
+            margin-bottom: var(--space-1);
+        }
+        
+        .experience-duration {
+            font-size: var(--text-sm);
+            color: var(--gray-500);
+            margin-bottom: var(--space-2);
+        }
+        
+        .experience-description {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+        
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .skill-item {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: var(--space-4);
+        }
+        
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+        }
+        
+        .skill-name {
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        
+        .skill-level {
+            font-size: var(--text-sm);
+            color: var(--usta-bronze);
+            font-weight: 600;
+        }
+        
+        .skill-endorsements {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            margin-top: var(--space-2);
+        }
+        
+        /* Certifications */
+        .cert-item {
+            display: flex;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border-radius: 12px;
+            margin-bottom: var(--space-3);
+        }
+        
+        .cert-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: var(--usta-bronze);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .cert-content h4 {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .cert-issuer {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+        }
+        
+        /* Portfolio Grid */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+        }
+        
+        .portfolio-item {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            background: var(--gray-200);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .portfolio-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-3);
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-content {
+                margin-left: 0;
+                margin-top: 80px;
+            }
+            
+            .profile-avatar-large {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .profile-stats {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav">
+        <div class="nav-container">
+            <a href="landing.html" class="nav-logo">
+                <i class="fas fa-hammer"></i>
+                <span style="font-size: var(--text-xl); font-weight: 700;">usta</span>
+            </a>
+            <div class="nav-links">
+                <a href="demo.html" class="nav-link"><i class="fas fa-home"></i> Feed</a>
+                <a href="discover.html" class="nav-link"><i class="fas fa-search"></i> Discover</a>
+                <a href="#" class="nav-link active"><i class="fas fa-user"></i> Profile</a>
+                <a href="index.html" class="nav-link"><i class="fas fa-briefcase"></i> Investor Hub</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-banner"></div>
+            <div class="profile-info">
+                <div class="profile-avatar-large">🔧</div>
+                <div class="profile-content">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <h1 class="profile-name">Mike Wilson</h1>
+                            <p class="profile-title">Master Welder & Fabrication Specialist</p>
+                            <div class="profile-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> Detroit, MI</span>
+                                <span><i class="fas fa-briefcase"></i> 15 years experience</span>
+                                <span><i class="fas fa-users"></i> 2,847 followers</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: var(--space-2);">
+                            <button class="btn btn-primary" id="followBtn" onclick="toggleFollow(1)">
+                                <i class="fas fa-user-plus"></i> <span id="followText">Follow</span>
+                            </button>
+                            <button class="btn btn-secondary"><i class="fas fa-envelope"></i> Message</button>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <div class="stat-value">Level 47</div>
+                            <div class="stat-label">Master Usta</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">124</div>
+                            <div class="stat-label">Skills Validated</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">89</div>
+                            <div class="stat-label">Challenges Complete</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- About Section -->
+        <div class="section-card">
+            <h2 class="section-title">About</h2>
+            <p style="color: var(--gray-700); line-height: 1.8;">
+                Certified master welder with 15+ years of experience in structural and precision welding. 
+                Specialized in TIG, MIG, and stick welding across various metals including stainless steel, 
+                aluminum, and exotic alloys. Passionate about teaching the next generation of welders 
+                through hands-on mentorship and skill sharing.
+            </p>
+        </div>
+        
+        <!-- Experience Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Experience</h2>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-logo">🏭</div>
+                <div class="experience-content">
+                    <h3 class="experience-title">Lead Welder</h3>
+                    <div class="experience-company">Detroit Steel & Fabrication</div>
+                    <div class="experience-duration">Jan 2018 - Present · 6 yrs</div>
+                    <p class="experience-description">
+                        Lead a team of 8 welders on large-scale structural fabrication projects. 
+                        Responsible for quality control, technique training, and process optimization. 
+                        Reduced defect rate by 40% through improved welding procedures.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-logo">⚙️</div>
+                <div class="experience-content">
+                    <h3 class="experience-title">Senior Welder</h3>
+                    <div class="experience-company">Precision Manufacturing Co.</div>
+                    <div class="experience-duration">Mar 2014 - Dec 2017 · 3 yrs 10 mos</div>
+                    <p class="experience-description">
+                        Specialized in TIG welding for aerospace and medical device components. 
+                        Maintained 99.8% pass rate on X-ray inspections. Trained 12 junior welders.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-logo">🔧</div>
+                <div class="experience-content">
+                    <h3 class="experience-title">Apprentice Welder</h3>
+                    <div class="experience-company">Motor City Welding</div>
+                    <div class="experience-duration">Jun 2010 - Feb 2014 · 3 yrs 9 mos</div>
+                    <p class="experience-description">
+                        Completed 4-year apprenticeship program. Gained proficiency in all major 
+                        welding processes and materials. Earned AWS D1.1 structural welding certification.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Skills Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Skills & Endorsements</h2>
+            </div>
+            
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <span class="skill-name">TIG Welding</span>
+                        <span class="skill-level">Expert</span>
+                    </div>
+                    <div class="skill-endorsements">
+                        <i class="fas fa-check-circle" style="color: var(--usta-bronze);"></i>
+                        Endorsed by 142 craftspeople
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <span class="skill-name">MIG Welding</span>
+                        <span class="skill-level">Expert</span>
+                    </div>
+                    <div class="skill-endorsements">
+                        <i class="fas fa-check-circle" style="color: var(--usta-bronze);"></i>
+                        Endorsed by 128 craftspeople
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <span class="skill-name">Structural Welding</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-endorsements">
+                        <i class="fas fa-check-circle" style="color: var(--usta-bronze);"></i>
+                        Endorsed by 96 craftspeople
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-header">
+                        <span class="skill-name">Blueprint Reading</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-endorsements">
+                        <i class="fas fa-check-circle" style="color: var(--usta-bronze);"></i>
+                        Endorsed by 84 craftspeople
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Certifications -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Licenses & Certifications</h2>
+            </div>
+            
+            <div class="cert-item">
+                <div class="cert-icon"><i class="fas fa-certificate"></i></div>
+                <div class="cert-content">
+                    <h4>AWS Certified Welding Inspector (CWI)</h4>
+                    <div class="cert-issuer">American Welding Society · Issued Mar 2019</div>
+                </div>
+            </div>
+            
+            <div class="cert-item">
+                <div class="cert-icon"><i class="fas fa-certificate"></i></div>
+                <div class="cert-content">
+                    <h4>ASME Section IX Welder Performance Qualification</h4>
+                    <div class="cert-issuer">ASME · Issued Jan 2018</div>
+                </div>
+            </div>
+            
+            <div class="cert-item">
+                <div class="cert-icon"><i class="fas fa-certificate"></i></div>
+                <div class="cert-content">
+                    <h4>AWS D1.1 Structural Welding Certification</h4>
+                    <div class="cert-issuer">American Welding Society · Issued Jun 2014</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Portfolio Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">Portfolio</h2>
+                <a href="#" class="btn btn-ghost btn-sm">View All</a>
+            </div>
+            
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <div style="font-weight: 700; margin-bottom: 4px;">Precision TIG Work</div>
+                        <div style="font-size: var(--text-xs);">1.2K validations</div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <div style="font-weight: 700; margin-bottom: 4px;">Structural Beam</div>
+                        <div style="font-size: var(--text-xs);">987 validations</div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <div style="font-weight: 700; margin-bottom: 4px;">Aluminum Fabrication</div>
+                        <div style="font-size: var(--text-xs);">856 validations</div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <div style="font-weight: 700; margin-bottom: 4px;">Pipe Welding</div>
+                        <div style="font-size: var(--text-xs);">743 validations</div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <div style="font-weight: 700; margin-bottom: 4px;">Stainless Steel</div>
+                        <div style="font-size: var(--text-xs);">621 validations</div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        <div style="font-weight: 700; margin-bottom: 4px;">Custom Fabrication</div>
+                        <div style="font-size: var(--text-xs);">534 validations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Follow/Unfollow functionality
+        let isFollowing = false;
+        const userId = 1; // This would come from URL params in real app
+        
+        async function toggleFollow(targetUserId) {
+            const followBtn = document.getElementById('followBtn');
+            const followText = document.getElementById('followText');
+            const icon = followBtn.querySelector('i');
+            
+            // Disable button during API call
+            followBtn.disabled = true;
+            
+            try {
+                let result;
+                
+                if (isFollowing) {
+                    // Unfollow
+                    result = await ustaAPI.unfollowUser(targetUserId);
+                    
+                    if (result.success) {
+                        isFollowing = false;
+                        followText.textContent = 'Follow';
+                        icon.className = 'fas fa-user-plus';
+                        followBtn.classList.remove('btn-secondary');
+                        followBtn.classList.add('btn-primary');
+                        
+                        // Update follower count
+                        updateFollowerCount(-1);
+                    }
+                } else {
+                    // Follow
+                    result = await ustaAPI.followUser(targetUserId);
+                    
+                    if (result.success) {
+                        isFollowing = true;
+                        followText.textContent = 'Following';
+                        icon.className = 'fas fa-check';
+                        followBtn.classList.remove('btn-primary');
+                        followBtn.classList.add('btn-secondary');
+                        
+                        // Update follower count
+                        updateFollowerCount(1);
+                    }
+                }
+                
+                if (!result.success) {
+                    console.log('Follow action failed (demo mode)');
+                    // Still update UI for demo
+                    isFollowing = !isFollowing;
+                    if (isFollowing) {
+                        followText.textContent = 'Following';
+                        icon.className = 'fas fa-check';
+                        followBtn.classList.remove('btn-primary');
+                        followBtn.classList.add('btn-secondary');
+                        updateFollowerCount(1);
+                    } else {
+                        followText.textContent = 'Follow';
+                        icon.className = 'fas fa-user-plus';
+                        followBtn.classList.remove('btn-secondary');
+                        followBtn.classList.add('btn-primary');
+                        updateFollowerCount(-1);
+                    }
+                }
+            } catch (error) {
+                console.error('Follow error:', error);
+            } finally {
+                followBtn.disabled = false;
+            }
+        }
+        
+        function updateFollowerCount(change) {
+            const followerMeta = document.querySelector('[data-followers]');
+            if (followerMeta) {
+                const currentCount = parseInt(followerMeta.textContent.replace(/[^0-9]/g, ''));
+                const newCount = currentCount + change;
+                followerMeta.innerHTML = `<i class="fas fa-users"></i> ${newCount.toLocaleString()} followers`;
+            }
+        }
+        
+        // Check if already following on page load
+        async function checkFollowStatus() {
+            // In real app, check from backend
+            // For now, check localStorage or assume not following
+            isFollowing = false;
+        }
+        
+        // Initialize
+        checkFollowStatus();
+    </script>
+</body>
+</html>

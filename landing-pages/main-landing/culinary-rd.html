@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culinary R&D Platform - Recipe Development & Menu Planning | Iterum Foods</title>
+    <meta name="description" content="Professional recipe development, menu planning, and cost analysis tools for chefs. Transform your culinary creativity into reality.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="unified-colors.css">
+    <link rel="stylesheet" href="../shared-styles.css">
+    
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+        
+        .platform-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+            color: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🍽️</div>
+                <span class="logo-text">Iterum Foods</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#platforms">All Platforms</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="index.html">← Back to Home</a></li>
+                <li><a href="#" class="nav-cta" onclick="openWaitlistModal(); return false;">Join Waitlist</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="hero" style="margin-top: 80px;">
+        <div class="hero-container">
+            <div class="platform-badge">🍽️ Culinary R&D Platform</div>
+            <h1>Transform Your Culinary Creativity Into Reality</h1>
+            <p class="hero-subtitle">
+                Professional recipe development, menu planning, and cost analysis tools designed for chefs who demand excellence.
+            </p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-primary" onclick="openWaitlistModal(); return false;">
+                    <i class="fas fa-rocket"></i> Get Early Access
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features -->
+    <section class="features-section" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">Features</div>
+                <h2>Everything You Need to Excel</h2>
+                <p>Powerful tools designed for professional culinary innovation</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-book"></i></div>
+                    <h3>Recipe Development</h3>
+                    <p>Create, test, and refine recipes with detailed notes, ingredient lists, and step-by-step instructions. Track versions and iterations.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-utensils"></i></div>
+                    <h3>Menu Builder</h3>
+                    <p>Design beautiful menus with drag-and-drop simplicity. Import from PDFs, images, or websites instantly.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-calculator"></i></div>
+                    <h3>Cost Analysis</h3>
+                    <p>Calculate food costs, profit margins, and pricing automatically. Make data-driven decisions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Track recipe performance, menu popularity, and financial metrics. Optimize your offerings.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-history"></i></div>
+                    <h3>Version Control</h3>
+                    <p>Never lose a recipe iteration. Track changes, compare versions, and roll back when needed.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Mobile Access</h3>
+                    <p>Access recipes and menus from any device. Work in the kitchen, at home, or on the go.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>Ready to Transform Your Culinary Process?</h2>
+            <p>Join the waitlist for early access to Culinary R&D Platform</p>
+            <a href="#" class="btn btn-primary btn-large" onclick="openWaitlistModal(); return false;">
+                <i class="fas fa-rocket"></i> Join Waitlist Now
+            </a>
+        </div>
+    </section>
+    
+    <script src="../shared-scripts.js"></script>
+    <script>
+        const PLATFORM_CONFIG = {
+            name: 'Culinary R&D',
+            code: 'culinary',
+            icon: '🍽️'
+        };
+    </script>
+</body>
+</html>
+

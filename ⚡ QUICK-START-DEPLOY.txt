@@ -1,0 +1,73 @@
+🚀 USTA QUICK DEPLOY - 3 STEPS
+═══════════════════════════════════════════════
+
+✅ ALL FILES READY! Backend is deployment-ready!
+
+STEP 1: RAILWAY (30 min)
+────────────────────────
+1. Go to: https://railway.app/
+2. Sign up with GitHub
+3. Click "New Project" → "Deploy from GitHub repo"
+4. Select "usta-backend" (push code to GitHub first)
+5. Add PostgreSQL database (click "+ New" → "Database")
+6. Set environment variables (see guide)
+7. Generate domain
+8. Copy your Railway URL
+
+STEP 2: FIREBASE STORAGE (5 min)
+────────────────────────
+1. Go to: https://console.firebase.google.com/project/usta-app-a86db/storage
+2. Click "Get Started"
+3. Choose "Production mode" → "Done"
+4. Update rules (see guide)
+5. Get Firebase config values
+6. Send me config values
+
+STEP 3: UPDATE & DEPLOY (5 min)
+────────────────────────
+1. Give me your Railway URL
+2. Give me your Firebase config
+3. I'll update the frontend
+4. Deploy: firebase deploy --only hosting
+5. DONE! 🎉
+
+═══════════════════════════════════════════════
+
+WHAT'S READY:
+✅ Dockerfile created
+✅ Railway config ready
+✅ Frontend API updated
+✅ Production dependencies added
+✅ Environment template created
+
+WHAT YOU NEED:
+❓ GitHub account (for Railway)
+❓ 1 hour to deploy
+❓ $0 cost (all free tiers)
+
+═══════════════════════════════════════════════
+
+NEED HELP WITH GITHUB?
+
+Option A: GitHub Desktop (easiest)
+1. Download: https://desktop.github.com/
+2. Create new repo: "usta-backend"
+3. Point to: C:\Users\chefm\Iterum Innovation\Skills App
+4. Publish to GitHub
+
+Option B: Command line
+cd "Skills App"
+git init
+git add .
+git commit -m "Ready for deployment"
+gh repo create usta-backend --public --source=. --push
+
+═══════════════════════════════════════════════
+
+READY? Tell me:
+✅ Have GitHub account?
+✅ Want to deploy now?
+✅ Need help with any step?
+
+Then let's launch! 🚀
+

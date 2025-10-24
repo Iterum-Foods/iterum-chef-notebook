@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Challenge - Usta</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --usta-bronze: #CD7F32;
+            --usta-bronze-dark: #8B5A2B;
+            --usta-navy: #2C3E50;
+            --usta-gold: #FFD700;
+            --usta-green: #2ECC71;
+            --usta-red: #E74C3C;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: white;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Phone Container */
+        .phone-container {
+            width: 100%;
+            max-width: 430px;
+            height: 932px;
+            max-height: 100vh;
+            margin: 0 auto;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .phone-container {
+                border-radius: 40px;
+                border: 12px solid #1f2937;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                margin-top: 20px;
+            }
+        }
+        
+        /* Camera View */
+        .camera-view {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2D3748, #1A202C);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .camera-placeholder {
+            font-size: 6rem;
+            opacity: 0.3;
+        }
+        
+        /* Shot Guide Overlay */
+        .shot-guide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        
+        .guide-header {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+        }
+        
+        .shot-number {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .shot-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--usta-bronze);
+            margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        .shot-instruction {
+            font-size: 1.05rem;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 12px 24px;
+            border-radius: 12px;
+            max-width: 90%;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+            line-height: 1.5;
+        }
+        
+        /* Frame Guides */
+        .frame-guide {
+            position: absolute;
+            border: 3px dashed rgba(205, 127, 50, 0.5);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+        
+        .guide-center {
+            top: 30%;
+            left: 10%;
+            right: 10%;
+            height: 40%;
+        }
+        
+        .guide-label {
+            position: absolute;
+            background: var(--usta-bronze);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Timer */
+        .timer {
+            position: absolute;
+            top: 160px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(205, 127, 50, 0.2);
+            border: 4px solid var(--usta-bronze);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.05);
+                opacity: 0.9;
+            }
+        }
+        
+        /* Recording Controls */
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            pointer-events: all;
+        }
+        
+        .control-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        .record-btn {
+            width: 80px;
+            height: 80px;
+            background: var(--usta-red);
+            border: 5px solid white;
+            position: relative;
+        }
+        
+        .record-btn.recording {
+            border-radius: 15px;
+            animation: recordPulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes recordPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 20px rgba(231, 76, 60, 0);
+            }
+        }
+        
+        /* Progress Indicator */
+        .shot-progress {
+            position: absolute;
+            bottom: 150px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+        
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+        
+        .progress-dot.active {
+            background: var(--usta-bronze);
+            width: 30px;
+            border-radius: 5px;
+        }
+        
+        .progress-dot.completed {
+            background: var(--usta-green);
+        }
+        
+        /* Tips Banner */
+        .tips-banner {
+            position: absolute;
+            bottom: 200px;
+            left: 20px;
+            right: 20px;
+            background: rgba(46, 204, 113, 0.2);
+            border: 2px solid var(--usta-green);
+            border-radius: 12px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .tip-icon {
+            font-size: 1.25rem;
+            margin-right: 8px;
+        }
+        
+        .tip-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(0,0,0,0.7);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Camera View -->
+        <div class="camera-view">
+            <!-- Camera Placeholder -->
+            <i class="fas fa-video camera-placeholder"></i>
+            
+            <!-- Back Button -->
+            <button class="back-btn" onclick="window.location.href='demo.html'">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <!-- Shot Guide Overlay -->
+            <div class="shot-guide">
+                <div class="guide-header">
+                    <div class="shot-number">Shot 1 of 3</div>
+                    <h2 class="shot-title">Show Your Setup</h2>
+                    <p class="shot-instruction">
+                        Display your tools, materials, and workspace. Get everything ready for the demonstration.
+                    </p>
+                </div>
+                
+                <!-- Frame Guide -->
+                <div class="frame-guide guide-center">
+                    <div class="guide-label">Keep subject in frame</div>
+                </div>
+                
+                <!-- Timer -->
+                <div class="timer">
+                    <span id="timerDisplay">10</span>
+                </div>
+                
+                <!-- Shot Progress -->
+                <div class="shot-progress">
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                </div>
+                
+                <!-- Tip Banner -->
+                <div class="tips-banner">
+                    <div style="display: flex; align-items: start;">
+                        <span class="tip-icon">💡</span>
+                        <div class="tip-text">
+                            <strong>Pro Tip:</strong> Make sure your setup is well-lit and all tools are visible. This shot should take exactly 10 seconds.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recording Controls -->
+            <div class="controls">
+                <button class="control-btn" onclick="flipCamera()">
+                    <i class="fas fa-camera-rotate"></i>
+                </button>
+                
+                <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+                    <i class="fas fa-circle" style="font-size: 2rem; color: white;"></i>
+                </button>
+                
+                <button class="control-btn" onclick="window.location.href='demo.html'">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentShot = 1;
+        let isRecording = false;
+        let countdown = 10;
+        let countdownInterval;
+        
+        const shots = [
+            {
+                number: 1,
+                title: "Show Your Setup",
+                instruction: "Display your tools, materials, and workspace. Get everything ready for the demonstration.",
+                duration: 10,
+                tip: "Make sure your setup is well-lit and all tools are visible. This shot should take exactly 10 seconds."
+            },
+            {
+                number: 2,
+                title: "Demonstrate the Skill",
+                instruction: "Perform the skill step-by-step. Show your technique clearly. Keep hands and work in frame.",
+                duration: 40,
+                tip: "Go slow and steady. Most beginners rush this part. Focus on technique, not speed. Camera should be at 45-degree angle."
+            },
+            {
+                number: 3,
+                title: "Show the Result",
+                instruction: "Display your finished work from multiple angles. Highlight quality and attention to detail.",
+                duration: 10,
+                tip: "Show the result close-up. Display both sides if applicable. A clean finish shows mastery."
+            }
+        ];
+        
+        function updateShotDisplay() {
+            const shot = shots[currentShot - 1];
+            
+            document.querySelector('.shot-number').textContent = `Shot ${shot.number} of 3`;
+            document.querySelector('.shot-title').textContent = shot.title;
+            document.querySelector('.shot-instruction').textContent = shot.instruction;
+            document.querySelector('.tip-text').innerHTML = `<strong>Pro Tip:</strong> ${shot.tip}`;
+            document.getElementById('timerDisplay').textContent = shot.duration;
+            countdown = shot.duration;
+            
+            // Update progress dots
+            document.querySelectorAll('.progress-dot').forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index < currentShot - 1) {
+                    dot.classList.add('completed');
+                } else if (index === currentShot - 1) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+        
+        function toggleRecording() {
+            isRecording = !isRecording;
+            const btn = document.getElementById('recordBtn');
+            
+            if (isRecording) {
+                btn.classList.add('recording');
+                startCountdown();
+            } else {
+                btn.classList.remove('recording');
+                stopCountdown();
+            }
+        }
+        
+        function startCountdown() {
+            const shot = shots[currentShot - 1];
+            countdown = shot.duration;
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                document.getElementById('timerDisplay').textContent = countdown;
+                
+                if (countdown <= 0) {
+                    stopCountdown();
+                    nextShot();
+                }
+            }, 1000);
+        }
+        
+        function stopCountdown() {
+            clearInterval(countdownInterval);
+        }
+        
+        function nextShot() {
+            if (currentShot < 3) {
+                currentShot++;
+                updateShotDisplay();
+                
+                // Show transition message
+                showTransition(`Great! Moving to Shot ${currentShot}...`);
+                
+                // Auto-start next shot after 2 seconds
+                setTimeout(() => {
+                    toggleRecording();
+                }, 2000);
+            } else {
+                // All shots complete!
+                completeRecording();
+            }
+        }
+        
+        function completeRecording() {
+            alert('🎉 Recording Complete!\n\nIn the full app:\n\n✓ Preview all 3 shots\n✓ Retake any shot\n✓ Add caption & hashtags\n✓ Post to your profile\n✓ Earn +50 XP!\n\nThis demo shows the guided recording experience.');
+            window.location.href = 'demo.html';
+        }
+        
+        function showTransition(message) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(205, 127, 50, 0.95);
+                color: white;
+                padding: 24px 48px;
+                border-radius: 16px;
+                font-size: 1.25rem;
+                font-weight: 800;
+                z-index: 1000;
+                animation: fadeInOut 2s ease-in-out;
+            `;
+            overlay.textContent = message;
+            document.body.appendChild(overlay);
+            
+            setTimeout(() => {
+                document.body.removeChild(overlay);
+            }, 2000);
+        }
+        
+        function flipCamera() {
+            alert('📸 Camera Flipped\n\nSwitched to front camera\n(In full app)');
+        }
+        
+        // Initialize
+        updateShotDisplay();
+        
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+

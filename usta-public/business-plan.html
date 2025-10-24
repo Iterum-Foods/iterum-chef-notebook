@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usta - Business Plan | $1.5M Seed Round</title>
+    
+    <link rel="stylesheet" href="css/usta-clean.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: white;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 1000;
+            padding: var(--space-4) 0;
+        }
+        
+        .sticky-nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--usta-navy) 0%, var(--gray-900) 100%);
+            color: white;
+            padding: 100px var(--space-6) var(--space-20);
+            text-align: center;
+        }
+        
+        .hero h1 {
+            color: white;
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-4);
+        }
+        
+        .hero-subtitle {
+            font-size: var(--text-xl);
+            color: rgba(255,255,255,0.9);
+            max-width: 700px;
+            margin: 0 auto var(--space-6);
+        }
+        
+        .hero-meta {
+            display: flex;
+            gap: var(--space-8);
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: var(--text-base);
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        /* Content Container */
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-12) var(--space-6);
+        }
+        
+        /* Table of Contents */
+        .toc {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: var(--space-6);
+            margin-bottom: var(--space-12);
+        }
+        
+        .toc h2 {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-4);
+        }
+        
+        .toc-list {
+            list-style: none;
+        }
+        
+        .toc-list li {
+            padding: var(--space-2) 0;
+        }
+        
+        .toc-list a {
+            color: var(--gray-700);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .toc-list a:hover {
+            color: var(--usta-bronze);
+        }
+        
+        /* Section */
+        .section {
+            margin-bottom: var(--space-16);
+            padding-bottom: var(--space-12);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-number {
+            color: var(--usta-bronze);
+            font-weight: 700;
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .section h2 {
+            font-size: var(--text-3xl);
+            margin-bottom: var(--space-6);
+            color: var(--gray-900);
+        }
+        
+        .section h3 {
+            font-size: var(--text-xl);
+            margin-top: var(--space-8);
+            margin-bottom: var(--space-4);
+            color: var(--gray-900);
+        }
+        
+        .section p {
+            font-size: var(--text-base);
+            line-height: 1.8;
+            color: var(--gray-700);
+            margin-bottom: var(--space-4);
+        }
+        
+        .section ul {
+            margin-left: var(--space-6);
+            margin-bottom: var(--space-4);
+        }
+        
+        .section li {
+            font-size: var(--text-base);
+            line-height: 1.8;
+            color: var(--gray-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        /* Highlight Boxes */
+        .highlight-box {
+            background: var(--gray-50);
+            border-left: 4px solid var(--usta-bronze);
+            padding: var(--space-6);
+            margin: var(--space-6) 0;
+            border-radius: 8px;
+        }
+        
+        .highlight-box strong {
+            color: var(--gray-900);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+            margin: var(--space-6) 0;
+        }
+        
+        .stat-box {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: var(--space-5);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--usta-bronze);
+            margin-bottom: var(--space-2);
+        }
+        
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+        }
+        
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--space-6) 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background: var(--gray-50);
+        }
+        
+        th {
+            padding: var(--space-4);
+            text-align: left;
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        td {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover {
+            background: var(--gray-50);
+        }
+        
+        /* Quote */
+        .quote {
+            font-size: var(--text-xl);
+            font-style: italic;
+            color: var(--gray-600);
+            text-align: center;
+            padding: var(--space-8);
+            margin: var(--space-8) 0;
+            border-top: 1px solid var(--gray-200);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .quote strong {
+            color: var(--usta-bronze);
+        }
+        
+        /* CTA Box */
+        .cta-box {
+            background: var(--usta-bronze);
+            color: white;
+            padding: var(--space-8);
+            border-radius: 16px;
+            text-align: center;
+            margin: var(--space-12) 0;
+        }
+        
+        .cta-box h3 {
+            color: white;
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-4);
+        }
+        
+        .cta-box p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: var(--space-6);
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: var(--text-sm);
+            }
+            
+            th, td {
+                padding: var(--space-3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Navigation -->
+    <div class="sticky-nav">
+        <div class="sticky-nav-content">
+            <div class="nav-title">🔨 Usta Business Plan</div>
+            <div class="nav-actions">
+                <a href="index.html" class="btn btn-ghost btn-sm">← Investor Hub</a>
+                <a href="pitch.html" class="btn btn-primary btn-sm">View Pitch Deck</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hero -->
+    <div class="hero">
+        <h1>🔨 Usta Business Plan</h1>
+        <p class="hero-subtitle">
+            The Professional Network for 50 Million Skilled Workers
+        </p>
+        <div class="hero-meta">
+            <span><i class="fas fa-calendar"></i> October 2025</span>
+            <span><i class="fas fa-chart-line"></i> $50B Market</span>
+            <span><i class="fas fa-users"></i> 50M Target Users</span>
+        </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="content-container">
+        <!-- Executive Summary -->
+        <div class="section">
+            <div class="section-number">Executive Summary</div>
+            <h2>The Opportunity</h2>
+            
+            <div class="highlight-box">
+                <p style="font-size: var(--text-lg); line-height: 1.8; margin: 0;">
+                    <strong>Usta</strong> (Turkish: "master craftsman") is the first platform combining 
+                    TikTok's ease, LinkedIn's professional value, and Duolingo's gamification into one 
+                    seamless experience for skilled professionals.
+                </p>
+            </div>
+            
+            <p>
+                By enabling Master Ustas to create trend-based skill challenges with guided recording templates, 
+                we remove the creative pressure from portfolio building. Users simply follow trending challenges, 
+                record using step-by-step guides, and get validated by professionals—building credible portfolios automatically.
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">$50B</div>
+                    <div class="stat-label">Market Opportunity</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">50M</div>
+                    <div class="stat-label">US Professionals</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">$1.5M</div>
+                    <div class="stat-label">Seed Round</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">$42M</div>
+                    <div class="stat-label">Year 5 Revenue</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h2>Table of Contents</h2>
+            <ul class="toc-list">
+                <li><a href="#market">1. Market Opportunity <span>→</span></a></li>
+                <li><a href="#problem">2. The Problem <span>→</span></a></li>
+                <li><a href="#solution">3. The Solution <span>→</span></a></li>
+                <li><a href="#business-model">4. Business Model <span>→</span></a></li>
+                <li><a href="#gtm">5. Go-to-Market Strategy <span>→</span></a></li>
+                <li><a href="#competitive">6. Competitive Analysis <span>→</span></a></li>
+                <li><a href="#product">7. Product Roadmap <span>→</span></a></li>
+                <li><a href="#team">8. Team & Execution <span>→</span></a></li>
+                <li><a href="#financials">9. Financial Projections <span>→</span></a></li>
+                <li><a href="#ask">10. The Ask <span>→</span></a></li>
+            </ul>
+        </div>
+        
+        <!-- 1. Market Opportunity -->
+        <div class="section" id="market">
+            <div class="section-number">Section 1</div>
+            <h2>Market Opportunity</h2>
+            
+            <h3>Total Addressable Market (TAM)</h3>
+            <p>
+                The skilled professional market represents one of the largest underserved segments 
+                in professional networking and training:
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>US Professionals</th>
+                        <th>Market Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Skilled Trades (welding, electrical, plumbing)</td>
+                        <td>15M</td>
+                        <td>$18B</td>
+                    </tr>
+                    <tr>
+                        <td>Healthcare Professionals</td>
+                        <td>10M</td>
+                        <td>$12B</td>
+                    </tr>
+                    <tr>
+                        <td>Tech Professionals</td>
+                        <td>8M</td>
+                        <td>$10B</td>
+                    </tr>
+                    <tr>
+                        <td>Creative Professionals</td>
+                        <td>12M</td>
+                        <td>$6B</td>
+                    </tr>
+                    <tr>
+                        <td>Culinary Professionals</td>
+                        <td>2M</td>
+                        <td>$2B</td>
+                    </tr>
+                    <tr>
+                        <td>Others (beauty, fitness, education)</td>
+                        <td>3M</td>
+                        <td>$2B</td>
+                    </tr>
+                    <tr style="background: var(--gray-50); font-weight: 700;">
+                        <td><strong>TOTAL</strong></td>
+                        <td><strong>50M</strong></td>
+                        <td><strong>$50B</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight-box">
+                <strong>Key Insight:</strong> LinkedIn serves white-collar workers. Instagram isn't professional. 
+                YouTube is passive. <strong>50 million skilled workers have no platform.</strong>
+            </div>
+            
+            <h3>Market Growth</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">8%</div>
+                    <div class="stat-label">Skills Training CAGR</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">15%</div>
+                    <div class="stat-label">Online Learning Growth</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">40%</div>
+                    <div class="stat-label">Video Education Increase</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">200M</div>
+                    <div class="stat-label">Global Opportunity</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 2. The Problem -->
+        <div class="section" id="problem">
+            <div class="section-number">Section 2</div>
+            <h2>The Problem</h2>
+            
+            <h3>For Skilled Workers:</h3>
+            <ul>
+                <li><strong>No way to showcase skills:</strong> LinkedIn is text-based. Instagram isn't professional. Portfolios are hard to build.</li>
+                <li><strong>Creative pressure:</strong> What should I create? How do I film it? Is it good enough?</li>
+                <li><strong>Can't prove abilities:</strong> Resumes show claims, not proof of actual skills.</li>
+                <li><strong>Fragmented presence:</strong> Skills scattered across multiple platforms.</li>
+                <li><strong>Weak professional network:</strong> LinkedIn is too generic, not industry-specific.</li>
+                <li><strong>No practice system:</strong> Hard to stay sharp and improve consistently.</li>
+            </ul>
+            
+            <h3>For Employers:</h3>
+            <ul>
+                <li><strong>Can't assess real skills:</strong> Resumes show experience, not actual capability.</li>
+                <li><strong>Expensive recruitment:</strong> $3-5K per hire, 45+ days to fill positions.</li>
+                <li><strong>High turnover:</strong> 73% leave in first year due to skill mismatch.</li>
+                <li><strong>Time-consuming:</strong> Review hundreds of resumes manually.</li>
+                <li><strong>No verification:</strong> Can't trust claimed abilities without testing.</li>
+            </ul>
+            
+            <div class="quote">
+                "$12B spent annually on recruitment, training, and professional networking—
+                with <strong>no platform that works for skilled trades.</strong>"
+            </div>
+        </div>
+        
+        <!-- 3. The Solution -->
+        <div class="section" id="solution">
+            <div class="section-number">Section 3</div>
+            <h2>The Usta Solution</h2>
+            
+            <div class="highlight-box">
+                <strong>Core Innovation:</strong> Trend-based skill challenges created by Master Ustas. 
+                No creative pressure—just follow the guide, demonstrate your skill, get validated.
+            </div>
+            
+            <h3>How It Works:</h3>
+            <ol style="margin-left: var(--space-6); line-height: 2;">
+                <li><strong>Master Usta posts #WeldingBasics challenge</strong> with perfect technique</li>
+                <li><strong>Includes recording guide:</strong> "Shot 1: Setup, Shot 2: Weld, Shot 3: Result"</li>
+                <li><strong>Users tap "Try This Challenge"</strong></li>
+                <li><strong>App guides them</strong> through exact same shots</li>
+                <li><strong>Users record their version</strong></li>
+                <li><strong>Post & get validated</strong> by professionals</li>
+                <li><strong>Skill added to portfolio</strong> automatically</li>
+                <li><strong>Earn XP, level up,</strong> build credibility</li>
+            </ol>
+            
+            <h3>Platform Features:</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin: var(--space-6) 0;">
+                <div style="padding: var(--space-4); background: var(--gray-50); border-radius: 12px;">
+                    <strong style="color: var(--gray-900);">🎥 Video-First Feed</strong><br>
+                    <span style="color: var(--gray-600); font-size: var(--text-sm);">TikTok-style vertical scrolling</span>
+                </div>
+                <div style="padding: var(--space-4); background: var(--gray-50); border-radius: 12px;">
+                    <strong style="color: var(--gray-900);">🎯 Guided Challenges</strong><br>
+                    <span style="color: var(--gray-600); font-size: var(--text-sm);">Step-by-step recording templates</span>
+                </div>
+                <div style="padding: var(--space-4); background: var(--gray-50); border-radius: 12px;">
+                    <strong style="color: var(--gray-900);">✅ Peer Validation</strong><br>
+                    <span style="color: var(--gray-600); font-size: var(--text-sm);">Community-verified skills</span>
+                </div>
+                <div style="padding: var(--space-4); background: var(--gray-50); border-radius: 12px;">
+                    <strong style="color: var(--gray-900);">🏆 Gamification</strong><br>
+                    <span style="color: var(--gray-600); font-size: var(--text-sm);">XP, levels, streaks, achievements</span>
+                </div>
+                <div style="padding: var(--space-4); background: var(--gray-50); border-radius: 12px;">
+                    <strong style="color: var(--gray-900);">👥 Communities</strong><br>
+                    <span style="color: var(--gray-600); font-size: var(--text-sm);">Craft-specific groups</span>
+                </div>
+                <div style="padding: var(--space-4); background: var(--gray-50); border-radius: 12px;">
+                    <strong style="color: var(--gray-900);">💼 Job Board</strong><br>
+                    <span style="color: var(--gray-600); font-size: var(--text-sm);">Get discovered by employers</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 4. Business Model -->
+        <div class="section" id="business-model">
+            <div class="section-number">Section 4</div>
+            <h2>Business Model & Monetization</h2>
+            
+            <p>Multi-sided marketplace connecting craftspeople, employers, and educators.</p>
+            
+            <h3>Revenue Streams:</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stream</th>
+                        <th>Target</th>
+                        <th>Price</th>
+                        <th>Year 1 Rev</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Job Board</strong></td>
+                        <td>Employers</td>
+                        <td>$299/mo or $99/post</td>
+                        <td>$480K</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Premium Users</strong></td>
+                        <td>Professionals</td>
+                        <td>$9.99/mo</td>
+                        <td>$180K</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Masterclass Courses</strong></td>
+                        <td>Users</td>
+                        <td>$49-$199/course</td>
+                        <td>$120K</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sponsored Challenges</strong></td>
+                        <td>Brands/Tools</td>
+                        <td>$5K-$25K/challenge</td>
+                        <td>$150K</td>
+                    </tr>
+                    <tr style="background: var(--gray-50); font-weight: 700;">
+                        <td colspan="3"><strong>TOTAL YEAR 1</strong></td>
+                        <td><strong>$930K</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight-box">
+                <strong>Unit Economics:</strong><br>
+                • CAC: $12 (organic growth + community)<br>
+                • LTV: $175 (14.6:1 ratio)<br>
+                • Gross Margin: 85%<br>
+                • Payback Period: 3 months
+            </div>
+        </div>
+        
+        <!-- 5. Go-to-Market -->
+        <div class="section" id="gtm">
+            <div class="section-number">Section 5</div>
+            <h2>Go-to-Market Strategy</h2>
+            
+            <h3>Phase 1: Community Seeding (Months 1-3)</h3>
+            <ul>
+                <li>Launch with 5 craft communities: Welding, Culinary, Electrical, Automotive, Carpentry</li>
+                <li>Recruit 25 Master Ustas per craft (125 total)</li>
+                <li>Each Master Usta brings 50-100 followers</li>
+                <li>Target: 10K users by Month 3</li>
+            </ul>
+            
+            <h3>Phase 2: Viral Growth (Months 4-9)</h3>
+            <ul>
+                <li>Challenge virality (TikTok mechanics)</li>
+                <li>Cross-craft discovery</li>
+                <li>Employer partnerships</li>
+                <li>Target: 75K users by Month 9</li>
+            </ul>
+            
+            <h3>Phase 3: Scale (Months 10-18)</h3>
+            <ul>
+                <li>Expand to 20 craft categories</li>
+                <li>Launch job board monetization</li>
+                <li>Premium features rollout</li>
+                <li>Target: 250K users by Month 18</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <strong>Growth Drivers:</strong> Viral challenges (50% of growth), Master Usta recruitment (30%), 
+                word-of-mouth (15%), paid acquisition (5%)
+            </div>
+        </div>
+        
+        <!-- 6. Competitive Analysis -->
+        <div class="section" id="competitive">
+            <div class="section-number">Section 6</div>
+            <h2>Competitive Landscape</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Strengths</th>
+                        <th>Weaknesses for Skilled Trades</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>LinkedIn</strong></td>
+                        <td>Professional network, credibility</td>
+                        <td>Text-based, white-collar focus, can't show skills</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Instagram</strong></td>
+                        <td>Visual, social, easy to use</td>
+                        <td>Not professional, no validation, no career growth</td>
+                    </tr>
+                    <tr>
+                        <td><strong>YouTube</strong></td>
+                        <td>Video platform, large audience</td>
+                        <td>Passive viewing, not skill-building, high production</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Indeed/ZipRecruiter</strong></td>
+                        <td>Job boards, large employer base</td>
+                        <td>No portfolios, no skill verification, resume-based</td>
+                    </tr>
+                    <tr style="background: rgba(205, 127, 50, 0.1);">
+                        <td><strong>Usta</strong></td>
+                        <td>Video portfolios, skill validation, gamification, community</td>
+                        <td>New platform (building network effects)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="quote">
+                "We're not competing with LinkedIn. We're serving the <strong>50M workers LinkedIn forgot.</strong>"
+            </div>
+        </div>
+        
+        <!-- 7. Product Roadmap -->
+        <div class="section" id="product">
+            <div class="section-number">Section 7</div>
+            <h2>Product Roadmap</h2>
+            
+            <h3>Q1 2026: MVP Launch</h3>
+            <ul>
+                <li>✅ User signup & profiles</li>
+                <li>✅ Video feed (TikTok-style)</li>
+                <li>✅ Skill validation system</li>
+                <li>✅ XP & leveling (gamification)</li>
+                <li>⏳ Video upload & challenges</li>
+                <li>⏳ Follow system</li>
+            </ul>
+            
+            <h3>Q2 2026: Community Features</h3>
+            <ul>
+                <li>Craft-specific communities</li>
+                <li>Messaging & DMs</li>
+                <li>Notifications</li>
+                <li>Advanced profiles (work experience)</li>
+            </ul>
+            
+            <h3>Q3 2026: Monetization Launch</h3>
+            <ul>
+                <li>Job board (employer postings)</li>
+                <li>Premium subscriptions</li>
+                <li>Sponsored challenges</li>
+                <li>Analytics for users</li>
+            </ul>
+            
+            <h3>Q4 2026: Scale & Growth</h3>
+            <ul>
+                <li>Masterclass-style courses</li>
+                <li>Live streaming</li>
+                <li>Mobile apps (iOS/Android)</li>
+                <li>International expansion</li>
+            </ul>
+        </div>
+        
+        <!-- 8. Team -->
+        <div class="section" id="team">
+            <div class="section-number">Section 8</div>
+            <h2>Team & Execution</h2>
+            
+            <h3>Founding Team</h3>
+            <div style="background: var(--gray-50); padding: var(--space-6); border-radius: 12px; margin: var(--space-6) 0;">
+                <div style="display: grid; grid-template-columns: 100px 1fr; gap: var(--space-4); align-items: center;">
+                    <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--usta-bronze); display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                        👨‍🍳
+                    </div>
+                    <div>
+                        <h4 style="font-size: var(--text-xl); margin-bottom: var(--space-2);">Technical Founder</h4>
+                        <p style="color: var(--gray-600); margin-bottom: var(--space-3);">
+                            <strong>Background:</strong> Culinary professional + full-stack software engineer<br>
+                            <strong>Experience:</strong> Built 4 restaurant tech platforms, understands the market firsthand<br>
+                            <strong>Execution:</strong> Bootstrapped working MVP in 8 weeks, solo developer
+                        </p>
+                        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+                            <span class="badge badge-bronze">Full-Stack Engineer</span>
+                            <span class="badge badge-bronze">Culinary Professional</span>
+                            <span class="badge badge-bronze">Fast Executor</span>
+                            <span class="badge badge-bronze">Market Expert</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Why We'll Win:</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">🎯</div>
+                    <div class="stat-label" style="font-weight: 700; color: var(--gray-900); margin-bottom: var(--space-2);">Market Expertise</div>
+                    <div class="stat-label">Deep understanding of craftsperson needs from lived experience</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">⚡</div>
+                    <div class="stat-label" style="font-weight: 700; color: var(--gray-900); margin-bottom: var(--space-2);">Fast Execution</div>
+                    <div class="stat-label">MVP built in 8 weeks. Ships features daily.</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">💰</div>
+                    <div class="stat-label" style="font-weight: 700; color: var(--gray-900); margin-bottom: var(--space-2);">Capital Efficient</div>
+                    <div class="stat-label">Bootstrapped to working product. Stretches every dollar.</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 2rem; margin-bottom: var(--space-2);">🔧</div>
+                    <div class="stat-label" style="font-weight: 700; color: var(--gray-900); margin-bottom: var(--space-2);">Technical Strength</div>
+                    <div class="stat-label">Solo-built frontend, backend, design, and infrastructure</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 9. Financial Projections -->
+        <div class="section" id="financials">
+            <div class="section-number">Section 9</div>
+            <h2>Financial Projections</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Year 1</th>
+                        <th>Year 2</th>
+                        <th>Year 3</th>
+                        <th>Year 5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Users</strong></td>
+                        <td>50K</td>
+                        <td>250K</td>
+                        <td>750K</td>
+                        <td>2M</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Revenue</strong></td>
+                        <td>$930K</td>
+                        <td>$4.2M</td>
+                        <td>$12.8M</td>
+                        <td>$42M</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gross Margin</strong></td>
+                        <td>72%</td>
+                        <td>78%</td>
+                        <td>82%</td>
+                        <td>85%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CAC</strong></td>
+                        <td>$15</td>
+                        <td>$12</td>
+                        <td>$10</td>
+                        <td>$8</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LTV</strong></td>
+                        <td>$150</td>
+                        <td>$165</td>
+                        <td>$175</td>
+                        <td>$185</td>
+                    </tr>
+                    <tr style="background: var(--gray-50);">
+                        <td><strong>LTV/CAC</strong></td>
+                        <td><strong>10:1</strong></td>
+                        <td><strong>13.8:1</strong></td>
+                        <td><strong>17.5:1</strong></td>
+                        <td><strong>23:1</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight-box">
+                <strong>Path to Profitability:</strong> Break-even at 150K users (Month 15). 
+                Profitable by Year 2 with 40% net margins by Year 3.
+            </div>
+        </div>
+        
+        <!-- 10. The Ask -->
+        <div class="section" id="ask">
+            <div class="section-number">Section 10</div>
+            <h2>The Ask</h2>
+            
+            <div class="highlight-box">
+                <p style="font-size: var(--text-xl); margin: 0;">
+                    <strong>Raising: $1.5M Seed Round</strong><br>
+                    <strong>Valuation: $8M pre-money ($9.5M post)</strong><br>
+                    <strong>Use of Funds: 18-month runway to 250K users</strong>
+                </p>
+            </div>
+            
+            <h3>Use of Funds:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Engineering (2 hires)</strong></td>
+                        <td>$450K</td>
+                        <td>Mobile apps, scale backend, features</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Community (3 hires)</strong></td>
+                        <td>$300K</td>
+                        <td>Recruit Master Ustas, manage communities</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Marketing</strong></td>
+                        <td>$350K</td>
+                        <td>Paid acquisition, influencer partnerships</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operations</strong></td>
+                        <td>$250K</td>
+                        <td>Infrastructure, tools, legal, admin</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reserve</strong></td>
+                        <td>$150K</td>
+                        <td>Buffer, opportunities</td>
+                    </tr>
+                    <tr style="background: var(--gray-50); font-weight: 700;">
+                        <td><strong>TOTAL</strong></td>
+                        <td><strong>$1.5M</strong></td>
+                        <td><strong>18-month runway</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Key Milestones:</h3>
+            <ul>
+                <li><strong>Month 6:</strong> 50K users, $500K ARR</li>
+                <li><strong>Month 12:</strong> 150K users, $2M ARR, break-even</li>
+                <li><strong>Month 18:</strong> 250K users, $4M ARR, profitable</li>
+                <li><strong>Month 24:</strong> Series A ready (500K+ users, $8M ARR)</li>
+            </ul>
+        </div>
+        
+        <!-- CTA -->
+        <div class="cta-box">
+            <h3>Ready to Discuss?</h3>
+            <p>
+                We're building the professional network for 50M skilled workers. 
+                Join us in creating a platform that empowers craftspeople worldwide.
+            </p>
+            <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+                <a href="mailto:your@email.com" class="btn btn-lg" style="background: white; color: var(--usta-bronze);">
+                    <i class="fas fa-envelope"></i>
+                    Schedule Meeting
+                </a>
+                <a href="pitch.html" class="btn btn-lg" style="background: transparent; color: white; border: 2px solid white;">
+                    <i class="fas fa-presentation"></i>
+                    View Pitch Deck
+                </a>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="text-align: center; padding: var(--space-8) 0; color: var(--gray-500); font-size: var(--text-sm);">
+            <p style="margin-bottom: var(--space-2);">🔨 <strong style="color: var(--usta-bronze);">usta</strong></p>
+            <p>© 2025 Usta. All rights reserved. | 
+                <a href="index.html" style="color: var(--usta-bronze);">Investor Hub</a> | 
+                <a href="landing.html" style="color: var(--usta-bronze);">Public Landing</a> |
+                <a href="USTA-BUSINESS-PLAN.md" target="_blank" style="color: var(--usta-bronze);">Download PDF</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
