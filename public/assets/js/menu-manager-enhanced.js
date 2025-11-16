@@ -13,32 +13,93 @@ class EnhancedMenuManager {
 
   async init() {
     console.log('🍽️ Enhanced Menu Manager initialized');
+    
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        this.setupAfterDOMReady();
+      });
+    } else {
+      // DOM is already ready
+      this.setupAfterDOMReady();
+    }
+  }
+
+  async setupAfterDOMReady() {
     await this.loadMenu();
-    this.setupEventListeners();
+    // Use setTimeout to ensure all elements are rendered
+    setTimeout(() => {
+      this.setupEventListeners();
+    }, 100);
   }
 
   /**
-   * Load menu data
+   * Load menu data from local storage or Firestore
    */
   async loadMenu() {
     const projectId = this.getCurrentProjectId();
     const menuKey = `${this.storageKey}_${projectId}`;
-    
-    const saved = localStorage.getItem(menuKey);
-    if (saved) {
+    let hasLocal = false;
+
+    const storedMenu = localStorage.getItem(menuKey);
+    if (storedMenu) {
       try {
-        const data = JSON.parse(saved);
-        this.currentMenu = data.menu;
-        this.menuItems = data.items || [];
-        console.log('📋 Loaded menu with', this.menuItems.length, 'items');
+        const parsed = JSON.parse(storedMenu);
+        this.currentMenuData = parsed;
+        this.currentMenu = parsed?.menu || null;
+        this.menuItems = Array.isArray(parsed?.items) ? parsed.items : [];
+        hasLocal = true;
       } catch (error) {
-        console.error('Error loading menu:', error);
-        this.initializeNewMenu();
+        console.warn('⚠️ Unable to parse local menu store, ignoring.', error);
       }
-    } else {
-      this.initializeNewMenu();
     }
-    
+
+    if (!hasLocal) {
+      const legacyKey = `menu_${this.getCurrentUserId?.() || ''}`;
+      const legacyMenu = localStorage.getItem(legacyKey);
+      if (legacyMenu) {
+        try {
+          const parsedLegacy = JSON.parse(legacyMenu);
+          this.currentMenuData = { menu: parsedLegacy, items: parsedLegacy?.items || [] };
+          this.currentMenu = parsedLegacy;
+          this.menuItems = parsedLegacy?.items || [];
+          hasLocal = true;
+        } catch (error) {
+          console.warn('⚠️ Unable to parse legacy menu store, ignoring.', error);
+        }
+      }
+    }
+
+    let remoteSnapshot = null;
+    if (window.firestoreSync?.fetchLatestMenuSnapshot) {
+      remoteSnapshot = await window.firestoreSync.fetchLatestMenuSnapshot(projectId).catch((error) => {
+        console.warn('⚠️ Menu snapshot fetch skipped:', error?.message || error);
+        return null;
+      });
+    }
+
+    if (remoteSnapshot) {
+      const remoteUpdatedAt = Date.parse(remoteSnapshot.updatedAt || remoteSnapshot.syncedAt || 0);
+      const localUpdatedAt = Date.parse(this.currentMenu?.updatedAt || this.currentMenuData?.menu?.updatedAt || 0);
+
+      if (!hasLocal || (remoteUpdatedAt && remoteUpdatedAt > localUpdatedAt)) {
+        this.currentMenuData = {
+          menu: remoteSnapshot.menu || null,
+          items: Array.isArray(remoteSnapshot.items) ? remoteSnapshot.items : [],
+        };
+        this.currentMenu = this.currentMenuData.menu;
+        this.menuItems = this.currentMenuData.items;
+
+        localStorage.setItem(menuKey, JSON.stringify(this.currentMenuData));
+
+        if (remoteSnapshot.links && window.menuRecipeIntegration?.storageKey) {
+          localStorage.setItem(window.menuRecipeIntegration.storageKey, JSON.stringify(remoteSnapshot.links));
+        }
+
+        console.log('☁️ Menu loaded from Firestore snapshot');
+      }
+    }
+
     this.renderMenuItems();
   }
 
@@ -46,11 +107,13 @@ class EnhancedMenuManager {
    * Initialize new menu
    */
   initializeNewMenu() {
+    const projectId = this.getCurrentProjectId();
     this.currentMenu = {
       id: `menu_${Date.now()}`,
       name: 'New Menu',
       description: '',
       version: '1.0',
+      projectId: projectId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -79,12 +142,49 @@ class EnhancedMenuManager {
         project: projectId
       });
     }
+
+    await this.syncToCloud();
+
+    window.dispatchEvent(new CustomEvent('menuWorkflowUpdated', {
+      detail: {
+        projectId,
+        menuId: this.currentMenu?.id || null,
+        itemCount: this.menuItems.length
+      }
+    }));
+  }
+
+  async syncToCloud(options = {}) {
+    if (!window.firestoreSync?.saveMenuSnapshot) {
+      return false;
+    }
+
+    const projectId = this.getCurrentProjectId();
+    try {
+      await window.firestoreSync.saveMenuSnapshot({
+        projectId,
+        menu: this.currentMenu,
+        items: this.menuItems,
+        links: window.menuRecipeIntegration?.getMenuRecipeLinks?.() || {},
+        userId: options.userId
+      });
+      return true;
+    } catch (error) {
+      console.warn('⚠️ Menu cloud sync skipped:', error.message || error);
+      return false;
+    }
   }
 
   /**
    * Add menu item (with recipe integration)
    */
-  async addMenuItem(itemData, createRecipe = true) {
+  async addMenuItem(itemData, createRecipe = true, options = {}) {
+    const {
+      skipSave = false,
+      skipRender = false,
+      skipToast = false
+    } = options;
+
     try {
       // Create menu item
       const menuItem = {
@@ -95,6 +195,11 @@ class EnhancedMenuManager {
         price: parseFloat(itemData.price) || 0,
         allergens: itemData.allergens || [],
         dietaryInfo: itemData.dietaryInfo || [],
+        projectedCovers: itemData.projectedCovers || 0,
+        portionSize: itemData.portionSize || '',
+        prepStation: itemData.prepStation || 'General',
+        prepLeadTime: itemData.prepLeadTime || 0,
+        serviceNotes: itemData.serviceNotes || '',
         spiceLevel: itemData.spiceLevel || 'mild',
         isSignature: itemData.isSignature || false,
         isNew: itemData.isNew || false,
@@ -115,17 +220,30 @@ class EnhancedMenuManager {
       if (createRecipe && window.menuRecipeIntegration) {
         const recipe = await window.menuRecipeIntegration.createRecipeStubForMenuItem(menuItem);
         menuItem.recipeId = recipe.id;
+        menuItem.recipeLinkStatus = 'stub';
+        menuItem.recipeName = recipe.name || menuItem.name;
         
-        this.showToast(`✅ Menu item added! Recipe draft created.`, 'success');
+        if (!skipToast) {
+          this.showToast(`✅ Menu item added! Recipe draft created.`, 'success');
+        }
+        menuItem.recipeId = recipe.id;
+        menuItem.recipeLinkStatus = recipe.id ? 'linked' : menuItem.recipeLinkStatus || 'stub';
+        menuItem.recipeName = recipe.title || recipe.name || menuItem.name;
       } else {
-        this.showToast(`✅ Menu item "${menuItem.name}" added!`, 'success');
+        if (!skipToast) {
+          this.showToast(`✅ Menu item "${menuItem.name}" added!`, 'success');
+        }
       }
 
       // Save menu
-      await this.saveMenu();
+      if (!skipSave) {
+        await this.saveMenu();
+      }
 
       // Refresh display
-      this.renderMenuItems();
+      if (!skipRender) {
+        this.renderMenuItems();
+      }
 
       // Analytics
       if (window.analyticsTracker) {
@@ -140,9 +258,49 @@ class EnhancedMenuManager {
 
     } catch (error) {
       console.error('Error adding menu item:', error);
-      this.showToast('❌ Error adding menu item', 'error');
+      if (!skipToast) {
+        this.showToast('❌ Error adding menu item', 'error');
+      }
       throw error;
     }
+  }
+
+  async createMenuFromImport(importData = {}) {
+    const projectId = this.getCurrentProjectId();
+    const now = new Date().toISOString();
+
+    this.currentMenu = {
+      id: `menu_${Date.now()}`,
+      name: importData.name || 'Imported Menu',
+      description: importData.description || '',
+      type: importData.type || 'imported',
+      projectId,
+      createdAt: now,
+      updatedAt: now,
+      source: 'import'
+    };
+
+    this.menuItems = [];
+    await this.saveMenu();
+
+    if (Array.isArray(importData.items) && importData.items.length) {
+      for (const item of importData.items) {
+        await this.addMenuItem({
+          name: item.name,
+          description: item.description || '',
+          category: item.category || 'Main Courses',
+          price: item.price || 0,
+          allergens: item.allergens || [],
+          dietaryInfo: item.dietaryInfo || [],
+          prepStation: item.prepStation || 'General'
+        }, true, { skipSave: true, skipRender: true, skipToast: true });
+      }
+    }
+
+    await this.saveMenu();
+    this.renderMenuItems();
+    this.showToast(`✅ Created "${this.currentMenu.name}" with ${this.menuItems.length} items!`, 'success');
+    return this.currentMenu;
   }
 
   /**
@@ -224,7 +382,7 @@ class EnhancedMenuManager {
           <div class="empty-state-icon">🍽️</div>
           <h3>No Menu Items Yet</h3>
           <p>Add your first menu item to get started</p>
-          <button class="btn btn-primary" onclick="window.enhancedMenuManager.showAddItemModal()">
+          <button class="btn btn-primary" onclick="window.showAddItemModal()">
             ➕ Add Menu Item
           </button>
         </div>
@@ -318,16 +476,19 @@ class EnhancedMenuManager {
           ` : ''}
         </div>
 
+        <div class="menu-item-meta" style="margin-top: 8px;">
+          <span class="menu-item-station">👩‍🍳 Station: ${item.prepStation || 'General'}</span>
+          ${item.projectedCovers ? `<span class="menu-item-covers">🍽️ Covers: ${item.projectedCovers}</span>` : ''}
+        </div>
+
+        ${item.serviceNotes ? `
+          <div class="menu-item-service-notes">
+            <strong>Service Notes:</strong> ${item.serviceNotes}
+          </div>
+        ` : ''}
+ 
         <div class="menu-item-actions">
-          ${recipeStatus && recipeStatus.recipeId ? `
-            <button class="btn btn-primary btn-sm" onclick="window.menuRecipeIntegration.openRecipeInDeveloper('${recipeStatus.recipeId}')">
-              📝 ${recipeStatus.action}
-            </button>
-          ` : `
-            <button class="btn btn-primary btn-sm" onclick="window.enhancedMenuManager.createRecipeForItem('${item.id}')">
-              ➕ Create Recipe
-            </button>
-          `}
+          ${this.renderRecipeActionButtons(item, recipeStatus)}
           <button class="btn btn-secondary btn-sm" onclick="window.enhancedMenuManager.showEditItemModal('${item.id}')">
             ✏️ Edit
           </button>
@@ -335,6 +496,32 @@ class EnhancedMenuManager {
             🗑️
           </button>
         </div>
+      </div>
+    `;
+  }
+
+  renderRecipeActionButtons(item, recipeStatus) {
+    if (recipeStatus && recipeStatus.recipeId) {
+      return `
+        <div class="menu-recipe-actions">
+          <button class="btn btn-primary btn-sm" onclick="window.menuRecipeIntegration.openRecipeInDeveloper('${recipeStatus.recipeId}')">
+            ${recipeStatus.icon} ${recipeStatus.action}
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="window.menuRecipeIntegration.promptRecipeLink('${item.id}')">
+            🔄 Relink
+          </button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="menu-recipe-actions">
+        <button class="btn btn-primary btn-sm" onclick="window.enhancedMenuManager.createRecipeForItem('${item.id}')">
+          ➕ Create Recipe
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="window.menuRecipeIntegration.promptRecipeLink('${item.id}')">
+          🔗 Link Existing
+        </button>
       </div>
     `;
   }
@@ -413,7 +600,17 @@ class EnhancedMenuManager {
     document.getElementById('edit-item-description').value = item.description || '';
     document.getElementById('edit-item-category').value = item.category;
     document.getElementById('edit-item-price').value = item.price;
-
+    const coversInput = document.getElementById('edit-item-covers');
+    if (coversInput) coversInput.value = item.projectedCovers || '';
+    const portionInput = document.getElementById('edit-item-portion');
+    if (portionInput) portionInput.value = item.portionSize || '';
+    const stationSelect = document.getElementById('edit-item-station');
+    if (stationSelect) stationSelect.value = item.prepStation || 'General';
+    const leadInput = document.getElementById('edit-item-lead');
+    if (leadInput) leadInput.value = item.prepLeadTime || '';
+    const serviceNotesInput = document.getElementById('edit-item-service-notes');
+    if (serviceNotesInput) serviceNotesInput.value = item.serviceNotes || '';
+ 
     // Show modal
     const modal = document.getElementById('edit-menu-item-modal');
     if (modal) {
@@ -537,21 +734,39 @@ Chocolate Cake, Rich chocolate cake with ganache, 6.99
           name: formData.get('name'),
           description: formData.get('description'),
           category: formData.get('category'),
-          price: parseFloat(formData.get('price')),
+          price: parseFloat(formData.get('price')) || 0,
           allergens: formData.get('allergens')?.split(',').map(a => a.trim()).filter(Boolean) || [],
-          dietaryInfo: formData.get('dietaryInfo')?.split(',').map(d => d.trim()).filter(Boolean) || []
+          dietaryInfo: formData.get('dietaryInfo')?.split(',').map(d => d.trim()).filter(Boolean) || [],
+          projectedCovers: parseInt(formData.get('projectedCovers')) || 0,
+          portionSize: formData.get('portionSize') || '',
+          prepStation: formData.get('prepStation') || 'General',
+          prepLeadTime: parseInt(formData.get('prepLeadTime')) || 0,
+          serviceNotes: formData.get('serviceNotes') || ''
         };
 
-        const createRecipe = formData.get('createRecipe') !== null;
+        // Check if createRecipe checkbox is checked
+        const createRecipeCheckbox = document.getElementById('item-create-recipe');
+        const createRecipe = createRecipeCheckbox ? createRecipeCheckbox.checked : false;
 
-        await this.addMenuItem(itemData, createRecipe);
-        
-        // Close modal
-        const modal = document.getElementById('add-menu-item-modal');
-        if (modal) {
-          modal.style.display = 'none';
+        try {
+          await this.addMenuItem(itemData, createRecipe);
+          
+          // Close modal
+          const modal = document.getElementById('add-menu-item-modal');
+          if (modal) {
+            modal.style.display = 'none';
+          }
+          
+          // Reset form
+          addForm.reset();
+        } catch (error) {
+          console.error('Error adding menu item:', error);
+          alert('Error adding menu item. Please try again.');
         }
       });
+      console.log('✅ Add menu item form handler attached');
+    } else {
+      console.warn('⚠️ Add menu item form not found');
     }
 
     // Edit item form
@@ -564,7 +779,12 @@ Chocolate Cake, Rich chocolate cake with ganache, 6.99
           name: formData.get('name'),
           description: formData.get('description'),
           category: formData.get('category'),
-          price: parseFloat(formData.get('price'))
+          price: parseFloat(formData.get('price')),
+          projectedCovers: parseInt(formData.get('projectedCovers')) || 0,
+          portionSize: formData.get('portionSize') || '',
+          prepStation: formData.get('prepStation') || 'General',
+          prepLeadTime: parseInt(formData.get('prepLeadTime')) || 0,
+          serviceNotes: formData.get('serviceNotes') || ''
         };
 
         await this.updateMenuItem(window._editingItemId, updates);
@@ -584,9 +804,37 @@ Chocolate Cake, Rich chocolate cake with ganache, 6.99
   getCurrentProjectId() {
     if (window.projectManager?.getCurrentProject) {
       const project = window.projectManager.getCurrentProject();
-      return project?.id || 'default';
+      if (project?.id) return project.id;
     }
-    return 'default';
+    if (window.projectManager?.currentProject?.id) {
+      return window.projectManager.currentProject.id;
+    }
+    if (window.projectManager?.masterProjectId) {
+      return window.projectManager.masterProjectId;
+    }
+
+    const stored = localStorage.getItem('active_project');
+    if (stored) {
+      return stored;
+    }
+
+    return 'master';
+  }
+
+  getCurrentUserId() {
+    const user = window.authManager?.currentUser;
+    if (user?.id) return user.id;
+    if (user?.userId) return user.userId;
+    const stored = localStorage.getItem('current_user');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        return parsed?.id || parsed?.userId || parsed?.email || null;
+      } catch (error) {
+        return null;
+      }
+    }
+    return null;
   }
 
   showToast(message, type = 'info') {
@@ -614,6 +862,15 @@ Chocolate Cake, Rich chocolate cake with ganache, 6.99
       toast.style.animation = 'slideOut 0.3s ease';
       setTimeout(() => toast.remove(), 300);
     }, 3000);
+  }
+
+  getAllCategories() {
+    const categories = new Set(this.menuItems.map(item => item.category));
+    return Array.from(categories);
+  }
+
+  getMenuItems() {
+    return Array.isArray(this.menuItems) ? [...this.menuItems] : [];
   }
 }
 

@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "iterum-culinary-app"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

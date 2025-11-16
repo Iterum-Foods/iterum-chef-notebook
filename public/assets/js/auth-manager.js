@@ -633,6 +633,40 @@ class AuthManager {
             throw error;
         }
     }
+
+    /**
+     * Update current user profile data and persist changes
+     */
+    async updateCurrentUserProfile(updates = {}) {
+        if (!this.currentUser) {
+            this.error('⚠️ Cannot update profile - no current user loaded');
+            return false;
+        }
+
+        try {
+            const existingProfile = this.currentUser.profile || {};
+            const mergedProfile = {
+                ...existingProfile,
+                ...updates,
+                lastUpdated: new Date().toISOString()
+            };
+
+            const updatedUser = {
+                ...this.currentUser,
+                profile: mergedProfile,
+                lastProfileUpdate: new Date().toISOString()
+            };
+
+            await this.saveSession(updatedUser);
+            this.notifyListeners('profile_updated', updatedUser);
+
+            this.log('✅ Current user profile updated');
+            return updatedUser;
+        } catch (error) {
+            this.error('❌ Failed to update current user profile:', error);
+            return false;
+        }
+    }
     
     /**
      * Verify that session was saved correctly

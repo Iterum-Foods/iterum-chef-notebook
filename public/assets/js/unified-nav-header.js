@@ -1,4 +1,4 @@
-givewqhst/**
+/**
  * Unified Navigation Header
  * Provides consistent navigation across all pages
  */
@@ -11,7 +11,6 @@ class UnifiedNavHeader {
 
     detectCurrentPage() {
         const path = window.location.pathname;
-        if (path.includes('chef-dashboard')) return 'chef';
         if (path.includes('index')) return 'dashboard';
         if (path.includes('recipe-library')) return 'recipes';
         if (path.includes('recipe-developer')) return 'developer';
@@ -48,24 +47,48 @@ class UnifiedNavHeader {
         // Add styles
         this.injectStyles();
 
+        // Setup dropdown hover delay
+        this.setupDropdownHover();
+
         console.log('✅ Navigation header injected');
+    }
+
+    setupDropdownHover() {
+        // Add delay for dropdown hover to stay open when moving to it
+        const dropdowns = document.querySelectorAll('.nav-dropdown');
+        
+        dropdowns.forEach(dropdown => {
+            let hoverTimeout;
+            
+            dropdown.addEventListener('mouseenter', () => {
+                clearTimeout(hoverTimeout);
+                const content = dropdown.querySelector('.nav-dropdown-content');
+                if (content) {
+                    content.classList.add('show');
+                }
+            });
+            
+            dropdown.addEventListener('mouseleave', () => {
+                hoverTimeout = setTimeout(() => {
+                    const content = dropdown.querySelector('.nav-dropdown-content');
+                    if (content) {
+                        content.classList.remove('show');
+                    }
+                }, 300); // 300ms delay before closing
+            });
+        });
     }
 
     getHeaderHTML() {
         return `
             <div class="nav-container">
-                <!-- Logo -->
                 <a href="index.html" class="nav-logo">
                     <span class="nav-logo-icon">🍳</span>
                     <span class="nav-logo-text">Iterum Culinary</span>
                 </a>
 
-                <!-- Main Navigation -->
                 <div class="nav-links">
-                    <a href="chef-dashboard.html" class="nav-link ${this.currentPage === 'chef' ? 'active' : ''}" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 700; margin-right: 10px; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);">
-                        <span>👨‍🍳</span> Chef
-                    </a>
-                    <a href="index.html" class="nav-link ${this.currentPage === 'dashboard' ? 'active' : ''}">
+                    <a href="index.html" class="nav-link nav-link-emphasis ${this.currentPage === 'dashboard' ? 'active' : ''}">
                         <span>🏠</span> Dashboard
                     </a>
                     <a href="recipe-library.html" class="nav-link ${this.currentPage === 'recipes' ? 'active' : ''}">
@@ -80,60 +103,51 @@ class UnifiedNavHeader {
                     <a href="ingredients.html" class="nav-link ${this.currentPage === 'ingredients' ? 'active' : ''}">
                         <span>🥬</span> Ingredients
                     </a>
-                    
-                    <!-- More Menu -->
                     <div class="nav-dropdown">
                         <button class="nav-link nav-dropdown-btn">
-                            <span>☰</span> More Features
+                            <span>☰</span> More
                         </button>
-                        <div class="nav-dropdown-content" style="min-width: 280px; max-height: 500px; overflow-y: auto;">
-                            <div style="padding: 10px 12px; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Kitchen Tools</div>
+                        <div class="nav-dropdown-content">
+                            <div class="nav-dropdown-category">Kitchen Tools</div>
                             <a href="kitchen-management.html">🔪 Kitchen Management</a>
                             <a href="kitchen-management.html?tab=pdf">📕 Recipe Book PDF</a>
                             <a href="kitchen-management.html?tab=preplist">📝 Prep Lists</a>
                             <a href="ingredient-highlights.html">✨ Ingredient Stories</a>
-                            <a href="server-info-sheet.html">🗣️ Server Info Sheets</a>
-                            
-                            <hr style="margin: 8px 0; border: none; border-top: 1px solid #e5e7eb;">
-                            <div style="padding: 10px 12px; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Inventory</div>
-                            <a href="inventory.html">📦 Inventory Tracking</a>
-                            <a href="vendor-management.html">🏪 Vendor Management</a>
-                            <a href="vendor-price-comparison.html">💰 Price Comparison</a>
+                            <a href="server-info-sheet.html">🗣️ Server Info</a>
+                            <hr>
+                            <div class="nav-dropdown-category">Inventory</div>
+                            <a href="inventory.html">📦 Inventory</a>
+                            <a href="vendor-management.html">🏪 Vendors</a>
+                            <a href="vendor-price-comparison.html">💰 Price Compare</a>
                             <a href="equipment-management.html">🔧 Equipment</a>
-                            <a href="production-planning.html">📋 Production Planning</a>
-                            
-                            <hr style="margin: 8px 0; border: none; border-top: 1px solid #e5e7eb;">
-                            <div style="padding: 10px 12px; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Import Tools</div>
-                            <a href="bulk-recipe-import.html">🚀 Bulk Recipe Import</a>
-                            <a href="bulk-ingredient-import.html">📥 Bulk Ingredient Import</a>
+                            <a href="production-planning.html">📋 Production</a>
+                            <hr>
+                            <div class="nav-dropdown-category">Import</div>
+                            <a href="bulk-recipe-import.html">🚀 Recipe Import</a>
+                            <a href="bulk-ingredient-import.html">📥 Ingredient Import</a>
                             <a href="recipe-photo-studio.html">📸 Photo Studio</a>
-                            
-                            <hr style="margin: 8px 0; border: none; border-top: 1px solid #e5e7eb;">
-                            <div style="padding: 10px 12px; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">System</div>
+                            <hr>
+                            <div class="nav-dropdown-category">System</div>
                             <a href="project-hub.html">📂 Project Hub</a>
                             <a href="data-backup-center.html">💾 Backup Center</a>
-                            <a href="data-management-dashboard.html">💾 Data Management</a>
+                            <a href="data-management-dashboard.html">🧠 Data Management</a>
                             <a href="audit-log.html">📜 Audit Log</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Side -->
-                <div class="nav-right">
-                    <!-- Project Selector Placeholder -->
-                    <div id="nav-project-selector-placeholder"></div>
-                    
-                    <!-- User Menu -->
+                <div class="nav-meta">
+                    <div class="nav-project-chip" id="nav-project-chip">Project: Master Project</div>
                     <div class="nav-dropdown">
                         <button class="nav-link nav-user-btn">
-                            <span id="nav-user-avatar">👤</span>
-                            <span id="nav-user-name">User</span>
+                            <span class="nav-avatar" id="nav-user-avatar">👤</span>
+                            <span class="nav-label" id="nav-user-name">User</span>
                         </button>
                         <div class="nav-dropdown-content nav-user-menu">
                             <a href="user-profile.html">👤 Profile & Settings</a>
                             <a href="project-hub.html">📂 Project Hub</a>
-                            <hr style="margin: 5px 0; border: none; border-top: 1px solid #e5e7eb;">
-                            <a href="#" onclick="event.preventDefault(); signOut();">🚪 Sign Out</a>
+                            <hr>
+                            <a href="#" onclick="event.preventDefault(); signOut?.();">🚪 Sign Out</a>
                         </div>
                     </div>
                 </div>
@@ -145,153 +159,200 @@ class UnifiedNavHeader {
         const style = document.createElement('style');
         style.textContent = `
             .unified-nav-header {
-                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-                color: white;
+                background: var(--brand-header-bg);
+                color: var(--brand-header-text);
                 padding: 0;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
                 position: sticky;
                 top: 0;
                 z-index: 1000;
-                border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+                border-bottom: 1px solid var(--brand-header-border);
+                box-shadow: 0 24px 48px rgba(15, 23, 42, 0.35);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
             }
 
             .nav-container {
-                max-width: 1400px;
+                max-width: 1240px;
                 margin: 0 auto;
-                padding: 0 20px;
+                padding: 0 32px;
                 display: flex;
                 align-items: center;
-                gap: 20px;
-                height: 70px;
+                gap: 24px;
+                height: 74px;
             }
 
             .nav-logo {
-                display: flex;
+                display: inline-flex;
                 align-items: center;
                 gap: 12px;
                 text-decoration: none;
-                color: white;
+                color: #ffffff;
                 font-weight: 800;
-                font-size: 1.3rem;
+                font-size: 1.28rem;
+                letter-spacing: -0.02em;
                 white-space: nowrap;
-                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
             }
 
             .nav-logo-icon {
-                font-size: 1.8rem;
-                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+                font-size: 1.7rem;
+                filter: drop-shadow(0 8px 18px rgba(37, 99, 235, 0.42));
             }
 
             .nav-links {
                 display: flex;
                 align-items: center;
-                gap: 5px;
+                gap: 6px;
                 flex: 1;
             }
 
             .nav-link {
-                color: white;
+                color: var(--brand-header-text);
                 text-decoration: none;
                 padding: 10px 18px;
-                border-radius: 8px;
-                transition: all 0.3s ease;
-                display: flex;
+                border-radius: 999px;
+                transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+                display: inline-flex;
                 align-items: center;
-                gap: 8px;
-                font-weight: 600;
+                gap: 10px;
+                font-weight: 500;
                 background: transparent;
-                border: none;
+                border: 1px solid transparent;
                 cursor: pointer;
-                font-size: 1rem;
+                font-size: 0.98rem;
                 white-space: nowrap;
-                text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-            }
-
-            .nav-link:hover {
-                background: rgba(59, 130, 246, 0.3);
-                transform: translateY(-1px);
-            }
-
-            .nav-link.active {
-                background: rgba(59, 130, 246, 0.5);
-                font-weight: 700;
-                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
             }
 
             .nav-link span:first-child {
                 font-size: 1.1rem;
             }
 
+            .nav-link:hover,
+            .nav-link:focus {
+                background: rgba(148, 163, 184, 0.16);
+                border-color: rgba(148, 163, 184, 0.22);
+                transform: translateY(-1px);
+                color: #ffffff;
+            }
+
+            .nav-link.active {
+                color: #ffffff;
+                background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+                border-color: transparent;
+                box-shadow: 0 18px 36px rgba(37, 99, 235, 0.38);
+                font-weight: 600;
+            }
+
+            .nav-link-emphasis {
+                background: rgba(59, 130, 246, 0.16);
+                border-color: rgba(59, 130, 246, 0.35);
+                color: rgba(226, 232, 240, 0.95);
+            }
+
+            .nav-link-emphasis:hover,
+            .nav-link-emphasis:focus {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.62) 0%, rgba(37, 99, 235, 0.82) 100%);
+                color: #ffffff;
+                border-color: transparent;
+                box-shadow: 0 18px 36px rgba(37, 99, 235, 0.45);
+            }
+
             .nav-right {
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                gap: 14px;
             }
 
             .nav-dropdown {
                 position: relative;
             }
 
-            .nav-dropdown-btn, .nav-user-btn {
-                display: flex;
+            .nav-dropdown-btn,
+            .nav-user-btn {
+                display: inline-flex;
                 align-items: center;
-                gap: 8px;
+                gap: 10px;
             }
 
             .nav-dropdown-content {
                 display: none;
                 position: absolute;
-                top: calc(100% + 10px);
+                top: calc(100% + 14px);
                 right: 0;
-                background: white;
-                border-radius: 12px;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-                min-width: 200px;
-                padding: 8px;
+                background: rgba(15, 23, 42, 0.94);
+                border-radius: 18px;
+                box-shadow: 0 30px 60px rgba(15, 23, 42, 0.4);
+                min-width: 260px;
+                padding: 14px;
                 z-index: 1001;
+                border: 1px solid rgba(96, 165, 250, 0.22);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
             }
 
-            .nav-dropdown:hover .nav-dropdown-content,
-            .nav-dropdown-content:hover {
-                display: block;
+            .nav-dropdown-content.show {
+                display: block !important;
             }
 
             .nav-dropdown-content a {
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                padding: 10px 12px;
-                color: #1f2937;
+                gap: 12px;
+                padding: 11px 12px;
+                color: rgba(226, 232, 240, 0.9);
                 text-decoration: none;
-                border-radius: 8px;
-                transition: background 0.2s;
+                border-radius: 12px;
+                transition: background 0.2s ease, color 0.2s ease;
+                font-weight: 500;
+                font-size: 0.94rem;
             }
 
             .nav-dropdown-content a:hover {
-                background: #f3f4f6;
+                background: rgba(59, 130, 246, 0.18);
+                color: #ffffff;
+            }
+
+            .nav-dropdown-content hr {
+                border: none;
+                border-top: 1px solid rgba(148, 163, 184, 0.22);
+                margin: 10px 0;
+            }
+
+            .nav-dropdown-content .nav-dropdown-category {
+                padding: 6px 12px 4px;
+                font-size: 0.72rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: rgba(148, 163, 184, 0.78);
             }
 
             .nav-user-menu {
-                min-width: 220px;
+                min-width: 240px;
             }
 
             #nav-user-avatar {
-                width: 32px;
-                height: 32px;
+                width: 36px;
+                height: 36px;
                 border-radius: 50%;
-                background: rgba(255,255,255,0.2);
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.45), rgba(37, 99, 235, 0.75));
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 1rem;
+                color: #ffffff;
+                box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+            }
+
+            .nav-label {
+                letter-spacing: 0.01em;
             }
 
             /* Mobile Responsive */
-            @media (max-width: 768px) {
+            @media (max-width: 900px) {
                 .nav-links {
                     display: none;
                 }
-                
+
                 .nav-container {
                     justify-content: space-between;
                 }
@@ -300,8 +361,25 @@ class UnifiedNavHeader {
                     display: none;
                 }
             }
+
+                /* Aggressively hide any legacy headers/navs to prevent double headers */
+                header:not(.unified-nav-header) { display: none !important; }
+                nav:not(.unified-nav-header) { display: none !important; }
+                .page-header,
+                .legacy-header,
+                .site-header,
+                .app-header,
+                .old-header,
+                .top-nav { display: none !important; }
         `;
         document.head.appendChild(style);
+    }
+
+    updateProjectChip(projectName = 'Master Project') {
+        const chip = document.getElementById('nav-project-chip');
+        if (chip) {
+            chip.textContent = `Project: ${projectName}`;
+        }
     }
 
     updateUserInfo(user) {
@@ -347,6 +425,25 @@ if (document.readyState === 'loading') {
         window.unifiedNavHeader.updateUserInfo(window.authManager.currentUser);
     }
 }
+
+document.addEventListener('projectChanged', (event) => {
+    const detail = event.detail || {};
+    const projectName = detail.project?.name || detail.projectName || detail.projectId || 'Master Project';
+    window.unifiedNavHeader?.updateProjectChip(projectName);
+});
+
+document.addEventListener('iterumAppReady', () => {
+    const storedProject = (() => {
+        try {
+            const value = localStorage.getItem('iterum_current_project');
+            return value ? JSON.parse(value) : null;
+        } catch {
+            return null;
+        }
+    })();
+    const projectName = window.projectManager?.currentProject?.name || storedProject?.name || storedProject?.projectName || 'Master Project';
+    window.unifiedNavHeader?.updateProjectChip(projectName);
+});
 
 // Global sign out function
 window.signOut = function() {

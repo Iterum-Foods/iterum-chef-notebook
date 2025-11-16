@@ -1,64 +1,73 @@
 /**
  * ITERUM CULINARY APP - MASTER BRAND KIT
- * 
- * This is the SINGLE SOURCE OF TRUTH for all branding and UI.
- * Change colors, spacing, fonts, etc. here and it updates across the entire app.
- * 
- * Last Updated: 2025-10-19
+ *
+ * Single source of truth for Iterum’s Nordic landing-page system.
+ * Updating variables here keeps every screen in visual sync.
+ *
+ * Last Updated: 2025-11-13
  */
+
+@import url('app-improvements.css');
+@import url('ui-polish-v2.css');
+@import url('enhanced-colors.css');
+@import url('ui-smooth-polish.css');
+@import url('unified-color-system.css');
+@import url('app-wide-ui-overhaul.css');
 
 :root {
     /* ============================================
-       BRAND COLORS - Dark Nordic Vintage Theme
+       BRAND COLORS – Index (Daily Ops) Palette
        ============================================ */
-    
-    /* Background Colors - Main page backgrounds */
-    --brand-bg-primary: #3D3426;        /* Chocolate brown */
-    --brand-bg-secondary: #2A2420;      /* Deep brown */
-    --brand-bg-tertiary: #1F1D1A;       /* Almost black */
-    --brand-bg-gradient: linear-gradient(135deg, #3D3426 0%, #2A2420 50%, #1F1D1A 100%);
-    
-    /* Card Colors - All cards, containers, panels */
-    --brand-card-bg: linear-gradient(145deg, #4A4136 0%, #3D3729 100%);
-    --brand-card-bg-elevated: linear-gradient(145deg, #5A5045 0%, #4D453A 100%);
-    --brand-card-bg-subtle: linear-gradient(145deg, #3D3729 0%, #35301E 100%);
-    --brand-card-bg-dark: linear-gradient(145deg, #2A2420 0%, #1A1512 100%);
-    
-    /* Border Colors */
-    --brand-border-light: #6B5D47;      /* Medium bark */
-    --brand-border-medium: #5C4D39;     /* Dark bark */
-    --brand-border-dark: #4A3F2F;       /* Very dark bark */
-    
-    /* Text Colors - High Contrast, Soft Tones */
-    --brand-text-primary: #F5F2EB;      /* Bright cream - for headings (high contrast) */
-    --brand-text-secondary: #E8E4DC;    /* Light cream - for body (very readable) */
-    --brand-text-tertiary: #D8D4CC;     /* Cool cream - for labels (clear) */
-    --brand-text-muted: #C8C4BC;        /* Muted cream - for secondary text (softer) */
-    
-    /* Accent Colors */
-    --brand-accent-primary: #C9954B;    /* Golden brown - primary actions */
-    --brand-accent-secondary: #A85D3A;  /* Terracotta - secondary actions */
-    --brand-accent-forest: #5B7A5F;     /* Nordic forest green */
-    
-    /* Semantic Colors */
-    --brand-success: #10b981;           /* Green - success states */
-    --brand-warning: #f59e0b;           /* Orange - warnings */
-    --brand-error: #ef4444;             /* Red - errors */
-    --brand-info: #3b82f6;              /* Blue - info */
-    
-    /* Button Gradients */
-    --brand-btn-primary: linear-gradient(135deg, #5B7A5F 0%, #384D3D 100%);
-    --brand-btn-secondary: linear-gradient(135deg, #A85D3A 0%, #8B4D2D 100%);
-    --brand-btn-accent: linear-gradient(135deg, #C9954B 0%, #A67C3D 100%);
-    
-    /* Header/Navigation Colors */
-    --brand-header-bg: linear-gradient(135deg, #0F0E0C 0%, #1A1512 100%);
-    --brand-header-border: rgba(201, 149, 75, 0.5);
-    --brand-header-text: #F5F2EB;       /* Bright cream for high contrast */
-    --brand-header-hover: rgba(201, 149, 75, 0.3);
-    --brand-header-active: rgba(201, 149, 75, 0.5);
-    
-    
+
+    /* Background Layers (dark board) */
+    --brand-bg-primary: #0f141a;
+    --brand-bg-secondary: #13171d;
+    --brand-bg-tertiary: #1a1f27;
+    --brand-bg-gradient:
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 45%),
+        radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.12), transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1), transparent 55%),
+        linear-gradient(180deg, #0f141a 0%, #0f141a 100%);
+
+    /* Surface Layers (cards slightly elevated dark) */
+    --brand-card-bg: rgba(19, 23, 29, 0.92);
+    --brand-card-bg-elevated: rgba(19, 23, 29, 0.96);
+    --brand-card-bg-subtle: rgba(19, 23, 29, 0.86);
+    --brand-card-bg-dark: rgba(15, 19, 25, 0.98);
+
+    /* Borders */
+    --brand-border-light: rgba(148, 163, 184, 0.25);
+    --brand-border-medium: rgba(148, 163, 184, 0.35);
+    --brand-border-dark: rgba(148, 163, 184, 0.45);
+
+    /* Typography Palette */
+    --brand-text-primary: #f8fafc;
+    --brand-text-secondary: rgba(226, 232, 240, 0.9);
+    --brand-text-tertiary: rgba(203, 213, 225, 0.78);
+    --brand-text-muted: rgba(148, 163, 184, 0.78);
+
+    /* Accent & Semantic Colors */
+    --brand-accent-primary: #8d7bff; /* index accent */
+    --brand-accent-secondary: #38bdf8;
+    --brand-accent-forest: #22c55e;
+
+    --brand-success: #22c55e;
+    --brand-warning: #f59e0b;
+    --brand-error: #ef4444;
+    --brand-info: #60a5fa;
+
+    /* Buttons */
+    --brand-btn-primary: linear-gradient(135deg, #8d7bff 0%, #6366f1 100%);
+    --brand-btn-secondary: linear-gradient(135deg, rgba(148, 163, 184, 0.18) 0%, rgba(148, 163, 184, 0.28) 100%);
+    --brand-btn-accent: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+
+    /* Navigation */
+        --brand-header-bg: rgba(255, 255, 255, 0.82);
+        --brand-header-border: rgba(15, 23, 42, 0.08);
+        --brand-header-text: #0f172a;
+        --brand-header-hover: rgba(2, 6, 23, 0.06);
+        --brand-header-active: rgba(37, 99, 235, 0.12);
+
     /* ============================================
        SPACING SYSTEM
        ============================================ */
@@ -69,61 +78,56 @@
     --space-xl: 32px;
     --space-2xl: 48px;
     --space-3xl: 64px;
-    
-    
+
     /* ============================================
        TYPOGRAPHY
        ============================================ */
     --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-family-handwriting: 'Shadows Into Light', cursive;
-    
-    --font-size-xs: 0.75rem;       /* 12px */
-    --font-size-sm: 0.875rem;      /* 14px */
-    --font-size-base: 1rem;        /* 16px */
-    --font-size-lg: 1.125rem;      /* 18px */
-    --font-size-xl: 1.25rem;       /* 20px */
-    --font-size-2xl: 1.5rem;       /* 24px */
-    --font-size-3xl: 1.875rem;     /* 30px */
-    --font-size-4xl: 2.25rem;      /* 36px */
-    --font-size-5xl: 3rem;         /* 48px */
-    
+
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    --font-size-5xl: 3rem;
+
     --font-weight-light: 300;
     --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --font-weight-extrabold: 800;
-    
-    
+
     /* ============================================
        BORDER RADIUS
        ============================================ */
     --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
-    --radius-xl: 20px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 26px;
     --radius-round: 50%;
-    
-    
+
     /* ============================================
        SHADOWS
        ============================================ */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.6);
-    --shadow-xl: 0 20px 80px rgba(0, 0, 0, 0.7);
-    --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-    
-    
+    --shadow-sm: 0 6px 16px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 18px 38px rgba(15, 23, 42, 0.12);
+    --shadow-lg: 0 28px 64px rgba(15, 23, 42, 0.18);
+    --shadow-xl: 0 42px 90px rgba(30, 64, 175, 0.22);
+    --shadow-inset: inset 0 2px 4px rgba(15, 23, 42, 0.08);
+
     /* ============================================
        TRANSITIONS
        ============================================ */
     --transition-fast: 0.15s ease;
-    --transition-base: 0.3s ease;
+    --transition-base: 0.28s ease;
     --transition-slow: 0.5s ease;
     --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-    
-    
+
     /* ============================================
        Z-INDEX LAYERS
        ============================================ */
@@ -154,14 +158,10 @@ body {
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    padding-top: 80px !important; /* account for universal header */
 }
 
-/* Ensure body always has header padding */
-body {
-    padding-top: 80px !important;
-}
-
-/* Override any bg-white classes */
+/* Light surfaces stay light */
 .bg-white,
 [class*="bg-white"] {
     background: var(--brand-card-bg) !important;
@@ -175,17 +175,18 @@ body {
 .card-container,
 [class*="card"] {
     background: var(--brand-card-bg) !important;
-    border: 2px solid var(--brand-border-light) !important;
+    border: 1px solid var(--brand-border-light) !important;
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
-    box-shadow: var(--shadow-md);
-    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--brand-accent-primary) !important;
+.card:hover,
+.card:focus-within {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(37, 99, 235, 0.42) !important;
 }
 
 
@@ -195,9 +196,9 @@ body {
 h1, h2, h3, h4, h5, h6 {
     color: var(--brand-text-primary) !important;
     font-weight: var(--font-weight-extrabold);
-    line-height: 1.3;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);  /* Stronger shadow for better contrast */
+    line-height: 1.25;
+    letter-spacing: -0.035em;
+    text-shadow: none;
 }
 
 h1 { font-size: var(--font-size-4xl); margin-bottom: var(--space-lg); }
@@ -206,9 +207,9 @@ h3 { font-size: var(--font-size-2xl); margin-bottom: var(--space-md); }
 h4 { font-size: var(--font-size-xl); margin-bottom: var(--space-sm); }
 
 p {
-    color: var(--brand-text-secondary);  /* Use brighter secondary for body text */
+    color: var(--brand-text-secondary);
     margin-bottom: var(--space-md);
-    font-weight: var(--font-weight-medium);  /* Slightly bolder */
+    font-weight: var(--font-weight-normal);
 }
 
 
@@ -218,37 +219,56 @@ p {
 .btn,
 button[class*="btn"],
 [role="button"] {
-    padding: 12px 24px;
-    border-radius: var(--radius-md);
-    font-weight: var(--font-weight-bold);
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-weight: var(--font-weight-semibold);
     font-size: var(--font-size-base);
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
     border: none;
     box-shadow: var(--shadow-sm);
+    letter-spacing: 0.02em;
 }
 
 .btn-primary,
 .btn.primary {
     background: var(--brand-btn-primary);
-    color: var(--brand-text-primary);
+    color: white;
 }
 
 .btn-secondary,
 .btn.secondary {
     background: var(--brand-btn-secondary);
-    color: var(--brand-text-primary);
+    color: rgba(226, 232, 240, 0.96);
 }
 
 .btn-accent,
 .btn.accent {
     background: var(--brand-btn-accent);
-    color: var(--brand-text-primary);
+    color: white;
 }
 
-.btn:hover {
+.btn-ghost,
+.btn.ghost {
+    background: transparent;
+    color: var(--brand-text-secondary);
+    box-shadow: none;
+}
+
+.btn-ghost:hover {
+    background: rgba(226, 232, 240, 0.55);
+}
+
+.btn:hover,
+.btn:focus {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+    filter: brightness(1.02);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
 }
 
 
@@ -258,14 +278,14 @@ button[class*="btn"],
 input,
 select,
 textarea {
-    background: var(--brand-card-bg-subtle) !important;
-    border: 2px solid var(--brand-border-light) !important;
-    color: var(--brand-text-secondary) !important;
+    background: var(--brand-card-bg) !important;
+    border: 1px solid var(--brand-border-light) !important;
+    color: var(--brand-text-primary) !important;
     padding: 12px 16px;
     border-radius: var(--radius-md);
     font-family: var(--font-family-primary);
-    font-weight: var(--font-weight-semibold);
-    transition: all var(--transition-base);
+    font-weight: var(--font-weight-medium);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
     box-shadow: var(--shadow-inset);
 }
 
@@ -273,19 +293,24 @@ input:focus,
 select:focus,
 textarea:focus {
     outline: none;
-    border-color: var(--brand-accent-primary) !important;
-    box-shadow: 0 0 0 4px rgba(201, 149, 75, 0.3), var(--shadow-inset);
-    background: var(--brand-card-bg) !important;
+    border-color: rgba(37, 99, 235, 0.8) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18), var(--shadow-inset);
+    background: var(--brand-card-bg-elevated) !important;
 }
 
 label {
-    color: var(--brand-text-secondary) !important;  /* Brighter labels */
-    font-weight: var(--font-weight-extrabold);  /* Bolder for better visibility */
+    color: var(--brand-text-tertiary) !important;
+    font-weight: var(--font-weight-semibold);
     font-size: var(--font-size-sm);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.06em;
     margin-bottom: var(--space-xs);
     display: block;
+}
+
+::placeholder {
+    color: rgba(100, 116, 139, 0.72);
+    opacity: 1;
 }
 
 
@@ -298,38 +323,39 @@ table {
 }
 
 thead {
-    background: var(--brand-card-bg-dark);
+    background: rgba(15, 23, 42, 0.96);
 }
 
 thead th {
-    color: var(--brand-text-primary) !important;
+    color: rgba(241, 245, 249, 0.96) !important;
     padding: 16px;
-    font-weight: var(--font-weight-extrabold);
+    font-weight: var(--font-weight-bold);
     font-size: var(--font-size-sm);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 3px solid var(--brand-accent-secondary);
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);  /* Stronger shadow for clarity */
+    letter-spacing: 0.12em;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.6);
 }
 
 tbody tr {
-    background: rgba(61, 55, 41, 0.8);
-    transition: all var(--transition-base);
+    background: rgba(248, 250, 252, 0.95);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
 tbody tr:nth-child(even) {
-    background: rgba(53, 48, 30, 0.8);
+    background: rgba(241, 245, 249, 0.95);
 }
 
 tbody tr:hover {
-    background: linear-gradient(90deg, rgba(201, 149, 75, 0.2) 0%, transparent 100%);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
+    background: rgba(219, 234, 254, 0.85);
 }
 
 tbody td {
-    color: var(--brand-text-secondary) !important;  /* Brighter for readability */
+    color: var(--brand-text-secondary) !important;
     padding: 14px 16px;
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
 }
 
 
@@ -339,16 +365,16 @@ tbody td {
 .modal,
 [class*="modal"] {
     background: var(--brand-card-bg) !important;
-    border: 3px solid var(--brand-border-light);
+    border: 1px solid rgba(148, 163, 184, 0.35);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-xl);
 }
 
 .modal-header,
 [class*="modal-header"] {
-    background: var(--brand-card-bg-dark);
-    color: var(--brand-text-primary) !important;
-    border-bottom: 2px solid var(--brand-border-light);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(37, 99, 235, 0.88) 100%);
+    color: white !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
     padding: var(--space-lg);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 }
@@ -356,8 +382,7 @@ tbody td {
 .modal-header h1,
 .modal-header h2,
 .modal-header h3 {
-    color: var(--brand-text-primary) !important;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);  /* Stronger contrast */
+    color: #ffffff !important;
 }
 
 
@@ -369,14 +394,8 @@ tbody td {
 .text-tertiary { color: var(--brand-text-tertiary) !important; }
 .text-muted { color: var(--brand-text-muted) !important; }
 
-/* Override any harsh whites */
-.text-white,
-[class*="text-white"] {
-    color: var(--brand-text-primary) !important;  /* Use soft cream instead */
-}
-
 .bg-card { background: var(--brand-card-bg) !important; }
-.bg-dark { background: var(--brand-card-bg-dark) !important; }
+.bg-dark { background: var(--brand-card-bg-dark) !important; color: rgba(241, 245, 249, 0.96); }
 
 .border-brand { border-color: var(--brand-border-light) !important; }
 
@@ -397,9 +416,10 @@ tbody td {
     html {
         font-size: 14px;
     }
-    
+
     h1 { font-size: var(--font-size-3xl); }
     h2 { font-size: var(--font-size-2xl); }
     h3 { font-size: var(--font-size-xl); }
 }
+
 

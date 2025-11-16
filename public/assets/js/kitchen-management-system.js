@@ -14,6 +14,9 @@ class KitchenManagementSystem {
     this.userEmail = null;
     this.currentRecipes = [];
     this.currentMenu = null;
+    this.currentMenuData = null;
+    this.currentMenuItems = [];
+    this.currentProjectId = null;
     this.pdfGenerator = new RecipeBookPDFGenerator();
     this.versionTracker = new RecipeVersionTracker();
   }
@@ -27,6 +30,14 @@ class KitchenManagementSystem {
     
     console.log(`🔧 Kitchen Management System initialized for ${userEmail}`);
     
+    if (window.projectManager) {
+      this.currentProjectId = window.projectManager.currentProject?.id || window.projectManager.masterProjectId || 'master';
+      window.addEventListener('projectChanged', async (event) => {
+        this.currentProjectId = event.detail?.project?.id || this.currentProjectId;
+        await this.loadUserData();
+      });
+    }
+
     // Load user's recipes and menu
     await this.loadUserData();
   }
@@ -36,20 +47,69 @@ class KitchenManagementSystem {
    */
   async loadUserData() {
     try {
-      // Load recipes from universal recipe manager (user-specific)
-      if (window.universalRecipeManager) {
-        this.currentRecipes = window.universalRecipeManager.getAllRecipes();
+      // Load recipes from universal recipe manager
+      if (window.universalRecipeManager?.getRecipeLibrary) {
+        this.currentRecipes = window.universalRecipeManager.getRecipeLibrary();
       } else {
-        // Fallback to localStorage (filtered by user)
         const allRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
-        this.currentRecipes = allRecipes.filter(r => r.userId === this.userId);
+        this.currentRecipes = allRecipes;
       }
 
-      // Load user's menu
-      const menuKey = `menu_${this.userId}`;
-      this.currentMenu = JSON.parse(localStorage.getItem(menuKey) || 'null');
+      // Determine project ID and load menu data
+      const projectId = this.currentProjectId || window.projectManager?.currentProject?.id || window.projectManager?.masterProjectId || 'master';
+      this.currentProjectId = projectId;
+      const menuKey = `${window.enhancedMenuManager?.storageKey || 'menu_data'}_${projectId}`;
+      const storedMenu = localStorage.getItem(menuKey);
+      if (storedMenu) {
+        this.currentMenuData = JSON.parse(storedMenu);
+        this.currentMenu = this.currentMenuData?.menu || null;
+        this.currentMenuItems = Array.isArray(this.currentMenuData?.items) ? this.currentMenuData.items : [];
+      } else {
+        // Fallback to legacy per-user menu storage
+        const legacyKey = `menu_${this.userId}`;
+        const legacyMenu = localStorage.getItem(legacyKey);
+        if (legacyMenu) {
+          const parsedLegacy = JSON.parse(legacyMenu);
+          this.currentMenuData = { menu: parsedLegacy, items: parsedLegacy?.items || [] };
+          this.currentMenu = parsedLegacy;
+          this.currentMenuItems = parsedLegacy?.items || [];
+        } else {
+          this.currentMenuData = { menu: null, items: [] };
+          this.currentMenu = null;
+          this.currentMenuItems = [];
+        }
+      }
 
-      console.log(`📊 Loaded ${this.currentRecipes.length} recipes for user`);
+      if (window.firestoreSync?.fetchLatestMenuSnapshot) {
+        try {
+          const remoteSnapshot = await window.firestoreSync.fetchLatestMenuSnapshot(projectId);
+          if (remoteSnapshot) {
+            const remoteUpdatedAt = Date.parse(remoteSnapshot.updatedAt || remoteSnapshot.syncedAt || 0);
+            const localUpdatedAt = Date.parse(this.currentMenu?.updatedAt || this.currentMenuData?.menu?.updatedAt || 0);
+
+            if (!this.currentMenuItems.length || (remoteUpdatedAt && remoteUpdatedAt > localUpdatedAt)) {
+              this.currentMenuData = {
+                menu: remoteSnapshot.menu || null,
+                items: Array.isArray(remoteSnapshot.items) ? remoteSnapshot.items : [],
+              };
+              this.currentMenu = this.currentMenuData.menu;
+              this.currentMenuItems = this.currentMenuData.items;
+
+              localStorage.setItem(menuKey, JSON.stringify(this.currentMenuData));
+
+              if (remoteSnapshot.links && window.menuRecipeIntegration?.storageKey) {
+                localStorage.setItem(window.menuRecipeIntegration.storageKey, JSON.stringify(remoteSnapshot.links));
+              }
+
+              console.log('☁️ Kitchen data hydrated from Firestore snapshot');
+            }
+          }
+        } catch (error) {
+          console.warn('⚠️ Unable to hydrate kitchen data from Firestore:', error?.message || error);
+        }
+      }
+ 
+      console.log(`📊 Loaded ${this.currentRecipes.length} recipes and ${this.currentMenuItems.length} menu items for project ${projectId}`);
     } catch (error) {
       console.error('Error loading user data:', error);
     }
@@ -234,94 +294,70 @@ class KitchenManagementSystem {
    * Generate Next Day Prep List
    */
   generateNextDayPrepList(targetDate = null) {
-    if (!targetDate) {
+    let serviceDate = targetDate;
+    if (!serviceDate) {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      targetDate = tomorrow;
+      serviceDate = tomorrow;
     }
 
-    const prepList = {
-      prepDate: targetDate.toISOString().split('T')[0],
-      generatedDate: new Date().toISOString(),
-      generatedBy: this.userEmail,
-      restaurant: this.currentMenu?.projectName || 'Restaurant',
-      
-      components: [],
-      shopping: [],
-      notes: []
-    };
+    if (!window.menuPrepManager) {
+      console.warn('⚠️ MenuPrepManager not available, returning fallback list.');
+      return {
+        prepDate: serviceDate.toISOString().split('T')[0],
+        generatedDate: new Date().toISOString(),
+        generatedBy: this.userEmail,
+        restaurant: this.currentMenu?.projectName || 'Restaurant',
+        components: [],
+        shopping: [],
+        notes: ['Menu prep manager not available.']
+      };
+    }
 
-    // Gather all components from recipes
-    this.currentRecipes.forEach(recipe => {
-      if (recipe.components && Array.isArray(recipe.components)) {
-        recipe.components.forEach(comp => {
-          prepList.components.push({
-            recipeName: recipe.title || recipe.name,
-            componentName: comp.name,
-            dailyPar: comp.dailyPar || 'N/A',
-            yield: comp.yield || 'N/A',
-            shelfLife: comp.shelfLife || 'Unknown',
-            ingredients: comp.ingredients || [],
-            instructions: comp.instructions || [],
-            priority: this.calculatePriority(comp.shelfLife)
-          });
-        });
-      }
+    const plan = window.menuPrepManager.generatePrepPlan({
+      projectId: this.currentProjectId || 'master',
+      menu: this.currentMenu,
+      menuItems: this.currentMenuItems,
+      recipes: this.currentRecipes,
+      serviceDate
     });
 
-    // Sort by priority (shorter shelf life = higher priority)
-    prepList.components.sort((a, b) => b.priority - a.priority);
-
-    // Generate shopping list from ingredients
-    const ingredientMap = new Map();
-    
-    prepList.components.forEach(comp => {
-      comp.ingredients.forEach(ing => {
-        const key = ing.name || ing.ingredientName;
-        if (ingredientMap.has(key)) {
-          const existing = ingredientMap.get(key);
-          existing.quantity += ing.quantity || 0;
-        } else {
-          ingredientMap.set(key, {
-            name: key,
-            quantity: ing.quantity || 0,
-            unit: ing.unit || '',
-            category: ing.category || 'Misc'
-          });
-        }
-      });
-    });
-
-    prepList.shopping = Array.from(ingredientMap.values())
-      .sort((a, b) => a.category.localeCompare(b.category));
-
-    // Add prep notes
-    prepList.notes = [
-      'Check inventory before starting prep',
-      'Verify all equipment is functioning',
-      'Prepare long shelf-life items first',
-      'Label all containers with date and time',
-      'Follow FIFO rotation',
-      'Taste and adjust seasoning',
-      'Store at proper temperatures'
-    ];
-
-    return prepList;
+    return plan;
   }
 
-  /**
-   * Calculate priority based on shelf life
-   */
-  calculatePriority(shelfLife) {
-    if (!shelfLife || typeof shelfLife !== 'string') return 1;
-    
-    const lower = shelfLife.toLowerCase();
-    
-    if (lower.includes('1 day') || lower.includes('same day')) return 5;
-    if (lower.includes('2 day') || lower.includes('3 day')) return 4;
-    if (lower.includes('week') || lower.includes('5 day')) return 3;
-    if (lower.includes('month')) return 2;
-    return 1;
+  generateFOHBriefing(serviceDate = null) {
+    let briefingDate = serviceDate;
+    if (!briefingDate) {
+      briefingDate = new Date();
+    }
+
+    if (!window.menuFOHManager) {
+      console.warn('⚠️ MenuFOHManager not available, returning fallback briefing.');
+      return {
+        serviceDate: briefingDate.toISOString().split('T')[0],
+        generatedDate: new Date().toISOString(),
+        generatedBy: this.userEmail,
+        restaurant: this.currentMenu?.projectName || 'Restaurant',
+        menuName: this.currentMenu?.name || 'Menu',
+        highlights: [],
+        courses: [],
+        allergenSummary: {},
+        dietarySummary: {},
+        notes: ['FOH manager not available.'],
+        warnings: [{ type: 'missing-manager', message: 'Menu FOH manager script not loaded.' }]
+      };
+    }
+
+    const briefing = window.menuFOHManager.generateSheet({
+      projectId: this.currentProjectId || 'master',
+      menu: this.currentMenu,
+      menuItems: this.currentMenuItems,
+      recipes: this.currentRecipes,
+      serviceDate: briefingDate
+    });
+
+    briefing.generatedBy = this.userEmail;
+    return briefing;
   }
 
   /**
@@ -348,7 +384,8 @@ class KitchenManagementSystem {
       recipeBook: await this.generateRecipeBookPDF(),
       buildSheets: this.currentRecipes.map(r => this.generateBuildSheet(r.id)),
       preServiceChecklist: this.generatePreServiceChecklist(),
-      prepList: this.generateNextDayPrepList()
+      prepList: this.generateNextDayPrepList(),
+      fohBriefing: this.generateFOHBriefing()
     };
 
     return documents;

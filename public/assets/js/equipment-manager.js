@@ -307,12 +307,12 @@ class EquipmentManager {
     /**
      * Add equipment
      */
-    addEquipment(equipmentData) {
+    addEquipment(equipmentData, options = {}) {
         const currentUser = this.getCurrentUser();
         const userId = currentUser?.userId || currentUser?.id || 'guest';
         
         const equipment = {
-            id: 'equip_' + Date.now(),
+            id: equipmentData.id || ('equip_' + Date.now()),
             name: equipmentData.name,
             category: equipmentData.category,
             subcategory: equipmentData.subcategory || '',
@@ -327,7 +327,7 @@ class EquipmentManager {
             status: equipmentData.status || 'Active',
             location: equipmentData.location || '',
             quantity: parseInt(equipmentData.quantity) || 1,
-            inStock: parseInt(equipmentData.quantity) || 1,
+            inStock: parseInt(equipmentData.inStock || equipmentData.quantity) || 1,
             condition: equipmentData.condition || 'Good',
             lastMaintenance: equipmentData.lastMaintenance || '',
             nextMaintenance: equipmentData.nextMaintenance || '',
@@ -340,10 +340,20 @@ class EquipmentManager {
             notes: equipmentData.notes || '',
             images: equipmentData.images || [],
             manualUrl: equipmentData.manualUrl || '',
-            createdAt: new Date().toISOString(),
+            createdAt: equipmentData.createdAt || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            userId: userId
+            userId: userId,
+            createdVia: equipmentData.createdVia || 'manual',
+            importBatchId: equipmentData.importBatchId || null
         };
+
+        if (!options.skipDuplicateCheck) {
+            const duplicate = this.equipment.find(item => item.name.toLowerCase() === equipment.name.toLowerCase());
+            if (duplicate) {
+                console.log('⚠️ Duplicate equipment skipped:', equipment.name);
+                return false;
+            }
+        }
         
         this.equipment.push(equipment);
         this.saveEquipment();

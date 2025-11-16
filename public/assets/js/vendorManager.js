@@ -137,6 +137,11 @@ class VendorManager {
                 zip_code: '02101',
                 specialties: ['produce', 'dairy'],
                 notes: 'Reliable supplier for fresh produce',
+                products: [
+                    { name: 'Heirloom Tomatoes', packSize: '10 lb flat', unitCost: 36.5, sku: 'PRD-HT10', notes: 'Peak season June-Aug' },
+                    { name: 'European Butter', packSize: '1 lb blocks (case of 12)', unitCost: 54.0, sku: 'DRY-EB12', notes: 'Plugra unsalted' }
+                ],
+                invoiceAttachment: null,
                 is_active: true,
                 created_at: new Date().toISOString()
             },
@@ -152,6 +157,11 @@ class VendorManager {
                 zip_code: '60601',
                 specialties: ['meat', 'poultry'],
                 notes: 'Premium meat supplier',
+                products: [
+                    { name: 'Prime Ribeye', packSize: '15 lb case', unitCost: 198.0, sku: 'MEAT-PR15', notes: 'Aged 21 days' },
+                    { name: 'Airline Chicken Breast', packSize: '10 lb case', unitCost: 62.5, sku: 'POUL-AL10', notes: '8 oz portions' }
+                ],
+                invoiceAttachment: null,
                 is_active: true,
                 created_at: new Date().toISOString()
             },
@@ -167,6 +177,11 @@ class VendorManager {
                 zip_code: '90001',
                 specialties: ['spices', 'asian ingredients'],
                 notes: 'Specialized in Asian ingredients',
+                products: [
+                    { name: 'Szechuan Peppercorn', packSize: '2 lb bag', unitCost: 24.0, sku: 'SPC-SZ2', notes: 'High-voltage heat' },
+                    { name: 'Yuzu Juice', packSize: '6 x 720ml', unitCost: 78.0, sku: 'SPC-YZ6', notes: 'Frozen, keep chilled' }
+                ],
+                invoiceAttachment: null,
                 is_active: true,
                 created_at: new Date().toISOString()
             }
@@ -273,7 +288,16 @@ class VendorManager {
     
     renderVendorRow(vendor) {
         const isSelected = this.selectedVendors.has(vendor.id);
-        const specialties = vendor.specialties?.join(', ') || 'None';
+        const specialties = Array.isArray(vendor.specialties) ? vendor.specialties : [];
+        const specialtyBadges = specialties.length
+            ? specialties.map((item) => `<span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">${this.escapeHtml(item)}</span>`).join('')
+            : '<span class="text-xs text-slate-400">No specialties</span>';
+        const productBadge = Array.isArray(vendor.products) && vendor.products.length
+            ? `<span class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700">🧾 ${vendor.products.length} item${vendor.products.length === 1 ? '' : 's'}</span>`
+            : '';
+        const invoiceBadge = vendor.invoiceAttachment
+            ? '<span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">📎 Invoice</span>'
+            : '';
         const statusClass = vendor.is_active ? 'status-active' : 'status-inactive';
         const statusText = vendor.is_active ? 'Active' : 'Inactive';
         
@@ -284,31 +308,33 @@ class VendorManager {
                 </td>
                 <td>
                     <div class="vendor-info">
-                        <div class="vendor-name">${vendor.name}</div>
-                        <div class="vendor-email">${vendor.email || 'No email'}</div>
+                        <div class="vendor-name">${this.escapeHtml(vendor.name)}</div>
+                        <div class="vendor-email">${vendor.email ? this.escapeHtml(vendor.email) : 'No email'}</div>
                     </div>
                 </td>
                 <td>
                     <div class="company-info">
-                        <div class="company-name">${vendor.company || 'No company'}</div>
-                        <div class="company-website">${vendor.website ? `<a href="${vendor.website}" target="_blank">${vendor.website}</a>` : 'No website'}</div>
+                        <div class="company-name">${vendor.company ? this.escapeHtml(vendor.company) : 'No company'}</div>
+                        <div class="company-website">${vendor.website ? `<a href="${vendor.website}" target="_blank">${this.escapeHtml(vendor.website)}</a>` : 'No website'}</div>
                     </div>
                 </td>
                 <td>
                     <div class="contact-info">
-                        <div class="contact-phone">${vendor.phone || 'No phone'}</div>
-                        <div class="contact-mobile">${vendor.mobile || 'No mobile'}</div>
+                        <div class="contact-phone">${vendor.phone ? this.escapeHtml(vendor.phone) : 'No phone'}</div>
+                        <div class="contact-mobile">${vendor.mobile ? this.escapeHtml(vendor.mobile) : 'No mobile'}</div>
                     </div>
                 </td>
                 <td>
                     <div class="location-info">
-                        <div class="location-city">${vendor.city || 'No city'}</div>
-                        <div class="location-state">${vendor.state || 'No state'}</div>
+                        <div class="location-city">${vendor.city ? this.escapeHtml(vendor.city) : 'No city'}</div>
+                        <div class="location-state">${vendor.state ? this.escapeHtml(vendor.state) : 'No state'}</div>
                     </div>
                 </td>
                 <td>
-                    <div class="specialties-info">
-                        <span class="specialties-tags">${specialties}</span>
+                    <div class="flex flex-wrap gap-2">
+                        ${productBadge}
+                        ${invoiceBadge}
+                        ${specialtyBadges}
                     </div>
                 </td>
                 <td>
@@ -390,6 +416,18 @@ class VendorManager {
                 countElement.textContent = this.selectedVendors.size;
             }
         }
+    }
+    
+    escapeHtml(text) {
+        if (text === null || text === undefined) {
+            return '';
+        }
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
     
     getFilteredVendors() {
@@ -502,6 +540,7 @@ class VendorManager {
         const modal = this.createVendorModal(mode, vendor);
         if (modal) {
             document.body.appendChild(modal);
+            this.initializeVendorModal(modal, vendor);
             
             // Show modal with animation
             setTimeout(() => {
@@ -658,6 +697,32 @@ class VendorManager {
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                       placeholder="Enter any additional notes about this vendor">${vendor?.notes || ''}</textarea>
                         </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-sm font-medium text-gray-700">
+                                    Signature products & pricing
+                                </label>
+                                <button type="button" data-action="add-product" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-100 text-indigo-700 text-sm font-medium hover:bg-indigo-200 transition">
+                                    ➕ Add item
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-500">Track the items you rely on from this vendor—pack sizes, SKUs, and current pricing stay at your fingertips.</p>
+                            <div id="vendor-products-list" class="space-y-3"></div>
+                        </div>
+
+                        <div class="mt-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Latest invoice or quote snapshot
+                            </label>
+                            <div id="vendor-invoice-dropzone" class="relative flex flex-col items-center justify-center gap-3 border-2 border-dashed border-gray-300 rounded-xl px-4 py-6 text-center bg-gray-50 hover:border-indigo-400 hover:bg-indigo-50 transition cursor-pointer">
+                                <input type="file" id="vendor-invoice-file" accept="image/*,application/pdf" class="hidden">
+                                <div class="text-3xl">📎</div>
+                                <div class="text-sm font-medium text-gray-700">Drag & drop or click to attach</div>
+                                <p class="text-xs text-gray-500">We'll keep a snapshot with the vendor so you can reference pricing quickly.</p>
+                            </div>
+                            <div id="vendor-invoice-preview" class="mt-3"></div>
+                        </div>
                         
                         <div class="flex items-center">
                             <input type="checkbox" id="vendor-active" class="mr-2"
@@ -685,6 +750,239 @@ class VendorManager {
         return modal;
     }
     
+    initializeVendorModal(modal, vendor = {}) {
+        if (!modal) {
+            return;
+        }
+        if (vendor?.id) {
+            modal.dataset.vendorId = vendor.id;
+        }
+        const productContainer = modal.querySelector('#vendor-products-list');
+        const addProductButton = modal.querySelector('[data-action="add-product"]');
+        const existingProducts = Array.isArray(vendor?.products) ? vendor.products : [];
+        if (productContainer) {
+            productContainer.innerHTML = '';
+            if (existingProducts.length) {
+                existingProducts.forEach(product => this.addProductRow(productContainer, product));
+            } else {
+                this.addProductRow(productContainer);
+            }
+            productContainer.addEventListener('click', (event) => {
+                const removeButton = event.target.closest('[data-action="remove-product"]');
+                if (!removeButton) return;
+                event.preventDefault();
+                const row = removeButton.closest('.vendor-product-row');
+                if (!row) return;
+                if (productContainer.querySelectorAll('.vendor-product-row').length > 1) {
+                    row.remove();
+                } else {
+                    row.querySelectorAll('input, textarea').forEach((input) => {
+                        input.value = '';
+                    });
+                }
+            });
+        }
+        if (addProductButton && productContainer) {
+            addProductButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                this.addProductRow(productContainer);
+            });
+        }
+        this.setupInvoiceCapture(modal, vendor);
+    }
+
+    addProductRow(container, product = {}) {
+        if (!container) return;
+        const row = document.createElement('div');
+        row.className = 'vendor-product-row space-y-3 rounded-xl border border-gray-200 bg-white shadow-sm p-4';
+        const safeName = this.escapeHtml(product?.name || '');
+        const safePack = this.escapeHtml(product?.packSize || '');
+        const safeSku = this.escapeHtml(product?.sku || '');
+        const safeNotes = this.escapeHtml(product?.notes || '');
+        const priceValue = product?.unitCost ?? '';
+        row.innerHTML = `
+            <div class="grid gap-3 md:grid-cols-4">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Item</label>
+                    <input type="text" data-field="name" value="${safeName}" placeholder="e.g., Heirloom tomatoes flat" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring focus:ring-indigo-200">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Pack size</label>
+                    <input type="text" data-field="pack" value="${safePack}" placeholder="10 lb case" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring focus:ring-indigo-200">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Unit cost</label>
+                    <div class="relative">
+                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                        <input type="number" min="0" step="0.01" data-field="price" value="${priceValue !== '' ? priceValue : ''}" placeholder="0.00" class="w-full rounded-lg border border-gray-300 pl-7 pr-3 py-2 text-sm focus:border-indigo-400 focus:ring focus:ring-indigo-200">
+                    </div>
+                </div>
+            </div>
+            <div class="grid gap-3 md:grid-cols-5 md:items-end">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">SKU / Code</label>
+                    <input type="text" data-field="sku" value="${safeSku}" placeholder="Vendor ref" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring focus:ring-indigo-200">
+                </div>
+                <div class="md:col-span-3">
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Notes</label>
+                    <textarea data-field="notes" rows="1" placeholder="Seasonal pricing or quality callouts" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-400 focus:ring focus:ring-indigo-200 resize-none">${safeNotes}</textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" data-action="remove-product" class="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-500 hover:bg-red-50">
+                        ✕ Remove
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(row);
+    }
+
+    collectProductData(container) {
+        if (!container) return [];
+        const rows = Array.from(container.querySelectorAll('.vendor-product-row'));
+        return rows.map((row) => {
+            const name = row.querySelector('[data-field="name"]')?.value.trim() || '';
+            const packSize = row.querySelector('[data-field="pack"]')?.value.trim() || '';
+            const sku = row.querySelector('[data-field="sku"]')?.value.trim() || '';
+            const notes = row.querySelector('[data-field="notes"]')?.value.trim() || '';
+            const priceRaw = row.querySelector('[data-field="price"]')?.value;
+            const hasContent = name || packSize || sku || notes || priceRaw;
+            if (!hasContent) {
+                return null;
+            }
+            const unitCost = priceRaw !== '' && priceRaw !== null ? parseFloat(priceRaw) : null;
+            return {
+                name,
+                packSize,
+                sku,
+                notes,
+                unitCost: Number.isFinite(unitCost) ? unitCost : null
+            };
+        }).filter(Boolean);
+    }
+
+    setupInvoiceCapture(modal, vendor = {}) {
+        const dropzone = modal.querySelector('#vendor-invoice-dropzone');
+        const fileInput = modal.querySelector('#vendor-invoice-file');
+        const preview = modal.querySelector('#vendor-invoice-preview');
+        if (!dropzone || !fileInput || !preview) {
+            return;
+        }
+        const attachment = vendor?.invoiceAttachment || null;
+        if (attachment) {
+            try {
+                modal.dataset.invoiceAttachment = JSON.stringify(attachment);
+                this.renderInvoicePreview(preview, attachment);
+            } catch (error) {
+                console.warn('⚠️ Unable to load existing invoice attachment:', error);
+                modal.dataset.invoiceAttachment = '';
+                preview.innerHTML = '<p class="text-sm text-gray-500">No file attached yet.</p>';
+            }
+        } else {
+            modal.dataset.invoiceAttachment = '';
+            preview.innerHTML = '<p class="text-sm text-gray-500">No file attached yet.</p>';
+        }
+        dropzone.addEventListener('click', (event) => {
+            event.preventDefault();
+            fileInput.click();
+        });
+        dropzone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropzone.classList.add('border-indigo-400', 'bg-indigo-50');
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-indigo-400', 'bg-indigo-50');
+        });
+        dropzone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropzone.classList.remove('border-indigo-400', 'bg-indigo-50');
+            if (event.dataTransfer?.files?.length) {
+                const file = event.dataTransfer.files[0];
+                this.processInvoiceFile(modal, file, preview);
+            }
+        });
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+                this.processInvoiceFile(modal, file, preview);
+            }
+        });
+        preview.addEventListener('click', (event) => {
+            const removeBtn = event.target.closest('[data-action="remove-invoice"]');
+            if (removeBtn) {
+                event.preventDefault();
+                modal.dataset.invoiceAttachment = '';
+                fileInput.value = '';
+                preview.innerHTML = '<p class="text-sm text-gray-500">No file attached yet.</p>';
+            }
+        });
+    }
+
+    processInvoiceFile(modal, file, preview) {
+        if (!file) return;
+        const maxSize = 8 * 1024 * 1024; // 8MB safety guard
+        if (file.size > maxSize) {
+            alert('Please choose a file under 8MB.');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            const attachment = {
+                name: file.name,
+                type: file.type || 'application/octet-stream',
+                data: reader.result
+            };
+            modal.dataset.invoiceAttachment = JSON.stringify(attachment);
+            this.renderInvoicePreview(preview, attachment);
+        };
+        reader.onerror = () => {
+            alert('We could not read that file. Please try again.');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    renderInvoicePreview(preview, attachment) {
+        if (!preview) return;
+        if (!attachment) {
+            preview.innerHTML = '<p class="text-sm text-gray-500">No file attached yet.</p>';
+            return;
+        }
+        const safeName = this.escapeHtml(attachment.name || 'Invoice');
+        const fileHref = attachment.data ? `href="${attachment.data}"` : 'href="#"';
+        const isImage = attachment.type?.startsWith('image/');
+        if (isImage) {
+            preview.innerHTML = `
+                <div class="rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">
+                    <img src="${attachment.data}" alt="${safeName}" class="w-full object-cover max-h-60">
+                    <div class="flex items-center justify-between px-3 py-2 text-sm bg-gray-50">
+                        <span class="text-gray-600 truncate">${safeName}</span>
+                        <div class="flex items-center gap-2">
+                            <a ${fileHref} download="${safeName}" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-700 font-medium">Download</a>
+                            <button type="button" data-action="remove-invoice" class="text-red-500 hover:text-red-600 font-medium">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            const descriptor = this.escapeHtml(attachment.type || 'Document');
+            preview.innerHTML = `
+                <div class="flex items-center justify-between px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">📄</span>
+                        <div>
+                            <div class="text-sm font-medium text-gray-800">${safeName}</div>
+                            <div class="text-xs text-gray-500">${descriptor} attached</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a ${fileHref} download="${safeName}" target="_blank" rel="noopener" class="text-indigo-600 hover:text-indigo-700 font-medium">Open</a>
+                        <button type="button" data-action="remove-invoice" class="text-red-500 hover:text-red-600 font-medium">Remove</button>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
     async saveVendor() {
         const form = document.getElementById('vendor-form');
         if (!form) {
@@ -693,6 +991,8 @@ class VendorManager {
         }
         
         console.log('💾 Saving vendor...');
+        
+        const modal = document.querySelector('.vendor-modal-overlay[data-modal="vendor"]');
         
         const formData = {
             name: document.getElementById('vendor-name').value.trim(),
@@ -710,20 +1010,31 @@ class VendorManager {
             is_active: document.getElementById('vendor-active').checked
         };
         
+        const productsContainer = modal ? modal.querySelector('#vendor-products-list') : null;
+        formData.products = this.collectProductData(productsContainer);
+        
+        let invoiceAttachment = null;
+        if (modal?.dataset?.invoiceAttachment) {
+            try {
+                invoiceAttachment = JSON.parse(modal.dataset.invoiceAttachment);
+            } catch (error) {
+                console.warn('⚠️ Failed to parse invoice attachment data:', error);
+            }
+        }
+        formData.invoiceAttachment = invoiceAttachment;
+        
         if (!formData.name) {
             alert('Please enter a vendor name');
             return;
         }
         
         // Check if we're editing or adding
-        const modal = document.querySelector('.vendor-modal-overlay[data-modal="vendor"]');
         const isEdit = modal && modal.dataset.vendorId;
-        const vendorId = isEdit ? parseInt(modal.dataset.vendorId) : null;
         
         try {
             if (isEdit) {
                 // UPDATE existing vendor
-                const response = await fetch(`/api/vendors/${vendorId}`, {
+                const response = await fetch(`/api/vendors/${formData.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -733,14 +1044,20 @@ class VendorManager {
                 
                 if (response.ok) {
                     const updatedVendor = await response.json();
-                    const index = this.vendors.findIndex(v => v.id === vendorId);
+                    const index = this.vendors.findIndex(v => v.id === formData.id);
                     if (index !== -1) {
-                        this.vendors[index] = updatedVendor;
+                        this.vendors[index] = {
+                            ...this.vendors[index],
+                            ...formData,
+                            ...updatedVendor,
+                            id: formData.id,
+                            updated_at: new Date().toISOString()
+                        };
                     }
-                    console.log('✅ Vendor updated in API:', updatedVendor.name);
+                    console.log('✅ Vendor updated in API:', formData.name);
                 } else {
                     // Fallback to local storage
-                    const index = this.vendors.findIndex(v => v.id === vendorId);
+                    const index = this.vendors.findIndex(v => v.id === formData.id);
                     if (index !== -1) {
                         this.vendors[index] = {
                             ...this.vendors[index],
@@ -762,8 +1079,14 @@ class VendorManager {
                 
                 if (response.ok) {
                     const savedVendor = await response.json();
-                    this.vendors.push(savedVendor);
-                    console.log('✅ Vendor saved to API:', savedVendor.name);
+                    const newVendor = {
+                        ...formData,
+                        ...savedVendor,
+                        id: savedVendor.id || Date.now(),
+                        created_at: savedVendor.created_at || new Date().toISOString()
+                    };
+                    this.vendors.push(newVendor);
+                    console.log('✅ Vendor saved to API:', newVendor.name);
                 } else {
                     // Fallback to local storage
                     const newVendor = {
@@ -1460,9 +1783,97 @@ VendorManager.prototype.viewVendorProfile = function(vendorId) {
     `;
     
     // Build specialties badges
-    const specialtiesHTML = vendor.specialties && vendor.specialties.length > 0
-        ? vendor.specialties.map(s => `<span style="display: inline-block; background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; margin: 4px;">${s}</span>`).join('')
+    const specialties = Array.isArray(vendor.specialties) ? vendor.specialties : [];
+    const specialtiesHTML = specialties.length
+        ? specialties.map(s => `<span style="display: inline-flex; align-items: center; gap: 6px; background: #e0e7ff; color: #3730a3; padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600;">⭐ ${this.escapeHtml(s)}</span>`).join(' ')
         : '<span style="color: #94a3b8;">None specified</span>';
+
+    // Build product list
+    const productItemsHTML = Array.isArray(vendor.products) && vendor.products.length
+        ? vendor.products.map(item => {
+            const safeName = this.escapeHtml(item?.name || 'Untitled item');
+            const safePack = this.escapeHtml(item?.packSize || 'Pack TBD');
+            const safeSku = this.escapeHtml(item?.sku || 'No SKU');
+            const safeNotes = this.escapeHtml(item?.notes || 'No additional notes');
+            const price = Number.isFinite(item?.unitCost) ? `$${Number(item.unitCost).toFixed(2)}` : 'Pricing TBD';
+            return `
+                <div style="padding: 18px; border: 1px solid #e2e8f0; border-radius: 16px; background: #f8fafc;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                        <div>
+                            <div style="font-weight: 700; color: #1e293b; font-size: 1rem;">${safeName}</div>
+                            <div style="font-size: 0.85rem; color: #64748b; margin-top: 6px; line-height: 1.6;">${safeNotes}</div>
+                        </div>
+                        <span style="display: inline-flex; align-items: center; gap: 6px; background: #fef3c7; color: #b45309; padding: 6px 12px; border-radius: 999px; font-weight: 600; font-size: 0.8rem;">💵 ${price}</span>
+                    </div>
+                    <div style="display: flex; gap: 18px; margin-top: 12px; font-size: 0.8rem; color: #475569; flex-wrap: wrap;">
+                        <span style="display: inline-flex; align-items: center; gap: 6px;">📦 ${safePack}</span>
+                        <span style="display: inline-flex; align-items: center; gap: 6px;">🆔 ${safeSku}</span>
+                    </div>
+                </div>
+            `;
+        }).join('')
+        : `<div style="padding: 20px; border: 2px dashed #cbd5e1; border-radius: 16px; text-align: center; color: #64748b; font-size: 0.9rem; background: #f8fafc;">No products tracked yet. Capture your go-to items directly from the vendor modal.</div>`;
+
+    const productsSectionHTML = `
+        <div style="padding: 25px; border-bottom: 2px solid #f1f5f9; background: white;">
+            <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin: 0 0 18px 0; display: flex; align-items: center; gap: 10px;">
+                <span>🍋</span> Product Catalogue <span style="background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">${Array.isArray(vendor.products) ? vendor.products.length : 0}</span>
+            </h3>
+            <div style="display: grid; gap: 16px;">
+                ${productItemsHTML}
+            </div>
+        </div>
+    `;
+
+    // Build invoice preview
+    let invoiceSectionHTML = '';
+    if (vendor.invoiceAttachment?.data) {
+        const attachment = vendor.invoiceAttachment;
+        const safeName = this.escapeHtml(attachment.name || 'Invoice');
+        if ((attachment.type || '').startsWith('image/')) {
+            invoiceSectionHTML = `
+                <div style="padding: 25px; border-bottom: 2px solid #f1f5f9; background: #f8fafc;">
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px;">
+                        <span>🧾</span> Latest Invoice Snapshot
+                    </h3>
+                    <div style="border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background: white;">
+                        <img src="${attachment.data}" alt="${safeName}" style="width: 100%; max-height: 320px; object-fit: cover;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #f8fafc; font-size: 0.9rem; color: #475569;">
+                            <span style="font-weight: 600;">${safeName}</span>
+                            <a href="${attachment.data}" download="${safeName}" target="_blank" rel="noopener" style="color: #4f46e5; font-weight: 600;">Download</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            const descriptor = this.escapeHtml(attachment.type || 'Document');
+            invoiceSectionHTML = `
+                <div style="padding: 25px; border-bottom: 2px solid #f1f5f9; background: #f8fafc;">
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px;">
+                        <span>🧾</span> Latest Invoice Snapshot
+                    </h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; border: 1px solid #e2e8f0; border-radius: 14px; background: white;">
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 600; color: #1e293b;">${safeName}</div>
+                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">${descriptor} attached</div>
+                        </div>
+                        <a href="${attachment.data}" download="${safeName}" target="_blank" rel="noopener" style="color: #4f46e5; font-weight: 600;">Open</a>
+                    </div>
+                </div>
+            `;
+        }
+    } else {
+        invoiceSectionHTML = `
+            <div style="padding: 25px; border-bottom: 2px solid #f1f5f9; background: #f8fafc;">
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px;">
+                    <span>🧾</span> Latest Invoice Snapshot
+                </h3>
+                <div style="padding: 20px; border: 2px dashed #cbd5e1; border-radius: 16px; color: #64748b; font-size: 0.9rem; background: white; text-align: center;">
+                    No invoice on file yet. Upload the latest quote from the vendor modal to keep pricing handy.
+                </div>
+            </div>
+        `;
+    }
     
     // Build contact info
     const contactHTML = `
@@ -1604,10 +2015,14 @@ VendorManager.prototype.viewVendorProfile = function(vendorId) {
                     <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px;">
                         <span>⭐</span> Specialties
                     </h3>
-                    <div style="line-height: 2;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
                         ${specialtiesHTML}
                     </div>
                 </div>
+
+                ${productsSectionHTML}
+
+                ${invoiceSectionHTML}
 
                 <!-- Notes Section -->
                 <div style="padding: 25px; background: #f8fafc;">
@@ -1615,7 +2030,7 @@ VendorManager.prototype.viewVendorProfile = function(vendorId) {
                         <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 10px;">
                             <span>📝</span> Notes & History <span style="background: #667eea; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">${notes.length}</span>
                         </h3>
-                        <button onclick="window.location.href='chef-dashboard.html'" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">
+                        <button onclick="vendorManager.promptVendorNote('${vendor.id}', this)" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">
                             ➕ Add Note
                         </button>
                     </div>
@@ -1643,6 +2058,42 @@ VendorManager.prototype.viewVendorProfile = function(vendorId) {
     };
     
     document.body.appendChild(modal);
+};
+
+VendorManager.prototype.promptVendorNote = function(vendorId, triggerElement) {
+    const vendor = this.vendors.find(v => v.id === vendorId);
+    if (!vendor) {
+        console.error('Vendor not found:', vendorId);
+        return;
+    }
+
+    const noteText = window.prompt(`Add a note for ${vendor.name}:`);
+    if (!noteText || !noteText.trim()) {
+        return;
+    }
+
+    const user = window.authManager?.currentUser;
+    const userId = user?.userId || user?.id || 'local';
+    const author = user?.email || user?.name || 'Team';
+    const notesKey = `vendor_notes_${userId}_${vendorId}`;
+    const notes = JSON.parse(localStorage.getItem(notesKey) || '[]');
+
+    notes.unshift({
+        id: `vendor_note_${Date.now()}`,
+        text: noteText.trim(),
+        author,
+        timestamp: new Date().toISOString(),
+    });
+
+    localStorage.setItem(notesKey, JSON.stringify(notes));
+    this.showNotification('Vendor note captured', 'success');
+
+    const modal = triggerElement?.closest('div[style*="position: fixed"]');
+    if (modal) {
+        modal.remove();
+    }
+
+    this.viewVendorProfile(vendorId);
 };
 
 // Utility function for debouncing

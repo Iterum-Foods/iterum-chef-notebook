@@ -13,7 +13,7 @@
  *    - Enable Google
  */
 
-// Firebase configuration - Iterum Culinary App
+// Firebase configuration - Your actual Firebase project config
 const firebaseConfig = {
     apiKey: "AIzaSyB94rVT-7xyBLJBH9zpjGyCZL5aEKmK7Hc",
     authDomain: "iterum-culinary-app.firebaseapp.com",

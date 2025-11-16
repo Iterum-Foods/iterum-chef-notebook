@@ -4,7 +4,7 @@
  * Integrates with existing unified authentication system
  */
 
-// Firebase configuration - Iterum Culinary App
+// Firebase configuration - embedded directly to avoid loading issues
 const firebaseConfig = {
     apiKey: "AIzaSyB94rVT-7xyBLJBH9zpjGyCZL5aEKmK7Hc",
     authDomain: "iterum-culinary-app.firebaseapp.com",

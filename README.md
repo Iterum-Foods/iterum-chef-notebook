@@ -1,100 +1,230 @@
-# Iterum Culinary App
+# 🍳 Iterum Culinary R&D App
 
-A comprehensive culinary management platform for professional chefs and restaurant teams.
+A comprehensive culinary research and development application for chefs, food service professionals, and culinary enthusiasts.
 
-## 🏗️ Project Structure
+## 🚀 Features
 
-```
-iterum-culinary-app/
-├── public/                 # Main app files (Firebase hosting)
-│   ├── index.html         # Main dashboard
-│   ├── launch.html        # Landing/login page
-│   └── assets/            # CSS, JS, images
-├── src/                   # Source files
-│   ├── pages/             # All HTML pages
-│   └── scripts/           # Utility scripts
-├── docs/                  # Documentation
-├── config/                # Configuration files
-├── data/                  # Database files
-├── archive/               # Old/backup files
-└── firebase.json          # Firebase configuration
-```
+### **User Management System**
+- **Multi-User Profiles**: Create and manage multiple chef profiles
+- **Project-Based Organization**: Organize work by projects (Master, Client, etc.)
+- **Cross-Page Synchronization**: User and project selection persists across all pages
+
+### **Recipe Development**
+- **Recipe Ideas Management**: Capture and organize culinary concepts
+- **Recipe Builder**: Comprehensive recipe development with ingredients, instructions, and notes
+- **PDF Recipe Import**: Convert existing recipe PDFs into structured data
+- **Recipe Versioning**: Track changes and improvements over time
+
+### **Project Management**
+- **Project Organization**: Separate data by project for different clients or purposes
+- **Data Tagging**: Organize information with custom tags and categories
+- **Progress Tracking**: Monitor development status and milestones
+
+### **Data Management**
+- **Ingredient Library**: Comprehensive ingredient database with nutritional information
+- **Vendor Management**: Track suppliers and vendor relationships
+- **Equipment Tracking**: Manage kitchen equipment and maintenance
+- **Menu Planning**: Build and organize menus for different occasions
+
+### **Storage & Security**
+- **User-Controlled Storage**: Local data storage with export/backup capabilities
+- **Offline-First Design**: Works without internet connection
+- **Data Portability**: Easy data export and import between systems
+- **🔒 Advanced Security Features**:
+  - **XSS Protection**: Safe HTML injection with input sanitization
+  - **Data Encryption**: AES-GCM encryption for sensitive localStorage data
+  - **Content Security Policy (CSP)**: Comprehensive security headers and violation monitoring
+  - **Input Validation**: Robust validation for all user inputs
+  - **API Security**: Secure fetch wrapper with request sanitization and response validation
+  - **Security Monitoring**: Real-time violation logging and reporting
+
+## 🛠️ Technology Stack
+
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Styling**: Tailwind CSS
+- **Storage**: LocalStorage, IndexedDB
+- **Build Tools**: Modern JavaScript with ES6 modules
+- **Compatibility**: Modern browsers (Chrome, Firefox, Safari, Edge)
+
+## 📋 Prerequisites
+
+- Modern web browser (Chrome 80+, Firefox 75+, Safari 13+, Edge 80+)
+- Local file system access or HTTP server
+- JavaScript enabled
 
 ## 🚀 Quick Start
 
-1. **Firebase Project**: `iterum-culinary-app`
-2. **Live URL**: https://iterum-culinary-app.web.app
-3. **GitHub**: `iterum-culinary-app`
+### **Option 1: Direct File Access**
+1. Clone or download this repository
+2. Navigate to the `Iterum App` folder
+3. Open `index.html` in your web browser
+4. Create your first user profile and start using the app
 
-## 🔧 Development
+### **Option 2: Local HTTP Server (Recommended)**
+1. Clone or download this repository
+2. Navigate to the `Iterum App` folder
+3. Start a local HTTP server:
 
-### Prerequisites
-- Node.js
-- Firebase CLI
-- Git
-
-### Setup
 ```bash
-# Install dependencies
-npm install
+# Python 3
+python -m http.server 8080
 
-# Login to Firebase
-firebase login
+# Python 2
+python -m SimpleHTTPServer 8080
 
-# Deploy to Firebase
-firebase deploy
+# Node.js
+npx http-server -p 8080
+
+# PHP
+php -S localhost:8080
 ```
 
-## 📱 Features
+4. Open `http://localhost:8080` in your browser
+5. Create your first user profile and start using the app
 
-- **Recipe Management**: Create, edit, and organize recipes
-- **Ingredient Database**: Comprehensive ingredient tracking
-- **Menu Builder**: Design and manage restaurant menus
-- **Equipment Management**: Track kitchen equipment and inventory
-- **Cost Calculator**: Calculate recipe costs and profit margins
-- **Project Management**: Organize work by projects
-- **User Authentication**: Secure login and user management
-- **Cloud Sync**: Automatic data synchronization across devices
+## 🔧 Development Setup
 
-## 🎨 Design System
+### **Project Structure**
+```
+Iterum App/
+├── index.html                 # Main application entry point
+├── assets/                    # Static assets
+│   ├── js/                   # JavaScript modules
+│   ├── css/                  # Stylesheets
+│   └── images/               # Images and icons
+├── pages/                     # Individual page modules
+├── tests/                     # Test files and debugging tools
+├── docs/                      # Documentation
+└── .github/                   # GitHub templates and workflows
+```
 
-- **Nordic Vintage UI**: Clean, natural design with vintage aesthetics
-- **Dark Mode**: Professional dark theme with high contrast
-- **Responsive**: Mobile-first design for all devices
-- **Unified Branding**: Consistent design across all features
+### **Key JavaScript Modules**
+- **`unified_auth_system.js`**: User authentication and profile management
+- **`project-management-system.js`**: Project organization and data tagging
+- **`userControlledStorage.js`**: Data storage and management
+- **`header_user_sync.js`**: Cross-page user interface synchronization
 
-## 📊 Tech Stack
+## 🧪 Testing
 
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Backend**: Firebase (Firestore, Authentication, Hosting)
-- **Storage**: LocalStorage + Cloud sync
-- **Styling**: Custom CSS with Nordic design system
+### **Test Pages**
+- **`test_user_loading_fixed.html`**: Test user loading functionality
+- **`test_user_switch_dropdown.html`**: Test user switching interface
+- **`test_project_persistence.html`**: Test project data persistence
 
-## 🔒 Security
+### **Debug Tools**
+- Built-in debug buttons in the user interface
+- Console logging for troubleshooting
+- User loading diagnostics
 
-- Firebase Authentication
-- User data isolation
-- Secure cloud storage
-- Input validation and sanitization
+## 🐛 Known Issues
 
-## 📈 Deployment
+### **Current Status**
+- ✅ User authentication system implemented
+- ✅ Project management system working
+- ✅ Cross-page data synchronization
+- ✅ Recipe development tools
+- ⚠️ User loading optimization in progress
+- ⚠️ Some cross-page sync edge cases
 
-The app is automatically deployed to Firebase Hosting when changes are pushed to the main branch.
+### **Recent Fixes**
+- User loading now defaults to offline mode (no more 404 errors)
+- Enhanced user storage scanning and merging
+- Improved project persistence across pages
 
-**Live URL**: https://iterum-culinary-app.web.app
+## 📝 Contributing
 
-## 🤝 Contributing
+### **Reporting Issues**
+1. Use the appropriate issue template:
+   - [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md)
+   - [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md)
+   - [User Loading Issue](.github/ISSUE_TEMPLATE/user_loading_issue.md)
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Include detailed reproduction steps
+3. Attach console logs and screenshots
+4. Specify your environment details
+
+### **Development Workflow**
+1. Create a feature branch for your changes
+2. Test thoroughly before submitting
+3. Update documentation as needed
+4. Submit a pull request with clear description
+
+## 🔒 Privacy & Data
+
+- **Local Storage**: All data is stored locally on your device
+- **No Cloud Sync**: No data is transmitted to external servers
+- **Export Control**: You control when and how data is exported
+- **Offline Operation**: Full functionality without internet connection
+
+## 📱 Browser Compatibility
+
+| Browser | Version | Status |
+|---------|---------|---------|
+| Chrome  | 80+     | ✅ Full Support |
+| Firefox | 75+     | ✅ Full Support |
+| Safari  | 13+     | ✅ Full Support |
+| Edge    | 80+     | ✅ Full Support |
+
+## 🆘 Support
+
+### **Getting Help**
+1. Check the [Issues](../../issues) page for known problems
+2. Search existing issues for similar problems
+3. Create a new issue with detailed information
+4. Include console logs and reproduction steps
+
+### **Common Solutions**
+- **User Loading Issues**: Try refreshing the page or clearing browser cache
+- **Data Not Persisting**: Check if you're on the correct project
+- **Interface Sync Issues**: Ensure you're logged in with a valid user profile
+
+## 🔒 Security Features
+
+This application implements comprehensive security measures to protect user data and prevent common web vulnerabilities:
+
+### **XSS Protection**
+- Safe HTML injection using trusted content flags
+- Input sanitization for all user-provided content
+- Automatic escaping of potentially dangerous characters
+
+### **Data Encryption**
+- AES-GCM encryption for sensitive localStorage data
+- Automatic encryption/decryption of user sessions
+- Secure key generation and management
+
+### **Content Security Policy (CSP)**
+- Strict CSP headers to prevent code injection
+- Violation monitoring and reporting
+- Real-time security event logging
+
+### **Input Validation**
+- Comprehensive validation for emails, passwords, and text inputs
+- File upload security checks
+- Number and data type validation
+
+### **API Security**
+- Secure fetch wrapper with authentication tokens
+- Request sanitization and validation
+- Response integrity checks
+
+### **Security Monitoring**
+- Real-time violation logging
+- Security event tracking
+- Automated threat detection
+
+For detailed security information, see [SECURITY_IMPLEMENTATION_SUMMARY.md](SECURITY_IMPLEMENTATION_SUMMARY.md).
 
 ## 📄 License
 
-This project is proprietary software. All rights reserved.
+This project is developed for culinary professionals and enthusiasts. Please respect the work and contribute positively to the community.
+
+## 🙏 Acknowledgments
+
+- Built for the culinary community
+- Designed for real-world kitchen workflows
+- Focused on user experience and data integrity
+- Enhanced with enterprise-grade security features
 
 ---
 
-**Iterum Culinary App** - Professional culinary management for modern kitchens.
+**🍳 Happy Cooking and Developing! 🚀**

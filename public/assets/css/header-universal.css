@@ -1,117 +1,192 @@
 /**
- * Universal Header Styles
- * Ensures all pages have consistent, visible headers
+ * Modern Unified Header
  */
 
-/* Make sure unified nav header is always visible and styled */
 .unified-nav-header {
-    background: linear-gradient(135deg, #0F0E0C 0%, #1A1512 100%) !important;
-    border-bottom: 2px solid rgba(201, 149, 75, 0.5) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    z-index: 1000 !important;
-    padding: 0 !important;
+    position: sticky !important;
+    top: 0;
+    z-index: 1200;
+    width: 100%;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    background: rgba(15, 23, 42, 0.86);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
 }
 
-/* Header text - high contrast but not harsh */
-.unified-nav-header * {
-    color: #F5F2EB !important;  /* Bright cream for better readability */
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+.unified-nav-header .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
 }
 
-/* Nav links */
+.unified-nav-header .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: rgba(248, 250, 252, 0.95);
+}
+
+.unified-nav-header .nav-logo-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.unified-nav-header .nav-logo-text {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+}
+
+.unified-nav-header .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
 .unified-nav-header .nav-link {
-    color: #F5F2EB !important;  /* Brighter for readability */
-    font-weight: 700;  /* Bolder */
+    color: rgba(226, 232, 240, 0.75);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
     padding: 10px 18px;
-    transition: all 0.3s ease;
+    border-radius: 999px;
+    transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
-.unified-nav-header .nav-link:hover {
-    background: rgba(201, 149, 75, 0.3) !important;
-    color: #FFFFFF !important;  /* Pure white on hover for max contrast */
+.unified-nav-header .nav-link:hover,
+.unified-nav-header .nav-link:focus {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
 }
 
 .unified-nav-header .nav-link.active {
-    background: rgba(201, 149, 75, 0.5) !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 2px 8px rgba(201, 149, 75, 0.4);
+    background: rgba(37, 99, 235, 0.18);
+    color: #e0e7ff;
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
 }
 
-/* Logo text */
-.unified-nav-header .nav-logo {
-    color: #FFFFFF !important;  /* Pure white for logo - highest contrast */
-    font-weight: 900;  /* Extra bold */
-    font-size: 1.4rem;  /* Slightly larger */
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);  /* Stronger shadow */
+.nav-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-/* User dropdown */
-.unified-nav-header .nav-user-dropdown {
-    background: #1A1512 !important;
-    border: 1px solid rgba(201, 149, 75, 0.3) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+.nav-project-chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    color: rgba(226, 232, 240, 0.95);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
-.unified-nav-header .nav-user-dropdown-item {
-    color: #E8E4DC !important;  /* Brighter */
-}
-
-.unified-nav-header .nav-user-dropdown-item:hover {
-    background: rgba(201, 149, 75, 0.2) !important;
-    color: #F5F2EB !important;  /* Even brighter on hover */
-}
-
-/* Project selector */
-.unified-nav-header .nav-project-selector {
-    background: rgba(201, 149, 75, 0.2) !important;
-    border: 1px solid rgba(201, 149, 75, 0.4) !important;
-    color: #F5F2EB !important;  /* Brighter text */
-    font-weight: 700;  /* Bolder */
-}
-
-/* Dropdown menus */
-.unified-nav-header .nav-dropdown-content {
-    background: #1A1512 !important;
-    border: 1px solid rgba(201, 149, 75, 0.3) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
-}
-
-.unified-nav-header .nav-dropdown-item {
-    color: #E8E4DC !important;  /* Brighter */
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(226, 232, 240, 0.9);
     font-weight: 600;
 }
 
-.unified-nav-header .nav-dropdown-item:hover {
-    background: rgba(201, 149, 75, 0.2) !important;
-    color: #F5F2EB !important;  /* Even brighter on hover */
-}
-
-/* Category headers in dropdown */
-.unified-nav-header .nav-dropdown-category {
-    color: #C9954B !important;
+.nav-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
     font-weight: 700;
+    letter-spacing: 0.05em;
 }
 
-/* Ensure body has padding for fixed header */
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-dropdown-menu {
+    position: absolute;
+    right: 0;
+    margin-top: 12px;
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    border-radius: 18px;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.45);
+    padding: 12px;
+    min-width: 220px;
+    backdrop-filter: blur(12px);
+}
+
+.nav-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(226, 232, 240, 0.9);
+    padding: 10px 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-dropdown-item:hover {
+    background: rgba(37, 99, 235, 0.16);
+}
+
 body {
     padding-top: 80px !important;
 }
 
-/* Override any conflicting header styles */
-header:not(.unified-nav-header) {
-    display: none !important;  /* Hide any old headers */
+/* Normalize layout across pages to avoid misshaped header */
+.unified-nav-header * {
+    box-sizing: border-box;
 }
 
-/* Make sure no harsh whites anywhere in header */
-.unified-nav-header .text-white,
-.unified-nav-header [style*="color: white"],
-.unified-nav-header [style*="color: #fff"],
-.unified-nav-header [style*="color:#fff"] {
-    color: #E8E4DC !important;
+.unified-nav-header .nav-container {
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 74px !important;
+    min-height: 74px !important;
 }
 
+.unified-nav-header .nav-links {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
+.unified-nav-header .nav-link {
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+}
+
+.unified-nav-header .nav-right,
+.nav-meta {
+    margin-left: auto !important;
+}
+
+/* Avoid extra spacing right below the header */
+.unified-nav-header + * {
+    margin-top: 0 !important;
+}
+
+@media (max-width: 900px) {
+    .unified-nav-header .nav-container {
+        height: 68px !important;
+        min-height: 68px !important;
+        padding: 10px 16px !important;
+    }
+}

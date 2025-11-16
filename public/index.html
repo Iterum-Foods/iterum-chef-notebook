@@ -1,231 +1,1418 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iterum R&D Chef Notebook</title>
-    
-    <!-- Immediate Auth Check - Redirect if not logged in -->
-    <script>
-        // Check for active session IMMEDIATELY
-        (function() {
-            try {
-                const sessionActive = localStorage.getItem('session_active');
-                const currentUser = localStorage.getItem('current_user');
-                
-                if (!sessionActive || !currentUser) {
-                    console.log('🔒 No active session - redirecting to launch page');
-                    // Add a small delay to prevent rapid redirects
-                    setTimeout(() => {
-                        window.location.href = 'launch.html';
-                    }, 100);
-                } else {
-                    console.log('✅ Session active - loading dashboard');
-                }
-            } catch (error) {
-                console.log('🔒 Error checking session - redirecting to launch page');
-                setTimeout(() => {
-                    window.location.href = 'launch.html';
-                }, 100);
-            }
-        })();
-    </script>
-    
-    <!-- Load Auth System -->
-    <script src="assets/js/firebase-config.js"></script>
-    <script src="assets/js/auth-manager.js"></script>
-    <script src="assets/js/auth-api-helper.js"></script>
-    <script src="assets/js/auth-diagnostics.js"></script>
-    
-    <!-- Load Brainstorming & Notes Systems -->
-    <script src="assets/js/recipe-brainstorming.js"></script>
-    <script src="assets/js/napkin-brainstorming.js"></script>
-    <script src="assets/js/robust-notes-system.js"></script>
-    <script src="assets/js/enhanced-notes-interface.js"></script>
-    
-    <!-- Load Core Systems -->
-    <script src="assets/js/unified-nav-header.js" defer></script>
-    <script src="assets/js/unified-project-selector.js" defer></script>
-    <script src="assets/js/cloud-data-sync.js"></script>
-    <script src="assets/js/sync-status-indicator.js"></script>
-    
-    <!-- Load UI Enhancement Systems -->
-    <script src="assets/js/toast-notifications.js"></script>
-    <script src="assets/js/loading-states.js"></script>
-    <script src="assets/js/empty-states.js"></script>
-    
-    <!-- Nordic Vintage Design System -->
-    <link rel="stylesheet" href="assets/css/modern-nordic-vintage.css">
-    <link rel="stylesheet" href="assets/css/dark-mode-enhancements.css">
-    <link rel="stylesheet" href="assets/css/iterum-brand-kit.css">
-    <link rel="stylesheet" href="assets/css/header-universal.css">
-    <link rel="stylesheet" href="assets/css/ui-polish.css">
-    
-    <style>
-        body {
-            background: linear-gradient(135deg, #0F0E0C 0%, #1A1512 30%, #2A2420 60%, #1F2A22 100%) !important;
-            padding-top: 80px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iterum Daily Ops Board</title>
+  <script>
+    (function () {
+      const sessionActive = localStorage.getItem('session_active');
+      const currentUser = localStorage.getItem('current_user');
+      if (!sessionActive || !currentUser) {
+        console.log('🔒 No active session - redirecting to launch page');
+        window.location.href = 'launch.html';
+      }
+    })();
+  </script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/auth-manager.js"></script>
+  <script src="assets/js/auth-api-helper.js"></script>
+  <script src="assets/js/auth-diagnostics.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/iterum-brand-kit.css">
+  <link rel="stylesheet" href="assets/css/header-universal.css">
+  <link rel="stylesheet" href="assets/css/ui-polish.css">
+  <link rel="icon" type="image/x-icon" href="assets/icons/iterum.ico">
+  <style>
+    :root {
+      --board-bg: #0f141a;
+      --board-surface: rgba(19, 23, 29, 0.9);
+      --board-border: rgba(148, 163, 184, 0.18);
+      --board-muted: #94a3b8;
+      --board-text: #f8fafc;
+      --board-accent: #8d7bff;
+      --board-accent-soft: rgba(141, 123, 255, 0.16);
+      --board-success: #22c55e;
+      --board-danger: #ef4444;
+      --board-radius: 20px;
+      --board-shadow: 0 32px 80px rgba(15, 23, 42, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--board-bg);
+      color: var(--board-text);
+      min-height: 100vh;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 45%),
+                  radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.12), transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1), transparent 55%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .dashboard-main {
+      padding: 32px 20px 64px;
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .board-header {
+      background: linear-gradient(135deg, rgba(32, 39, 53, 0.9), rgba(44, 30, 61, 0.85));
+      border-radius: var(--board-radius);
+      padding: 32px 36px;
+      box-shadow: var(--board-shadow);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .board-header-top {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .board-eyebrow {
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 240, 0.6);
+      margin: 0 0 8px;
+    }
+
+    .board-header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .board-subtitle {
+      margin: 8px 0 0;
+      color: rgba(226, 232, 240, 0.75);
+      max-width: 560px;
+      font-size: 15px;
+    }
+
+    .board-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 220px;
+      align-items: flex-end;
+    }
+
+    .project-chip {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--board-text);
+      font-weight: 500;
+    }
+
+    .date-picker {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      color: rgba(226, 232, 240, 0.8);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .date-picker input[type="date"] {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: var(--board-text);
+      font-family: inherit;
+    }
+
+  .ops-overview {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .quick-stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .quick-stat-card {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 18px;
+    padding: 20px 24px;
+    box-shadow: var(--board-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .quick-stat-label {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(226, 232, 240, 0.55);
+  }
+
+  .quick-stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #f8fafc;
+  }
+
+  .quick-stat-sub {
+    font-size: 13px;
+    color: rgba(148, 163, 184, 0.75);
+  }
+
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .quick-action-card {
+    background: rgba(27, 34, 44, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: var(--board-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    text-align: left;
+  }
+
+  .quick-action-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99, 102, 241, 0.45);
+    box-shadow: 0 24px 60px rgba(99, 102, 241, 0.28);
+  }
+
+  .quick-action-icon {
+    font-size: 24px;
+  }
+
+  .quick-action-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f8fafc;
+  }
+
+  .quick-action-desc {
+    font-size: 13px;
+    color: rgba(226, 232, 240, 0.68);
+  }
+
+  .quick-action-card[data-quick-action="quick-note"] {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.28), rgba(59, 130, 246, 0.25));
+    border-color: rgba(99, 102, 241, 0.45);
+  }
+
+  .quick-note-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 11, 18, 0.75);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 24px;
+  }
+
+  .quick-note-overlay.show {
+    display: flex;
+  }
+
+  .quick-note-modal {
+    background: rgba(17, 24, 39, 0.96);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 20px;
+    width: min(420px, 100%);
+    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.5);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quick-note-modal header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f8fafc;
+  }
+
+  .quick-note-modal header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .quick-note-modal header button {
+    background: transparent;
+    border: none;
+    color: rgba(226, 232, 240, 0.7);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .quick-note-modal header button:hover {
+    color: #f8fafc;
+  }
+
+  .quick-note-modal select,
+  .quick-note-modal textarea {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(15, 23, 42, 0.75);
+    color: #f8fafc;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .quick-note-modal textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  .quick-note-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(226, 232, 240, 0.6);
+  }
+
+  .quick-note-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .quick-note-actions button {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .quick-note-save {
+    background: linear-gradient(135deg, #38bdf8, #2563eb);
+    color: white;
+    box-shadow: 0 18px 40px rgba(37, 99, 235, 0.4);
+  }
+
+  .quick-note-cancel {
+    background: rgba(148, 163, 184, 0.12);
+    color: rgba(226, 232, 240, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+  }
+
+  .quick-note-actions button:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .quick-note-modal {
+      padding: 24px;
+      border-radius: 18px;
+    }
+  }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .board-card {
+      background: var(--board-surface);
+      border-radius: var(--board-radius);
+      border: 1px solid var(--board-border);
+      box-shadow: var(--board-shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 420px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .card-header p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--board-muted);
+    }
+
+    .card-status {
+      font-size: 12px;
+      color: rgba(226, 232, 240, 0.6);
+      background: rgba(148, 163, 184, 0.12);
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+
+    .status-flash {
+      animation: statusFlash 0.8s ease;
+    }
+
+    @keyframes statusFlash {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.85;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(15, 20, 28, 0.75);
+      color: var(--board-text);
+      padding: 16px;
+      font-size: 15px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    .idea-form textarea:focus {
+      outline: none;
+      border-color: rgba(141, 123, 255, 0.6);
+      box-shadow: 0 0 0 3px rgba(141, 123, 255, 0.2);
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      color: inherit;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(141, 123, 255, 0.9), rgba(99, 102, 241, 0.9));
+      color: white;
+      box-shadow: 0 14px 30px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn.ghost {
+      background: rgba(148, 163, 184, 0.12);
+      color: rgba(226, 232, 240, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .btn.ghost:hover {
+      transform: translateY(-1px);
+      background: rgba(148, 163, 184, 0.2);
+    }
+
+    .inline-form {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .inline-form input[type="text"] {
+      flex: 1;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(15, 20, 28, 0.75);
+      color: var(--board-text);
+      padding: 12px 14px;
+      font-size: 15px;
+    }
+
+    .task-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+      overflow-y: auto;
+      max-height: 280px;
+      padding-right: 4px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    .task-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: rgba(141, 123, 255, 0.8);
+    }
+
+    .task-text {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .task-text.done {
+      text-decoration: line-through;
+      color: rgba(148, 163, 184, 0.6);
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .task-actions button {
+      background: none;
+      border: none;
+      color: rgba(148, 163, 184, 0.6);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 8px;
+    }
+
+    .task-actions button:hover {
+      background: rgba(148, 163, 184, 0.12);
+      color: rgba(226, 232, 240, 0.9);
+    }
+
+    .idea-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .idea-form input[type="text"],
+    .idea-form textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(15, 20, 28, 0.8);
+      color: var(--board-text);
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    .idea-form textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .idea-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      max-height: 270px;
+      padding-right: 4px;
+    }
+
+    .idea-card {
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: rgba(15, 23, 42, 0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .idea-card h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .idea-card p {
+      margin: 0;
+      font-size: 14px;
+      color: rgba(226, 232, 240, 0.75);
+      line-height: 1.5;
+    }
+
+    .idea-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(148, 163, 184, 0.6);
+    }
+
+    .idea-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .idea-actions button {
+      border: none;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      background: rgba(148, 163, 184, 0.14);
+      color: rgba(226, 232, 240, 0.85);
+    }
+
+    .idea-actions button:hover {
+      background: rgba(141, 123, 255, 0.25);
+      color: white;
+    }
+
+    .idea-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: var(--board-accent-soft);
+      color: rgba(226, 232, 240, 0.85);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px dashed rgba(148, 163, 184, 0.25);
+      color: rgba(148, 163, 184, 0.6);
+      font-size: 14px;
+      background: rgba(15, 20, 28, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .board-header-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .board-meta {
+        align-items: flex-start;
+      }
+
+      .inline-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .inline-form button {
+        width: 100%;
+      }
+    }
+  </style>
+  <script src="assets/js/user-data-manager.js" defer></script>
+  <script src="assets/js/cloud-data-sync.js" defer></script>
+  <script src="assets/js/sync-status-indicator.js" defer></script>
+  <script src="assets/js/unified-nav-header.js" defer></script>
+  <script src="assets/js/unified-project-selector.js" defer></script>
+  <script src="assets/js/header-user-display.js" defer></script>
 </head>
-<body>
-    <!-- Loading Screen -->
-    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0F0E0C 0%, #1A1512 30%, #2A2420 60%, #1F2A22 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: #e2e8f0;">
-        <div style="font-size: 48px; margin-bottom: 20px;">🍳</div>
-        <div style="font-size: 24px; font-weight: 600; margin-bottom: 10px; color: #10b981;">Iterum Culinary App</div>
-        <div style="font-size: 16px; color: #94a3b8; margin-bottom: 30px;">Loading your professional chef notebook...</div>
-        <div style="width: 40px; height: 40px; border: 3px solid rgba(16, 185, 129, 0.3); border-top: 3px solid #10b981; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <style>
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        </style>
+<body style="padding-top: 80px;">
+  <div id="simple-loading" style="position: fixed; inset: 0; background: rgba(9, 12, 17, 0.95); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+    <div style="text-align: center;">
+      <div style="width: 64px; height: 64px; border: 5px solid rgba(148, 163, 184, 0.25); border-top-color: var(--board-accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 18px;"></div>
+      <p style="color: rgba(248, 250, 252, 0.9); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; font-size: 13px; margin: 0;">Preparing workspace</p>
     </div>
-
-    <!-- Main Dashboard Content -->
-    <div id="main-content" style="display: none;">
-        <!-- Dashboard will be loaded here -->
-        <div class="dashboard-container" style="max-width: 1400px; margin: 0 auto; padding: 20px;">
-            <div class="dashboard-header" style="text-align: center; margin-bottom: 40px;">
-                <h1 style="color: #f1f5f9; font-size: 2.5rem; font-weight: 700; margin-bottom: 16px;">Welcome to Iterum</h1>
-                <p style="color: #94a3b8; font-size: 1.1rem;">Your Professional Culinary R&D Platform</p>
+  </div>
+  <script>
+    function removeLoadingIndicator() {
+      const loading = document.getElementById('simple-loading');
+      if (loading) {
+        loading.remove();
+      }
+    }
+    setTimeout(removeLoadingIndicator, 1200);
+  </script>
+  <main class="dashboard-main">
+    <div class="dashboard-container">
+      <header class="board-header">
+        <div class="board-header-top">
+          <div>
+            <p class="board-eyebrow">Iterum Kitchen OS</p>
+            <h1>Daily Ops Board</h1>
+            <p class="board-subtitle">Keep the day tight: jot quick notes, knock out the essential tasks, and capture recipes worth exploring.</p>
+          </div>
+          <div class="board-meta">
+            <div class="project-chip" id="dashboard-project">Project: Master Project</div>
+            <div class="date-picker">
+              <label for="dashboard-date">Working date</label>
+              <input type="date" id="dashboard-date">
             </div>
-
-            <!-- Enhanced Notes & Brainstorming Section -->
-            <div class="dashboard-section" style="margin-bottom: 40px;">
-                <h2 style="color: #e2e8f0; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">Enhanced Notes & Brainstorming</h2>
-                <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                    <div class="feature-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 24px; transition: all 0.3s ease;">
-                        <h3 style="color: #10b981; font-size: 1.2rem; margin-bottom: 12px;">📝 Enhanced Notes</h3>
-                        <p style="color: #94a3b8; margin-bottom: 16px;">Professional note-taking with categories, templates, and collaboration features.</p>
-                        <button onclick="openEnhancedNotes()" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Open Notes</button>
-                    </div>
-                    
-                    <div class="feature-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 24px; transition: all 0.3s ease;">
-                        <h3 style="color: #3b82f6; font-size: 1.2rem; margin-bottom: 12px;">💡 Brainstorm Ideas</h3>
-                        <p style="color: #94a3b8; margin-bottom: 16px;">Creative workspace for recipe development and culinary innovation.</p>
-                        <button onclick="openBrainstorming()" style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); color: #3b82f6; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Start Brainstorming</button>
-                    </div>
-                    
-                    <div class="feature-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 24px; transition: all 0.3s ease;">
-                        <h3 style="color: #f59e0b; font-size: 1.2rem; margin-bottom: 12px;">📄 Napkin Sketch</h3>
-                        <p style="color: #94a3b8; margin-bottom: 16px;">Natural drawing interface for quick culinary sketches and ideas.</p>
-                        <button onclick="openNapkinSketch()" style="background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.3); color: #f59e0b; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Start Sketching</button>
-                    </div>
-                    
-                    <div class="feature-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 24px; transition: all 0.3s ease;">
-                        <h3 style="color: #8b5cf6; font-size: 1.2rem; margin-bottom: 12px;">🎲 Random Idea</h3>
-                        <p style="color: #94a3b8; margin-bottom: 16px;">Generate random recipe ideas and culinary inspiration.</p>
-                        <button onclick="generateQuickIdea()" style="background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.3); color: #8b5cf6; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Get Random Idea</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Brainstorming Section -->
-            <div class="dashboard-section" style="margin-bottom: 40px;">
-                <h2 style="color: #e2e8f0; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;">Quick Brainstorming</h2>
-                <div class="quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                    <div class="quick-card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 16px; text-align: center;">
-                        <div style="font-size: 24px; margin-bottom: 8px;">📝</div>
-                        <div style="color: #e2e8f0; font-weight: 500; margin-bottom: 4px;">Enhanced Notes</div>
-                        <div style="color: #94a3b8; font-size: 14px;">Professional note-taking</div>
-                    </div>
-                    
-                    <div class="quick-card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 16px; text-align: center;">
-                        <div style="font-size: 24px; margin-bottom: 8px;">💡</div>
-                        <div style="color: #e2e8f0; font-weight: 500; margin-bottom: 4px;">Brainstorm Ideas</div>
-                        <div style="color: #94a3b8; font-size: 14px;">Creative workspace</div>
-                    </div>
-                    
-                    <div class="quick-card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 16px; text-align: center;">
-                        <div style="font-size: 24px; margin-bottom: 8px;">📄</div>
-                        <div style="color: #e2e8f0; font-weight: 500; margin-bottom: 4px;">Napkin Sketch</div>
-                        <div style="color: #94a3b8; font-size: 14px;">Natural drawing</div>
-                    </div>
-                    
-                    <div class="quick-card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 8px; padding: 16px; text-align: center;">
-                        <div style="font-size: 24px; margin-bottom: 8px;">🎲</div>
-                        <div style="color: #e2e8f0; font-weight: 500; margin-bottom: 4px;">Random Idea</div>
-                        <div style="color: #94a3b8; font-size: 14px;">Generate inspiration</div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </header>
+      <section class="ops-overview">
+        <div class="quick-stats-row">
+          <div class="quick-stat-card">
+            <span class="quick-stat-label">Open tasks</span>
+            <span class="quick-stat-value" id="quick-stat-tasks">0</span>
+            <span class="quick-stat-sub">Across today’s checklist</span>
+          </div>
+          <div class="quick-stat-card">
+            <span class="quick-stat-label">Recipe ideas queued</span>
+            <span class="quick-stat-value" id="quick-stat-ideas">0</span>
+            <span class="quick-stat-sub">Ready to explore</span>
+          </div>
+          <div class="quick-stat-card">
+            <span class="quick-stat-label">Days with notes</span>
+            <span class="quick-stat-value" id="quick-stat-notes">0</span>
+            <span class="quick-stat-sub">Captured this project</span>
+          </div>
+        </div>
+        <div class="quick-actions-grid">
+          <button class="quick-action-card" data-quick-action="navigate" data-target="kitchen-management.html">
+            <span class="quick-action-icon">🔪</span>
+            <span class="quick-action-title">Kitchen management</span>
+            <span class="quick-action-desc">Generate prep lists, FOH briefs, and build sheets.</span>
+          </button>
+          <button class="quick-action-card" data-quick-action="navigate" data-target="menu-builder.html">
+            <span class="quick-action-icon">🍽️</span>
+            <span class="quick-action-title">Menu builder</span>
+            <span class="quick-action-desc">Draft dishes, link recipes, and prep FOH collateral.</span>
+          </button>
+          <button class="quick-action-card" data-quick-action="navigate" data-target="vendor-management.html">
+            <span class="quick-action-icon">🏪</span>
+            <span class="quick-action-title">Vendors & sourcing</span>
+            <span class="quick-action-desc">Track suppliers, signature products, and invoices.</span>
+          </button>
+          <button class="quick-action-card" data-quick-action="navigate" data-target="ingredients.html">
+            <span class="quick-action-icon">🥬</span>
+            <span class="quick-action-title">Ingredient library</span>
+            <span class="quick-action-desc">Add staples, import catalogs, and enrich metadata.</span>
+          </button>
+          <button class="quick-action-card" data-quick-action="quick-note" data-note-type="service">
+            <span class="quick-action-icon">📝</span>
+            <span class="quick-action-title">Quick service note</span>
+            <span class="quick-action-desc">Capture a fast observation and save it to today’s log.</span>
+          </button>
+        </div>
+      </section>
+      <section class="board-grid">
+        <article class="board-card notes-card">
+          <header class="card-header">
+            <div>
+              <h2>Notes</h2>
+              <p>Kitchen pulse, service feedback, or anything the team should remember.</p>
+            </div>
+            <span id="notes-status" class="card-status">No saved notes yet</span>
+          </header>
+          <textarea id="notes-content" placeholder="Document today's takeaways, issues to escalate, or wins worth sharing."></textarea>
+          <div class="card-actions">
+            <button id="save-notes" class="btn primary">Save notes</button>
+            <button id="clear-notes" class="btn ghost">Clear</button>
+          </div>
+        </article>
+        <article class="board-card tasks-card">
+          <header class="card-header">
+            <div>
+              <h2>Daily tasks</h2>
+              <p>Capture the must-do items for today and check them off as you go.</p>
+            </div>
+            <span id="task-status" class="card-status">Nothing queued</span>
+          </header>
+          <form id="task-form" class="inline-form">
+            <input type="text" id="task-input" placeholder="Add a task and press Enter">
+            <button type="submit" class="btn primary">Add</button>
+          </form>
+          <ul id="task-list" class="task-list"></ul>
+          <div class="card-actions">
+            <button id="clear-completed" class="btn ghost">Clear completed</button>
+            <button id="reset-tasks" class="btn ghost">Reset list</button>
+          </div>
+        </article>
+        <article class="board-card ideas-card">
+          <header class="card-header">
+            <div>
+              <h2>Recipe ideas</h2>
+              <p>Log dishes to test, specials to float, or tweaks worth iterating.</p>
+            </div>
+            <span id="idea-status" class="card-status">No ideas yet</span>
+          </header>
+          <form id="idea-form" class="idea-form">
+            <input type="text" id="idea-title" placeholder="Idea title">
+            <textarea id="idea-notes" placeholder="Flavor notes, service context, or next steps"></textarea>
+            <div class="card-actions">
+              <button type="submit" class="btn primary">Add idea</button>
+              <button type="button" id="clear-ideas" class="btn ghost">Clear all</button>
+            </div>
+          </form>
+          <div id="idea-list" class="idea-list"></div>
+        </article>
+      </section>
     </div>
-
-    <script>
-        // Wait for page to load, then hide loading screen and show content
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loading-screen');
-                const mainContent = document.getElementById('main-content');
-                
-                if (loadingScreen) loadingScreen.style.display = 'none';
-                if (mainContent) mainContent.style.display = 'block';
-            }, 2000); // 2 second delay to show loading screen
-        });
-
-        // Enhanced Notes Function
-        function openEnhancedNotes() {
-            if (window.enhancedNotesInterface) {
-                window.enhancedNotesInterface.openNotesInterface();
-            } else {
-                alert('Enhanced Notes system is loading...');
+  </main>
+<div class="quick-note-overlay" id="quick-note-overlay">
+  <div class="quick-note-modal">
+    <header>
+      <h3>Quick note</h3>
+      <button type="button" data-close-note>&times;</button>
+    </header>
+    <form id="quick-note-form">
+      <label for="quick-note-category" class="quick-note-label">Note focus</label>
+      <select id="quick-note-category">
+        <option value="service">Service floor</option>
+        <option value="kitchen">Kitchen ops</option>
+        <option value="equipment">Equipment</option>
+        <option value="vendor">Vendor</option>
+        <option value="recipe">Recipe idea</option>
+      </select>
+      <label for="quick-note-text" class="quick-note-label">Details</label>
+      <textarea id="quick-note-text" placeholder="What should the team remember?"></textarea>
+      <div class="quick-note-actions">
+        <button type="button" class="quick-note-cancel" data-close-note>Cancel</button>
+        <button type="submit" class="quick-note-save">Save to notes</button>
+      </div>
+    </form>
+  </div>
+</div>
+  <script>
+    (function () {
+      const Dashboard = {
+        storagePrefix: 'iterum.dashboard.simplified',
+        projectId: 'master',
+        activeDate: '',
+        init() {
+          this.cacheElements();
+          this.syncProjectContext();
+          this.bindEvents();
+          this.ensureDate();
+          this.renderAll();
+          document.addEventListener('projectChanged', (event) => this.handleProjectChanged(event));
+        },
+        cacheElements() {
+          this.dateInput = document.getElementById('dashboard-date');
+          this.projectChip = document.getElementById('dashboard-project');
+          this.notesContent = document.getElementById('notes-content');
+          this.notesStatus = document.getElementById('notes-status');
+          this.saveNotesBtn = document.getElementById('save-notes');
+          this.clearNotesBtn = document.getElementById('clear-notes');
+          this.taskForm = document.getElementById('task-form');
+          this.taskInput = document.getElementById('task-input');
+          this.taskList = document.getElementById('task-list');
+          this.taskStatus = document.getElementById('task-status');
+          this.clearCompletedBtn = document.getElementById('clear-completed');
+          this.resetTasksBtn = document.getElementById('reset-tasks');
+          this.ideaForm = document.getElementById('idea-form');
+          this.ideaTitle = document.getElementById('idea-title');
+          this.ideaNotes = document.getElementById('idea-notes');
+          this.clearIdeasBtn = document.getElementById('clear-ideas');
+          this.ideaList = document.getElementById('idea-list');
+          this.ideaStatus = document.getElementById('idea-status');
+          this.quickStatTasks = document.getElementById('quick-stat-tasks');
+          this.quickStatIdeas = document.getElementById('quick-stat-ideas');
+          this.quickStatNotes = document.getElementById('quick-stat-notes');
+          this.quickActionButtons = document.querySelectorAll('[data-quick-action]');
+          this.quickNoteOverlay = document.getElementById('quick-note-overlay');
+          this.quickNoteForm = document.getElementById('quick-note-form');
+          this.quickNoteCategory = document.getElementById('quick-note-category');
+          this.quickNoteInput = document.getElementById('quick-note-text');
+          this.quickNoteCloseButtons = document.querySelectorAll('[data-close-note]');
+        },
+        bindEvents() {
+          if (this.dateInput) {
+            this.dateInput.addEventListener('change', () => {
+              this.ensureDate();
+              this.renderAll();
+            });
+          }
+          if (this.saveNotesBtn) {
+            this.saveNotesBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              this.saveNotes();
+            });
+          }
+          if (this.clearNotesBtn) {
+            this.clearNotesBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              this.notesContent.value = '';
+            });
+          }
+          if (this.taskForm) {
+            this.taskForm.addEventListener('submit', (e) => {
+              e.preventDefault();
+              this.addTask();
+            });
+          }
+          if (this.clearCompletedBtn) {
+            this.clearCompletedBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              this.clearCompletedTasks();
+            });
+          }
+          if (this.resetTasksBtn) {
+            this.resetTasksBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              this.resetTaskList();
+            });
+          }
+          if (this.taskList) {
+            this.taskList.addEventListener('click', (e) => {
+              const target = e.target;
+              const taskId = target.dataset.taskId;
+              if (!taskId) return;
+              if (target.dataset.action === 'delete') {
+                this.deleteTask(taskId);
+              }
+            });
+            this.taskList.addEventListener('change', (e) => {
+              const target = e.target;
+              if (target.matches('input[type="checkbox"][data-task-id]')) {
+                this.toggleTask(target.dataset.taskId, target.checked);
+              }
+            });
+          }
+          if (this.ideaForm) {
+            this.ideaForm.addEventListener('submit', (e) => {
+              e.preventDefault();
+              this.addIdea();
+            });
+          }
+          if (this.clearIdeasBtn) {
+            this.clearIdeasBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              this.clearIdeas();
+            });
+          }
+          if (this.ideaList) {
+            this.ideaList.addEventListener('click', (e) => {
+              const target = e.target;
+              const ideaId = target.dataset.ideaId;
+              if (!ideaId) return;
+              if (target.dataset.action === 'delete') {
+                this.deleteIdea(ideaId);
+              } else if (target.dataset.action === 'toggle') {
+                this.toggleIdeaStatus(ideaId);
+              }
+            });
+          }
+          if (this.quickActionButtons && this.quickActionButtons.length) {
+            this.quickActionButtons.forEach((button) => {
+              button.addEventListener('click', () => {
+                const action = button.dataset.quickAction;
+                if (action === 'navigate') {
+                  const target = button.dataset.target;
+                  if (target) {
+                    window.location.href = target;
+                  }
+                } else if (action === 'quick-note') {
+                  const noteType = button.dataset.noteType || 'service';
+                  this.openQuickNote(noteType);
+                }
+              });
+            });
+          }
+          if (this.quickNoteForm) {
+            this.quickNoteForm.addEventListener('submit', (e) => {
+              e.preventDefault();
+              this.submitQuickNote();
+            });
+          }
+          if (this.quickNoteCloseButtons && this.quickNoteCloseButtons.length) {
+            this.quickNoteCloseButtons.forEach((button) => {
+              button.addEventListener('click', () => this.closeQuickNote());
+            });
+          }
+          if (this.quickNoteOverlay) {
+            this.quickNoteOverlay.addEventListener('click', (event) => {
+              if (event.target === this.quickNoteOverlay) {
+                this.closeQuickNote();
+              }
+            });
+          }
+        },
+        openQuickNote(type = 'service') {
+          if (this.quickNoteOverlay) {
+            this.quickNoteOverlay.classList.add('show');
+          }
+          if (this.quickNoteCategory) {
+            this.quickNoteCategory.value = type;
+          }
+          if (this.quickNoteInput) {
+            this.quickNoteInput.value = '';
+            setTimeout(() => this.quickNoteInput.focus(), 20);
+          }
+        },
+        closeQuickNote() {
+          if (this.quickNoteOverlay) {
+            this.quickNoteOverlay.classList.remove('show');
+          }
+          if (this.quickNoteInput) {
+            this.quickNoteInput.value = '';
+          }
+        },
+        submitQuickNote() {
+          if (!this.quickNoteInput) return;
+          const text = this.quickNoteInput.value.trim();
+          if (!text) {
+            this.setStatus(this.notesStatus, 'Add a quick note first');
+            this.quickNoteInput.focus();
+            return;
+          }
+          const category = this.quickNoteCategory ? this.quickNoteCategory.value : '';
+          const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const snippet = `[${timestamp}]${category ? ` ${category.toUpperCase()}:` : ''} ${text}`;
+          const existing = (this.notesContent.value || '').trim();
+          this.notesContent.value = existing ? `${existing}\n\n${snippet}` : snippet;
+          this.saveNotes();
+          this.setStatus(this.notesStatus, 'Quick note saved');
+          this.closeQuickNote();
+        },
+        updateQuickStats() {
+          if (this.quickStatTasks) {
+            const map = this.getTasksMap();
+            const tasks = map[this.activeDate] || [];
+            const openTasks = tasks.filter((task) => !task.done).length;
+            this.quickStatTasks.textContent = openTasks;
+          }
+          if (this.quickStatIdeas) {
+            const ideas = this.getIdeas();
+            const openIdeas = ideas.filter((idea) => idea.status !== 'done').length;
+            this.quickStatIdeas.textContent = openIdeas;
+          }
+          if (this.quickStatNotes) {
+            const notesMap = this.getNotesMap();
+            this.quickStatNotes.textContent = Object.keys(notesMap).length;
+          }
+        },
+        syncProjectContext() {
+          try {
+            if (window.projectManager) {
+              if (typeof window.projectManager.getActiveProject === 'function') {
+                const project = window.projectManager.getActiveProject();
+                if (project) {
+                  this.projectId = project.id || project.projectId || this.projectId;
+                  this.updateProjectChip(project.name || project.title || 'Active Project');
+                  return;
+                }
+              }
+              if (window.projectManager.currentProjectId) {
+                this.projectId = window.projectManager.currentProjectId;
+                this.updateProjectChip(window.projectManager.currentProjectName || 'Active Project');
+                return;
+              }
             }
-        }
-
-        // Brainstorming Function
-        function openBrainstorming() {
-            if (window.recipeBrainstorming) {
-                window.recipeBrainstorming.openBrainstormingWorkspace();
-            } else {
-                alert('Brainstorming system is loading...');
+            const storedName = localStorage.getItem('active_project_name');
+            const storedId = localStorage.getItem('active_project_id');
+            if (storedId) {
+              this.projectId = storedId;
             }
-        }
-
-        // Napkin Sketch Function
-        function openNapkinSketch() {
-            if (window.napkinBrainstorming) {
-                window.napkinBrainstorming.openNapkinWorkspace();
-            } else {
-                alert('Napkin sketching system is loading...');
+            this.updateProjectChip(storedName || 'Master Project');
+          } catch (error) {
+            console.warn('⚠️ Failed to sync project context:', error);
+            this.updateProjectChip('Master Project');
+          }
+        },
+        updateProjectChip(name) {
+          if (this.projectChip) {
+            this.projectChip.textContent = `Project: ${name || 'Master Project'}`;
+          }
+        },
+        ensureDate() {
+          const today = this.getToday();
+          if (!this.dateInput.value) {
+            this.dateInput.value = today;
+          }
+          this.activeDate = this.dateInput.value || today;
+        },
+        getToday() {
+          return new Date().toISOString().slice(0, 10);
+        },
+        getNotesMap() {
+          const key = `${this.storagePrefix}.notes.${this.projectId}`;
+          try {
+            return JSON.parse(localStorage.getItem(key)) || {};
+          } catch (error) {
+            console.warn('⚠️ Failed to parse notes map:', error);
+            return {};
+          }
+        },
+        setNotesMap(map) {
+          const key = `${this.storagePrefix}.notes.${this.projectId}`;
+          localStorage.setItem(key, JSON.stringify(map));
+        },
+        saveNotes() {
+          const map = this.getNotesMap();
+          const content = this.notesContent.value.trim();
+          if (content) {
+            map[this.activeDate] = {
+              content,
+              updatedAt: new Date().toISOString(),
+            };
+          } else {
+            delete map[this.activeDate];
+          }
+          this.setNotesMap(map);
+          this.setStatus(this.notesStatus, 'Saved');
+          this.renderNotes();
+        },
+        renderNotes() {
+          const map = this.getNotesMap();
+          const entry = map[this.activeDate];
+          this.notesContent.value = entry ? entry.content : '';
+          const totalDays = Object.keys(map).length;
+          if (totalDays === 0) {
+            this.notesStatus.textContent = 'No saved notes yet';
+          } else {
+            const lastUpdated = entry?.updatedAt ? new Date(entry.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+            this.notesStatus.textContent = entry ? `Saved · ${lastUpdated}` : `${totalDays} day${totalDays === 1 ? '' : 's'} logged`;
+          }
+          this.updateQuickStats();
+        },
+        getTasksMap() {
+          const key = `${this.storagePrefix}.tasks.${this.projectId}`;
+          try {
+            return JSON.parse(localStorage.getItem(key)) || {};
+          } catch (error) {
+            console.warn('⚠️ Failed to parse tasks map:', error);
+            return {};
+          }
+        },
+        setTasksMap(map) {
+          const key = `${this.storagePrefix}.tasks.${this.projectId}`;
+          localStorage.setItem(key, JSON.stringify(map));
+        },
+        addTask() {
+          const text = (this.taskInput.value || '').trim();
+          if (!text) {
+            this.setStatus(this.taskStatus, 'Enter a task first');
+            return;
+          }
+          const map = this.getTasksMap();
+          const tasks = map[this.activeDate] || [];
+          tasks.push({
+            id: this.generateId(),
+            text,
+            done: false,
+            createdAt: new Date().toISOString(),
+          });
+          map[this.activeDate] = tasks;
+          this.setTasksMap(map);
+          this.taskInput.value = '';
+          this.renderTasks();
+          this.setStatus(this.taskStatus, 'Task added');
+        },
+        toggleTask(taskId, done) {
+          const map = this.getTasksMap();
+          const tasks = map[this.activeDate] || [];
+          const task = tasks.find((t) => t.id === taskId);
+          if (task) {
+            task.done = !!done;
+            this.setTasksMap(map);
+            this.renderTasks();
+          }
+        },
+        deleteTask(taskId) {
+          const map = this.getTasksMap();
+          const tasks = map[this.activeDate] || [];
+          map[this.activeDate] = tasks.filter((t) => t.id !== taskId);
+          this.setTasksMap(map);
+          this.renderTasks();
+          this.setStatus(this.taskStatus, 'Task removed');
+        },
+        clearCompletedTasks() {
+          const map = this.getTasksMap();
+          const tasks = map[this.activeDate] || [];
+          const remaining = tasks.filter((t) => !t.done);
+          if (remaining.length === tasks.length) {
+            this.setStatus(this.taskStatus, 'Nothing to clear');
+            return;
+          }
+          map[this.activeDate] = remaining;
+          this.setTasksMap(map);
+          this.renderTasks();
+          this.setStatus(this.taskStatus, 'Completed tasks cleared');
+        },
+        resetTaskList() {
+          const map = this.getTasksMap();
+          delete map[this.activeDate];
+          this.setTasksMap(map);
+          this.renderTasks();
+          this.setStatus(this.taskStatus, 'List reset');
+        },
+        renderTasks() {
+          const map = this.getTasksMap();
+          const tasks = map[this.activeDate] || [];
+          this.taskList.innerHTML = '';
+          if (tasks.length === 0) {
+            this.taskList.innerHTML = '<li class="empty-state">No tasks yet. Add the first one above.</li>';
+            this.taskStatus.textContent = 'Nothing queued';
+            this.updateQuickStats();
+            return;
+          }
+          const openCount = tasks.filter((t) => !t.done).length;
+          this.taskStatus.textContent = `${openCount} open · ${tasks.length} total`;
+          tasks
+            .sort((a, b) => {
+              if (a.done === b.done) {
+                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+              }
+              return a.done ? 1 : -1;
+            })
+            .forEach((task) => {
+              const item = document.createElement('li');
+              item.className = 'task-item';
+              item.innerHTML = `
+                <input type="checkbox" data-task-id="${task.id}" ${task.done ? 'checked' : ''}>
+                <span class="task-text ${task.done ? 'done' : ''}">${this.escapeHtml(task.text)}</span>
+                <div class="task-actions">
+                  <button data-task-id="${task.id}" data-action="delete">Delete</button>
+                </div>
+              `;
+              this.taskList.appendChild(item);
+            });
+          this.updateQuickStats();
+        },
+        getIdeas() {
+          const key = `${this.storagePrefix}.ideas.${this.projectId}`;
+          try {
+            return JSON.parse(localStorage.getItem(key)) || [];
+          } catch (error) {
+            console.warn('⚠️ Failed to parse ideas list:', error);
+            return [];
+          }
+        },
+        setIdeas(list) {
+          const key = `${this.storagePrefix}.ideas.${this.projectId}`;
+          localStorage.setItem(key, JSON.stringify(list));
+        },
+        addIdea() {
+          const title = (this.ideaTitle.value || '').trim();
+          const notes = (this.ideaNotes.value || '').trim();
+          if (!title && !notes) {
+            this.setStatus(this.ideaStatus, 'Add a title or some notes first');
+            return;
+          }
+          const ideas = this.getIdeas();
+          ideas.unshift({
+            id: this.generateId(),
+            title: title || 'Untitled idea',
+            notes,
+            status: 'open',
+            createdAt: new Date().toISOString(),
+          });
+          this.setIdeas(ideas);
+          this.ideaTitle.value = '';
+          this.ideaNotes.value = '';
+          this.renderIdeas();
+          this.setStatus(this.ideaStatus, 'Idea captured');
+        },
+        toggleIdeaStatus(ideaId) {
+          const ideas = this.getIdeas();
+          const idea = ideas.find((item) => item.id === ideaId);
+          if (idea) {
+            idea.status = idea.status === 'done' ? 'open' : 'done';
+            this.setIdeas(ideas);
+            this.renderIdeas();
+          }
+        },
+        deleteIdea(ideaId) {
+          const ideas = this.getIdeas().filter((item) => item.id !== ideaId);
+          this.setIdeas(ideas);
+          this.renderIdeas();
+          this.setStatus(this.ideaStatus, 'Idea removed');
+        },
+        clearIdeas() {
+          this.setIdeas([]);
+          this.renderIdeas();
+          this.setStatus(this.ideaStatus, 'Ideas cleared');
+        },
+        renderIdeas() {
+          const ideas = this.getIdeas();
+          this.ideaList.innerHTML = '';
+          if (ideas.length === 0) {
+            this.ideaList.innerHTML = '<div class="empty-state">No recipe ideas captured yet.</div>';
+            this.ideaStatus.textContent = 'No ideas yet';
+            this.updateQuickStats();
+            return;
+          }
+          this.ideaStatus.textContent = `${ideas.length} idea${ideas.length === 1 ? '' : 's'}`;
+          ideas.forEach((idea) => {
+            const card = document.createElement('div');
+            card.className = 'idea-card';
+            const createdAt = new Date(idea.createdAt);
+            const prettyDate = createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+            card.innerHTML = `
+              <div class="idea-meta">
+                <span>${prettyDate}</span>
+                ${idea.status === 'done' ? '<span class="idea-tag">Ready to build</span>' : ''}
+              </div>
+              <h3>${this.escapeHtml(idea.title)}</h3>
+              ${idea.notes ? `<p>${this.escapeHtml(idea.notes)}</p>` : ''}
+              <div class="idea-actions">
+                <button data-idea-id="${idea.id}" data-action="toggle">${idea.status === 'done' ? 'Mark active' : 'Mark ready'}</button>
+                <button data-idea-id="${idea.id}" data-action="delete">Delete</button>
+              </div>
+            `;
+            this.ideaList.appendChild(card);
+          });
+          this.updateQuickStats();
+        },
+        renderAll() {
+          this.renderNotes();
+          this.renderTasks();
+          this.renderIdeas();
+          this.updateQuickStats();
+        },
+        handleProjectChanged(event) {
+          try {
+            const detail = event?.detail || {};
+            const project = detail.project || detail;
+            const nextId = project?.id || project?.projectId || detail.projectId;
+            if (nextId && nextId !== this.projectId) {
+              this.projectId = nextId;
+              this.updateProjectChip(project?.name || project?.title || 'Active Project');
+              this.renderAll();
             }
-        }
+          } catch (error) {
+            console.warn('⚠️ Failed to handle project change:', error);
+          }
+        },
+        setStatus(element, message) {
+          if (!element) return;
+          element.textContent = message;
+          element.classList.add('status-flash');
+          setTimeout(() => element.classList.remove('status-flash'), 800);
+        },
+        escapeHtml(text) {
+          return text
+            ? text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+            : '';
+        },
+        generateId() {
+          return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+        },
+      };
 
-        // Random Idea Generator
-        function generateQuickIdea() {
-            const ideas = [
-                "Mediterranean-inspired quinoa bowl with roasted vegetables",
-                "Spicy Thai coconut curry with fresh herbs",
-                "Deconstructed apple pie with cinnamon ice cream",
-                "Smoked salmon tartare with capers and dill",
-                "Chocolate lava cake with raspberry coulis",
-                "Grilled octopus with lemon and oregano",
-                "Truffle risotto with wild mushrooms",
-                "Beef Wellington with red wine reduction",
-                "Lemon meringue tart with candied zest",
-                "Seared scallops with pea puree and pancetta"
-            ];
-            
-            const randomIdea = ideas[Math.floor(Math.random() * ideas.length)];
-            
-            // Show the idea
-            alert(`🎲 Random Recipe Idea:\n\n"${randomIdea}"\n\nWould you like to create a note with this idea?`);
-            
-            // Optionally create a note
-            if (window.robustNotesSystem) {
-                const noteData = {
-                    title: `Random Recipe Idea: ${randomIdea}`,
-                    content: `Generated idea: ${randomIdea}\n\nInspiration: This could be developed into a full recipe with proper techniques and plating.\n\nNext steps:\n- Research traditional methods\n- Develop ingredient list\n- Create step-by-step instructions\n- Test and refine`,
-                    category: 'Recipe Ideas',
-                    tags: ['random-idea', 'inspiration', 'recipe-development']
-                };
-                
-                window.robustNotesSystem.createNote(noteData);
-                alert('✅ Note created with your random idea!');
-            }
+      document.addEventListener('DOMContentLoaded', () => {
+        try {
+          if (window.IterumApp && typeof window.IterumApp.init === 'function') {
+            window.IterumApp.init();
+          }
+        } catch (error) {
+          console.warn('⚠️ IterumApp init failed:', error);
         }
-    </script>
+        try {
+          if (window.HeaderUserSync && typeof window.HeaderUserSync.init === 'function') {
+            window.HeaderUserSync.init();
+          }
+        } catch (error) {
+          console.warn('⚠️ HeaderUserSync init failed:', error);
+        }
+        try {
+          if (window.projectManager && typeof window.projectManager.init === 'function') {
+            window.projectManager.init();
+          }
+        } catch (error) {
+          console.warn('⚠️ projectManager init failed:', error);
+        }
+        try {
+          if (typeof checkAndShowUserToggle === 'function') {
+            checkAndShowUserToggle();
+          }
+        } catch (error) {
+          console.warn('⚠️ checkAndShowUserToggle failed:', error);
+        }
+        Dashboard.init();
+        removeLoadingIndicator();
+      });
+    })();
+  </script>
 </body>
 </html>

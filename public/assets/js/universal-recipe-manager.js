@@ -35,6 +35,10 @@ class UniversalRecipeManager {
             
             // Dispatch ready event
             window.dispatchEvent(new CustomEvent('recipeManagerReady'));
+
+            if (window.firestoreSync?.fetchRecipeLibrarySnapshot) {
+                this.loadLibraryFromCloud();
+            }
             
         } catch (error) {
             console.error('❌ Error initializing Universal Recipe Manager:', error);
@@ -162,6 +166,9 @@ class UniversalRecipeManager {
         
         // Normalize instructions
         const instructions = this.normalizeInstructions(recipe.instructions || []);
+        
+        // Get current project ID
+        const projectId = this.getCurrentProjectId();
 
         return {
             id: id,
@@ -186,6 +193,8 @@ class UniversalRecipeManager {
             status: recipe.status || 'published',
             userId: recipe.userId || currentUser?.id || 'guest',
             userName: recipe.userName || currentUser?.name || 'Guest',
+            projectId: recipe.projectId || projectId, // Tag with current project
+            project: recipe.project || projectId, // Keep both for compatibility
             createdAt: recipe.createdAt || recipe.created_at || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             // Metadata
@@ -195,6 +204,29 @@ class UniversalRecipeManager {
                 addedToLibrary: new Date().toISOString()
             }
         };
+    }
+    
+    /**
+     * Get current project ID
+     */
+    getCurrentProjectId() {
+        // Try unified project selector first
+        if (window.unifiedProjectSelector && window.unifiedProjectSelector.currentProjectId) {
+            return window.unifiedProjectSelector.currentProjectId;
+        }
+        
+        // Try project manager
+        if (window.projectManager && window.projectManager.currentProject) {
+            return window.projectManager.currentProject.id;
+        }
+        
+        // Try localStorage
+        const currentUser = this.getCurrentUser();
+        const userId = currentUser?.id || 'guest';
+        const storedProjectId = localStorage.getItem(`iterum_current_project_user_${userId}`) ||
+                                localStorage.getItem('iterum_current_project');
+        
+        return storedProjectId || 'master';
     }
 
     /**
@@ -309,10 +341,39 @@ class UniversalRecipeManager {
         try {
             localStorage.setItem(this.storageKeys.recipeLibrary, JSON.stringify(library));
             console.log(`💾 Recipe library saved: ${library.length} recipes`);
+
+            if (window.firestoreSync?.saveRecipeLibrarySnapshot) {
+                window.firestoreSync.saveRecipeLibrarySnapshot(library).catch((error) => {
+                    console.warn('⚠️ Recipe library cloud sync skipped:', error?.message || error);
+                });
+            }
+
             return true;
         } catch (error) {
             console.error('❌ Error saving recipe library:', error);
             return false;
+        }
+    }
+
+    async loadLibraryFromCloud() {
+        try {
+            const snapshot = await window.firestoreSync.fetchRecipeLibrarySnapshot();
+            if (!snapshot || !Array.isArray(snapshot.recipes)) {
+                return;
+            }
+
+            const localLibrary = this.getRecipeLibrary();
+            const localUpdated = Array.isArray(localLibrary) && localLibrary.length
+                ? Date.parse(localLibrary[0]?.updatedAt || 0)
+                : 0;
+            const remoteUpdated = Date.parse(snapshot.updatedAt || snapshot.syncedAt || 0);
+
+            if (!localLibrary.length || (remoteUpdated && remoteUpdated > localUpdated)) {
+                this.saveRecipeLibrary(snapshot.recipes);
+                console.log('☁️ Recipe library hydrated from Firestore snapshot');
+            }
+        } catch (error) {
+            console.warn('⚠️ Unable to hydrate recipe library from cloud:', error?.message || error);
         }
     }
 

@@ -27,12 +27,6 @@
     <script src="assets/js/auth-api-helper.js"></script>
     <script src="assets/js/auth-diagnostics.js"></script>
     
-    <!-- Load Brainstorming & Notes Systems -->
-    <script src="assets/js/recipe-brainstorming.js"></script>
-    <script src="assets/js/napkin-brainstorming.js"></script>
-    <script src="assets/js/robust-notes-system.js"></script>
-    <script src="assets/js/enhanced-notes-interface.js"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Shadows+Into+Light:wght@400&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
@@ -1005,100 +999,13 @@
         <!-- Daily Notes & Calendar Section -->
         <section class="notes-calendar-section">
           <div class="notes-calendar-header">
-            <h2 class="heading-2">📝 Enhanced Notes & Brainstorming</h2>
+            <h2 class="heading-2">📅 Daily Notes & Calendar</h2>
             <div class="notes-actions">
-              <button class="btn btn-primary" onclick="window.enhancedNotesInterface.openInterface()" style="
-                background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-                border: 1px solid #1e40af;
-                color: white;
-                font-weight: 600;
-              ">📝 Enhanced Notes</button>
-              <button class="btn btn-secondary" onclick="window.recipeBrainstorming.openWorkspace()" style="
-                background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-                border: 1px solid #6d28d9;
-                color: white;
-                font-weight: 600;
-              ">🧠 Brainstorm</button>
-              <button class="btn btn-secondary" onclick="window.napkinBrainstorming.openNapkinWorkspace()" style="
-                background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-                border: 1px solid #b45309;
-                color: white;
-                font-weight: 600;
-              ">🧻 Napkin Sketch</button>
-              <button class="btn btn-secondary" onclick="openCalendarView()">📅 Full Calendar</button>
+              <button class="btn btn-primary" onclick="openCalendarView()">📅 Full Calendar</button>
               <button class="btn btn-secondary" onclick="exportNotes()">📤 Export Notes</button>
             </div>
           </div>
           
-          <!-- Quick Brainstorming Section -->
-          <div class="quick-brainstorming-section" style="
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
-            border: 1px solid #334155;
-          ">
-            <h3 style="color: #e2e8f0; margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">💡 Quick Brainstorming</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-              <button onclick="window.enhancedNotesInterface.openInterface()" class="brainstorm-card" style="
-                background: rgba(59, 130, 246, 0.1);
-                border: 1px solid rgba(59, 130, 246, 0.3);
-                border-radius: 8px;
-                padding: 16px;
-                text-align: center;
-                cursor: pointer;
-                transition: all 0.2s;
-                color: #60a5fa;
-              " onmouseover="this.style.background='rgba(59, 130, 246, 0.2)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.1)'">
-                <div style="font-size: 24px; margin-bottom: 8px;">📝</div>
-                <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Enhanced Notes</div>
-                <div style="font-size: 11px; opacity: 0.8;">Categories, templates, search</div>
-              </button>
-              <button onclick="window.recipeBrainstorming.openWorkspace()" class="brainstorm-card" style="
-                background: rgba(139, 92, 246, 0.1);
-                border: 1px solid rgba(139, 92, 246, 0.3);
-                border-radius: 8px;
-                padding: 16px;
-                text-align: center;
-                cursor: pointer;
-                transition: all 0.2s;
-                color: #a855f7;
-              " onmouseover="this.style.background='rgba(139, 92, 246, 0.2)'" onmouseout="this.style.background='rgba(139, 92, 246, 0.1)'">
-                <div style="font-size: 24px; margin-bottom: 8px;">🧠</div>
-                <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Brainstorm Ideas</div>
-                <div style="font-size: 11px; opacity: 0.8;">Templates, sketching, notes</div>
-              </button>
-              <button onclick="window.napkinBrainstorming.openNapkinWorkspace()" class="brainstorm-card" style="
-                background: rgba(245, 158, 11, 0.1);
-                border: 1px solid rgba(245, 158, 11, 0.3);
-                border-radius: 8px;
-                padding: 16px;
-                text-align: center;
-                cursor: pointer;
-                transition: all 0.2s;
-                color: #f59e0b;
-              " onmouseover="this.style.background='rgba(245, 158, 11, 0.2)'" onmouseout="this.style.background='rgba(245, 158, 11, 0.1)'">
-                <div style="font-size: 24px; margin-bottom: 8px;">🧻</div>
-                <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Napkin Sketch</div>
-                <div style="font-size: 11px; opacity: 0.8;">Just like the pros do it</div>
-              </button>
-              <button onclick="generateQuickIdea()" class="brainstorm-card" style="
-                background: rgba(16, 185, 129, 0.1);
-                border: 1px solid rgba(16, 185, 129, 0.3);
-                border-radius: 8px;
-                padding: 16px;
-                text-align: center;
-                cursor: pointer;
-                transition: all 0.2s;
-                color: #10b981;
-              " onmouseover="this.style.background='rgba(16, 185, 129, 0.2)'" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)'">
-                <div style="font-size: 24px; margin-bottom: 8px;">🎲</div>
-                <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Random Idea</div>
-                <div style="font-size: 11px; opacity: 0.8;">Generate inspiration</div>
-              </button>
-            </div>
-          </div>
-
           <div class="notes-calendar-grid">
             <!-- Daily Notes Form -->
             <div class="daily-notes-card">
@@ -1285,41 +1192,6 @@
           showUserToggle(event.detail.user);
         }
       });
-
-      // Quick idea generator
-      function generateQuickIdea() {
-        const cuisines = ['Italian', 'French', 'Japanese', 'Mexican', 'Indian', 'Thai', 'Mediterranean', 'American', 'Korean', 'Chinese'];
-        const proteins = ['chicken', 'beef', 'fish', 'tofu', 'lamb', 'pork', 'shrimp', 'duck', 'turkey', 'salmon'];
-        const cookingMethods = ['roasted', 'grilled', 'braised', 'seared', 'steamed', 'fried', 'baked', 'sautéed', 'smoked', 'poached'];
-        const vegetables = ['asparagus', 'broccoli', 'carrots', 'zucchini', 'eggplant', 'mushrooms', 'spinach', 'kale', 'sweet potato', 'cauliflower'];
-        const seasonings = ['garlic', 'ginger', 'lemon', 'herbs', 'spices', 'chili', 'soy sauce', 'balsamic', 'honey', 'olive oil'];
-        
-        const cuisine = cuisines[Math.floor(Math.random() * cuisines.length)];
-        const protein = proteins[Math.floor(Math.random() * proteins.length)];
-        const method = cookingMethods[Math.floor(Math.random() * cookingMethods.length)];
-        const vegetable = vegetables[Math.floor(Math.random() * vegetables.length)];
-        const seasoning = seasonings[Math.floor(Math.random() * seasonings.length)];
-        
-        const idea = `${method} ${protein} with ${vegetable} and ${seasoning} (${cuisine} style)`;
-        
-        // Show notification with the idea
-        if (window.showToast) {
-          window.showToast(`💡 Idea: ${idea}`, 'success');
-        } else {
-          alert(`Generated idea: ${idea}`);
-        }
-        
-        // Optionally create a note with this idea
-        if (window.robustNotesSystem) {
-          window.robustNotesSystem.createNote({
-            title: `Recipe Idea: ${idea}`,
-            content: `# Recipe Concept\n\n**Generated Idea:** ${idea}\n\n## Development Notes\n- **Cuisine Style:** ${cuisine}\n- **Main Protein:** ${protein}\n- **Cooking Method:** ${method}\n- **Vegetable:** ${vegetable}\n- **Seasoning:** ${seasoning}\n\n## Next Steps\n- [ ] Research traditional ${cuisine} techniques\n- [ ] Source quality ${protein}\n- [ ] Plan ingredient ratios\n- [ ] Test cooking method\n- [ ] Develop plating concept\n\n## Flavor Profile\n- **Primary:** \n- **Secondary:** \n- **Accent:** \n\n## Notes\n`,
-            category: 'recipe',
-            tags: ['idea', 'generated', cuisine.toLowerCase(), protein],
-            priority: 'medium'
-          });
-        }
-      }
 
       // Mobile navigation toggle
       function toggleMobileNav() {
