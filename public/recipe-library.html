@@ -54,10 +54,10 @@
         
         /* Recipe Library Specific Styles */
         .recipe-filters {
-            background: white;
+            background: var(--brand-card-bg);
             padding: var(--spacing-6);
             border-radius: var(--radius-lg);
-            border: 1px solid var(--gray-200);
+            border: 1px solid var(--brand-border-light);
             margin-bottom: var(--spacing-6);
         }
         
@@ -76,21 +76,22 @@
         }
         
         .recipe-card {
-            background: white;
+            background: var(--brand-card-bg);
             border-radius: var(--radius-lg);
-            border: 1px solid var(--gray-200);
+            border: 1px solid var(--brand-border-light);
             overflow: hidden;
             transition: all var(--transition-normal);
         }
         
         .recipe-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
+            border-color: var(--brand-border-medium);
         }
         
         .recipe-card-header {
-            background: linear-gradient(135deg, var(--iterum-primary), var(--iterum-secondary));
-            color: white;
+            background: var(--brand-btn-primary);
+            color: #ffffff;
             padding: var(--spacing-4);
         }
         
@@ -126,12 +127,12 @@
         .info-value {
             font-size: var(--font-size-lg);
             font-weight: var(--font-weight-semibold);
-            color: var(--iterum-primary);
+            color: var(--brand-text-primary);
         }
         
         .info-label {
             font-size: var(--font-size-sm);
-            color: var(--gray-600);
+            color: var(--brand-text-tertiary);
         }
         
         .recipe-actions {
@@ -140,7 +141,7 @@
         }
         
         .recipe-description {
-            color: var(--gray-600);
+            color: var(--brand-text-secondary);
             margin-bottom: var(--spacing-4);
             line-height: var(--line-height-relaxed);
         }
@@ -153,11 +154,12 @@
         }
         
         .recipe-tag {
-            background: var(--gray-100);
-            color: var(--gray-700);
+            background: var(--brand-card-bg-subtle);
+            color: var(--brand-text-tertiary);
             padding: var(--spacing-1) var(--spacing-2);
             border-radius: var(--radius-sm);
             font-size: var(--font-size-sm);
+            border: 1px solid var(--brand-border-light);
         }
         
         @media (max-width: 768px) {
