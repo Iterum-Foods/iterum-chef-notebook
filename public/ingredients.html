@@ -586,14 +586,139 @@
             searchIngredients();
         }
 
-        function previewURLImport() {
-            const url = document.getElementById('ingredient-url').value;
+        async function previewURLImport() {
+            const url = document.getElementById('ingredient-url').value.trim();
             if (!url) {
                 alert('Please enter a URL to import from');
                 return;
             }
-            console.log('🔗 Previewing URL import from:', url);
-            // Implement URL preview logic here
+
+            const previewDiv = document.getElementById('ingredient-import-preview');
+            if (!previewDiv) {
+                console.error('Preview div not found');
+                return;
+            }
+
+            previewDiv.style.display = 'block';
+            previewDiv.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">⏳</div>
+                    <div>Fetching ingredient data from ${url}...</div>
+                </div>
+            `;
+
+            try {
+                if (!window.fetchIngredientMetadata) {
+                    throw new Error('Ingredient scraper not loaded. Please refresh the page.');
+                }
+
+                const metadata = await window.fetchIngredientMetadata(url);
+                
+                if (!metadata || !metadata.name) {
+                    throw new Error('Could not extract ingredient information from this URL');
+                }
+
+                // Display preview
+                const nutritionHTML = metadata.nutritional_info && Object.keys(metadata.nutritional_info).length > 0
+                    ? `
+                        <div style="margin-top: 16px; padding: 12px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <div style="font-weight: 600; color: #1e40af; margin-bottom: 8px;">📊 Nutritional Info (per 100g)</div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; font-size: 0.85rem;">
+                                ${metadata.nutritional_info.calories ? `<div><strong>${metadata.nutritional_info.calories}</strong> cal</div>` : ''}
+                                ${metadata.nutritional_info.protein ? `<div><strong>${metadata.nutritional_info.protein}g</strong> protein</div>` : ''}
+                                ${metadata.nutritional_info.fat ? `<div><strong>${metadata.nutritional_info.fat}g</strong> fat</div>` : ''}
+                                ${metadata.nutritional_info.carbohydrates ? `<div><strong>${metadata.nutritional_info.carbohydrates}g</strong> carbs</div>` : ''}
+                            </div>
+                        </div>
+                    `
+                    : '';
+
+                previewDiv.innerHTML = `
+                    <div style="padding: 16px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <span style="font-size: 32px;">✅</span>
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.1rem; color: #1e293b;">${metadata.name}</div>
+                                <div style="font-size: 0.85rem; color: #64748b;">From ${metadata.source_host || new URL(url).hostname}</div>
+                            </div>
+                        </div>
+                        ${metadata.description ? `<div style="color: #475569; font-size: 0.9rem; margin-bottom: 12px; line-height: 1.5;">${metadata.description}</div>` : ''}
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                            <span style="padding: 4px 10px; background: #e0e7ff; color: #3730a3; border-radius: 999px; font-size: 0.8rem; font-weight: 600;">${metadata.category || 'other'}</span>
+                            <span style="padding: 4px 10px; background: #dbeafe; color: #1e40af; border-radius: 999px; font-size: 0.8rem;">Unit: ${metadata.unit || 'g'}</span>
+                            ${metadata.allergens && metadata.allergens.length > 0 ? `<span style="padding: 4px 10px; background: #fee2e2; color: #991b1b; border-radius: 999px; font-size: 0.8rem;">⚠️ Allergens: ${metadata.allergens.join(', ')}</span>` : ''}
+                        </div>
+                        ${nutritionHTML}
+                        <div style="margin-top: 16px; display: flex; gap: 8px;">
+                            <button onclick="importFromURLPreview()" class="btn btn-primary" style="flex: 1;">➕ Import This Ingredient</button>
+                            <button onclick="document.getElementById('ingredient-import-preview').style.display='none'" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+                `;
+
+                // Store metadata for import
+                window.lastScrapedIngredient = metadata;
+            } catch (error) {
+                console.error('❌ Error previewing URL:', error);
+                previewDiv.innerHTML = `
+                    <div style="padding: 16px; text-align: center;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">❌</div>
+                        <div style="font-weight: 600; color: #dc2626; margin-bottom: 8px;">Failed to fetch ingredient</div>
+                        <div style="color: #64748b; font-size: 0.9rem; margin-bottom: 12px;">${error.message}</div>
+                        <button onclick="document.getElementById('ingredient-import-preview').style.display='none'" class="btn btn-secondary">Close</button>
+                    </div>
+                `;
+            }
+        }
+
+        function importFromURLPreview() {
+            if (!window.lastScrapedIngredient) {
+                alert('No ingredient data to import. Please preview first.');
+                return;
+            }
+
+            const metadata = window.lastScrapedIngredient;
+            const ingredients = JSON.parse(localStorage.getItem('ingredients_database') || localStorage.getItem('ingredients') || '[]');
+
+            // Check for duplicates
+            const duplicate = ingredients.find(i => i.name.toLowerCase() === metadata.name.toLowerCase());
+            if (duplicate) {
+                if (!confirm(`Ingredient "${metadata.name}" already exists. Do you want to update it?`)) {
+                    return;
+                }
+                // Update existing
+                Object.assign(duplicate, {
+                    ...metadata,
+                    id: duplicate.id,
+                    updatedAt: new Date().toISOString()
+                });
+            } else {
+                // Add new
+                const newIngredient = {
+                    id: `ing_url_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+                    ...metadata,
+                    dateAdded: new Date().toISOString(),
+                    createdVia: 'url-import'
+                };
+                ingredients.push(newIngredient);
+            }
+
+            localStorage.setItem('ingredients_database', JSON.stringify(ingredients));
+            localStorage.setItem('ingredients', JSON.stringify(ingredients));
+
+            alert(`✅ Ingredient "${metadata.name}" ${duplicate ? 'updated' : 'imported'} successfully!`);
+            
+            // Clear preview and form
+            document.getElementById('ingredient-import-preview').style.display = 'none';
+            document.getElementById('ingredient-url').value = '';
+            window.lastScrapedIngredient = null;
+
+            // Refresh ingredient list
+            if (typeof searchIngredients === 'function') {
+                searchIngredients();
+            } else {
+                window.location.reload();
+            }
         }
 
         function viewIngredient(id) {
@@ -1078,6 +1203,7 @@
     
     <!-- Load Base Ingredients Loader -->
     <script src="assets/js/base-ingredients-loader.js"></script>
+    <script src="assets/js/ingredient-url-scraper.js"></script>
     
     <!-- Load Vendor-Ingredient Connector -->
     <script src="assets/js/vendor-ingredient-connector.js"></script>
