@@ -1,6 +1,13 @@
 # 🍳 Iterum Culinary R&D App
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Firebase Hosting](https://img.shields.io/badge/Firebase-Hosting-orange)](https://iterum-culinary-app.web.app)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
 A comprehensive culinary research and development application for chefs, food service professionals, and culinary enthusiasts.
+
+🌐 **Live Site**: [https://iterum-culinary-app.web.app](https://iterum-culinary-app.web.app)
 
 ## 🚀 Features
 
@@ -41,9 +48,11 @@ A comprehensive culinary research and development application for chefs, food se
 ## 🛠️ Technology Stack
 
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Styling**: Tailwind CSS
-- **Storage**: LocalStorage, IndexedDB
+- **Styling**: Tailwind CSS, Custom Design System
+- **Backend**: Firebase (Authentication, Firestore, Hosting)
+- **Storage**: LocalStorage, IndexedDB, Firebase Firestore
 - **Build Tools**: Modern JavaScript with ES6 modules
+- **Deployment**: Firebase Hosting
 - **Compatibility**: Modern browsers (Chrome, Firefox, Safari, Edge)
 
 ## 📋 Prerequisites
@@ -61,19 +70,27 @@ A comprehensive culinary research and development application for chefs, food se
 4. Create your first user profile and start using the app
 
 ### **Option 2: Local HTTP Server (Recommended)**
-1. Clone or download this repository
-2. Navigate to the `Iterum App` folder
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/Iterum-Foods/iterum-chef-notebook.git
+   cd iterum-culinary-app
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 3. Start a local HTTP server:
 
 ```bash
+# Using npm (recommended)
+npm start
+# Opens http://localhost:8080 automatically
+
+# Or manually:
+npx http-server public -p 8080
+
 # Python 3
 python -m http.server 8080
-
-# Python 2
-python -m SimpleHTTPServer 8080
-
-# Node.js
-npx http-server -p 8080
 
 # PHP
 php -S localhost:8080
@@ -82,20 +99,31 @@ php -S localhost:8080
 4. Open `http://localhost:8080` in your browser
 5. Create your first user profile and start using the app
 
+### **Option 3: Deploy to Firebase Hosting**
+1. Install Firebase CLI: `npm install -g firebase-tools`
+2. Login: `firebase login`
+3. Deploy: `firebase deploy --only hosting`
+4. Visit: https://iterum-culinary-app.web.app
+
 ## 🔧 Development Setup
 
 ### **Project Structure**
 ```
-Iterum App/
-├── index.html                 # Main application entry point
-├── assets/                    # Static assets
-│   ├── js/                   # JavaScript modules
-│   ├── css/                  # Stylesheets
-│   └── images/               # Images and icons
-├── pages/                     # Individual page modules
-├── tests/                     # Test files and debugging tools
+iterum-culinary-app/
+├── public/                    # Deployed files (Firebase Hosting)
+│   ├── index.html            # Landing/login page
+│   ├── dashboard.html        # Main dashboard
+│   ├── assets/               # Static assets
+│   │   ├── js/               # JavaScript modules (124 files)
+│   │   ├── css/              # Stylesheets
+│   │   ├── icons/            # Icons
+│   │   └── images/           # Images
+│   └── data/                 # Data files and catalogs
 ├── docs/                      # Documentation
-└── .github/                   # GitHub templates and workflows
+├── .github/                   # GitHub templates and workflows
+├── firebase.json             # Firebase configuration
+├── firestore.rules          # Firestore security rules
+└── package.json             # Node.js dependencies
 ```
 
 ### **Key JavaScript Modules**
