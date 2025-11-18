@@ -108,6 +108,34 @@ service cloud.firestore {
     }
     
     // ============================================
+    // PROJECTS (Top-level collection)
+    // ============================================
+    
+    match /projects/{projectId} {
+      // Authenticated users can read any project
+      allow read: if isAuthenticated();
+      
+      // Users can create/update projects
+      allow create, update: if isAuthenticated() && isValidSize();
+      
+      // Users can delete their own projects
+      allow delete: if isAuthenticated();
+      
+      // Project sub-collections
+      match /snapshots/{snapshotId} {
+        allow read, write: if isAuthenticated() && isValidSize();
+      }
+      
+      match /menus/{menuId} {
+        allow read, write: if isAuthenticated() && isValidSize();
+      }
+      
+      match /recipes/{recipeId} {
+        allow read, write: if isAuthenticated() && isValidSize();
+      }
+    }
+    
+    // ============================================
     // SHARED/PUBLIC DATA
     // ============================================
     
